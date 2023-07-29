@@ -1,5 +1,7 @@
-export default function AdminLayout ({children}: any){
-    return <div>
-        {children}
+export default function AdminLayout({ children }: any) {
+  return (
+    <div className="h-full">
+      {children}
     </div>
+  );
 }
