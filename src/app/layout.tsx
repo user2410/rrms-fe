@@ -1,7 +1,9 @@
-import '../assets/globals.css'
 import type { Metadata } from 'next'
 import { Inter } from 'next/font/google'
 import React from "react";
+
+import '../assets/globals.css';
+import "@fortawesome/fontawesome-free/css/all.min.css";
 
 const inter = Inter({ subsets: ['latin'] })
 
