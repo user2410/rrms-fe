@@ -1,14 +1,11 @@
 "use client";
 
-import BillTile from "@/components/page/user-dashboard/main-dashboard/bill-tile";
-import PlanTile from "@/components/page/user-dashboard/main-dashboard/plan-tile";
-import RentArrearTile from "@/components/page/user-dashboard/main-dashboard/rent-arrear-tile";
-import RevenueTile from "@/components/page/user-dashboard/main-dashboard/revenue-tile";
-import StatsCard from "@/components/page/user-dashboard/main-dashboard/stats";
-import WelcomeTile from "@/components/page/user-dashboard/main-dashboard/welcome-tile";
-import { Chart as ChartJS, registerables } from "chart.js";
-
-ChartJS.register(...registerables);
+import BillTile from "@/components/page/manage/main-dashboard/bill-tile";
+import PlanTile from "@/components/page/manage/main-dashboard/plan-tile";
+import RentArrearTile from "@/components/page/manage/main-dashboard/rent-arrear-tile";
+import RevenueTile from "@/components/page/manage/main-dashboard/revenue-tile";
+import StatsCard from "@/components/page/manage/main-dashboard/stats";
+import WelcomeTile from "@/components/page/manage/main-dashboard/welcome-tile";
 
 export default function ManageDashboard() {
   return (

@@ -1,6 +1,6 @@
 // import ManageHeaderStats from "@components/page/user-dashboard/header";
-import ManageDashboardNavbar from "@components/page/user-dashboard/navbar";
-import Sidebar from "@components/page/user-dashboard/sidebar";
+import ManageDashboardNavbar from "@/components/page/manage/navbar";
+import Sidebar from "@/components/page/manage/sidebar";
 
 export default function ManageLayout({ 
   children

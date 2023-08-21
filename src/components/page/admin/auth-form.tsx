@@ -1,6 +1,6 @@
 "use client";
 
-import Button from "@components/ui/button";
+import Button from "@components/ui/buttons/button_1";
 import TextInput from "@components/ui/input/text";
 import clsx from "clsx";
 import { useState } from "react";
