@@ -1,6 +1,6 @@
 import useOnClickOutside from "@/hooks/use-click-outside";
 import clsx from "clsx";
-import { Dispatch, Fragment, SetStateAction, useState } from "react";
+import { Dispatch, Fragment, SetStateAction, forwardRef, useState } from "react";
 
 const headerItems = [
   {
@@ -25,17 +25,17 @@ const headerItems = [
   },
 ];
 
-export default function NavItems({
-  showNavItemsDropdown,
-  setShowNavItemsDropdown,
-  headerRef,
-}: {
-  showNavItemsDropdown: boolean;
-  setShowNavItemsDropdown: Dispatch<SetStateAction<boolean>>;
+interface NavItemsProps {
   headerRef: React.RefObject<HTMLElement>;
-}) {
+}
+
+const NavItems = forwardRef<HTMLDivElement, NavItemsProps>(({
+  headerRef,
+}, dropdownRef) => {
+  const [showDropdown, setShowDropdown] = useState<boolean>(false);
+
   useOnClickOutside(headerRef, () => {
-    setShowNavItemsDropdown(false);
+    setShowDropdown(false);
   });
 
   return (
@@ -52,10 +52,12 @@ export default function NavItems({
       </div>
 
       {/* Mobile menu */}
-      <div className={clsx(
-        "w-screen absolute top-20 left-0",
-        showNavItemsDropdown ? "block" : "hidden"
-      )}>
+      <div 
+        ref={dropdownRef}
+        className={clsx(
+          "w-screen absolute top-20 left-0",
+          showDropdown ? "block" : "hidden"
+        )}>
         <ul className="flex flex-col font-medium rounded-lg bg-gray-50 dark:bg-gray-800 dark:border-gray-700">
           {headerItems.map((item, index) => (
             <li key={index}>
@@ -75,4 +77,6 @@ export default function NavItems({
       </div>
     </Fragment>
   );
-}
+});
+
+export default NavItems;

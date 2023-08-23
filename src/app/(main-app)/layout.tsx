@@ -1,7 +1,7 @@
-import FooterMain from "@/components/page/main-app/footer"
-import HeaderMain from "@/components/page/main-app/header"
+import FooterMain from "@/components/page/main-app/footer";
+import HeaderMain from "@/components/page/main-app/header";
 
-export default function MainLayout({
+export default async function MainLayout({
   children,
 }: {
   children: React.ReactNode
@@ -12,10 +12,10 @@ export default function MainLayout({
         className="relative flex-grow"
         style={{
           WebkitOverflowScrolling: 'touch',
-        }}
+        }}  
       >
-        <HeaderMain />
-        <div className="pt-20">
+        <HeaderMain/>
+        <div className="pt-28">
           {children}
         </div>
         <FooterMain/>

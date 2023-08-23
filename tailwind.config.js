@@ -1,6 +1,5 @@
 /** @type {import('tailwindcss').Config} */
 const plugin = require("tailwindcss/plugin");
-const colors = require("tailwindcss/colors");
 
 module.exports = {
   content: [
@@ -10,9 +9,6 @@ module.exports = {
     './public/**/*.html',
   ],
   theme: {
-    colors: {
-      ...colors,
-    },
     extend: {
       minHeight: {
         "screen-75": "75vh",

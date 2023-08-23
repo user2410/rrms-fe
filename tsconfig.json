@@ -21,6 +21,8 @@
     ],
     "paths": {
       "@/*": ["./src/*"],
+      "@actions/*": ["./src/actions/*"],
+      "@api/*": ["./pages/api/*"],
       "@app/*": ["./src/app/*"],
       "@assets/*": ["./src/assets/*"],
       "@components/*": ["./src/components/*"],

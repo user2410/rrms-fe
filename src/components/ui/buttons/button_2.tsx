@@ -1,4 +1,4 @@
-import cn from 'classnames';
+import clsx from 'clsx';
 import { ButtonHTMLAttributes, forwardRef } from 'react';
 import { ImSpinner2 } from 'react-icons/im';
 
@@ -19,21 +19,21 @@ const Button = forwardRef<HTMLButtonElement, ButtonProps>((props, ref) => {
     active,
     loading = false,
     disabled = false,
+    type,
     ...rest
   } = props;
 
-  const rootClassName = cn(
+  const rootClassName = clsx(
     'group text-[13px] md:text-sm lg:text-15px leading-4 inline-flex items-center cursor-pointer transition ease-in-out duration-300 font-body font-semibold text-center justify-center tracking-[0.2px] rounded placeholder-white focus-visible:outline-none focus:outline-none',
-    {
-      'h-12 md:h-14 bg-brand text-brand-light tracking-widest px-5 md:px-6 lg:px-8 py-4 md:py-3.5 lg:py-4 hover:text-white hover:bg-opacity-90':
-        variant === 'primary',
-      'h-12 md:h-14 bg-brand-light text-brand-dark border border-border-four tracking-widest px-5 md:px-6 lg:px-8 py-4 md:py-3.5 lg:py-4':
-        variant === 'border',
-      'h-11 md:h-[50px] bg-brand text-brand-light font-manrope px-5 lg:px-6 py-4 md:py-3.5 lg:py-4 hover:text-white hover:bg-opacity-90 focus:bg-opacity-70':
-        variant === 'formButton',
-      'cursor-not-allowed hover:cursor-not-allowed bg-opacity-50 hover:bg-opacity-50':
-        disabled,
-    },
+    variant === 'primary' 
+      ? 'h-12 md:h-14 bg-brand text-brand-light tracking-widest px-5 md:px-6 lg:px-8 py-4 md:py-3.5 lg:py-4 hover:text-white hover:bg-opacity-90'
+      : variant === 'border'
+      ? 'h-12 md:h-14 bg-brand-light text-brand-dark border border-border-four tracking-widest px-5 md:px-6 lg:px-8 py-4 md:py-3.5 lg:py-4'
+      : variant === 'formButton'
+      ? 'h-11 md:h-[50px] bg-brand text-brand-light font-manrope px-5 lg:px-6 py-4 md:py-3.5 lg:py-4 hover:text-white hover:bg-opacity-90 focus:bg-opacity-70'
+      : null,
+    disabled
+      ? 'cursor-not-allowed hover:cursor-not-allowed bg-opacity-50 hover:bg-opacity-50' : null,
     className
   );
 
@@ -44,6 +44,7 @@ const Button = forwardRef<HTMLButtonElement, ButtonProps>((props, ref) => {
       ref={ref}
       className={rootClassName}
       disabled={disabled}
+      type={type}
       {...rest}
     >
       {children}

@@ -1,11 +1,13 @@
-import Button from "@/components/ui/buttons/button_2";
+import Button from "@/components/ui/buttons/button_1";
 import TextInput from "@/components/ui/input/text";
 import Logo from "@/components/ui/logo";
 import Modal from "@/components/ui/modal";
 import { Switch } from "@headlessui/react";
+import { signIn } from "next-auth/react";
 import Image from "next/image";
 import React from "react";
-import { FieldValues, useForm } from "react-hook-form";
+import { FieldValues, SubmitHandler, useForm } from "react-hook-form";
+import toast from "react-hot-toast";
 import { FaFacebook, FaLinkedinIn, FaTwitter } from "react-icons/fa";
 
 interface LoginModalProps {
@@ -30,9 +32,26 @@ export default function LoginModal({
     },
   });
 
-  const onSubmit = (data: any) => { 
+  const onSubmit : SubmitHandler<FieldValues> = async (data) => {
     setLoading(true);
     console.log(data);
+    try {
+      const cb = await signIn('credentials', { 
+        ...data,
+        redirect: false 
+      });
+      if(cb?.error) {
+        toast.error("Invalid credential");
+      } else if (cb?.ok) {
+        toast.success(`Logged in as ${data.email}!`)
+        onClose();
+      }
+    } catch(err) {
+      toast.error("Something went wrong");
+      console.error(err);
+    } finally {
+      setLoading(false);
+    }
   };
 
   return (
@@ -89,9 +108,10 @@ export default function LoginModal({
                     required: true,
                     pattern: {
                       value:
-                        /^(?=.*\d)(?=.*[a-z])(?=.*[A-Z])(?=.*[a-zA-Z]).{8,}$/,
+                      // regex matches alphanumeric string at least 8 characters long
+                      /^[A-Za-z\d]{8,}$/,
                       message:
-                        "Password must be at least 8 characters long, contain at least one uppercase letter, one lowercase letter, one number and one special character",
+                        "Password must be at least 8 characters long",
                     },
                   }}
                 />
@@ -122,16 +142,12 @@ export default function LoginModal({
                     Forgot password ?
                   </button>
                 </div>
-                <div className="relative">
-                  <Button
-                    type="submit"
-                    // loading={isLoading}
-                    // disabled={isLoading}
-                    className="w-full mt-2 tracking-normal h-11 md:h-12 font-15px md:font-15px"
-                    variant="formButton"
-                  >
-                    Sign in
-                  </Button>
+                <div className="w-full">
+                  <div className="mx-auto w-1/2">
+                    <Button type="submit" fullWidth disabled={isLoading}>
+                      Sign in
+                    </Button>
+                  </div>
                 </div>
               </div>
             </form>

@@ -1,0 +1,284 @@
+authorize log: {
+  status: 200,
+  statusText: 'OK',
+  headers: AxiosHeaders {
+    date: 'Tue, 22 Aug 2023 11:19:06 GMT',
+    'content-type': 'application/json',
+    'content-length': '635',
+    vary: 'Origin',
+    'access-control-allow-origin': '*',
+    connection: 'close'
+  },
+  config: {
+    transitional: {
+      silentJSONParsing: true,
+      forcedJSONParsing: true,
+      clarifyTimeoutError: false
+    },
+    adapter: [ 'xhr', 'http' ],
+    transformRequest: [ [Function: transformRequest] ],
+    transformResponse: [ [Function: transformResponse] ],
+    timeout: 0,
+    xsrfCookieName: 'XSRF-TOKEN',
+    xsrfHeaderName: 'X-XSRF-TOKEN',
+    maxContentLength: -1,
+    maxBodyLength: -1,
+    env: { FormData: [Function], Blob: [class Blob] },
+    validateStatus: [Function: validateStatus],
+    headers: AxiosHeaders {
+      Accept: 'application/json, text/plain, */*',
+      'Content-Type': 'application/json',
+      'User-Agent': 'axios/1.4.0',
+      'Content-Length': '128',
+      'Accept-Encoding': 'gzip, compress, deflate, br'
+    },
+    baseURL: 'http://localhost:8000',
+    method: 'post',
+    url: '/api/auth/credential/login',
+    data: '{"csrfToken":"9d31eb84353aca59e743d892874a8cf4db36c4e10aca7992aa9657bc64983b95","email":"delta@gmail.com","password":"12345678"}'
+  },
+  request: <ref *1> ClientRequest {
+    _events: [Object: null prototype] {
+      abort: [Function (anonymous)],
+      aborted: [Function (anonymous)],
+      connect: [Function (anonymous)],
+      error: [Function (anonymous)],
+      socket: [Function (anonymous)],
+      timeout: [Function (anonymous)],
+      finish: [Function: requestOnFinish]
+    },
+    _eventsCount: 7,
+    _maxListeners: undefined,
+    outputData: [],
+    outputSize: 0,
+    writable: true,
+    destroyed: false,
+    _last: true,
+    chunkedEncoding: false,
+    shouldKeepAlive: false,
+    maxRequestsOnConnectionReached: false,
+    _defaultKeepAlive: true,
+    useChunkedEncodingByDefault: true,
+    sendDate: false,
+    _removedConnection: false,
+    _removedContLen: false,
+    _removedTE: false,
+    strictContentLength: false,
+    _contentLength: '128',
+    _hasBody: true,
+    _trailer: '',
+    finished: true,
+    _headerSent: true,
+    _closed: false,
+    socket: Socket {
+      connecting: false,
+      _hadError: false,
+      _parent: null,
+      _host: 'localhost',
+      _closeAfterHandlingError: false,
+      _readableState: [ReadableState],
+      _events: [Object: null prototype],
+      _eventsCount: 7,
+      _maxListeners: undefined,
+      _writableState: [WritableState],
+      allowHalfOpen: false,
+      _sockname: null,
+      _pendingData: null,
+      _pendingEncoding: '',
+      server: null,
+      _server: null,
+      parser: null,
+      _httpMessage: [Circular *1],
+      [Symbol(async_id_symbol)]: 150,
+      [Symbol(kHandle)]: [TCP],
+      [Symbol(lastWriteQueueSize)]: 0,
+      [Symbol(timeout)]: null,
+      [Symbol(kBuffer)]: null,
+      [Symbol(kBufferCb)]: null,
+      [Symbol(kBufferGen)]: null,
+      [Symbol(kCapture)]: false,
+      [Symbol(kSetNoDelay)]: true,
+      [Symbol(kSetKeepAlive)]: true,
+      [Symbol(kSetKeepAliveInitialDelay)]: 60,
+      [Symbol(kBytesRead)]: 0,
+      [Symbol(kBytesWritten)]: 0
+    },
+    _header: 'POST /api/auth/credential/login HTTP/1.1\r\n' +
+      'Accept: application/json, text/plain, */*\r\n' +
+      'Content-Type: application/json\r\n' +
+      'User-Agent: axios/1.4.0\r\n' +
+      'Content-Length: 128\r\n' +
+      'Accept-Encoding: gzip, compress, deflate, br\r\n' +
+      'Host: localhost:8000\r\n' +
+      'Connection: close\r\n' +
+      '\r\n',
+    _keepAliveTimeout: 0,
+    _onPendingData: [Function: nop],
+    agent: Agent {
+      _events: [Object: null prototype],
+      _eventsCount: 2,
+      _maxListeners: undefined,
+      defaultPort: 80,
+      protocol: 'http:',
+      options: [Object: null prototype],
+      requests: [Object: null prototype] {},
+      sockets: [Object: null prototype],
+      freeSockets: [Object: null prototype] {},
+      keepAliveMsecs: 1000,
+      keepAlive: false,
+      maxSockets: Infinity,
+      maxFreeSockets: 256,
+      scheduling: 'lifo',
+      maxTotalSockets: Infinity,
+      totalSocketCount: 2,
+      [Symbol(kCapture)]: false
+    },
+    socketPath: undefined,
+    method: 'POST',
+    maxHeaderSize: undefined,
+    insecureHTTPParser: undefined,
+    joinDuplicateHeaders: undefined,
+    path: '/api/auth/credential/login',
+    _ended: true,
+    res: IncomingMessage {
+      _readableState: [ReadableState],
+      _events: [Object: null prototype],
+      _eventsCount: 4,
+      _maxListeners: undefined,
+      socket: [Socket],
+      httpVersionMajor: 1,
+      httpVersionMinor: 1,
+      httpVersion: '1.1',
+      complete: true,
+      rawHeaders: [Array],
+      rawTrailers: [],
+      joinDuplicateHeaders: undefined,
+      aborted: false,
+      upgrade: false,
+      url: '',
+      method: null,
+      statusCode: 200,
+      statusMessage: 'OK',
+      client: [Socket],
+      _consuming: false,
+      _dumped: false,
+      req: [Circular *1],
+      responseUrl: 'http://localhost:8000/api/auth/credential/login',
+      redirects: [],
+      [Symbol(kCapture)]: false,
+      [Symbol(kHeaders)]: [Object],
+      [Symbol(kHeadersCount)]: 12,
+      [Symbol(kTrailers)]: null,
+      [Symbol(kTrailersCount)]: 0
+    },
+    aborted: false,
+    timeoutCb: null,
+    upgradeOrConnect: false,
+    parser: null,
+    maxHeadersCount: null,
+    reusedSocket: false,
+    host: 'localhost',
+    protocol: 'http:',
+    _redirectable: Writable {
+      _writableState: [WritableState],
+      _events: [Object: null prototype],
+      _eventsCount: 3,
+      _maxListeners: undefined,
+      _options: [Object],
+      _ended: true,
+      _ending: true,
+      _redirectCount: 0,
+      _redirects: [],
+      _requestBodyLength: 128,
+      _requestBodyBuffers: [],
+      _onNativeResponse: [Function (anonymous)],
+      _currentRequest: [Circular *1],
+      _currentUrl: 'http://localhost:8000/api/auth/credential/login',
+      [Symbol(kCapture)]: false
+    },
+    [Symbol(kCapture)]: false,
+    [Symbol(kBytesWritten)]: 0,
+    [Symbol(kNeedDrain)]: false,
+    [Symbol(corked)]: 0,
+    [Symbol(kOutHeaders)]: [Object: null prototype] {
+      accept: [Array],
+      'content-type': [Array],
+      'user-agent': [Array],
+      'content-length': [Array],
+      'accept-encoding': [Array],
+      host: [Array]
+    },
+    [Symbol(errored)]: null,
+    [Symbol(kUniqueHeaders)]: null
+  },
+  data: {
+    accessExp: '2023-08-23T23:39:23.438621395+07:00',
+    accessToken: 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY0OTk2YTg0LTI0NzEtNGZiMi1hMzAyLWU3YjY4MmMxODVhMSIsInR5cGUiOiJhY2Nlc3MiLCJzdWIiOiI5NDJmYmQ4My1jMjRhLTRkMjctYWY4Zi0xNGY1NjhiNmE5NjUiLCJpYXQiOiIyMDIzLTA4LTIzVDIyOjM5OjIzLjQzODYyMTI3NiswNzowMCIsImV4cCI6IjIwMjMtMDgtMjNUMjM6Mzk6MjMuNDM4NjIxMzk1KzA3OjAwIn0.qHy2dPArRNiyv8AVroFSv7TPCFzdhw_lH9sK9KSSAk4',
+    user: {
+      id: '942fbd83-c24a-4d27-af8f-14f568b6a965',
+      email: 'delta@gmail.com',
+      created_at: '2023-08-04T18:10:56.30861+07:00',
+      created_by: null,
+      updated_at: '2023-08-04T18:10:56.30861+07:00',
+      updated_by: null,
+      deleted_f: false
+    }
+  }
+}
+jwt token log: {
+  name: undefined,
+  email: undefined,
+  picture: undefined,
+  sub: undefined
+}
+jwt user log: {
+  accessExp: '2023-08-23T23:39:23.438621395+07:00',
+  accessToken: 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY0OTk2YTg0LTI0NzEtNGZiMi1hMzAyLWU3YjY4MmMxODVhMSIsInR5cGUiOiJhY2Nlc3MiLCJzdWIiOiI5NDJmYmQ4My1jMjRhLTRkMjctYWY4Zi0xNGY1NjhiNmE5NjUiLCJpYXQiOiIyMDIzLTA4LTIzVDIyOjM5OjIzLjQzODYyMTI3NiswNzowMCIsImV4cCI6IjIwMjMtMDgtMjNUMjM6Mzk6MjMuNDM4NjIxMzk1KzA3OjAwIn0.qHy2dPArRNiyv8AVroFSv7TPCFzdhw_lH9sK9KSSAk4',
+  user: {
+    id: '942fbd83-c24a-4d27-af8f-14f568b6a965',
+    email: 'delta@gmail.com',
+    created_at: '2023-08-04T18:10:56.30861+07:00',
+    created_by: null,
+    updated_at: '2023-08-04T18:10:56.30861+07:00',
+    updated_by: null,
+    deleted_f: false
+  }
+}
+jwt token log: {
+  accessExp: '2023-08-23T23:39:23.438621395+07:00',
+  accessToken: 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY0OTk2YTg0LTI0NzEtNGZiMi1hMzAyLWU3YjY4MmMxODVhMSIsInR5cGUiOiJhY2Nlc3MiLCJzdWIiOiI5NDJmYmQ4My1jMjRhLTRkMjctYWY4Zi0xNGY1NjhiNmE5NjUiLCJpYXQiOiIyMDIzLTA4LTIzVDIyOjM5OjIzLjQzODYyMTI3NiswNzowMCIsImV4cCI6IjIwMjMtMDgtMjNUMjM6Mzk6MjMuNDM4NjIxMzk1KzA3OjAwIn0.qHy2dPArRNiyv8AVroFSv7TPCFzdhw_lH9sK9KSSAk4',
+  user: {
+    id: '942fbd83-c24a-4d27-af8f-14f568b6a965',
+    email: 'delta@gmail.com',
+    created_at: '2023-08-04T18:10:56.30861+07:00',
+    created_by: null,
+    updated_at: '2023-08-04T18:10:56.30861+07:00',
+    updated_by: null,
+    deleted_f: false
+  },
+  iat: 1692805163,
+  exp: 1695397163,
+  jti: '5a14c102-3ac5-4e15-86a4-72fd806aef28'
+}
+jwt user log: undefined
+session session log: {
+  user: { name: undefined, email: undefined, image: undefined },
+  expires: '2023-09-22T15:39:23.554Z'
+}
+session token log: {
+  accessExp: '2023-08-23T23:39:23.438621395+07:00',
+  accessToken: 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY0OTk2YTg0LTI0NzEtNGZiMi1hMzAyLWU3YjY4MmMxODVhMSIsInR5cGUiOiJhY2Nlc3MiLCJzdWIiOiI5NDJmYmQ4My1jMjRhLTRkMjctYWY4Zi0xNGY1NjhiNmE5NjUiLCJpYXQiOiIyMDIzLTA4LTIzVDIyOjM5OjIzLjQzODYyMTI3NiswNzowMCIsImV4cCI6IjIwMjMtMDgtMjNUMjM6Mzk6MjMuNDM4NjIxMzk1KzA3OjAwIn0.qHy2dPArRNiyv8AVroFSv7TPCFzdhw_lH9sK9KSSAk4',
+  user: {
+    id: '942fbd83-c24a-4d27-af8f-14f568b6a965',
+    email: 'delta@gmail.com',
+    created_at: '2023-08-04T18:10:56.30861+07:00',
+    created_by: null,
+    updated_at: '2023-08-04T18:10:56.30861+07:00',
+    updated_by: null,
+    deleted_f: false
+  },
+  iat: 1692805163,
+  exp: 1695397163,
+  jti: '5a14c102-3ac5-4e15-86a4-72fd806aef28'
+}
+session user log: undefined

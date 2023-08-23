@@ -5,6 +5,8 @@ import React from "react";
 import "@fortawesome/fontawesome-free/css/all.min.css";
 import '../assets/globals.css';
 import ReactQueryContext from '@/context/react-query';
+import NextAuthContext from '@/context/next-auth';
+import { Toaster } from 'react-hot-toast';
 
 const inter = Inter({ subsets: ['latin'] })
 
@@ -20,10 +22,14 @@ export default function RootLayout({
 }) {
   return (
     <html lang="en">
+      <head></head>
       <body className={inter.className}>
-        <ReactQueryContext>
-          {children}
-        </ReactQueryContext>
+        <NextAuthContext>
+          <ReactQueryContext>
+            <Toaster/>
+            {children}
+          </ReactQueryContext>
+        </NextAuthContext>
       </body>
     </html>
   )
