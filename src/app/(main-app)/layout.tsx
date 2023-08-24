@@ -7,19 +7,17 @@ export default async function MainLayout({
   children: React.ReactNode
 }) {
   return (
-    <div className="flex flex-col min-h-screen">
-      <main
-        className="relative flex-grow"
-        style={{
-          WebkitOverflowScrolling: 'touch',
-        }}  
-      >
-        <HeaderMain/>
-        <div className="pt-28">
-          {children}
-        </div>
-        <FooterMain/>
-      </main>
-    </div>
+    <main
+      className="relative min-h-screen"
+      style={{
+        WebkitOverflowScrolling: 'touch',
+      }}
+    >
+      <HeaderMain />
+      <div className="pt-28">
+        {children}
+      </div>
+      <FooterMain />
+    </main>
   )
 }

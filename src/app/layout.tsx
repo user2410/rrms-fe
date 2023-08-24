@@ -7,6 +7,8 @@ import '../assets/globals.css';
 import ReactQueryContext from '@/context/react-query';
 import NextAuthContext from '@/context/next-auth';
 import { Toaster } from 'react-hot-toast';
+import ManagedModal from '@components/ui/managed-modal';
+import { ManagedUIContext } from '@/context/ui.context';
 
 const inter = Inter({ subsets: ['latin'] })
 
@@ -26,8 +28,11 @@ export default function RootLayout({
       <body className={inter.className}>
         <NextAuthContext>
           <ReactQueryContext>
-            <Toaster/>
-            {children}
+            <ManagedUIContext>
+              <Toaster/>
+              <ManagedModal />
+              {children}
+            </ManagedUIContext>
           </ReactQueryContext>
         </NextAuthContext>
       </body>

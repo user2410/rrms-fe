@@ -1,22 +1,22 @@
 "use client";
 
+import { useModalAction } from "@/context/modal.context";
 import useOnClickOutside from "@/hooks/use-click-outside";
 import clsx from "clsx";
 import { signOut, useSession } from "next-auth/react";
 import Image from "next/image";
-import { Fragment, useState } from "react";
+import { useState } from "react";
 import toast from "react-hot-toast";
-import LoginModal from "./auth-form/login";
 
 export default function AuthItem({
   headerRef,
-} : {
+}: {
   headerRef: React.RefObject<HTMLElement>;
 }) {
   const [showAuthDropdown, setShowAuthDropdown] = useState<boolean>(false);
-  const [showLoginModal, setShowLoginModal] = useState<boolean>(false);
-  const {data: session, status : sessionStat} = useSession();
-  
+  const {openModal} = useModalAction();
+  const { data: session, status: sessionStat } = useSession();
+
   useOnClickOutside(headerRef, () => {
     setShowAuthDropdown(false);
   });
@@ -32,11 +32,6 @@ export default function AuthItem({
   }
 
   return (
-    <Fragment>
-      <LoginModal
-        isOpen={showLoginModal}
-        onClose={() => setShowLoginModal(false)}
-      />
     <div className="relative flex">
       <button
         className="block px-4 py-2 text-white bg-transparent"
@@ -44,7 +39,7 @@ export default function AuthItem({
           if (sessionStat === "authenticated") {
             setShowAuthDropdown(!showAuthDropdown);
           } else {
-            setShowLoginModal(true);
+            openModal('AUTH_VIEW');
           }
         }}>
         {sessionStat === "authenticated"
@@ -76,6 +71,5 @@ export default function AuthItem({
         </ul>
       </div>
     </div>
-    </Fragment>
   );
 }
