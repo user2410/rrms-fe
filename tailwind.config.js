@@ -1,125 +1,75 @@
 /** @type {import('tailwindcss').Config} */
-const plugin = require("tailwindcss/plugin");
-
 module.exports = {
+  darkMode: ["class"],
   content: [
     './src/**/*.{js,ts,jsx,tsx,mdx}',
-    './node_modules/flowbite-react/**/*.js',
+    './src/components/**/*.{ts,tsx}',
     './pages/**/*.{ts,tsx}',
-    './public/**/*.html',
-  ],
+	],
   theme: {
+    container: {
+      center: true,
+      padding: "2rem",
+      screens: {
+        "2xl": "1400px",
+      },
+    },
     extend: {
-      minHeight: {
-        "screen-75": "75vh",
+      colors: {
+        border: "hsl(var(--border))",
+        input: "hsl(var(--input))",
+        ring: "hsl(var(--ring))",
+        background: "hsl(var(--background))",
+        foreground: "hsl(var(--foreground))",
+        primary: {
+          DEFAULT: "hsl(var(--primary))",
+          foreground: "hsl(var(--primary-foreground))",
+        },
+        secondary: {
+          DEFAULT: "hsl(var(--secondary))",
+          foreground: "hsl(var(--secondary-foreground))",
+        },
+        destructive: {
+          DEFAULT: "hsl(var(--destructive))",
+          foreground: "hsl(var(--destructive-foreground))",
+        },
+        muted: {
+          DEFAULT: "hsl(var(--muted))",
+          foreground: "hsl(var(--muted-foreground))",
+        },
+        accent: {
+          DEFAULT: "hsl(var(--accent))",
+          foreground: "hsl(var(--accent-foreground))",
+        },
+        popover: {
+          DEFAULT: "hsl(var(--popover))",
+          foreground: "hsl(var(--popover-foreground))",
+        },
+        card: {
+          DEFAULT: "hsl(var(--card))",
+          foreground: "hsl(var(--card-foreground))",
+        },
       },
-      fontSize: {
-        55: "55rem",
+      borderRadius: {
+        lg: "var(--radius)",
+        md: "calc(var(--radius) - 2px)",
+        sm: "calc(var(--radius) - 4px)",
       },
-      opacity: {
-        80: ".8",
+      keyframes: {
+        "accordion-down": {
+          from: { height: 0 },
+          to: { height: "var(--radix-accordion-content-height)" },
+        },
+        "accordion-up": {
+          from: { height: "var(--radix-accordion-content-height)" },
+          to: { height: 0 },
+        },
       },
-      zIndex: {
-        2: 2,
-        3: 3,
-      },
-      inset: {
-        "-100": "-100%",
-        "-225-px": "-225px",
-        "-160-px": "-160px",
-        "-150-px": "-150px",
-        "-94-px": "-94px",
-        "-50-px": "-50px",
-        "-29-px": "-29px",
-        "-20-px": "-20px",
-        "25-px": "25px",
-        "40-px": "40px",
-        "95-px": "95px",
-        "145-px": "145px",
-        "195-px": "195px",
-        "210-px": "210px",
-        "260-px": "260px",
-      },
-      height: {
-        "95-px": "95px",
-        "70-px": "70px",
-        "350-px": "350px",
-        "500-px": "500px",
-        "600-px": "600px",
-      },
-      maxHeight: {
-        "860-px": "860px",
-      },
-      maxWidth: {
-        "100-px": "100px",
-        "120-px": "120px",
-        "150-px": "150px",
-        "180-px": "180px",
-        "200-px": "200px",
-        "210-px": "210px",
-        "580-px": "580px",
-      },
-      minWidth: {
-        "140-px": "140px",
-        48: "12rem",
-      },
-      backgroundSize: {
-        full: "100%",
-      },
-      backgroundImage: {
-        'gradient-radial': 'radial-gradient(var(--tw-gradient-stops))',
-        'gradient-conic':
-          'conic-gradient(from 180deg at 50% 50%, var(--tw-gradient-stops))',
+      animation: {
+        "accordion-down": "accordion-down 0.2s ease-out",
+        "accordion-up": "accordion-up 0.2s ease-out",
       },
     },
   },
-  plugins: [
-    require("@tailwindcss/forms")({
-			strategy: "class",
-		}),
-    require("flowbite/plugin"),
-    plugin(function ({ addComponents, theme }) {
-      const screens = theme("screens", {});
-      addComponents([
-        {
-          ".container": { width: "100%" },
-        },
-        {
-          [`@media (min-width: ${screens.sm})`]: {
-            ".container": {
-              "max-width": "640px",
-            },
-          },
-        },
-        {
-          [`@media (min-width: ${screens.md})`]: {
-            ".container": {
-              "max-width": "768px",
-            },
-          },
-        },
-        {
-          [`@media (min-width: ${screens.lg})`]: {
-            ".container": {
-              "max-width": "1024px",
-            },
-          },
-        },
-        {
-          [`@media (min-width: ${screens.xl})`]: {
-            ".container": {
-              "max-width": "1280px",
-            },
-          },
-        },
-        {
-          [`@media (min-width: ${screens["2xl"]})`]: {
-            ".container": {
-              "max-width": "1280px",
-            },
-          },
-        },
-      ]);
-    }),
-  ],
+  plugins: [require("tailwindcss-animate")],
 }

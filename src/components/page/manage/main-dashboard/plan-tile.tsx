@@ -1,8 +1,9 @@
 import { addDays } from "date-fns";
 import DarkCalendarStripe from "./date-stripe";
 import Link from "next/link";
-import { Tooltip } from "flowbite-react";
 import { IoMdCheckmarkCircleOutline, IoMdRemoveCircleOutline } from "react-icons/io";
+import { Tooltip, TooltipProvider, TooltipTrigger } from "@/components/ui/tooltip";
+import { TooltipContent } from "@radix-ui/react-tooltip";
 
 export default function PlanTile() {
   return (
@@ -77,19 +78,28 @@ export default function PlanTile() {
               </div>
             </Link>
             <div className="flex justify-end items-center space-x-2 w-[20%] pr-2">
-              <Tooltip content="Mark as done">
-                <button onClick={() => console.log("Mark as done")}>
-                  <IoMdCheckmarkCircleOutline
-                    size={25}
-                    className="text-green-500"
-                  />
-                </button>
-              </Tooltip>
-              <Tooltip content="Discard this task">
-                <button onClick={() => console.log("Discard")}>
-                  <IoMdRemoveCircleOutline size={25} className="text-red-500" />
-                </button>
-              </Tooltip>
+              <TooltipProvider>
+                <Tooltip>
+                  <TooltipTrigger asChild>
+                    <button onClick={() => console.log("Mark as done")}>
+                      <IoMdCheckmarkCircleOutline size={25} className="text-green-500"/>
+                    </button>
+                  </TooltipTrigger>
+                  <TooltipContent>
+                    <p className="px-3 py-2 text-sm font-medium text-white transition-opacity duration-300 bg-gray-900 rounded-lg shadow-sm dark:bg-gray-700">Mark as done</p>
+                  </TooltipContent>
+                </Tooltip>
+                <Tooltip>
+                  <TooltipTrigger asChild>
+                    <button onClick={() => console.log("Discard this task")}>
+                      <IoMdRemoveCircleOutline size={25} className="text-red-500" />
+                    </button>
+                  </TooltipTrigger>
+                  <TooltipContent>
+                    <p className="px-3 py-2 text-sm font-medium text-white transition-opacity duration-300 bg-gray-900 rounded-lg shadow-sm dark:bg-gray-700">Discard this task</p>
+                  </TooltipContent>
+                </Tooltip>
+              </TooltipProvider>
             </div>
           </div>
         ))}
