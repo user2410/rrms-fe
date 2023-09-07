@@ -6,6 +6,7 @@ interface Route {
   href: string;
   icon?: React.ReactNode;
   subroutes?: Route[];
+  active?: boolean;
 }
 
 const useRoutes = () => {
@@ -30,22 +31,26 @@ const useRoutes = () => {
                 label: 'My properties',
                 href: '/manage/properties/my-properties',
                 icon: <i className="fas fa-building" />,
+                active: pathname === '/manage/properties/my-properties',
               },
               {
                 label: 'Create property',
                 href: '/manage/properties/new',
                 icon: <i className="fas fa-plus" />,
+                active: pathname === '/manage/properties/new',
               },
               {
                 label: 'Drafts',
                 href: '/manage/properties/drafts',
                 icon: <i className="fas fa-file" />,
+                active: pathname === '/manage/properties/drafts',
               },
             ]
           },
           {
-            label: 'Rental management',
+            label: 'Rental',
             href: 'rental',
+            icon: <i className="fa-solid fa-hand-holding-hand"/>,
             subroutes: [
               {
                 label: 'Tenants',
@@ -87,6 +92,7 @@ const useRoutes = () => {
           {
             label: 'Listings',
             href: '/manage/listings',
+            icon: <i className="fa-regular fa-square-caret-up"/>,
             subroutes: [
               {
                 label: 'All listings',
@@ -108,11 +114,25 @@ const useRoutes = () => {
         ],
       },
       {
-        label: 'Search',
-        href: '/search',
-        icon: <i className="fas fa-search" />,
-        subroutes: [],
-      }
+        label: 'Landlord',
+        href: '/landlord',
+        active: pathname.startsWith('/landlord'),
+      },
+      {
+        label: 'Tenant',
+        href: '/tenant',
+        active: pathname.startsWith('/tenant'),
+      },
+      {
+        label: 'News',
+        href: '/news',
+        active: pathname.startsWith('/news'),
+      },
+      {
+        label: 'Contact',
+        href: '/contact',
+        active: pathname.startsWith('/contact'),
+      },
     ],
   }), [pathname]);
 

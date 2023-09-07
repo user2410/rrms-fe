@@ -2,6 +2,7 @@
 
 import { PropsWithChildren, createContext, useContext, useMemo, useReducer } from "react";
 import { ModalProvider } from "./modal.context";
+import { ThemeProvider } from "./theme.context";
 
 interface State {
   displaySidebar: boolean;
@@ -62,7 +63,11 @@ export const useUI = () => {
 export function ManagedUIContext({ children }: PropsWithChildren<{}>) {
   return (
     <UIProvider>
-      <ModalProvider>{children}</ModalProvider>
+      <ModalProvider>
+        <ThemeProvider attribute="class" defaultTheme="system" enableSystem>
+          {children}
+        </ThemeProvider>
+      </ModalProvider>
     </UIProvider>
   );
 }

@@ -8,6 +8,8 @@ import Image from "next/image";
 import NotificationDropdown from "./dropdowns/notification";
 import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from "@/components/ui/accordion";
 import useRoutes from "@/hooks/use-route";
+import { ScrollArea } from "@/components/ui/scroll-area";
+import { CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 
 export default function Sidebar() {
   const routeTree = useRoutes();
@@ -15,7 +17,7 @@ export default function Sidebar() {
   const [collapseShow, setCollapseShow] = React.useState("hidden");
   
   return (
-    <nav className="md:left-0 md:block md:fixed md:top-0 md:bottom-0 md:flex-row md:flex-nowrap md:overflow-hidden shadow-xl bg-white flex flex-wrap items-center justify-between relative md:w-64 z-10 py-4 px-6">
+    <nav className="md:left-0 md:block md:fixed md:top-0 md:bottom-0 md:flex-row md:flex-nowrap md:overflow-hidden shadow-xl flex flex-wrap items-center justify-between relative md:w-64 z-10 py-4 px-6">
       <div className="md:flex-col md:items-stretch md:min-h-full md:flex-nowrap px-0 flex flex-wrap items-center justify-between w-full mx-auto">
         {/* Toggler */}
         <button
@@ -27,7 +29,7 @@ export default function Sidebar() {
         </button>
         <Link
           href="/"
-          className="md:block text-left md:pb-2 text-slate-600 mr-0 inline-block whitespace-nowrap text-sm uppercase font-bold p-4 px-0"
+          className="md:block text-left md:pb-2 text-foreground mr-0 inline-block whitespace-nowrap text-sm uppercase font-bold p-4 px-0"
         >
           <div className="flex items-center gap-2">
             <Image
@@ -54,9 +56,9 @@ export default function Sidebar() {
             collapseShow
           )}
         >
-          <div className="w-full">
+          <div className="w-full space-y-6">
             {/* Collapse header */}
-            <div className="md:min-w-full md:hidden block pb-4 mb-4 border-b border-solid border-blueGray-200">
+            <div className="md:min-w-full md:hidden block pb-4 border-b border-solid border-blueGray-200">
               <div className="flex flex-wrap">
                 <div className="w-6/12">
                   <Link
@@ -78,7 +80,7 @@ export default function Sidebar() {
               </div>
             </div>
             {/* Search Form */}
-            <form className="mt-6 mb-4 md:hidden">
+            <form className="md:hidden">
               <div className="mb-3 pt-0">
                 <input
                   type="text"
@@ -88,40 +90,41 @@ export default function Sidebar() {
               </div>
             </form>
             {/* User */}
-            <div className="hidden md:block mt-6">
+            <div className="hidden md:block">
               <hr className="my-4 md:min-w-full" />
               <div className="flex items-center space-x-4">
                 <div className="flex-shrink-0">
                   <Image
-                    className="w-8 h-8 rounded-full"
+                    className="w-12 h-12 rounded-full"
                     src="/img/avatar_placeholder.png"
                     alt="Neil image"
                     width={32}
                     height={32} />
                 </div>
-                <div className="flex-1 min-w-0">
-                  <p className="text-sm font-medium text-gray-900 truncate">
-                    Neil Sims
-                  </p>
-                  <p className="text-sm text-gray-500 truncate dark:text-gray-400">
-                    email@windster.com
-                  </p>
-                </div>
+                <CardHeader className="flex-1 p-0">
+                  <CardTitle className="text-sm font-medium truncate">Pham Chinh</CardTitle>
+                  <CardDescription className="text-sm">
+                    email@pc.com
+                  </CardDescription>
+                </CardHeader>
               </div>
               <hr className="my-4 md:min-w-full" />
             </div>
-
-            <div className="overflow-hidden hover:overflow-y-auto hover:scrollbar h-[60vh] mt-6">
+            {/* Navigation */}
+            <ScrollArea className="h-[60vh] border-none">
               <Accordion type="single" collapsible className="w-full">
                 {manageRoute?.subroutes?.map((subroute, idx1) => (
                   <AccordionItem value={idx1.toString()} key={idx1}>
                     {/* Heading */}
-                    <AccordionTrigger className="hover:no-underline">
-                      <div className="text-primary text-xs uppercase hover:no-underline">{subroute.label}</div>
+                    <AccordionTrigger>
+                      <span className="space-x-2 overflow-hidden">
+                        <span className="inline-block text-sm w-4 mr-2">{subroute.icon}</span>
+                        <span className="text-xs uppercase !no-underline">{subroute.label}</span>
+                      </span>
                     </AccordionTrigger>
                     {/* Navigation */}
                     <AccordionContent>
-                      <ul className="min-w-full flex flex-col list-none">
+                      <ul className="min-w-full flex flex-col list-none pl-1 md:pl-2">
                         {subroute?.subroutes?.map((item, idx2) => (
                           <li className="items-center" key={idx2}>
                             <Link
@@ -138,7 +141,7 @@ export default function Sidebar() {
                   </AccordionItem>
                 ))}
               </Accordion>
-            </div>
+            </ScrollArea>
           </div>
 
           <div className="w-full">
@@ -146,7 +149,7 @@ export default function Sidebar() {
               <li className="items-center">
                 <Link
                   href='/'
-                  className="text-slate-500 hover:text-slate-500 text-xs uppercase py-3 font-bold block"
+                  className="text-slate-500 hover:text-slate-400 text-xs uppercase py-3 font-bold block"
                 >
                   <i
                     className={clsx(
@@ -165,7 +168,7 @@ export default function Sidebar() {
                 <Link
                   href='/'
                   className={
-                    "text-slate-500 hover:text-slate-500 text-xs uppercase py-3 font-bold block"
+                    "text-slate-500 hover:text-slate-400 text-xs uppercase py-3 font-bold block"
                     // + (router.pathname.indexOf("/admin/dashboard") !== -1
                     //   ? "text-lightBlue-500 hover:text-lightBlue-600"
                     //   : "text-slate-500 hover:text-slate-500")

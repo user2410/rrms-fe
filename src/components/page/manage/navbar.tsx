@@ -1,9 +1,11 @@
 "use client";
 
-import Link from "next/link";
-import { format } from "date-fns";
-import { IoMdSearch, IoMdMail, IoMdNotifications } from "react-icons/io";
+import { Badge } from "@/components/ui/badge";
+import { ThemeSwitcher } from "@/components/ui/theme-switcher";
 import useRoutes from "@/hooks/use-route";
+import { format } from "date-fns";
+import Link from "next/link";
+import { IoMdMail, IoMdNotifications } from "react-icons/io";
 
 const ICON_SIZE = 24;
 
@@ -11,7 +13,7 @@ export default function ManageDashboardNavbar() {
   const routes = useRoutes();
 
   return (
-    <nav className="fixed top-0 left-0 md:left-64 w-full md:w-[calc(100vw_-_16rem)] z-10 bg-white shadow-sm">
+    <nav className="fixed top-0 left-0 md:left-64 w-full md:w-[calc(100vw_-_16rem)] z-10 shadow-sm bg-background">
       <div className="flex items-center p-4 md:py-6 md:flex-row md:flex-nowrap md:justify-start">
         <div className="w-full mx-autp items-center flex justify-between md:flex-nowrap flex-wrap md:px-10 px-4">
           {/* Breadcrumb */}
@@ -29,16 +31,15 @@ export default function ManageDashboardNavbar() {
           </div>
           {/* Form */}
           <div>
-            <div className="flex gap-8">
-              <div className="relative">
-                <IoMdSearch size={ICON_SIZE} />
-              </div>
+            <div className="flex items-center gap-8">
+              <ThemeSwitcher size={20}/>
               <div className="relative">
                 <IoMdMail size={ICON_SIZE} />
-                <span className="absolute block rounded-full bg-red-500 ring-2 ring-white top-0 right-0 h-2 w-2 md:h-3 md:w-3" />
+                <Badge variant="destructive" className="absolute -top-4 -right-4">12</Badge>
               </div>
               <div className="relative">
                 <IoMdNotifications size={ICON_SIZE} />
+                <Badge variant="destructive" className="absolute -top-4 -right-4">12</Badge>
               </div>
             </div>
             {/* <form className="md:flex hidden flex-row flex-wrap items-center lg:ml-auto mr-3">

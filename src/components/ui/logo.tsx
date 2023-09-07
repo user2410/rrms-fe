@@ -26,7 +26,7 @@ export default function Logo({
       )}
     >
       <Image
-        src="/logo.png"
+        src="/logo.svg"
         alt="RRMS"
         width={size}
         height={size}

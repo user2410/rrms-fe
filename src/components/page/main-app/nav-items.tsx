@@ -1,82 +1,51 @@
-import useOnClickOutside from "@/hooks/use-click-outside";
-import clsx from "clsx";
-import { Dispatch, Fragment, SetStateAction, forwardRef, useState } from "react";
+import { Fragment, useEffect } from "react";
+import { Drawer } from "@/components/ui/drawer/drawer";
+import motionProps from '@components/ui/drawer/motion';
+import { useUI } from "@/context/ui.context";
+import useRoutes from "@/hooks/use-route";
+import { IoClose } from "react-icons/io5";
 
-const headerItems = [
-  {
-    url: '/',
-    title: 'Home',
-  },
-  {
-    url: '/landlord',
-    title: 'Landlord',
-  },
-  {
-    url: '/Tenant',
-    title: 'Tenant',
-  },
-  {
-    url: '/news',
-    title: 'News',
-  },
-  {
-    url: '/contact',
-    title: 'Contact',
-  },
-];
+export default function NavItems() {
+  const rootRoute = useRoutes();
+  const {
+    displaySidebar,
+    closeSidebar,
+  } = useUI();
 
-interface NavItemsProps {
-  headerRef: React.RefObject<HTMLElement>;
-}
-
-const NavItems = forwardRef<HTMLDivElement, NavItemsProps>(({
-  headerRef,
-}, dropdownRef) => {
-  const [showDropdown, setShowDropdown] = useState<boolean>(false);
-
-  useOnClickOutside(headerRef, () => {
-    setShowDropdown(false);
-  });
+  useEffect(() => { console.log(displaySidebar)} , [displaySidebar]);
 
   return (
     <Fragment>
-      {/* Nav items */}
-      <div className="items-center justify-between hidden w-full md:flex md:w-auto" id="navbar-language">
-        <ul className="flex flex-col font-medium p-4 md:p-0 mt-4 border border-gray-100 rounded-lg bg-gray-50 md:flex-row md:space-x-8 md:mt-0 md:border-0 md:bg-white dark:bg-gray-800 md:dark:bg-gray-900 dark:border-gray-700">
-          {headerItems.map((item, index) => (
+      <div className="items-center justify-between hidden w-full md:flex md:w-auto bg-background/95 backdrop-blur" id="navbar-language">
+        <ul className="flex flex-col font-medium p-4 md:p-0 mt-4 md:flex-row md:space-x-8 md:mt-0 ">
+          {rootRoute.subroutes?.map((item, index) => (
             <li key={index}>
-              <a href={item.url} className="block py-2 pl-3 pr-4 text-slate-600 hover:text-blue-700 rounded bg-transparent md:p-0">{item.title}</a>
+              <a href={item.href} className="block py-2 pl-3 pr-4 text-foreground/60 hover:text-primary rounded bg-transparent md:p-0">{item.label}</a>
             </li>
           ))}
         </ul>
       </div>
-
-      {/* Mobile menu */}
-      <div 
-        ref={dropdownRef}
-        className={clsx(
-          "w-screen absolute top-20 left-0",
-          showDropdown ? "block" : "hidden"
-        )}>
-        <ul className="flex flex-col font-medium rounded-lg bg-gray-50 dark:bg-gray-800 dark:border-gray-700">
-          {headerItems.map((item, index) => (
-            <li key={index}>
-              <a href={item.url} className="block py-2 pl-3 pr-4 text-slate-700 hover:text-white hover:bg-blue-700 rounded bg-transparent md:p-0">{item.title}</a>
-            </li>
-          ))}
-          {/* <li className="border-t border-slate-400">
-            <a
-              href="#"
-              className="block py-2 pl-3 pr-4 text-gray-900 rounded hover:bg-gray-100"
-              onClick={(e) => {
-                e.preventDefault();
-                setShowSignInModal(true);
-              }}>Sign in</a>
-          </li> */}
-        </ul>
-      </div>
+      <Drawer
+        className="w-[375px]"
+        placement="right"
+        open={displaySidebar}
+        onClose={closeSidebar}
+        // @ts-ignore
+        level={null}
+        {...motionProps}
+      >
+        {/* Mobile menu */}
+        <div className="p-4">
+          <span onClick={closeSidebar}><IoClose size={24}/></span>
+          <ul className="flex flex-col space-y-2 font-medium rounded-lg">
+            {rootRoute.subroutes?.map((item, index) => (
+              <li key={index}>
+                <a href={item.href} className="block py-2 pl-3 pr-4 text-foreground/60 hover:text-foreground/80 rounded bg-transparent">{item.label}</a>
+              </li>
+            ))}
+          </ul>
+        </div>
+      </Drawer>
     </Fragment>
   );
-});
-
-export default NavItems;
+};

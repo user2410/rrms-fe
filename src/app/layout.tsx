@@ -2,13 +2,13 @@ import type { Metadata } from 'next';
 import { Inter } from 'next/font/google';
 import React from "react";
 
-import "@fortawesome/fontawesome-free/css/all.min.css";
-import '../assets/globals.css';
-import ReactQueryContext from '@/context/react-query';
 import NextAuthContext from '@/context/next-auth';
-import { Toaster } from 'react-hot-toast';
-import ManagedModal from '@components/ui/managed-modal';
+import ReactQueryContext from '@/context/react-query';
 import { ManagedUIContext } from '@/context/ui.context';
+import ManagedModal from '@components/ui/managed-modal';
+import "@fortawesome/fontawesome-free/css/all.min.css";
+import { Toaster } from 'react-hot-toast';
+import '../assets/globals.css';
 
 const inter = Inter({ subsets: ['latin'] })
 
@@ -30,8 +30,10 @@ export default function RootLayout({
           <ReactQueryContext>
             <ManagedUIContext>
               <Toaster/>
-              <ManagedModal />
-              {children}
+              <ManagedModal/>
+              <div className="w-full h-full bg-background dark:bg-background">
+                {children}
+              </div>
             </ManagedUIContext>
           </ReactQueryContext>
         </NextAuthContext>
