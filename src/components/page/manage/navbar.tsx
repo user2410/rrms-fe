@@ -13,7 +13,7 @@ export default function ManageDashboardNavbar() {
   const routes = useRoutes();
 
   return (
-    <nav className="fixed top-0 left-0 md:left-64 w-full md:w-[calc(100vw_-_16rem)] z-10 shadow-sm bg-background">
+    <nav className="fixed top-0 left-0 md:left-64 w-full md:w-[calc(100vw_-_16rem)] z-10 shadow-sm bg-background border-b">
       <div className="flex items-center p-4 md:py-6 md:flex-row md:flex-nowrap md:justify-start">
         <div className="w-full mx-autp items-center flex justify-between md:flex-nowrap flex-wrap md:px-10 px-4">
           {/* Breadcrumb */}

@@ -30,7 +30,7 @@ export default function Logo({
         alt="RRMS"
         width={size}
         height={size}
-        className={imgClassName}
+        className={clsx('dark:stroke-white' ,imgClassName)}
         priority
         loading="eager"
       />
