@@ -9,6 +9,7 @@ import ManagedModal from '@components/ui/managed-modal';
 import "@fortawesome/fontawesome-free/css/all.min.css";
 import { Toaster } from 'react-hot-toast';
 import '../assets/globals.css';
+import GoogleMapContext from '@/context/google-map';
 
 const inter = Inter({ subsets: ['latin'] })
 
@@ -27,15 +28,17 @@ export default function RootLayout({
       <head></head>
       <body className={inter.className}>
         <NextAuthContext>
-          <ReactQueryContext>
-            <ManagedUIContext>
-              <Toaster/>
-              <ManagedModal/>
-              <div className="w-full h-full bg-background dark:bg-background">
-                {children}
-              </div>
-            </ManagedUIContext>
-          </ReactQueryContext>
+          <GoogleMapContext>
+            <ReactQueryContext>
+              <ManagedUIContext>
+                <Toaster/>
+                <ManagedModal/>
+                <div className="w-full h-full bg-background dark:bg-background">
+                  {children}
+                </div>
+              </ManagedUIContext>
+            </ReactQueryContext>
+          </GoogleMapContext>
         </NextAuthContext>
       </body>
     </html>

@@ -14,7 +14,7 @@ export default function DetailedStepper({
 }) {
   return (
     <div>
-      <ol className="items-center w-full space-y-4 sm:flex sm:space-x-8 sm:space-y-0">
+      <ol className="items-center w-full space-y-2 xl:space-y-4 sm:flex sm:space-x-8 sm:space-y-0">
         {steps.map((step, index) => (
           <li 
             key={index}

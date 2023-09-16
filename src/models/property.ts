@@ -1,4 +1,10 @@
-export type PropertyType = 'APARTMENT' | 'SINGLE_RESIDENCE' | 'ROOM' | 'BLOCK';
+export type PropertyType = 
+  'APARTMENT' |
+  'PRIVATE' | 'TOWNHOUSE' | 'SHOPHOUSE' | 'VILLA' |
+  'ROOM' | 'STORE' |
+  'OFFICE' |
+  'BLOCK' |
+  'COMPLEX'; // Quỹ căn hộ / biệt thự
 
 export type PropertyMedia = {
   url: string;
@@ -45,8 +51,13 @@ export default interface Property {
 
 export const mapPropertyTypeToText = {
   APARTMENT: 'Căn hộ',
-  SINGLE_RESIDENCE: 'Nhà riêng',
+  PRIVATE: 'Nhà riêng',
+  TOWNHOUSE: 'Nhà mặt phố',
+  SHOPHOUSE: 'Shophouse, nhà phố thương mại',
+  VILLA: 'Biệt thự',
   ROOM: 'Phòng trọ',
+  OFFICE: 'Văn phòng',
+  STORE: 'Cửa hàng',
   BLOCK: 'Dãy nhà/phòng trọ',
 }
 
@@ -61,7 +72,8 @@ export const pFeatures: PFeature[] = [
   {id: BigInt(7), feature: "p-feature_parking"},
   {id: BigInt(8), feature: "p-feature_outdoor-common-area"},
   {id: BigInt(9), feature: "p-feature_services"},
-  {id: BigInt(10), feature: "p-feature_facilities"}
+  {id: BigInt(10), feature: "p-feature_facilities"},
+  {id: BigInt(11), feature: "p-feature_others"},
 ];
 
 export const mapPFeatureToText = {
@@ -76,6 +88,7 @@ export const mapPFeatureToText = {
   "p-feature_outdoor-common-area": "Khu vực công cộng ngoài trời",
   "p-feature_services": "Dịch vụ",
   "p-feature_facilities": "Tiện nghi",
+  "p-feature_others": "Khác",
 }
 
 export const mockupProperties: Property[] = [
@@ -328,7 +341,7 @@ export const mockupProperties: Property[] = [
     city: 'TP. Hồ Chí Minh',
     lat: 10.764,
     lng: 106.675,
-    type: 'SINGLE_RESIDENCE',
+    type: 'PRIVATE',
     media: [
       {
         property_id: '4',

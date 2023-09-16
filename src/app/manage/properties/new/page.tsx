@@ -1,13 +1,20 @@
 "use client";
 
-import Step1, { PropertyFormValues } from "@/components/page/manage/properties/new/step1";
+import Step1, { PropertyFormValues } from "@/app/manage/properties/new/step1";
+import Step2, { UnitFormValues } from "./step2";
+import Summary from "./summary";
 import { Separator } from "@/components/ui/separator";
 import DetailedStepper from "@/components/ui/stepper/detailed-stepper";
+import { useState } from "react";
+
+export interface Result {
+  property: PropertyFormValues;
+  units: UnitFormValues;
+}
 
 export default function CreatePropertyPage() {
-  // function onSubmit(values: PropertyFormValues) {
-  //   console.log(values);
-  // }
+  const [step, setStep] = useState<number>(0);
+  const [result, setResult] = useState<Result>({} as Result);
 
   return (
     <div className="container mx-auto py-10 space-y-8">
@@ -18,21 +25,47 @@ export default function CreatePropertyPage() {
       <DetailedStepper
         steps={[
           {
-            title: "Property basic info",
-            description: "Basic info of your property",
+            title: "Tổng quan",
+            description: "Thông tin cơ bản về bất động sản của bạn",
           },
           {
-            title: "Inside your property",
-            description: "Inside your property",
+            title: "Chi tiết",
+            description: "Thông tin chi tiết về bất động sản của bạn",
           },
           {
-            title: "Summary",
+            title: "Tổng kết",
           },
         ]}
-        currentStep={0}
+        currentStep={step}
       />
       <Separator/>
-      <Step1 handleSubmit={(values: PropertyFormValues) => { console.log(values); } }/>
+      {
+        step === 0 ? (
+          <Step1 
+            initialData={result.property}
+            handleSubmit={(values: PropertyFormValues) => { 
+              console.log(values); 
+              setResult({ ...result, property: values });
+              setStep(step + 1);
+            }}
+          />
+        ) : step === 1 ? (
+          <Step2 
+            property={result.property}
+            onPrev={() => setStep(step - 1)}
+            handleSubmit={(values : UnitFormValues) => {
+              console.log(values);
+              setResult({ ...result, units: values });
+              setStep(step + 1);
+            }}/>
+        ) : step === 2 ? (
+          <Summary
+            result={result}
+            onPrev={() => setStep(step - 1)}
+            onSubmit={() => console.log(result)}
+          />
+        ) : null
+      }
     </div>
   )
 }

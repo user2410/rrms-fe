@@ -18,7 +18,7 @@ export default async function handler(
 
   try {
     const r = await axiosInstance.post('/api/auth/credential/register', { email, password });
-    return res.status(200).json(r.data);
+    return res.status(201).json(r.data);
   } catch (err) {
     // console.error(err);
     return res.status(500).json({ message: "Internal server error" });
