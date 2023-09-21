@@ -1,12 +1,14 @@
 "use client";
 
+import { PropertyForm } from "@/app/manage/properties/new/page";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
-import { Separator } from "@/components/ui/separator";
-import { useRef } from "react";
-import { UseFormReturn, useFieldArray } from "react-hook-form";
-import { PropertyFormValues } from "../../../../../app/manage/properties/new/step1";
 import { FormField, FormItem, FormMessage } from "@/components/ui/form";
+import { Input } from "@/components/ui/input";
+import { Separator } from "@/components/ui/separator";
+import { Fragment, useRef, useState } from "react";
+import { UseFormReturn, useFieldArray, useFormContext } from "react-hook-form";
+import { IoClose } from "react-icons/io5";
 
 export interface FileUpload {
   name: string;
@@ -23,28 +25,86 @@ function displayFileSize(fsize: number): string {
     : fsize + "b";
 }
 
-export default function Step1MediaUpload({ 
-  accept, 
-  multiple, 
-  form, 
-} : {
+function VideoInput({ form }: { form: UseFormReturn<PropertyForm> }) {
+  const [value, setValue] = useState<string>("");
+
+  const { fields, append, remove } = useFieldArray({
+    name: "property.media",
+    control: form.control,
+  });
+  const videos = fields.filter((item) => item.type === "VIDEO");
+
+  return (
+    <Fragment>
+      <CardHeader className="px-0">
+        <CardTitle>Thêm video từ Youtube</CardTitle>
+        <div className="text-sm text-muted-foreground">
+          <ul className="list-disc list-inside">
+            <li>Video phải được chia sẻ công khai</li>
+            <li>Video phải có độ dài ít nhất 30 giây</li>
+          </ul>
+        </div>
+      </CardHeader>
+      <CardContent className="px-0">
+        <div className="space-y-2 my-3">
+          {videos.map((item, index) => (
+            <div key={index} className="h-full flex items-center">
+              <a href={item.url} className="flex-grow">{item.url}</a>
+              <Button
+                variant="ghost"
+                onClick={() => remove(index)}
+              >
+                <IoClose size={24} />
+              </Button>
+            </div>
+          ))}
+        </div>
+        <div className="h-full flex gap-1 my-3">
+          <Input
+            value={value}
+            onChange={(e) => setValue(e.target.value)}
+            placeholder="VD: https://www.youtube.com/watch?v=dQw4w9WgXcQ"
+          />
+          <Button
+            type="button"
+            variant="ghost"
+            onClick={() => {
+              setValue('');
+              append({ url: value, type: "VIDEO" });
+            }}
+            className=""
+          >+</Button>
+        </div>
+        <FormMessage></FormMessage>
+      </CardContent>
+    </Fragment>
+  )
+}
+
+export default function Step1MediaUpload({
+  accept,
+  multiple,
+}: {
   accept?: string;
   multiple?: boolean;
-  form: UseFormReturn<PropertyFormValues, any, undefined>
 }) {
   const inputFileRef = useRef<HTMLInputElement>(null);
 
+  const form = useFormContext<PropertyForm>();
+
   const { fields, append, remove } = useFieldArray({
-    name: "media",
+    name: "property.media",
     control: form.control,
   });
   // const [isDragEnter, setIsDragEnter] = useState<boolean>(false);
+  const images = fields.filter((item) => item.type.startsWith("IMAGE"));
 
   function handleFileInputChange(event: React.ChangeEvent<HTMLInputElement>) {
     Object.entries(event.target.files!).forEach((e) => {
       const { name, size, type } = e[1];
       append({
-        name, size, type,
+        name, size,
+        type: type.toUpperCase(),
         url: URL.createObjectURL(e[1])
       });
     });
@@ -75,8 +135,8 @@ export default function Step1MediaUpload({
         </Button>
       </CardHeader>
       <CardContent
-        onClick={() => fields.length === 0 && inputFileRef.current && inputFileRef.current.click()}
-        className="p-6 cursor-pointer w-full h-full border-2 border-dashed border-primary flex gap-2 xl:gap-4 text-base select-none"
+        onClick={() => images.length === 0 && inputFileRef.current && inputFileRef.current.click()}
+        className="p-6 cursor-pointer w-full h-full border-2 border-dashed border-primary flex flex-wrap gap-2 xl:gap-4 text-base select-none"
       >
         <input
           ref={inputFileRef}
@@ -85,13 +145,13 @@ export default function Step1MediaUpload({
           multiple={multiple}
           hidden
           onChange={handleFileInputChange} />
-        {fields.length === 0 && (
+        {images.length === 0 && (
           <div className="w-full text-center my-3 pointer-events-none">
-            <div className="fas fa-cloud-arrow-up m-2"/>
+            <div className="fas fa-cloud-arrow-up m-2" />
             Bấm để chọn ảnh
           </div>
         )}
-        {fields.map((file, index) => (
+        {images.map((file, index) => (
           <Card key={file.id} className="w-[180px] shadow-md">
             <CardHeader className="h-[180px] p-2 lg:p-4">
               <img src={file.url} alt="" className="max-w-full max-h-full object-cover" />
@@ -99,7 +159,7 @@ export default function Step1MediaUpload({
             <Separator />
             <CardContent className="p-2 lg:p-4">
               <CardTitle className="text-sm font-normal truncate">{file.name}</CardTitle>
-              <CardDescription className="text-xs">{displayFileSize(file.size)}</CardDescription>
+              <CardDescription className="text-xs">{displayFileSize(file.size!)}</CardDescription>
             </CardContent>
             <Separator />
             <CardFooter className="p-0">
@@ -108,13 +168,15 @@ export default function Step1MediaUpload({
           </Card>
         ))}
       </CardContent>
+      <Separator className="my-4" />
+      <VideoInput form={form} />
       <CardFooter>
         <FormField
-          name="media"
+          name="property.media"
           control={form.control}
           render={() => (
             <FormItem>
-              <FormMessage/>
+              <FormMessage />
             </FormItem>
           )}
         />

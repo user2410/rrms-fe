@@ -1,110 +1,40 @@
 "use client";
 
+import { PropertyForm } from "@/app/manage/properties/new/page";
 import { Button } from "@/components/ui/button";
-import { FormControl, FormField, FormItem, FormLabel, FormMessage } from "@/components/ui/form";
-import { Input } from "@/components/ui/input";
+import { FormControl, FormField, FormItem, FormMessage } from "@/components/ui/form";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
-import { Fragment, useState } from "react";
-import { Control, FieldValues, UseFormReturn, useFieldArray, useFormState } from "react-hook-form";
+import { Textarea } from "@/components/ui/textarea";
+import { mapUAmenityToText } from "@/models/unit";
+import { Fragment } from "react";
+import { useFieldArray, useFormContext } from "react-hook-form";
 import { IoClose } from "react-icons/io5";
-
-interface Amenity {
-  amenityId: string;
-  description?: string;
-}
-
-interface FormAmenity extends Amenity {
-  id: string;
-}
-
-const amenities = [
-  {
-    id: "1",
-    amenity: "u-amenity_furniture",
-    name: "Nội thất",
-  },
-  {
-    id: "2",
-    amenity: "u-amenity_fridge",
-    name: "Tủ lạnh",
-  },
-  {
-    id: "3",
-    amenity: "u-amenity_air-cond",
-    name: "Điều hòa",
-  },
-  {
-    id: "4",
-    amenity: "u-amenity_washing-machine",
-    name: "Máy giặt",
-  },
-  {
-    id: "5",
-    amenity: "u-amenity_dishwasher",
-    name: "Máy rửa chén",
-  },
-  {
-    id: "6",
-    amenity: "u-amenity_water-heater",
-    name: "Nóng lạnh",
-  },
-  {
-    id: "7",
-    amenity: "u-amenity_tv",
-    name: "TV"
-  },
-  {
-    id: "8",
-    amenity: "u-amenity_internet",
-    name: "Internet",
-  },
-  {
-    id: "9",
-    amenity: "u-amenity_wardrobe",
-    name: "Tủ quần áo",
-  },
-  {
-    id: "10",
-    amenity: "u-amenity_closet",
-    name: "Tủ đồ",
-  },
-  {
-    id: "11",
-    amenity: "u-amenity_entresol",
-    name: "Gác lửng",
-  },
-  {
-    id: "12",
-    amenity: "u-amenity_bed",
-    name: "Giường",
-  },
-];
 
 export default function Step2Amenities({
   nth,
-  control,
-  getFields,
-  append,
-  remove,
 }: {
   nth: number,
-  control: Control<any>;
-  getFields: () => FormAmenity[];
-  append: (data: Amenity) => void;
-  remove: (i: number) => void;
 }) {
-  const [values, setValues] = useState(getFields());
+  const { control } = useFormContext<PropertyForm>();
+
+  const { fields, append, remove } = useFieldArray({
+    name: `units.${nth}.amenities`,
+    control,
+  })
 
   return (
     <Fragment>
-      {values.map((amenity, index) => (
-        <div key={amenity.id} className="flex items-end gap-1 my-2">
+      <div className="w-full flex mt-4 mb-2">
+        <div className="w-[40%] text-xs font-medium">Tiện nghi</div>
+        <div className="flex-grow text-xs font-medium">Mô tả</div>
+      </div>
+      {fields.map((amenity, index) => (
+        <div key={amenity.id} className="flex items-start gap-1 my-2">
           <FormField
             control={control}
             name={`units.${nth}.amenities.${index}.amenityId`}
             render={({ field }) => (
-              <FormItem className="w-[30%]">
-                {index === 0 && (<FormLabel className="text-xs">Tên</FormLabel>)}
+              <FormItem className="w-[40%]">
                 <FormControl>
                   <Select onValueChange={field.onChange}>
                     <FormControl>
@@ -113,13 +43,12 @@ export default function Step2Amenities({
                       </SelectTrigger>
                     </FormControl>
                     <SelectContent>
-                      {amenities.map((amenity) => (
-                        <SelectItem 
-                          key={amenity.id} 
-                          value={amenity.amenity}
-                          className="overflow-hidden"
+                      {Object.entries(mapUAmenityToText).map(([key, value]) => (
+                        <SelectItem
+                          key={key}
+                          value={key}
                         >
-                          {amenity.name}
+                          {value}
                         </SelectItem>
                       ))}
                     </SelectContent>
@@ -134,9 +63,13 @@ export default function Step2Amenities({
             name={`units.${nth}.amenities.${index}.description`}
             render={({ field }) => (
               <FormItem className="flex-grow">
-                {index === 0 && (<FormLabel className="text-xs">Mô tả</FormLabel>)}
                 <FormControl>
-                  <Input {...field} />
+                  <Textarea
+                    placeholder="Mô tả tiện nghi"
+                    rows={2}
+                    {...field} 
+                    className="resize-none"
+                  />
                 </FormControl>
                 <FormMessage />
               </FormItem>
@@ -147,27 +80,21 @@ export default function Step2Amenities({
             variant="ghost"
             size="sm"
             className=""
-            onClick={() => {
-              remove(index);
-              setValues(getFields());
-            }}
+            onClick={() => remove(index)}
           >
             <IoClose size={24} />
           </Button>
         </div>
       ))}
       <Button
-          type="button"
-          variant="outline"
-          size="sm"
-          className="mt-2"
-          onClick={() => {
-            append({ amenityId: "0", description: "" })
-            setValues(getFields());
-          }}
-        >
-          Thêm tiện nghi
-        </Button>
+        type="button"
+        variant="outline"
+        size="sm"
+        className="mt-2"
+        onClick={() => append({ amenityId: "0", description: "" })}
+      >
+        Thêm tiện nghi
+      </Button>
     </Fragment>
   );
 }

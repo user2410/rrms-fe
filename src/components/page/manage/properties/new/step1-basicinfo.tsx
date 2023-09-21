@@ -1,13 +1,13 @@
 "use client";
 
+import { PropertyForm } from "@/app/manage/properties/new/page";
 import { FormControl, FormDescription, FormField, FormItem, FormLabel, FormMessage } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Textarea } from "@/components/ui/textarea";
-import { Fragment } from "react";
-import { UseFormReturn } from "react-hook-form";
-import { PropertyFormValues } from "@app/manage/properties/new/step1";
 import { mapPropertyTypeToText } from "@/models/property";
+import { Fragment } from "react";
+import { useFormContext } from "react-hook-form";
 
 const propertyTypePlaceholders = {
   APARTMENT: 'VD: Căn hộ đường Giải Phóng',
@@ -21,22 +21,20 @@ const propertyTypePlaceholders = {
   BLOCK: 'VD: Khu nhà trọ đường Lê Văn Lương',
 }
 
-export default function Step1BasicInfo({
-  form
-}: {
-  form: UseFormReturn<PropertyFormValues, any, undefined>
-}) {
+export default function Step1BasicInfo() {
+  const form = useFormContext<PropertyForm>();
+  
   return (
     <Fragment>
       <FormField
         control={form.control}
-        name="type"
+        name="property.type"
         render={({ field }) => (
           <FormItem>
             <FormLabel>Loại bất động sản <span className="ml-1 text-red-600">*</span></FormLabel>
             <Select onValueChange={(e: string) => {
               if (['APARTMENT', 'ROOM', 'STUDIO'].includes(e)) {
-                form.setValue("numberOfFloors", 1);
+                form.setValue("property.numberOfFloors", 1);
               }
               field.onChange(e);
             }}>
@@ -62,14 +60,14 @@ export default function Step1BasicInfo({
       />
       <FormField
         control={form.control}
-        name="name"
+        name="property.name"
         render={({ field }) => (
           <FormItem>
             <FormLabel>Tên bất động sản <span className="ml-1 text-red-600">*</span></FormLabel>
             <FormControl>
-              <Input placeholder={propertyTypePlaceholders[form.watch('type') as keyof typeof propertyTypePlaceholders]} {...field} />
+              <Input placeholder={propertyTypePlaceholders[form.watch('property.type') as keyof typeof propertyTypePlaceholders]} {...field} />
             </FormControl>
-            <FormDescription>Tên của bất động sản để phân biệt các bất động sản được quản lý.</FormDescription>
+            <FormDescription>Tên của bất động sản phân biệt các bất động sản được quản lý.</FormDescription>
             <FormMessage />
           </FormItem>
         )}
@@ -77,7 +75,7 @@ export default function Step1BasicInfo({
       <div className="flex justify-between gap-1">
         <FormField
           control={form.control}
-          name="numberOfFloors"
+          name="property.numberOfFloors"
           render={({ field }) => (
             <FormItem className="grow">
               <FormLabel>
@@ -88,7 +86,7 @@ export default function Step1BasicInfo({
                 <Input 
                   type="number" 
                   {...field} 
-                  disabled={['APARTMENT', 'ROOM'].includes(form.watch('type'))}
+                  disabled={['APARTMENT', 'ROOM'].includes(form.watch('property.type'))}
                   onChange={(e) => field.onChange(e.target.valueAsNumber)}/>
               </FormControl>
               <FormMessage />
@@ -97,7 +95,7 @@ export default function Step1BasicInfo({
         />
         <FormField
           control={form.control}
-          name="area"
+          name="property.area"
           render={({ field }) => (
             <FormItem className="grow">
               <FormLabel>
@@ -118,7 +116,7 @@ export default function Step1BasicInfo({
       </div>
       <FormField
         control={form.control}
-        name="description"
+        name="property.description"
         render={({ field }) => (
           <FormItem>
             <FormLabel>Mô tả</FormLabel>

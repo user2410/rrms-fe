@@ -1,20 +1,20 @@
-import { PropertyFormValues } from "@/app/manage/properties/new/step1";
-import { Button } from "@/components/ui/button"
+"use client";
+
+import { PropertyForm } from "@/app/manage/properties/new/page";
+import { Button } from "@/components/ui/button";
 import { FormControl, FormField, FormItem, FormMessage } from "@/components/ui/form";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Textarea } from "@/components/ui/textarea";
 import { mapPFeatureToText } from "@/models/property";
-import { Fragment } from "react"
-import { UseFormReturn, useFieldArray } from "react-hook-form";
+import { Fragment } from "react";
+import { useFieldArray, useFormContext } from "react-hook-form";
 import { IoClose } from "react-icons/io5";
 
-export default function Step1Features({
-  form
-}: {
-  form: UseFormReturn<PropertyFormValues, any, undefined>
-}) {
+export default function Step1Features() {
+  const form = useFormContext<PropertyForm>();
+
   const { fields, append, remove } = useFieldArray({
-    name: "features",
+    name: "property.features",
     control: form.control,
   });
 
@@ -28,7 +28,7 @@ export default function Step1Features({
         <div key={f.id} className="flex items-start gap-1 my-2">
           <FormField
             control={form.control}
-            name={`features.${index}.featureId`}
+            name={`property.features.${index}.featureId`}
             render={({ field }) => (
               <FormItem className="w-[40%]">
                 <FormControl>
@@ -56,11 +56,12 @@ export default function Step1Features({
           />
           <FormField
             control={form.control}
-            name={`features.${index}.description`}
+            name={`property.features.${index}.description`}
             render={({ field }) => (
               <FormItem className="flex-grow">
                 <FormControl>
                   <Textarea
+                    placeholder="Mô tả tiện ích"
                     rows={2}
                     {...field}
                     className="overflow-y-scroll"

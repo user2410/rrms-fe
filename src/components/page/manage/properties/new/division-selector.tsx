@@ -1,78 +1,101 @@
 "use client";
 
-import { Control } from "react-hook-form";
-import { PropertyFormValues } from "../../../../../app/manage/properties/new/step1";
 import { FormControl, FormField, FormItem, FormLabel, FormMessage } from "@/components/ui/form";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
+import { useFormContext, useWatch } from "react-hook-form";
 
-import { Fragment, useEffect, useState } from "react";
-import { useQuery } from "@tanstack/react-query";
-import { ScrollArea } from "@/components/ui/scroll-area";
-import { Separator } from "@/components/ui/separator";
+import { PropertyForm } from "@/app/manage/properties/new/page";
 import { Input } from "@/components/ui/input";
+import { ScrollArea } from "@/components/ui/scroll-area";
+import { City, District, Ward } from "@/models/dghcvn";
+import { useQuery } from "@tanstack/react-query";
+import axios from "axios";
+import { Fragment } from "react";
 
-interface Division {
-  Id: string;
-  Name: string;
-  Districts: [
-    {
-      Id: string;
-      Name: string;
-      Wards: [
-        {
-          Id: string;
-          Name: string;
-          Level: string;
-        }
-      ]
-    }
-  ]
-};
+export default function DivisionSelector() {
+  const { control, resetField } = useFormContext<PropertyForm>();
 
-export default function DivisionSelector({
-  control
-}: {
-  control: Control<PropertyFormValues>
-}) {
-  const query = useQuery<Division[]>({
-    queryKey: ["dghcvn"],
-    queryFn: async () => {
-      const res = await fetch("/dghcvn.json");
-      const data = await res.json();
-      return data;
-    }
+  const cityCode = useWatch({
+    control,
+    name: "property.city",
+  });
+  const districtId = useWatch({
+    control,
+    name: "property.district",
+  });
+  const wardId = useWatch({
+    control,
+    name: "property.ward",
   });
 
-  const [selectedCity, setSelectedCity] = useState<string>("00");
-  const [selectedDistrict, setSelectedDistrict] = useState<string>("000");
+  // useEffect(() => {
+  //   resetField('property.district');
+  //   resetField('property.ward');
+  // }, [cityCode]);
 
-  useEffect(() => {
-    if (selectedCity === "00") {
-      setSelectedDistrict("000");
-    }
-  }, [selectedCity]);
+  // useEffect(() => {
+  //   resetField('property.ward');
+  // }, [districtId]);
+
+  const cityQuery = useQuery<City[]>({
+    queryKey: ["dghcvn", "cities"],
+    queryFn: async () => {
+      const res = await axios.get("/api/location/dghcvn/cities");
+      return res.data;
+    },
+    staleTime: 24 * 60 * (60 * 1000), // 1 day
+    cacheTime: 25 * 60 * (60 * 1000), // 1 day
+  });
+
+  const districtQuery = useQuery<District[]>({
+    queryKey: ["dghcvn", "districts", cityCode],
+    queryFn: async ({ queryKey }) => {
+      const res = await axios.get("/api/location/dghcvn/districts", {
+        params: { cityCode: queryKey.at(2) }
+      });
+      return res.data;
+    },
+    enabled: (!!cityCode),
+    staleTime: 24 * 60 * (60 * 1000), // 1 day
+    cacheTime: 25 * 60 * (60 * 1000), // 1 day
+  });
+
+  const wardQuery = useQuery<Ward[]>({
+    queryKey: ["dghcvn", "wards", districtId],
+    queryFn: async ({ queryKey }) => {
+      const res = await axios.get("/api/location/dghcvn/wards", {
+        params: { districtId: queryKey.at(2) }
+      });
+      return res.data;
+    },
+    enabled: (!!districtId),
+    staleTime: 24 * 60 * (60 * 1000), // 1 day
+    cacheTime: 25 * 60 * (60 * 1000), // 1 day
+  });
 
   return (
     <Fragment>
       <FormField
         control={control}
-        name="city"
+        name="property.city"
         render={({ field }) => (
           <FormItem className="flex-grow">
             <FormLabel>
               Tỉnh / Thành phố
               <span className="ml-1 text-red-600">*</span>
             </FormLabel>
-            {(query.isLoading || query.isError) ? (
+            {(cityQuery.isLoading || cityQuery.isError) ? (
               <FormControl>
-                <Input placeholder="Chọn tỉnh thành" {...field} />
+                <Input {...field} />
               </FormControl>
             ) : (
-              <Select
+              <Select 
                 onValueChange={(e) => {
-                  setSelectedCity(e);
+                  resetField('property.district');
+                  resetField('property.ward');
                   field.onChange(e);
                 }}
+                defaultValue={field.value}
               >
                 <FormControl>
                   <SelectTrigger>
@@ -81,10 +104,8 @@ export default function DivisionSelector({
                 </FormControl>
                 <SelectContent>
                   <ScrollArea className="h-72">
-                    <SelectItem value="00">Chọn tỉnh thành</SelectItem>
-                    <Separator />
-                    {query.data.map((d, i) => (
-                      <SelectItem key={i} value={d.Name}>{d.Name}</SelectItem>
+                    {cityQuery.data.map((c, i) => (
+                      <SelectItem key={i} value={c.id}>{c.name}</SelectItem>
                     ))}
                   </ScrollArea>
                 </SelectContent>
@@ -94,42 +115,44 @@ export default function DivisionSelector({
           </FormItem>
         )}
       />
-      <div className="flex justify-between gap-1">
+      <div className="grid grid-cols-2 gap-1">
         <FormField
           control={control}
-          name="district"
+          name="property.district"
           render={({ field }) => (
-            <FormItem className="flex-grow">
+            <FormItem>
               <FormLabel>
                 Quận, huyện
                 <span className="ml-1 text-red-600">*</span>
               </FormLabel>
-              {(query.isLoading || query.isError) ? (
+              {(districtQuery.isLoading || districtQuery.isError) ? (
                 <FormControl>
-                  <Input placeholder="Chọn quận huyện" {...field} />
+                  <Input
+                    {...field}
+                    placeholder="Quận huyện"
+                    disabled={!cityCode}
+                  />
                 </FormControl>
               ) : (
                 <Select
-                  onValueChange={(e: string) => {
-                    setSelectedDistrict(e);
+                  onValueChange={(e) => {
+                    resetField('property.ward')
                     field.onChange(e);
                   }}
-                  disabled={selectedCity === '00'}
+                  defaultValue={field.value}
+                  value={districtId}
+                  disabled={!cityCode}
                 >
                   <FormControl>
                     <SelectTrigger>
-                      <SelectValue placeholder="Chọn quận huyện" />
+                      <SelectValue placeholder="Chọn quận huyện"/>
                     </SelectTrigger>
                   </FormControl>
                   <SelectContent>
                     <ScrollArea className="h-72">
-                      <SelectItem value="000">Chọn quận huyện</SelectItem>
-                      <Separator />
-                      {(selectedCity !== "00") && (
-                        query.data.find((c) => c.Name === selectedCity)?.Districts.map((d, i) => (
-                          <SelectItem key={i} value={d.Name}>{d.Name}</SelectItem>
-                        ))
-                      )}
+                      {districtQuery.data.map((d, i) => (
+                        <SelectItem key={i} value={d.id.toString()}>{d.name}</SelectItem>
+                      ))}
                     </ScrollArea>
                   </SelectContent>
                 </Select>
@@ -140,39 +163,40 @@ export default function DivisionSelector({
         />
         <FormField
           control={control}
-          name="ward"
+          name="property.ward"
           render={({ field }) => (
-            <FormItem className="flex-grow">
+            <FormItem>
               <FormLabel>
                 Phường, xã
                 <span className="ml-1 text-red-600">*</span>
               </FormLabel>
-              {(query.isLoading || query.isError) ? (
+              {(wardQuery.isLoading || wardQuery.isError) ? (
                 <FormControl>
-                  <Input placeholder="Chọn phường xã" {...field} />
+                  <Input
+                    {...field}
+                    placeholder="Phường xã"
+                    disabled={!districtId}
+                  />
                 </FormControl>
               ) : (
                 <Select
                   onValueChange={field.onChange}
-                  disabled={selectedDistrict === '000'}
+                  defaultValue={field.value}
+                  value={wardId}
+                  disabled={!districtId}
                 >
                   <FormControl>
                     <SelectTrigger>
-                      <SelectValue placeholder="Chọn quận huyện" />
+                      <SelectValue placeholder="Chọn phường xã" />
                     </SelectTrigger>
                   </FormControl>
                   <SelectContent>
                     <ScrollArea className="h-72">
-                      <SelectItem value="000">Chọn quận huyện</SelectItem>
-                      <Separator />
-                      {(selectedDistrict !== "000") && (
-                        query.
-                          data.find((c) => c.Name === selectedCity)?.
-                          Districts.find((d) => d.Name === selectedDistrict)?.
-                          Wards.map((d, i) => (
-                          <SelectItem key={i} value={d.Name}>{d.Name}</SelectItem>
+                      {
+                        wardQuery.data.map((w, i) => (
+                          <SelectItem key={i} value={w.id.toString()}>{w.name}</SelectItem>
                         ))
-                      )}
+                      }
                     </ScrollArea>
                   </SelectContent>
                 </Select>

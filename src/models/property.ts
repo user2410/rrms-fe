@@ -58,7 +58,7 @@ export const mapPropertyTypeToText = {
   ROOM: 'Phòng trọ',
   OFFICE: 'Văn phòng',
   STORE: 'Cửa hàng',
-  BLOCK: 'Dãy nhà/phòng trọ',
+  BLOCK: 'Dãy phòng trọ',
 }
 
 export const pFeatures: PFeature[] = [

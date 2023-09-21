@@ -1,13 +1,12 @@
-import { Control, UseFormReturn } from "react-hook-form";
-import { Fragment } from "react";
+import { PropertyForm } from "@/app/manage/properties/new/page";
 import { FormControl, FormField, FormItem, FormLabel, FormMessage } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
+import { Fragment } from "react";
+import { useFormContext } from "react-hook-form";
 
-export default function Step2NRooms({
-  control,
-}: {
-  control: Control<any>;
-}) {
+export default function Step2NRooms() {
+  const {control} = useFormContext<PropertyForm>();
+
   return (
     <Fragment>
       <FormField

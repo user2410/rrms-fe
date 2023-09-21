@@ -1,27 +1,26 @@
 "use client";
 
+import { PropertyForm } from "@/app/manage/properties/new/page";
 import { FormControl, FormField, FormItem, FormLabel, FormMessage } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
-import { UseFormReturn, useFieldArray } from "react-hook-form";
-import { PropertyFormValues } from "../../../../../app/manage/properties/new/step1";
-import { Fragment } from "react";
+import { useFormContext } from "react-hook-form";
 
-export default function Step1ExtraInfo({
-  form
-}: {
-  form: UseFormReturn<PropertyFormValues, any, undefined>
-}) {
+export default function Step1ExtraInfo() {
+  const form = useFormContext<PropertyForm>();
 
   return (
     <div className="space-y-2">
       <FormField
         control={form.control}
-        name="orientation"
+        name="property.orientation"
         render={({ field }) => (
           <FormItem>
             <FormLabel>Hướng nhà</FormLabel>
-            <Select onValueChange={field.onChange}>
+            <Select 
+              onValueChange={field.onChange}
+              defaultValue={field.value}
+            >
               <FormControl>
                 <SelectTrigger><SelectValue /></SelectTrigger>
               </FormControl>
@@ -42,7 +41,7 @@ export default function Step1ExtraInfo({
       />
       <FormField
         control={form.control}
-        name="yearBuilt"
+        name="property.yearBuilt"
         render={({ field }) => (
           <FormItem>
             <FormLabel>Năm xây dựng</FormLabel>
@@ -59,7 +58,7 @@ export default function Step1ExtraInfo({
       />
       <FormField
         control={form.control}
-        name="entranceWidth"
+        name="property.entranceWidth"
         render={({ field }) => (
           <FormItem>
             <FormLabel>Đường vào (m)</FormLabel>
@@ -76,7 +75,7 @@ export default function Step1ExtraInfo({
       />
       <FormField
         control={form.control}
-        name="facade"
+        name="property.facade"
         render={({ field }) => (
           <FormItem>
             <FormLabel>Mặt tiền (m<sup>2</sup>)</FormLabel>

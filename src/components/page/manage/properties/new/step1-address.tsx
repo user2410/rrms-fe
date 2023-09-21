@@ -5,17 +5,17 @@ import { Input } from "@/components/ui/input";
 import useDebounce from "@/hooks/use-debounce";
 import axios from "axios";
 import { Fragment, useEffect, useState } from "react";
-import { UseFormReturn } from "react-hook-form";
-import { PropertyFormValues } from "@app/manage/properties/new/step1";
+import { UseFormReturn, useFormContext } from "react-hook-form";
 import DivisionSelector from "./division-selector";
+import { PropertyForm } from "@/app/manage/properties/new/page";
 
 function Location({
   form
 }: {
-  form: UseFormReturn<PropertyFormValues, any, undefined>
+  form: UseFormReturn<PropertyForm, any, undefined>
 }) {
   // on field placeUrl change -> send get request
-  const [input, setInput] = useState<string>(form.getValues('placeUrl'));
+  const [input, setInput] = useState<string>(form.getValues('property.placeUrl'));
   const [loading, setLoading] = useState<boolean>(false);
   const [error, setError] = useState<string>("");
   const [message, setMessage] = useState<string>("");
@@ -38,8 +38,8 @@ function Location({
         console.log(res.data);
         if (res.data.coord) {
           const {lat, lng} = res.data.coord;
-          form.setValue('lat', lat);
-          form.setValue('lng', lng);
+          form.setValue('property.lat', lat);
+          form.setValue('property.lng', lng);
           setMessage(`Toạ độ: ${lat}, ${lng}`);
         } else {
           setMessage('Không lấy được toạ độ');
@@ -48,7 +48,7 @@ function Location({
       })
       .catch((err) => {
         console.log(err);
-        form.setValue('placeUrl', "");
+        form.setValue('property.placeUrl', "");
         switch (err.response.status) {
           case 400: case 404:
             setError("Link không hợp lệ");
@@ -66,7 +66,7 @@ function Location({
   return (
     <FormField
       control={form.control}
-      name="placeUrl"
+      name="property.placeUrl"
       render={({ field }) => (
         <FormItem>
           <FormLabel>
@@ -97,16 +97,14 @@ function Location({
   )
 }
 
-export default function Step1Address({
-  form
-}: {
-  form: UseFormReturn<PropertyFormValues, any, undefined>
-}) {
+export default function Step1Address() {
+  const form = useFormContext<PropertyForm>();
+
   return (
     <Fragment>
       <FormField
         control={form.control}
-        name="fullAddress"
+        name="property.fullAddress"
         render={({ field }) => (
           <FormItem>
             <FormLabel>
@@ -120,7 +118,7 @@ export default function Step1Address({
           </FormItem>
         )}
       />
-      <DivisionSelector control={form.control} />
+      <DivisionSelector/>
       <Location form={form} />
     </Fragment>
   )

@@ -1,23 +1,21 @@
 "use client";
 
+import { PropertyForm } from "@/app/manage/properties/new/page";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
-import { FormControl, FormDescription, FormItem, FormLabel, FormMessage } from "@/components/ui/form";
+import { FormControl, FormItem, FormLabel, FormMessage } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
 import { Fragment, useRef } from "react";
-import { UseFormReturn, useFieldArray } from "react-hook-form";
+import { useFieldArray, useFormContext } from "react-hook-form";
 import { IoClose } from "react-icons/io5";
-import { PropertyFormValues } from "../../../../../app/manage/properties/new/step1";
 
-export function Step1Tag({
-  form
-}: {
-  form: UseFormReturn<PropertyFormValues, any, undefined>
-}) {
+export function Step1Tag() {
   const inputRef = useRef<HTMLInputElement>(null);
 
+  const form = useFormContext<PropertyForm>();
+
   const { fields, append, remove } = useFieldArray({
-    name: "tags",
+    name: "property.tags",
     control: form.control,
   });
 

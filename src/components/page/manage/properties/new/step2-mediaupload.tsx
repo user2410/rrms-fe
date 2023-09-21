@@ -1,9 +1,11 @@
 "use client";
 
+import { PropertyForm } from "@/app/manage/properties/new/page";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
 import { Separator } from "@/components/ui/separator";
 import { useRef, useState } from "react";
+import { useFieldArray, useFormContext } from "react-hook-form";
 
 export interface FileUpload {
   name: string;
@@ -24,39 +26,40 @@ function displayFileSize(fsize: number): string {
     : fsize + "b";
 }
 
-export default function Step2MediaUpload({ 
-  accept, 
+export default function Step2MediaUpload({
+  accept,
   multiple,
-  getFields,
-  append,
-  remove,
-} : {
+  nth,
+}: {
   accept?: string;
   multiple?: boolean;
-  getFields: () => FormFileUpload[];
-  append: (data: FileUpload) => void;
-  remove: (i: number) => void;
+  nth: number;
 }) {
   const inputFileRef = useRef<HTMLInputElement>(null);
 
-  const [values, setValues] = useState(getFields());
-  const [isDragEnter, setIsDragEnter] = useState<boolean>(false);
+  const form = useFormContext<PropertyForm>();
+  const { fields, append, remove } = useFieldArray({
+    control: form.control,
+    name: `units.${nth}.media`,
+  })
+  const images = fields.filter((item) => item.type.startsWith("IMAGE"));
+
+  // const [isDragEnter, setIsDragEnter] = useState<boolean>(false);
 
   function handleFileInputChange(event: React.ChangeEvent<HTMLInputElement>) {
     Object.entries(event.target.files!).forEach((e) => {
       const { name, size, type } = e[1];
       append({
-        name, size, type,
+        name, size,
+        type: type.toUpperCase(),
         url: URL.createObjectURL(e[1])
       });
-      setValues(getFields());
     });
   }
 
   function handleRemoveFile(fileUrl: string, i: number) {
     remove(i);
     URL.revokeObjectURL(fileUrl);
-    setValues(getFields());
   }
 
   return (
@@ -68,8 +71,8 @@ export default function Step2MediaUpload({
         </Button>
       </CardHeader>
       <CardContent
-        onClick={() => values.length === 0 && inputFileRef.current && inputFileRef.current.click()}
-        className="p-6 cursor-pointer w-full h-full border-2 border-dashed border-primary flex gap-2 xl:gap-4 text-base select-none"
+        onClick={() => fields.length === 0 && inputFileRef.current && inputFileRef.current.click()}
+        className="p-6 cursor-pointer w-full h-full border-2 border-dashed border-primary flex flex-wrap gap-2 xl:gap-4 text-base select-none"
       >
         <input
           ref={inputFileRef}
@@ -78,15 +81,13 @@ export default function Step2MediaUpload({
           multiple={multiple}
           hidden
           onChange={handleFileInputChange} />
-        {values.length === 0 && (
-          <p className="w-full text-center my-3 pointer-events-none">
-            Thêm một ảnh đại diện hấp dẫn sẽ giúp bài viết của bạn cuốn hút hơn với
-            độc giả.
-            <br />
-            Kéo thả ảnh vào đây, hoặc bấm để chọn ảnh
-          </p>
+        {images.length === 0 && (
+          <div className="w-full text-center my-3 pointer-events-none">
+            <div className="fas fa-cloud-arrow-up m-2" />
+            Bấm để chọn ảnh
+          </div>
         )}
-        {values.map((file, index) => (
+        {images.map((file, index) => (
           <Card key={file.id} className="w-[180px] shadow-md">
             <CardHeader className="h-[180px] p-2 lg:p-4">
               <img src={file.url} alt="" className="max-w-full max-h-full object-cover" />
