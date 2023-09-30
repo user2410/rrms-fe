@@ -9,6 +9,7 @@ import { useFieldArray, useFormContext } from "react-hook-form";
 import { IoClose } from "react-icons/io5";
 import Step2Amenities from "./step2-amenities";
 import Step2MediaUpload from "./step2-mediaupload";
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 
 const emptyValue = {
   name: "",
@@ -22,6 +23,7 @@ const emptyValue = {
   numberOfBalconies: 0,
   amenities: [],
   media: [],
+  type: "ROOM"
 };
 
 export default function Step2Block() {
@@ -45,33 +47,61 @@ export default function Step2Block() {
             <div className="flex gap-2">
               <Button
                 type="button"
-                onClick={() => append(unit)}
+                onClick={() => append(form.getValues(`units.${index}`))}
               >
                 Thêm phòng tương tự
               </Button>
-              <Button
-                variant="ghost"
-                type="button"
-                onClick={() => remove(index)}
-              >
-                <IoClose size={16} />
-              </Button>
+              {fields.length === 1 ? null : (
+                <Button
+                  variant="ghost"
+                  type="button"
+                  onClick={() => remove(index)}
+                >
+                  <IoClose size={16} />
+                </Button>
+              )}
             </div>
           </CardHeader>
           <CardContent className="grid grid-cols-1 lg:grid-cols-2 justify-between gap-4">
             <div className="space-y-4">
-              <FormField
-                name={`units.${index}.name`}
-                render={({ field }) => (
-                  <FormItem>
-                    <FormLabel>Tên phòng</FormLabel>
-                    <FormControl>
-                      <Input placeholder="VD: Phòng 201" {...field} defaultValue={unit.name} />
-                    </FormControl>
-                    <FormMessage />
-                  </FormItem>
-                )}
-              />
+              <div className="flex flex-row justify-between gap-2">
+                <FormField
+                  name={`units.${index}.name`}
+                  render={({ field }) => (
+                    <FormItem>
+                      <FormLabel>Tên phòng</FormLabel>
+                      <FormControl>
+                        <Input placeholder="VD: Phòng 201" {...field} defaultValue={unit.name} />
+                      </FormControl>
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
+                <FormField
+                  control={form.control}
+                  name="units.0.type"
+                  render={({ field }) => (
+                    <FormItem className="flex-grow-[2]">
+                      <FormLabel>Loại phòng</FormLabel>
+                      <Select
+                        defaultValue={field.value}
+                        onValueChange={field.onChange}
+                      >
+                        <FormControl>
+                          <SelectTrigger>
+                            <SelectValue placeholder="Chọn loại phòng" />
+                          </SelectTrigger>
+                        </FormControl>
+                        <SelectContent>
+                          <SelectItem value="ROOM">Phòng trọ thường</SelectItem>
+                          <SelectItem value="STUDIO">Phòng trọ Studio</SelectItem>
+                        </SelectContent>
+                      </Select>
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
+              </div>
               <div className="flex flex-row justify-between gap-2">
                 <FormField
                   name={`units.${index}.area`}
@@ -79,12 +109,12 @@ export default function Step2Block() {
                     <FormItem className="grow">
                       <FormLabel>Diện tích (m<sup>2</sup>)<span className="ml-1 text-red-600">*</span></FormLabel>
                       <FormControl>
-                        <Input 
+                        <Input
                           type="number"
-                          placeholder="VD: 25" 
-                          {...field} 
+                          placeholder="VD: 25"
+                          {...field}
                           onChange={(e) => field.onChange(e.target.valueAsNumber)}
-                          defaultValue={unit.name} 
+                          defaultValue={unit.name}
                         />
                       </FormControl>
                       <FormMessage />
@@ -109,7 +139,7 @@ export default function Step2Block() {
               </div>
               <div>
                 <CardTitle className="text-xl my-2">Tiện nghi</CardTitle>
-                <Step2Amenities nth={index}/>
+                <Step2Amenities nth={index} />
               </div>
             </div>
             <div className="">

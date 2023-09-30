@@ -13,7 +13,7 @@ export type PropertyMedia = {
 };
 
 export type PFeature = {
-  id: BigInt;
+  id: number;
   feature: string;
 }
 
@@ -61,35 +61,20 @@ export const mapPropertyTypeToText = {
   BLOCK: 'Dãy phòng trọ',
 }
 
-export const pFeatures: PFeature[] = [
-  {id: BigInt(0), feature: "p-feature_security"},
-  {id: BigInt(1), feature: "p-feature_fire-alarm"},
-  {id: BigInt(2), feature: "p-feature_gym"},
-  {id: BigInt(3), feature: "p-feature_fitness-center"},
-  {id: BigInt(4), feature: "p-feature_swimming-pool"},
-  {id: BigInt(5), feature: "p-feature_community-rooms"},
-  {id: BigInt(6), feature: "p-feature_public-library"},
-  {id: BigInt(7), feature: "p-feature_parking"},
-  {id: BigInt(8), feature: "p-feature_outdoor-common-area"},
-  {id: BigInt(9), feature: "p-feature_services"},
-  {id: BigInt(10), feature: "p-feature_facilities"},
-  {id: BigInt(11), feature: "p-feature_others"},
+export const pFeatures = [
+  {id: 1, feature: "p-feature_security", text: "An ninh"},
+  {id: 2, feature: "p-feature_fire-alarm", text: "Hệ thống báo cháy"},
+  {id: 3, feature: "p-feature_gym", text: "Phòng tập gym"},
+  {id: 4, feature: "p-feature_fitness-center", text: "Trung tâm thể dục"},
+  {id: 5, feature: "p-feature_swimming-pool", text: "Hồ bơi"},
+  {id: 6, feature: "p-feature_community-rooms", text: "Phòng cộng đồng"},
+  {id: 7, feature: "p-feature_public-library", text: "Thư viện công cộng"},
+  {id: 8, feature: "p-feature_parking", text: "Bãi đỗ xe"},
+  {id: 9, feature: "p-feature_outdoor-common-area", text: "Khu vực công cộng ngoài trời"},
+  {id: 10, feature: "p-feature_services", text: "Dịch vụ"},
+  {id: 11, feature: "p-feature_facilities", text: "Cơ sở vật chất"},
+  {id: 12, feature: "p-feature_others", text: "Khác"},
 ];
-
-export const mapPFeatureToText = {
-  "p-feature_security": "An ninh",
-  "p-feature_fire-alarm": "Hệ thống báo cháy",
-  "p-feature_gym": "Phòng tập gym",
-  "p-feature_fitness-center": "Trung tâm thể dục",
-  "p-feature_swimming-pool": "Hồ bơi",
-  "p-feature_community-rooms": "Phòng cộng đồng",
-  "p-feature_public-library": "Thư viện công cộng",
-  "p-feature_parking": "Bãi đỗ xe",
-  "p-feature_outdoor-common-area": "Khu vực công cộng ngoài trời",
-  "p-feature_services": "Dịch vụ",
-  "p-feature_facilities": "Tiện nghi",
-  "p-feature_others": "Khác",
-}
 
 export const mockupProperties: Property[] = [
   {

@@ -7,9 +7,7 @@ import { useFormContext, useWatch } from "react-hook-form";
 import { PropertyForm } from "@/app/manage/properties/new/page";
 import { Input } from "@/components/ui/input";
 import { ScrollArea } from "@/components/ui/scroll-area";
-import { City, District, Ward } from "@/models/dghcvn";
-import { useQuery } from "@tanstack/react-query";
-import axios from "axios";
+import { useCities, useDistricts, useWards } from "@/hooks/use-dghcvn";
 import { Fragment } from "react";
 
 export default function DivisionSelector() {
@@ -28,50 +26,9 @@ export default function DivisionSelector() {
     name: "property.ward",
   });
 
-  // useEffect(() => {
-  //   resetField('property.district');
-  //   resetField('property.ward');
-  // }, [cityCode]);
-
-  // useEffect(() => {
-  //   resetField('property.ward');
-  // }, [districtId]);
-
-  const cityQuery = useQuery<City[]>({
-    queryKey: ["dghcvn", "cities"],
-    queryFn: async () => {
-      const res = await axios.get("/api/location/dghcvn/cities");
-      return res.data;
-    },
-    staleTime: 24 * 60 * (60 * 1000), // 1 day
-    cacheTime: 25 * 60 * (60 * 1000), // 1 day
-  });
-
-  const districtQuery = useQuery<District[]>({
-    queryKey: ["dghcvn", "districts", cityCode],
-    queryFn: async ({ queryKey }) => {
-      const res = await axios.get("/api/location/dghcvn/districts", {
-        params: { cityCode: queryKey.at(2) }
-      });
-      return res.data;
-    },
-    enabled: (!!cityCode),
-    staleTime: 24 * 60 * (60 * 1000), // 1 day
-    cacheTime: 25 * 60 * (60 * 1000), // 1 day
-  });
-
-  const wardQuery = useQuery<Ward[]>({
-    queryKey: ["dghcvn", "wards", districtId],
-    queryFn: async ({ queryKey }) => {
-      const res = await axios.get("/api/location/dghcvn/wards", {
-        params: { districtId: queryKey.at(2) }
-      });
-      return res.data;
-    },
-    enabled: (!!districtId),
-    staleTime: 24 * 60 * (60 * 1000), // 1 day
-    cacheTime: 25 * 60 * (60 * 1000), // 1 day
-  });
+  const cityQuery = useCities();
+  const districtQuery = useDistricts(cityCode);
+  const wardQuery = useWards(districtId);
 
   return (
     <Fragment>

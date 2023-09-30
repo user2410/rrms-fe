@@ -1,16 +1,17 @@
 "use client";
 
+import { createProperty } from "@/actions/properties/create";
 import Step1 from "@/app/manage/properties/new/step1";
-import Step2 from "./step2";
-import Summary from "./summary";
+import { Button } from "@/components/ui/button";
+import { Form } from "@/components/ui/form";
 import { Separator } from "@/components/ui/separator";
 import DetailedStepper from "@/components/ui/stepper/detailed-stepper";
-import { useState } from "react";
-import * as z from "zod";
-import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { Form } from "@/components/ui/form";
-import { Button } from "@/components/ui/button";
+import { useState } from "react";
+import { useForm } from "react-hook-form";
+import * as z from "zod";
+import Step2 from "./step2";
+import Summary from "./summary";
 
 const propertyFormSchema = z.object({
   property: z.object({
@@ -121,14 +122,15 @@ const propertyFormSchema = z.object({
       hasBalcony: z
         .boolean()
         .optional(),
+      type: z
+        .string(),
       amenities: z
         .array(
           z.object({
             amenityId: z.string(),
             description: z.string().optional(),
           })
-        )
-        .optional(),
+        ),
       media: z
         .array(
           z.object({
@@ -137,23 +139,31 @@ const propertyFormSchema = z.object({
             type: z.string(),
             url: z.string(),
           })
-        )
-        .optional(),
+        ),
     })
   ),
 })
 
 export type PropertyForm = z.infer<typeof propertyFormSchema>;
 
-export default function CreatePropertyPage() {
+export default function CreatePropertyPage() {  
   const [step, setStep] = useState<number>(0);
 
   const form = useForm<PropertyForm>({
     resolver: zodResolver(propertyFormSchema),
   });
 
-  function onSubmit(data: PropertyForm) {
-    console.log(data);
+  async function onSubmit(data: PropertyForm) {
+    console.log('submit data', step, data);
+    if(step < 2) {
+      return;
+    }
+    try {
+      // TODO: display step-by-step creating modal
+      await createProperty(data);
+    } catch(err) {
+      console.error(err);
+    }
   }
 
   return (
@@ -180,7 +190,7 @@ export default function CreatePropertyPage() {
       />
       <Separator />
       <Form {...form}>
-        <form onSubmit={form.handleSubmit(onSubmit)}>
+        <form>
           {
             step === 0 ? (
               <Step1/>
@@ -200,7 +210,7 @@ export default function CreatePropertyPage() {
               Previous
             </Button>
             <Button 
-              type={step === 2 ? "submit" : "button"} 
+              type="button"
               variant="default"
               onClick={(e) => {
                 switch(step) {
@@ -211,8 +221,17 @@ export default function CreatePropertyPage() {
                           form.setValue(
                             'units', 
                             [['BLOCK', 'COMPLEX'].includes(form.getValues('property.type')) 
-                              ? ({} as any) 
-                              : ({area: form.getValues('property.area')} as any)
+                              ? ({
+                                media: [],
+                                amenities: [],
+                                type: 'ROOM',
+                              } as any) 
+                              : ({
+                                area: form.getValues('property.area'), 
+                                media: [],
+                                amenities: [],
+                                type: 'APARTMENT'
+                              } as any)
                             ]
                           );
                           setStep(step+1);
@@ -227,6 +246,7 @@ export default function CreatePropertyPage() {
                       .then(res => setStep(res ? (step+1) : step));
                     break;
                   default:
+                    onSubmit(form.getValues());
                     break;
                 }
               }}

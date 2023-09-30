@@ -7,6 +7,7 @@ import { FormControl, FormDescription, FormField, FormItem, FormLabel, FormMessa
 import { Input } from "@/components/ui/input";
 import { useFormContext } from "react-hook-form";
 import Step2Amenities from "./step2-amenities";
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 
 export default function Step2Room() {
   const form = useFormContext<PropertyForm>();
@@ -19,17 +20,41 @@ export default function Step2Room() {
           <CardDescription>Chi tiết về phòng trọ</CardDescription>
         </CardHeader>
         <CardContent className="space-y-4">
+          <FormField
+            control={form.control}
+            name="units.0.name"
+            render={({ field }) => (
+              <FormItem className="flex-grow-[2]">
+                <FormLabel>Tên phòng</FormLabel>
+                <FormControl>
+                  <Input placeholder="D9-401" {...field} />
+                </FormControl>
+                <FormDescription>Nếu không có, bỏ qua trường này</FormDescription>
+                <FormMessage />
+              </FormItem>
+            )}
+          />
           <div className="w-full flex justify-between gap-2">
             <FormField
               control={form.control}
-              name="units.0.name"
+              name="units.0.type"
               render={({ field }) => (
                 <FormItem className="flex-grow-[2]">
-                  <FormLabel>Tên phòng</FormLabel>
-                  <FormControl>
-                    <Input placeholder="D9-401" {...field} />
-                  </FormControl>
-                  <FormDescription>Nếu không có, bỏ qua trường này</FormDescription>
+                  <FormLabel>Loại phòng</FormLabel>
+                  <Select
+                    defaultValue={field.value}
+                    onValueChange={field.onChange}
+                  >
+                    <FormControl>
+                      <SelectTrigger>
+                        <SelectValue placeholder="Chọn loại phòng" />
+                      </SelectTrigger>
+                    </FormControl>
+                    <SelectContent>
+                      <SelectItem value="ROOM">Phòng trọ thường</SelectItem>
+                      <SelectItem value="STUDIO">Phòng trọ Studio</SelectItem>
+                    </SelectContent>
+                  </Select>
                   <FormMessage />
                 </FormItem>
               )}
@@ -101,7 +126,7 @@ export default function Step2Room() {
           <CardDescription>Tiện nghi có sẵn trong phòng trọ</CardDescription>
         </CardHeader>
         <CardContent>
-          <Step2Amenities nth={0}/>
+          <Step2Amenities nth={0} />
         </CardContent>
       </Card>
     </div>

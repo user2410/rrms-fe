@@ -17,6 +17,8 @@ export default function Step2() {
       <Step2SR/>
     ) : ['ROOM', 'STUDIO', 'STORE'].includes(propertyType!) ? (
       <Step2Room/>
+    // ) : propertyType === "OFFICE" ? (
+    //   <Step2Office/>
     ) : propertyType === "BLOCK" ? (
       <Step2Block/>
     ) : null

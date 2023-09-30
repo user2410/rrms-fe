@@ -1,4 +1,4 @@
-import { backendInstance } from '@/libs/axios';
+import { backendAPI } from '@/libs/axios';
 import type { NextApiRequest, NextApiResponse } from 'next';
 
 export default async function handler(
@@ -17,7 +17,7 @@ export default async function handler(
   }
 
   try {
-    const r = await backendInstance.post('/api/auth/credential/register', { email, password });
+    const r = await backendAPI.post('/api/auth/credential/register', { email, password });
     return res.status(201).json(r.data);
   } catch (err) {
     // console.error(err);

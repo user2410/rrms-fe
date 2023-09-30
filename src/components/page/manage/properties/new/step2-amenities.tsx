@@ -5,7 +5,7 @@ import { Button } from "@/components/ui/button";
 import { FormControl, FormField, FormItem, FormMessage } from "@/components/ui/form";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Textarea } from "@/components/ui/textarea";
-import { mapUAmenityToText } from "@/models/unit";
+import { uAmenities } from "@/models/unit";
 import { Fragment } from "react";
 import { useFieldArray, useFormContext } from "react-hook-form";
 import { IoClose } from "react-icons/io5";
@@ -36,19 +36,21 @@ export default function Step2Amenities({
             render={({ field }) => (
               <FormItem className="w-[40%]">
                 <FormControl>
-                  <Select onValueChange={field.onChange}>
+                  <Select 
+                    onValueChange={field.onChange}
+                  >
                     <FormControl>
                       <SelectTrigger>
                         <SelectValue placeholder="Chọn tiện nghi" />
                       </SelectTrigger>
                     </FormControl>
                     <SelectContent>
-                      {Object.entries(mapUAmenityToText).map(([key, value]) => (
+                      {uAmenities.map((item, idx) => (
                         <SelectItem
-                          key={key}
-                          value={key}
+                          key={idx}
+                          value={item.id.toString()}
                         >
-                          {value}
+                          {item.text}
                         </SelectItem>
                       ))}
                     </SelectContent>

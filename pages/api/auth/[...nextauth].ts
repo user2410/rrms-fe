@@ -1,4 +1,4 @@
-import { backendInstance } from '@/libs/axios';
+import { backendAPI } from '@/libs/axios';
 import { AuthOptions } from 'next-auth';
 import NextAuth from 'next-auth';
 import CredentialsProvider from 'next-auth/providers/credentials';
@@ -28,7 +28,7 @@ export const authOptions: AuthOptions = {
 
         try {
           console.log('querying server')
-          const res = await backendInstance.post('/api/auth/credential/login', credentials);
+          const res = await backendAPI.post('/api/auth/credential/login', credentials);
           if(res.status === 401) {
             return null;
           }

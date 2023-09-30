@@ -5,7 +5,7 @@ import { Button } from "@/components/ui/button";
 import { FormControl, FormField, FormItem, FormMessage } from "@/components/ui/form";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Textarea } from "@/components/ui/textarea";
-import { mapPFeatureToText } from "@/models/property";
+import { pFeatures } from "@/models/property";
 import { Fragment } from "react";
 import { useFieldArray, useFormContext } from "react-hook-form";
 import { IoClose } from "react-icons/io5";
@@ -32,21 +32,25 @@ export default function Step1Features() {
             render={({ field }) => (
               <FormItem className="w-[40%]">
                 <FormControl>
-                  <Select onValueChange={field.onChange} defaultValue={f.featureId}>
+                  <Select
+                    onValueChange={field.onChange}
+                  >
                     <FormControl>
                       <SelectTrigger>
-                        <SelectValue placeholder="VD: Bãi đỗ xe" />
+                        <SelectValue placeholder="Chọn tiện ích" />
                       </SelectTrigger>
                     </FormControl>
                     <SelectContent>
-                      {Object.entries(mapPFeatureToText).map(([key, value]) => (
-                        <SelectItem
-                          key={key}
-                          value={key}
-                        >
-                          {value}
-                        </SelectItem>
-                      ))}
+                      {pFeatures
+                        .filter(f => !(fields.map((_f, idx) => idx !== index ? _f.featureId : '').includes(f.id.toString())))
+                        .map((item, idx) => (
+                          <SelectItem
+                            key={idx}
+                            value={item.id.toString()}
+                          >
+                            {item.text}
+                          </SelectItem>
+                        ))}
                     </SelectContent>
                   </Select>
                 </FormControl>

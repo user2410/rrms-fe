@@ -1,6 +1,6 @@
 import { PropertyForm } from "@/app/manage/properties/new/page";
-import { mapPFeatureToText } from "@/models/property";
-import { mapUAmenityToText } from "@/models/unit";
+import { pFeatures } from "@/models/property";
+import { uAmenities } from "@/models/unit";
 import { useFormContext } from "react-hook-form";
 
 export default function SummaryFA() {
@@ -27,7 +27,7 @@ export default function SummaryFA() {
             {property.features.map((feature, index) => (
               <tr key={index} className="bg-white border-b dark:bg-gray-800 dark:border-gray-700">
                 <th scope="row" className="px-6 py-4 font-medium text-gray-900 whitespace-nowrap dark:text-white">
-                  {mapPFeatureToText[feature.featureId as keyof typeof mapPFeatureToText]}
+                  {pFeatures.find(f => f.id === parseInt(feature.featureId))!.text}
                 </th>
                 <td className="px-6 py-4">
                   {feature.description || "N/A"}
@@ -52,13 +52,13 @@ export default function SummaryFA() {
               </tr>
             </thead>
             <tbody>
-              {units[0].amenities?.map((feature, index) => (
+              {units[0].amenities?.map((amenity, index) => (
                 <tr key={index} className="bg-white border-b dark:bg-gray-800 dark:border-gray-700">
                   <th scope="row" className="px-6 py-4 font-medium text-gray-900 whitespace-nowrap dark:text-white">
-                    {mapUAmenityToText[feature.amenityId as keyof typeof mapUAmenityToText]}
+                    {uAmenities.find(a => a.id.toString() === amenity.amenityId)!.text}
                   </th>
                   <td className="px-6 py-4">
-                    {feature.description || "N/A"}
+                    {amenity.description || "N/A"}
                   </td>
                 </tr>
               ))}

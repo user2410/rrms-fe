@@ -1,8 +1,6 @@
 import { PropertyForm } from "@/app/manage/properties/new/page";
-import { City, District, Ward } from "@/models/dghcvn";
+import { useCities, useDistricts, useWards } from "@/hooks/use-dghcvn";
 import { GoogleMap, MarkerF } from "@react-google-maps/api";
-import { useQuery } from "@tanstack/react-query";
-import axios from "axios";
 import { useFormContext } from "react-hook-form";
 import { FaToilet } from "react-icons/fa";
 import { MdBalcony, MdBathtub, MdBed } from "react-icons/md";
@@ -12,41 +10,9 @@ export default function SummaryBasicInfo() {
   const property = form.getValues("property");
   const units = form.getValues("units");
 
-  const cityQuery = useQuery<City[]>({
-    queryKey: ["dghcvn", "cities"],
-    queryFn: async () => {
-      const res = await axios.get("/api/location/dghcvn/cities");
-      return res.data;
-    },
-    staleTime: 24 * 60 * (60 * 1000), // 1 day
-    cacheTime: 25 * 60 * (60 * 1000), // 1 day
-  });
-
-  const districtQuery = useQuery<District[]>({
-    queryKey: ["dghcvn", "districts", property.city],
-    queryFn: async ({ queryKey }) => {
-      const res = await axios.get("/api/location/dghcvn/districts", {
-        params: { cityCode: queryKey.at(2) }
-      });
-      return res.data;
-    },
-    enabled: (!!property.city),
-    staleTime: 24 * 60 * (60 * 1000), // 1 day
-    cacheTime: 25 * 60 * (60 * 1000), // 1 day
-  });
-
-  const wardQuery = useQuery<Ward[]>({
-    queryKey: ["dghcvn", "wards", property.district],
-    queryFn: async ({ queryKey }) => {
-      const res = await axios.get("/api/location/dghcvn/wards", {
-        params: { districtId: queryKey.at(2) }
-      });
-      return res.data;
-    },
-    enabled: (!!property.district),
-    staleTime: 24 * 60 * (60 * 1000), // 1 day
-    cacheTime: 25 * 60 * (60 * 1000), // 1 day
-  });
+  const cityQuery = useCities();
+  const districtQuery = useDistricts(property.city);
+  const wardQuery = useWards(property.district);
 
   return (
     <div className="space-y-6 px-2">
@@ -58,6 +24,7 @@ export default function SummaryBasicInfo() {
                 <tr className="bg-white border-b dark:bg-gray-800 dark:border-gray-700" key={index}>
                   <th scope="row" className="px-6 py-4 font-medium text-gray-900 whitespace-nowrap dark:text-white">
                     {
+                      key === "area" ? "Diện tích" :
                       key === "numberOfFloors" ? "Số tầng" :
                       key === "fullAddress" ? "Địa chỉ" :
                       key === "city" ? "Tỉnh / Thành phố" :

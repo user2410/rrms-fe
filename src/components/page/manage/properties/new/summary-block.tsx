@@ -1,6 +1,6 @@
 import { PropertyForm } from "@/app/manage/properties/new/page";
-import { mapUAmenityToText } from "@/models/unit";
-import { Fragment, useCallback, useRef } from "react";
+import { uAmenities } from "@/models/unit";
+import { useCallback, useRef } from "react";
 import { useFormContext } from "react-hook-form";
 
 import { Navigation } from 'swiper';
@@ -89,7 +89,7 @@ export default function SummaryBlock() {
                     {unit.amenities.map((amenity, index) => (
                       <li key={index}>
                         <span className="font-medium">
-                          {mapUAmenityToText[amenity.amenityId as keyof typeof mapUAmenityToText]}
+                          {uAmenities.find(a => a.id.toString() === amenity.amenityId)!.text}
                         </span>
                         {amenity.description ? (<span>{`: ${amenity.description}`}</span>) : null}
                       </li>

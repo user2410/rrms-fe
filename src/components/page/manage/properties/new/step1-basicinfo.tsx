@@ -32,12 +32,16 @@ export default function Step1BasicInfo() {
         render={({ field }) => (
           <FormItem>
             <FormLabel>Loại bất động sản <span className="ml-1 text-red-600">*</span></FormLabel>
-            <Select onValueChange={(e: string) => {
-              if (['APARTMENT', 'ROOM', 'STUDIO'].includes(e)) {
-                form.setValue("property.numberOfFloors", 1);
-              }
-              field.onChange(e);
-            }}>
+            <Select 
+              defaultValue={field.value}
+              value={form.watch('property.type')}
+              onValueChange={(e: string) => {
+                if (['APARTMENT', 'ROOM', 'STUDIO'].includes(e)) {
+                  form.setValue("property.numberOfFloors", 1);
+                }
+                field.onChange(e);
+              }}
+            >
               <FormControl>
                 <SelectTrigger>
                   <SelectValue placeholder="VD: Nhà riêng" />

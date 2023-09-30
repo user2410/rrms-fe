@@ -3,7 +3,7 @@
 import { PropertyForm } from "@/app/manage/properties/new/page";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
-import { FormField, FormItem, FormMessage } from "@/components/ui/form";
+import { FormDescription, FormField, FormItem, FormMessage } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
 import { Separator } from "@/components/ui/separator";
 import { Fragment, useRef, useState } from "react";
@@ -27,12 +27,24 @@ function displayFileSize(fsize: number): string {
 
 function VideoInput({ form }: { form: UseFormReturn<PropertyForm> }) {
   const [value, setValue] = useState<string>("");
+  const [error, setError] = useState<string>("");
 
   const { fields, append, remove } = useFieldArray({
     name: "property.media",
     control: form.control,
   });
-  const videos = fields.filter((item) => item.type === "VIDEO");
+  const videos = fields.filter((item) => item.type .startsWith("VIDEO"));
+
+  function addVideoHandler() {
+    const regex = /^(?:https?:\/\/)?(?:m\.|www\.)?(?:youtu\.be\/|youtube\.com\/(?:embed\/|v\/|watch\?v=|watch\?.+&v=))((\w|-){11})(?:\S+)?$/
+    if (value.match(regex)) {
+      append({ url: value, type: "VIDEO" });
+      setValue('');
+      setError('');
+    } else {
+      setError('Link video youtube không hợp lệ');
+    }
+  }
 
   return (
     <Fragment>
@@ -51,6 +63,7 @@ function VideoInput({ form }: { form: UseFormReturn<PropertyForm> }) {
             <div key={index} className="h-full flex items-center">
               <a href={item.url} className="flex-grow">{item.url}</a>
               <Button
+                type="button"
                 variant="ghost"
                 onClick={() => remove(index)}
               >
@@ -68,14 +81,13 @@ function VideoInput({ form }: { form: UseFormReturn<PropertyForm> }) {
           <Button
             type="button"
             variant="ghost"
-            onClick={() => {
-              setValue('');
-              append({ url: value, type: "VIDEO" });
-            }}
-            className=""
+            onClick={addVideoHandler}
           >+</Button>
         </div>
-        <FormMessage></FormMessage>
+        <FormDescription>
+          {error && (<span className="text-red-600">{error}</span>)}
+        </FormDescription>
+        <FormMessage/>
       </CardContent>
     </Fragment>
   )
