@@ -1,40 +1,23 @@
-"use client";
-
-import {
-  ColumnDef,
-  ColumnFiltersState,
-  SortingState,
-  VisibilityState,
-  flexRender,
-  getCoreRowModel,
-  getFilteredRowModel,
-  getPaginationRowModel,
-  getSortedRowModel,
-  useReactTable,
-} from "@tanstack/react-table";
-
-import {
-  Table,
-  TableBody,
-  TableCell,
-  TableHead,
-  TableHeader,
-  TableRow,
-} from "@/components/ui/table";
-import { PropertyType, mapPropertyTypeToText } from "@/models/property";
-import { useState } from "react";
-import DataTablePagination from "../../../ui/table/data-table-pagination";
-import { DataTableToolbar } from "./table/data-table-toolbar";
+import { ListingFormValues } from "@/app/manage/listings/new/page";
+import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
+import Property from "@/models/property";
+import { ColumnDef, ColumnFiltersState, Row, SortingState, VisibilityState, flexRender, getCoreRowModel, getFilteredRowModel, getPaginationRowModel, getSortedRowModel, useReactTable } from "@tanstack/react-table";
+import { useEffect, useMemo, useState } from "react";
+import { useFormContext } from "react-hook-form";
+import DataTablePagination from "../../../../ui/table/data-table-pagination";
+import { DataTableToolbar } from "./data-table-toolbar";
 
 interface DataTableProps<TData, TValue> {
   columns: ColumnDef<TData, TValue>[]
   data: TData[]
 }
 
-export function DataTable<TData, TValue>({
+export default function PropertyTable<TData, TValue>({
   columns,
   data,
 }: DataTableProps<TData, TValue>) {
+  const form = useFormContext<ListingFormValues>();
+
   const [sorting, setSorting] = useState<SortingState>([]);
   const [columnFilters, setColumnFilters] = useState<ColumnFiltersState>([]);
   const [columnVisibility, setColumnVisibility] = useState<VisibilityState>({
@@ -43,42 +26,55 @@ export function DataTable<TData, TValue>({
     "createdAt": false,
     "updatedAt": false,
   });
-
+  const [rowSelection, setRowSelection] = useState({});
+  
   const table = useReactTable({
     data,
     columns,
     getCoreRowModel: getCoreRowModel(),
     getPaginationRowModel: getPaginationRowModel(),
     onSortingChange: setSorting,
+    getRowId: (originalRow: TData, index: number, parent?: Row<TData>) => {
+      return (originalRow as Property).id
+    },
     getSortedRowModel: getSortedRowModel(),
     onColumnFiltersChange: setColumnFilters,
     getFilteredRowModel: getFilteredRowModel(),
     onColumnVisibilityChange: setColumnVisibility,
+    onRowSelectionChange: setRowSelection,
+    enableMultiRowSelection: false,
     state: {
       sorting,
       columnFilters,
       columnVisibility,
-    }
+      rowSelection,
+    },
+    initialState: {
+      pagination: {
+        pageSize: 5,
+      },
+    },
   });
+
+  useEffect(() => {
+    console.log("rowSelection", rowSelection);
+    const selectedRows = Object.keys(rowSelection);
+    if(selectedRows.length === 0) {
+      form.resetField("propertyID");
+    } else {
+      form.setValue("propertyID", selectedRows[0]);
+    }
+  }, [rowSelection]);
 
   return (
     <div className="space-y-4">
-      <DataTableToolbar 
-        table={table} 
+      <DataTableToolbar
+        table={table}
         inputFilter={{
           column: "name",
           placeholder: "Filter name..."
         }}
-        optionalFilters={[
-          {
-            column: "type",
-            title: "Type",
-            options: Object.keys(mapPropertyTypeToText).map((type) => ({
-              label: mapPropertyTypeToText[type as PropertyType],
-              value: type,
-            }))
-          }
-        ]}/>
+      />
       <div className="rounded-md border">
         <Table>
           <TableHeader>
@@ -125,5 +121,5 @@ export function DataTable<TData, TValue>({
       </div>
       <DataTablePagination table={table} />
     </div>
-  )
+  );
 }

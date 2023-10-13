@@ -29,7 +29,7 @@ export default function Step2Amenities({
         <div className="flex-grow text-xs font-medium">Mô tả</div>
       </div>
       {fields.map((amenity, index) => (
-        <div key={amenity.id} className="flex items-start gap-1 my-2">
+        <div key={index} className="flex items-start gap-1 my-2">
           <FormField
             control={control}
             name={`units.${nth}.amenities.${index}.amenityId`}
@@ -45,12 +45,13 @@ export default function Step2Amenities({
                       </SelectTrigger>
                     </FormControl>
                     <SelectContent>
-                      {uAmenities.map((item, idx) => (
+                      {uAmenities.map((a, idx) => (
                         <SelectItem
                           key={idx}
-                          value={item.id.toString()}
+                          disabled={fields.map((f) => f.amenityId).includes(a.id.toString())}
+                          value={a.id.toString()}
                         >
-                          {item.text}
+                          {a.text}
                         </SelectItem>
                       ))}
                     </SelectContent>

@@ -39,7 +39,7 @@ export default function RootLayout({
               <ManagedUIContext>
                 <Toaster/>
                 <ManagedModal/>
-                <div className="w-full h-full bg-background dark:bg-background">
+                <div className="w-full h-full bg-background">
                   {children}
                 </div>
               </ManagedUIContext>

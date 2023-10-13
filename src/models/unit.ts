@@ -3,7 +3,7 @@ export type UnitType = 'ROOM' | 'APARTMENT' | 'STUDIO';
 
 export type UnitMedia = {
   url: string;
-  property_id: string;
+  propertyId: string;
   type: 'IMAGE' | 'VIDEO';
 }
 
@@ -20,7 +20,7 @@ export type UnitAmenity = {
 
 export default interface Unit {
   id: string;
-  property_id: string;
+  propertyId: string;
   name: string;
   area: number;
   floor: number;
@@ -32,8 +32,8 @@ export default interface Unit {
   number_of_kitchens: number;
   media: UnitMedia[];
   amenities: UnitAmenity[];
-  created_at: string;
-  updated_at: string;
+  createdAt: string;
+  updatedAt: string;
 }
 
 export const mapUnitTypeToText = {

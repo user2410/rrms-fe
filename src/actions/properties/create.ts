@@ -5,7 +5,7 @@ import { uploadFile } from "../upload-file";
 export async function createProperty({property, units} : PropertyForm) {
   console.log('createProperty', property, units);
   // hard code value in development, pass accessToken in production
-  const ACCESS_TOKEN = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjdiMjVmOTZjLTk3OGMtNGQ5OC05YjVjLTBjYjY4MzQ4YWQ2NSIsInR5cGUiOiJhY2Nlc3MiLCJzdWIiOiI4NzU1OWM3ZS03MDRmLTQ5MmEtOTBhOC05MzJiOWMwYzk1Y2MiLCJpYXQiOiIyMDIzLTA5LTI4VDEwOjM5OjQ4Ljg1NDY3OTMwOCswNzowMCIsImV4cCI6IjIwMjMtMDktMjhUMjI6Mzk6NDguODU0Njc5NDMxKzA3OjAwIn0.LLWTwiMQCLWoh_RZiXuZP2w1dJeJmMRmPVyYNFjNBTw";
+  const ACCESS_TOKEN = process.env.NEXT_PUBLIC_ACCESS_TOKEN as string;
   // deep copy objects
   const _property = JSON.parse(JSON.stringify(property));
   const _units = JSON.parse(JSON.stringify(units));

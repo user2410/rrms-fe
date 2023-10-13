@@ -1,5 +1,6 @@
 "use client";
 
+import { ScrollArea } from "@/components/ui/scroll-area";
 import ManageDashboardNavbar from "@components/page/manage/navbar";
 import Sidebar from "@components/page/manage/sidebar";
 // import { useSession } from "next-auth/react";
@@ -22,17 +23,18 @@ export default function ManageLayout({
   //   return <p>Access Denied</p>
   // }
 
-
   return (
-    <div className="h-full">
-      <Sidebar />
-      <div className="relative md:ml-64 md:w-[calc(100vw_-_18rem)]">
-        <ManageDashboardNavbar />
-        <div className="py-20">
-          <div className="m-4 w-full h-full">
-            {children}
-          </div>
+    <div className="w-full h-full grid grid-cols-12 bg-gray-100 dark:bg-background">
+      <div className="hidden xl:block xl:col-span-2">
+        <Sidebar />
+      </div>
+      <div className="col-span-12 xl:col-span-10">
+        <div className="max-h-[88px]">
+          <ManageDashboardNavbar />
         </div>
+        <ScrollArea className="h-[calc(100vh_-_88px)]">
+          {children}
+        </ScrollArea>
       </div>
     </div>
   );

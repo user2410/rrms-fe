@@ -11,28 +11,39 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
-import { IoIosMore, IoIosArrowDown } from "react-icons/io";
 import toast from "react-hot-toast";
-import { DataTableColumnHeader } from "./data-table-column-header";
+import { IoIosMore } from "react-icons/io";
+import { Checkbox } from "@/components/ui/checkbox";
 
 export const columns: ColumnDef<Property>[] = [
   {
+    id: "select",
+    cell: ({ row }) => (
+      <Checkbox
+        checked={row.getIsSelected()}
+        onCheckedChange={(value) => row.toggleSelected(!!value)}
+        aria-label="Select row"
+      />
+    ),
+    enableSorting: false,
+    enableHiding: false,
+  },
+  {
     accessorKey: 'id',
-    header: 'ID',
+    header: 'ID'
   },
   {
     accessorKey: 'name',
-    header: 'Name',
-    cell: ({row}) => {
-      const name = row.getValue('name');
-      const media = row.getValue('media');
-      console.log(media);
+    header: 'Tên',
+    cell: (cellProp) => {
+      const name = cellProp.row.getValue('name');
+      const media = cellProp.row.original.media;
 
       return (
         <div className="flex">
           <div className="w-10 h-10 rounded-sm md:rounded-md">
             <img 
-              src="https://pt123.cdn.static123.com/images/thumbs/900x600/fit/2023/06/17/9e9b8e68ee899b038777e626e8ab6ae2_1686997946.jpg" 
+              src={media[0].url} 
               alt="" 
               className="w-full h-full object-cover" 
             />
@@ -46,7 +57,7 @@ export const columns: ColumnDef<Property>[] = [
   },
   {
     accessorKey: 'type',
-    header: 'Property type',
+    header: 'Loại',
     cell: ({row}) => {
       const value = row.getValue('type');
       return <span className="capitalize">{mapPropertyTypeToText[value as PropertyType]}</span>;
@@ -57,50 +68,39 @@ export const columns: ColumnDef<Property>[] = [
   },
   {
     accessorKey: 'area',
-    header: 'Area',
+    header: 'Diện tích',
   },
   {
-    accessorKey: 'full_address',
-    header: 'Address',
+    accessorKey: 'fullAdress',
+    header: 'Địa chỉ',
   },
   {
     accessorKey: 'orientation',
-    header: 'Orientation',
+    header: 'Hướng nhà',
   },
   {
-    accessorKey: 'year_built',
-    header: 'Year Built',
+    accessorKey: 'yearBuilt',
+    header: 'Năm xây dựng',
   },
   {
-    accessorKey: 'created_at',
+    accessorKey: 'createdAt',
     header: 'Created At',
     cell: ({row}) => {
-      const value = new Date(row.getValue('created_at'));
+      const value = new Date(row.getValue('createdAt'));
       return format(value, 'dd/MM/yyyy HH:mm:ss');
     }
   },
   {
-    accessorKey: 'updated_at',
+    accessorKey: 'updatedAt',
     sortingFn: (rowA: Row<Property>, rowB: Row<Property>, columnId: string) => {
       const a = new Date(rowA.getValue(columnId));
       const b = new Date(rowB.getValue(columnId));
       const d = a.getTime() - b.getTime();
       return (d < 0 ? -1 : d === 0 ? 0 : 1);
     },
-    header: ({column}) => {
-      return (
-        // <Button
-        //   variant="ghost"
-        //   onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
-        // >
-        //   Updated At
-        //   <IoIosArrowDown size={16} className="ml-2 h-4 w-4" />
-        // </Button>
-        <DataTableColumnHeader column={column} title="Updated At" />
-      )
-    },
+    header: () => (<span>Updated At</span>),
     cell: ({row}) => {
-      const value = new Date(row.getValue('created_at'));
+      const value = new Date(row.getValue('createdAt'));
       return format(value, 'dd/MM/yyyy HH:mm:ss');
     }
   },

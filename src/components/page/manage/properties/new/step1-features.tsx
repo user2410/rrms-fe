@@ -24,33 +24,30 @@ export default function Step1Features() {
         <div className="w-[40%] text-xs font-medium">Tiện ích</div>
         <div className="flex-grow text-xs font-medium">Mô tả</div>
       </div>
-      {fields.map((f, index) => (
-        <div key={f.id} className="flex items-start gap-1 my-2">
+      {fields.map((_f, index) => (
+        <div key={index} className="flex items-start gap-1 my-2">
           <FormField
             control={form.control}
             name={`property.features.${index}.featureId`}
             render={({ field }) => (
               <FormItem className="w-[40%]">
                 <FormControl>
-                  <Select
-                    onValueChange={field.onChange}
-                  >
+                  <Select onValueChange={field.onChange} defaultValue={field.value}>
                     <FormControl>
                       <SelectTrigger>
                         <SelectValue placeholder="Chọn tiện ích" />
                       </SelectTrigger>
                     </FormControl>
                     <SelectContent>
-                      {pFeatures
-                        .filter(f => !(fields.map((_f, idx) => idx !== index ? _f.featureId : '').includes(f.id.toString())))
-                        .map((item, idx) => (
-                          <SelectItem
-                            key={idx}
-                            value={item.id.toString()}
-                          >
-                            {item.text}
-                          </SelectItem>
-                        ))}
+                      {pFeatures.map((item) => (
+                        <SelectItem
+                          key={item.id}
+                          disabled={fields.map((f) => f.featureId).includes(item.id.toString())}
+                          value={item.id.toString()}
+                        >
+                          {item.text}
+                        </SelectItem>
+                      ))}
                     </SelectContent>
                   </Select>
                 </FormControl>

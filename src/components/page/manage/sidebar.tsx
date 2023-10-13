@@ -17,7 +17,11 @@ export default function Sidebar() {
   const [collapseShow, setCollapseShow] = React.useState("hidden");
   
   return (
-    <nav className="md:left-0 md:block md:fixed md:top-0 md:bottom-0 md:flex-row md:flex-nowrap md:overflow-hidden shadow-xl flex flex-wrap items-center justify-between relative md:w-64 z-10 py-4 px-6 border-r">
+    <nav className="
+      h-screen bg-background
+      flex flex-wrap md:flex-row md:flex-nowrap items-center justify-between
+      overflow-hidden z-10 py-4 px-6 border-r
+    ">
       <div className="md:flex-col md:items-stretch md:min-h-full md:flex-nowrap px-0 flex flex-wrap items-center justify-between w-full mx-auto">
         {/* Toggler */}
         <button
@@ -31,7 +35,7 @@ export default function Sidebar() {
           href="/"
           className="md:block text-left md:pb-2 text-foreground mr-0 inline-block whitespace-nowrap text-sm uppercase font-bold p-4 px-0"
         >
-          <div className="flex items-center gap-2">
+          <div className="flex items-center justify-center gap-2">
             <Image
               className="float-left"
               src="/logo.png"

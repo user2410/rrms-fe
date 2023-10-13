@@ -3,12 +3,12 @@ export type PropertyType =
   'PRIVATE' | 'TOWNHOUSE' | 'SHOPHOUSE' | 'VILLA' |
   'ROOM' | 'STORE' |
   'OFFICE' |
-  'BLOCK' |
-  'COMPLEX'; // Quỹ căn hộ / biệt thự
+  'BLOCK';
+  // 'COMPLEX'; // Quỹ căn hộ / biệt thự
 
 export type PropertyMedia = {
   url: string;
-  property_id: string;
+  propertyId: string;
   type: 'IMAGE' | 'VIDEO';
 };
 
@@ -18,14 +18,14 @@ export type PFeature = {
 }
 
 export type PropertyFeature = {
-  property_id: string;
-  feature_id: BigInt;
+  propertyId: string;
+  featureId: BigInt;
   description?: string;
 };
 
 export type PropertyTag = {
   id: BigInt;
-  property_id: string;
+  propertyId: string;
   tag: string;
 }
 
@@ -33,10 +33,10 @@ export default interface Property {
   id: string;
   name?: string;
   area: number;
-  number_of_floors: number;
-  year_built?: number;
+  numberOfFloors: number;
+  yearBuilt?: number;
   orientation?: string;
-  full_address: string;
+  fullAdress: string;
   district: string;
   city: string;
   lat: number;
@@ -45,8 +45,8 @@ export default interface Property {
   media: PropertyMedia[];
   features: PropertyFeature[];
   tags: PropertyTag[];
-  created_at: Date;
-  updated_at: Date;
+  createdAt: Date;
+  updatedAt: Date;
 }
 
 export const mapPropertyTypeToText = {
@@ -78,13 +78,13 @@ export const pFeatures = [
 
 export const mockupProperties: Property[] = [
   {
-    id: '1',
+    id: 'f6ca05c0-fad5-46fc-a237-a8e930e7cb01',
     name: 'Property 1',
     area: 100,
-    number_of_floors: 10,
-    year_built: 2020,
+    numberOfFloors: 10,
+    yearBuilt: 2020,
     orientation: 'Đông Nam',
-    full_address: '123 Nguyễn Văn Linh, Quận 7, TP. Hồ Chí Minh',
+    fullAdress: '123 Nguyễn Văn Linh, Quận 7, TP. Hồ Chí Minh',
     district: 'Quận 7',
     city: 'TP. Hồ Chí Minh',
     lat: 10.765,
@@ -92,78 +92,78 @@ export const mockupProperties: Property[] = [
     type: 'APARTMENT',
     media: [
       {
-        property_id: '1',
+        propertyId: '1',
         type: 'IMAGE',
         url: 'https://pt123.cdn.static123.com/images/thumbs/900x600/fit/2023/06/17/9e9b8e68ee899b038777e626e8ab6ae2_1686997946.jpg',
       },
       {
-        property_id: '1',
+        propertyId: '1',
         type: 'IMAGE',
         url: 'https://pt123.cdn.static123.com/images/thumbs/900x600/fit/2023/06/17/870d627df044cef9c81b869f48c80447_1686997941.jpg',
       },
       {
-        property_id: '1',
+        propertyId: '1',
         type: 'IMAGE',
         url: 'https://pt123.cdn.static123.com/images/thumbs/900x600/fit/2023/06/17/698ca5f9cd4ead81824028844dcc11a0_1686997941.jpg',
       },
       {
-        property_id: '1',
+        propertyId: '1',
         type: 'IMAGE',
         url: 'https://pt123.cdn.static123.com/images/thumbs/900x600/fit/2023/06/17/11c874d516379eb8e507e5342160a933_1686997951.jpg',
       },
       {
-        property_id: '1',
+        propertyId: '1',
         type: 'IMAGE',
         url: 'https://pt123.cdn.static123.com/images/thumbs/900x600/fit/2023/06/17/img-1475_1686997951.jpg',
       },
       {
-        property_id: '1',
+        propertyId: '1',
         type: 'IMAGE',
         url: 'https://pt123.cdn.static123.com/images/thumbs/450x300/fit/2023/06/16/img-6342_1686925907.jpg',
       },
       {
-        property_id: '1',
+        propertyId: '1',
         type: 'IMAGE',
         url: 'https://pt123.cdn.static123.com/images/thumbs/450x300/fit/2021/10/27/17f127e466893fd370b536e3d9cd0b15-2742471474502885792_1635303858.jpg',
       },
     ],
     features: [
       {
-        property_id: "1",
-        feature_id: BigInt(1),
+        propertyId: "1",
+        featureId: BigInt(1),
       },
       {
-        property_id: "1",
-        feature_id: BigInt(3),
+        propertyId: "1",
+        featureId: BigInt(3),
       },
       {
-        property_id: "1",
-        feature_id: BigInt(4),
+        propertyId: "1",
+        featureId: BigInt(4),
       },
     ],
     tags: [
       {
         id: BigInt(1),
-        property_id: "1",
+        propertyId: "1",
         tag: "Biệt thự liền kề",
       },
       {
         id: BigInt(2),
-        property_id: "1",
+        propertyId: "1",
         tag: "Mặt phố",
       },
     ],
-    created_at: new Date('2021-01-02'),
-    updated_at: new Date('2021-01-02'),
+    createdAt: new Date('2021-01-02'),
+    updatedAt: new Date('2021-01-02'),
   },
   {
-    id: '2',
+    id: 'f6ca05c0-fad5-46fc-a237-a8e930e7cb02',
     name: 'Property 2',
     area: 105,
-    number_of_floors: 5,
-    year_built: 2021,
+    numberOfFloors: 5,
+    yearBuilt: 2021,
     orientation: 'Đông Bắc',
-    full_address: '124 Lạc Long Quân, Quận 4, TP. Hồ Chí Minh',
+    fullAdress: '124 Lạc Long Quân, Quận 4, TP. Hồ Chí Minh',
     district: 'Quận 4',
     city: 'TP. Hồ Chí Minh',
     lat: 10.764,
@@ -171,78 +171,78 @@ export const mockupProperties: Property[] = [
     type: 'ROOM',
     media: [
       {
-        property_id: '2',
+        propertyId: '2',
         type: 'IMAGE',
         url: 'https://pt123.cdn.static123.com/images/thumbs/900x600/fit/2023/06/17/9e9b8e68ee899b038777e626e8ab6ae2_1686997946.jpg',
       },
       {
-        property_id: '2',
+        propertyId: '2',
         type: 'IMAGE',
         url: 'https://pt123.cdn.static123.com/images/thumbs/900x600/fit/2023/06/17/870d627df044cef9c81b869f48c80447_1686997941.jpg',
       },
       {
-        property_id: '2',
+        propertyId: '2',
         type: 'IMAGE',
         url: 'https://pt123.cdn.static123.com/images/thumbs/900x600/fit/2023/06/17/698ca5f9cd4ead81824028844dcc11a0_1686997941.jpg',
       },
       {
-        property_id: '2',
+        propertyId: '2',
         type: 'IMAGE',
         url: 'https://pt123.cdn.static123.com/images/thumbs/900x600/fit/2023/06/17/11c874d516379eb8e507e5342160a933_1686997951.jpg',
       },
       {
-        property_id: '2',
+        propertyId: '2',
         type: 'IMAGE',
         url: 'https://pt123.cdn.static123.com/images/thumbs/900x600/fit/2023/06/17/img-1475_1686997951.jpg',
       },
       {
-        property_id: '2',
+        propertyId: '2',
         type: 'IMAGE',
         url: 'https://pt123.cdn.static123.com/images/thumbs/450x300/fit/2023/06/16/img-6342_1686925907.jpg',
       },
       {
-        property_id: '2',
+        propertyId: '2',
         type: 'IMAGE',
         url: 'https://pt123.cdn.static123.com/images/thumbs/450x300/fit/2021/10/27/17f127e466893fd370b536e3d9cd0b15-2742471474502885792_1635303858.jpg',
       },
     ],
     features: [
       {
-        property_id: "2",
-        feature_id: BigInt(1),
+        propertyId: "2",
+        featureId: BigInt(1),
       },
       {
-        property_id: "2",
-        feature_id: BigInt(3),
+        propertyId: "2",
+        featureId: BigInt(3),
       },
       {
-        property_id: "2",
-        feature_id: BigInt(4),
+        propertyId: "2",
+        featureId: BigInt(4),
       },
     ],
     tags: [
       {
         id: BigInt(3),
-        property_id: "1",
+        propertyId: "1",
         tag: "Phòng trọ có gác xép",
       },
       {
         id: BigInt(4),
-        property_id: "1",
+        propertyId: "1",
         tag: "Phòng trọ đôi",
       },
     ],
-    created_at: new Date('2021-02-12'),
-    updated_at: new Date('2021-02-12'),
+    createdAt: new Date('2021-02-12'),
+    updatedAt: new Date('2021-02-12'),
   },
   {
-    id: '3',
+    id: 'f6ca05c0-fad5-46fc-a237-a8e930e7cb03',
     name: 'Property 3',
     area: 110,
-    number_of_floors: 15,
-    year_built: 2020,
+    numberOfFloors: 15,
+    yearBuilt: 2020,
     orientation: 'Tây Nam',
-    full_address: '125 Nguyễn Văn Linh, Quận 7, TP. Hồ Chí Minh',
+    fullAdress: '125 Nguyễn Văn Linh, Quận 7, TP. Hồ Chí Minh',
     district: 'Quận 7',
     city: 'TP. Hồ Chí Minh',
     lat: 10.765,
@@ -250,78 +250,78 @@ export const mockupProperties: Property[] = [
     type: 'ROOM',
     media: [
       {
-        property_id: '3',
+        propertyId: '3',
         type: 'IMAGE',
         url: 'https://pt123.cdn.static123.com/images/thumbs/900x600/fit/2023/06/17/9e9b8e68ee899b038777e626e8ab6ae2_1686997946.jpg',
       },
       {
-        property_id: '3',
+        propertyId: '3',
         type: 'IMAGE',
         url: 'https://pt123.cdn.static123.com/images/thumbs/900x600/fit/2023/06/17/870d627df044cef9c81b869f48c80447_1686997941.jpg',
       },
       {
-        property_id: '3',
+        propertyId: '3',
         type: 'IMAGE',
         url: 'https://pt123.cdn.static123.com/images/thumbs/900x600/fit/2023/06/17/698ca5f9cd4ead81824028844dcc11a0_1686997941.jpg',
       },
       {
-        property_id: '3',
+        propertyId: '3',
         type: 'IMAGE',
         url: 'https://pt123.cdn.static123.com/images/thumbs/900x600/fit/2023/06/17/11c874d516379eb8e507e5342160a933_1686997951.jpg',
       },
       {
-        property_id: '3',
+        propertyId: '3',
         type: 'IMAGE',
         url: 'https://pt123.cdn.static123.com/images/thumbs/900x600/fit/2023/06/17/img-1475_1686997951.jpg',
       },
       {
-        property_id: '3',
+        propertyId: '3',
         type: 'IMAGE',
         url: 'https://pt123.cdn.static123.com/images/thumbs/450x300/fit/2023/06/16/img-6342_1686925907.jpg',
       },
       {
-        property_id: '3',
+        propertyId: '3',
         type: 'IMAGE',
         url: 'https://pt123.cdn.static123.com/images/thumbs/450x300/fit/2021/10/27/17f127e466893fd370b536e3d9cd0b15-2742471474502885792_1635303858.jpg',
       },
     ],
     features: [
       {
-        property_id: "3",
-        feature_id: BigInt(1),
+        propertyId: "3",
+        featureId: BigInt(1),
       },
       {
-        property_id: "3",
-        feature_id: BigInt(3),
+        propertyId: "3",
+        featureId: BigInt(3),
       },
       {
-        property_id: "3",
-        feature_id: BigInt(4),
+        propertyId: "3",
+        featureId: BigInt(4),
       },
     ],
     tags: [
       {
         id: BigInt(3),
-        property_id: "1",
+        propertyId: "1",
         tag: "Phòng trọ có gác xép",
       },
       {
         id: BigInt(4),
-        property_id: "1",
+        propertyId: "1",
         tag: "Phòng trọ đôi",
       },
     ],
-    created_at: new Date('2021-03-22'),
-    updated_at: new Date('2021-03-22'),
+    createdAt: new Date('2021-03-22'),
+    updatedAt: new Date('2021-03-22'),
   },
   {
-    id: '4',
+    id: "f6ca05c0-fad5-46fc-a237-a8e930e7cb04",
     name: 'Property 4',
     area: 115,
-    number_of_floors: 20,
-    year_built: 2021,
+    numberOfFloors: 20,
+    yearBuilt: 2021,
     orientation: 'Tây Bắc',
-    full_address: '126 Lạc Long Quân, Quận 4, TP. Hồ Chí Minh',
+    fullAdress: '126 Lạc Long Quân, Quận 4, TP. Hồ Chí Minh',
     district: 'Quận 4',
     city: 'TP. Hồ Chí Minh',
     lat: 10.764,
@@ -329,78 +329,78 @@ export const mockupProperties: Property[] = [
     type: 'PRIVATE',
     media: [
       {
-        property_id: '4',
+        propertyId: '4',
         type: 'IMAGE',
         url: 'https://pt123.cdn.static123.com/images/thumbs/900x600/fit/2023/06/17/9e9b8e68ee899b038777e626e8ab6ae2_1686997946.jpg',
       },
       {
-        property_id: '4',
+        propertyId: '4',
         type: 'IMAGE',
         url: 'https://pt123.cdn.static123.com/images/thumbs/900x600/fit/2023/06/17/870d627df044cef9c81b869f48c80447_1686997941.jpg',
       },
       {
-        property_id: '4',
+        propertyId: '4',
         type: 'IMAGE',
         url: 'https://pt123.cdn.static123.com/images/thumbs/900x600/fit/2023/06/17/698ca5f9cd4ead81824028844dcc11a0_1686997941.jpg',
       },
       {
-        property_id: '4',
+        propertyId: '4',
         type: 'IMAGE',
         url: 'https://pt123.cdn.static123.com/images/thumbs/900x600/fit/2023/06/17/11c874d516379eb8e507e5342160a933_1686997951.jpg',
       },
       {
-        property_id: '4',
+        propertyId: '4',
         type: 'IMAGE',
         url: 'https://pt123.cdn.static123.com/images/thumbs/900x600/fit/2023/06/17/img-1475_1686997951.jpg',
       },
       {
-        property_id: '4',
+        propertyId: '4',
         type: 'IMAGE',
         url: 'https://pt123.cdn.static123.com/images/thumbs/450x300/fit/2023/06/16/img-6342_1686925907.jpg',
       },
       {
-        property_id: '4',
+        propertyId: '4',
         type: 'IMAGE',
         url: 'https://pt123.cdn.static123.com/images/thumbs/450x300/fit/2021/10/27/17f127e466893fd370b536e3d9cd0b15-2742471474502885792_1635303858.jpg',
       },
     ],
     features: [
       {
-        property_id: "4",
-        feature_id: BigInt(1),
+        propertyId: "4",
+        featureId: BigInt(1),
       },
       {
-        property_id: "4",
-        feature_id: BigInt(3),
+        propertyId: "4",
+        featureId: BigInt(3),
       },
       {
-        property_id: "4",
-        feature_id: BigInt(4),
+        propertyId: "4",
+        featureId: BigInt(4),
       },
     ],
     tags: [
       {
         id: BigInt(8),
-        property_id: "4",
+        propertyId: "4",
         tag: "Quận 4",
       },
       {
         id: BigInt(9),
-        property_id: "4",
+        propertyId: "4",
         tag: "Nhà mặt phố",
       },
     ],
-    created_at: new Date('2021-04-02'),
-    updated_at: new Date('2021-04-02'),
+    createdAt: new Date('2021-04-02'),
+    updatedAt: new Date('2021-04-02'),
   },
   {
-    id: '5',
+    id: "f6ca05c0-fad5-46fc-a237-a8e930e7cb05",
     name: 'Property 5',
     area: 120,
-    number_of_floors: 25,
-    year_built: 2020,
+    numberOfFloors: 25,
+    yearBuilt: 2020,
     orientation: 'Đông Nam',
-    full_address: '127 Nguyễn Văn Linh, Quận 7, TP. Hồ Chí Minh',
+    fullAdress: '127 Nguyễn Văn Linh, Quận 7, TP. Hồ Chí Minh',
     district: 'Quận 7',
     city: 'TP. Hồ Chí Minh',
     lat: 10.765,
@@ -408,78 +408,78 @@ export const mockupProperties: Property[] = [
     type: 'APARTMENT',
     media: [
       {
-        property_id: '5',
+        propertyId: '5',
         type: 'IMAGE',
         url: 'https://pt123.cdn.static123.com/images/thumbs/900x600/fit/2023/06/17/9e9b8e68ee899b038777e626e8ab6ae2_1686997946.jpg',
       },
       {
-        property_id: '5',
+        propertyId: '5',
         type: 'IMAGE',
         url: 'https://pt123.cdn.static123.com/images/thumbs/900x600/fit/2023/06/17/870d627df044cef9c81b869f48c80447_1686997941.jpg',
       },
       {
-        property_id: '5',
+        propertyId: '5',
         type: 'IMAGE',
         url: 'https://pt123.cdn.static123.com/images/thumbs/900x600/fit/2023/06/17/698ca5f9cd4ead81824028844dcc11a0_1686997941.jpg',
       },
       {
-        property_id: '5',
+        propertyId: '5',
         type: 'IMAGE',
         url: 'https://pt123.cdn.static123.com/images/thumbs/900x600/fit/2023/06/17/11c874d516379eb8e507e5342160a933_1686997951.jpg',
       },
       {
-        property_id: '5',
+        propertyId: '5',
         type: 'IMAGE',
         url: 'https://pt123.cdn.static123.com/images/thumbs/900x600/fit/2023/06/17/img-1475_1686997951.jpg',
       },
       {
-        property_id: '5',
+        propertyId: '5',
         type: 'IMAGE',
         url: 'https://pt123.cdn.static123.com/images/thumbs/450x300/fit/2023/06/16/img-6342_1686925907.jpg',
       },
       {
-        property_id: '5',
+        propertyId: '5',
         type: 'IMAGE',
         url: 'https://pt123.cdn.static123.com/images/thumbs/450x300/fit/2021/10/27/17f127e466893fd370b536e3d9cd0b15-2742471474502885792_1635303858.jpg',
       },
     ],
     features: [
       {
-        property_id: "5",
-        feature_id: BigInt(1),
+        propertyId: "5",
+        featureId: BigInt(1),
       },
       {
-        property_id: "5",
-        feature_id: BigInt(3),
+        propertyId: "5",
+        featureId: BigInt(3),
       },
       {
-        property_id: "5",
-        feature_id: BigInt(4),
+        propertyId: "5",
+        featureId: BigInt(4),
       },
     ],
     tags: [
       {
         id: BigInt(10),
-        property_id: "1",
+        propertyId: "1",
         tag: "Căn hộ chung cư",
       },
       {
         id: BigInt(11),
-        property_id: "1",
+        propertyId: "1",
         tag: "Căn hộ cao cấp",
       },
     ],
-    created_at: new Date('2021-05-12'), 
-    updated_at: new Date('2021-05-12'),
+    createdAt: new Date('2021-05-12'), 
+    updatedAt: new Date('2021-05-12'),
   },
   {
-    id: '6',
+    id: "f6ca05c0-fad5-46fc-a237-a8e930e7cb06",
     name: 'Property 6',
     area: 125,
-    number_of_floors: 30,
-    year_built: 2021,
+    numberOfFloors: 30,
+    yearBuilt: 2021,
     orientation: 'Đông Bắc',
-    full_address: '128 Lạc Long Quân, Quận 4, TP. Hồ Chí Minh',
+    fullAdress: '128 Lạc Long Quân, Quận 4, TP. Hồ Chí Minh',
     district: 'Quận 4',
     city: 'TP. Hồ Chí Minh',
     lat: 10.764,
@@ -487,78 +487,78 @@ export const mockupProperties: Property[] = [
     type: 'APARTMENT',
     media: [
       {
-        property_id: '6',
+        propertyId: '6',
         type: 'IMAGE',
         url: 'https://pt123.cdn.static123.com/images/thumbs/900x600/fit/2023/06/17/9e9b8e68ee899b038777e626e8ab6ae2_1686997946.jpg',
       },
       {
-        property_id: '6',
+        propertyId: '6',
         type: 'IMAGE',
         url: 'https://pt123.cdn.static123.com/images/thumbs/900x600/fit/2023/06/17/870d627df044cef9c81b869f48c80447_1686997941.jpg',
       },
       {
-        property_id: '6',
+        propertyId: '6',
         type: 'IMAGE',
         url: 'https://pt123.cdn.static123.com/images/thumbs/900x600/fit/2023/06/17/698ca5f9cd4ead81824028844dcc11a0_1686997941.jpg',
       },
       {
-        property_id: '6',
+        propertyId: '6',
         type: 'IMAGE',
         url: 'https://pt123.cdn.static123.com/images/thumbs/900x600/fit/2023/06/17/11c874d516379eb8e507e5342160a933_1686997951.jpg',
       },
       {
-        property_id: '6',
+        propertyId: '6',
         type: 'IMAGE',
         url: 'https://pt123.cdn.static123.com/images/thumbs/900x600/fit/2023/06/17/img-1475_1686997951.jpg',
       },
       {
-        property_id: '6',
+        propertyId: '6',
         type: 'IMAGE',
         url: 'https://pt123.cdn.static123.com/images/thumbs/450x300/fit/2023/06/16/img-6342_1686925907.jpg',
       },
       {
-        property_id: '6',
+        propertyId: '6',
         type: 'IMAGE',
         url: 'https://pt123.cdn.static123.com/images/thumbs/450x300/fit/2021/10/27/17f127e466893fd370b536e3d9cd0b15-2742471474502885792_1635303858.jpg',
       },
     ],
     features: [
       {
-        property_id: "6",
-        feature_id: BigInt(1),
+        propertyId: "6",
+        featureId: BigInt(1),
       },
       {
-        property_id: "6",
-        feature_id: BigInt(3),
+        propertyId: "6",
+        featureId: BigInt(3),
       },
       {
-        property_id: "6",
-        feature_id: BigInt(4),
+        propertyId: "6",
+        featureId: BigInt(4),
       },
     ],
     tags: [
       {
         id: BigInt(10),
-        property_id: "1",
+        propertyId: "1",
         tag: "Căn hộ chung cư",
       },
       {
         id: BigInt(11),
-        property_id: "1",
+        propertyId: "1",
         tag: "Căn hộ cao cấp",
       },
     ],
-    created_at: new Date('2021-06-22'),
-    updated_at: new Date('2021-06-22'),
+    createdAt: new Date('2021-06-22'),
+    updatedAt: new Date('2021-06-22'),
   },
   {
-    id: '7',
+    id: "f6ca05c0-fad5-46fc-a237-a8e930e7cb4907",
     name: 'Property 7',
     area: 130,
-    number_of_floors: 35,
-    year_built: 2020,
+    numberOfFloors: 35,
+    yearBuilt: 2020,
     orientation: 'Tây Nam',
-    full_address: '129 Nguyễn Văn Linh, Quận 7, TP. Hồ Chí Minh',
+    fullAdress: '129 Nguyễn Văn Linh, Quận 7, TP. Hồ Chí Minh',
     district: 'Quận 7',
     city: 'TP. Hồ Chí Minh',
     lat: 10.765,
@@ -566,78 +566,78 @@ export const mockupProperties: Property[] = [
     type: 'ROOM',
     media: [
       {
-        property_id: '7',
+        propertyId: '7',
         type: 'IMAGE',
         url: 'https://pt123.cdn.static123.com/images/thumbs/900x600/fit/2023/06/17/9e9b8e68ee899b038777e626e8ab6ae2_1686997946.jpg',
       },
       {
-        property_id: '7',
+        propertyId: '7',
         type: 'IMAGE',
         url: 'https://pt123.cdn.static123.com/images/thumbs/900x600/fit/2023/06/17/870d627df044cef9c81b869f48c80447_1686997941.jpg',
       },
       {
-        property_id: '7',
+        propertyId: '7',
         type: 'IMAGE',
         url: 'https://pt123.cdn.static123.com/images/thumbs/900x600/fit/2023/06/17/698ca5f9cd4ead81824028844dcc11a0_1686997941.jpg',
       },
       {
-        property_id: '7',
+        propertyId: '7',
         type: 'IMAGE',
         url: 'https://pt123.cdn.static123.com/images/thumbs/900x600/fit/2023/06/17/11c874d516379eb8e507e5342160a933_1686997951.jpg',
       },
       {
-        property_id: '7',
+        propertyId: '7',
         type: 'IMAGE',
         url: 'https://pt123.cdn.static123.com/images/thumbs/900x600/fit/2023/06/17/img-1475_1686997951.jpg',
       },
       {
-        property_id: '7',
+        propertyId: '7',
         type: 'IMAGE',
         url: 'https://pt123.cdn.static123.com/images/thumbs/450x300/fit/2023/06/16/img-6342_1686925907.jpg',
       },
       {
-        property_id: '7',
+        propertyId: '7',
         type: 'IMAGE',
         url: 'https://pt123.cdn.static123.com/images/thumbs/450x300/fit/2021/10/27/17f127e466893fd370b536e3d9cd0b15-2742471474502885792_1635303858.jpg',
       },
     ],
     features: [
       {
-        property_id: "7",
-        feature_id: BigInt(1),
+        propertyId: "7",
+        featureId: BigInt(1),
       },
       {
-        property_id: "7",
-        feature_id: BigInt(3),
+        propertyId: "7",
+        featureId: BigInt(3),
       },
       {
-        property_id: "7",
-        feature_id: BigInt(4),
+        propertyId: "7",
+        featureId: BigInt(4),
       },
     ],
     tags: [
       {
         id: BigInt(3),
-        property_id: "1",
+        propertyId: "1",
         tag: "Phòng trọ có gác xép",
       },
       {
         id: BigInt(4),
-        property_id: "1",
+        propertyId: "1",
         tag: "Phòng trọ đôi",
       },
     ],
-    created_at: new Date('2021-07-02'),
-    updated_at: new Date('2021-07-02'),
+    createdAt: new Date('2021-07-02'),
+    updatedAt: new Date('2021-07-02'),
   },
   {
-    id: '8',
+    id: "f6ca05c0-fad5-46fc-a237-a8e930e7cb08",
     name: 'Property 8',
     area: 135,
-    number_of_floors: 40,
-    year_built: 2021,
+    numberOfFloors: 40,
+    yearBuilt: 2021,
     orientation: 'Tây Bắc',
-    full_address: '130 Lạc Long Quân, Quận 4, TP. Hồ Chí Minh',
+    fullAdress: '130 Lạc Long Quân, Quận 4, TP. Hồ Chí Minh',
     district: 'Quận 4',
     city: 'TP. Hồ Chí Minh',
     lat: 10.764,
@@ -645,78 +645,78 @@ export const mockupProperties: Property[] = [
     type: 'APARTMENT',
     media: [
       {
-        property_id: '8',
+        propertyId: '8',
         type: 'IMAGE',
         url: 'https://pt123.cdn.static123.com/images/thumbs/900x600/fit/2023/06/17/9e9b8e68ee899b038777e626e8ab6ae2_1686997946.jpg',
       },
       {
-        property_id: '8',
+        propertyId: '8',
         type: 'IMAGE',
         url: 'https://pt123.cdn.static123.com/images/thumbs/900x600/fit/2023/06/17/870d627df044cef9c81b869f48c80447_1686997941.jpg',
       },
       {
-        property_id: '8',
+        propertyId: '8',
         type: 'IMAGE',
         url: 'https://pt123.cdn.static123.com/images/thumbs/900x600/fit/2023/06/17/698ca5f9cd4ead81824028844dcc11a0_1686997941.jpg',
       },
       {
-        property_id: '8',
+        propertyId: '8',
         type: 'IMAGE',
         url: 'https://pt123.cdn.static123.com/images/thumbs/900x600/fit/2023/06/17/11c874d516379eb8e507e5342160a933_1686997951.jpg',
       },
       {
-        property_id: '8',
+        propertyId: '8',
         type: 'IMAGE',
         url: 'https://pt123.cdn.static123.com/images/thumbs/900x600/fit/2023/06/17/img-1475_1686997951.jpg',
       },
       {
-        property_id: '8',
+        propertyId: '8',
         type: 'IMAGE',
         url: 'https://pt123.cdn.static123.com/images/thumbs/450x300/fit/2023/06/16/img-6342_1686925907.jpg',
       },
       {
-        property_id: '8',
+        propertyId: '8',
         type: 'IMAGE',
         url: 'https://pt123.cdn.static123.com/images/thumbs/450x300/fit/2021/10/27/17f127e466893fd370b536e3d9cd0b15-2742471474502885792_1635303858.jpg',
       },
     ],
     features: [
       {
-        property_id: "8",
-        feature_id: BigInt(1),
+        propertyId: "8",
+        featureId: BigInt(1),
       },
       {
-        property_id: "8",
-        feature_id: BigInt(3),
+        propertyId: "8",
+        featureId: BigInt(3),
       },
       {
-        property_id: "8",
-        feature_id: BigInt(4),
+        propertyId: "8",
+        featureId: BigInt(4),
       },
     ],
     tags: [
       {
         id: BigInt(12),
-        property_id: "1",
+        propertyId: "1",
         tag: "Căn hộ chung cư",
       },
       {
         id: BigInt(13),
-        property_id: "1",
+        propertyId: "1",
         tag: "Căn hộ cao cấp",
       },
     ],
-    created_at: new Date('2021-08-12'),
-    updated_at: new Date('2021-08-12'),
+    createdAt: new Date('2021-08-12'),
+    updatedAt: new Date('2021-08-12'),
   },
   {
-    id: '9',
+    id: "f6ca05c0-fad5-46fc-a237-a8e930e7cb09",
     name: 'Property 9',
     area: 140,
-    number_of_floors: 45,
-    year_built: 2020,
+    numberOfFloors: 45,
+    yearBuilt: 2020,
     orientation: 'Đông Nam',
-    full_address: '131 Nguyễn Văn Linh, Quận 7, TP. Hồ Chí Minh',
+    fullAdress: '131 Nguyễn Văn Linh, Quận 7, TP. Hồ Chí Minh',
     district: 'Quận 7',
     city: 'TP. Hồ Chí Minh',
     lat: 10.765,
@@ -724,78 +724,78 @@ export const mockupProperties: Property[] = [
     type: 'APARTMENT',
     media: [
       {
-        property_id: '9',
+        propertyId: '9',
         type: 'IMAGE',
         url: 'https://pt123.cdn.static123.com/images/thumbs/900x600/fit/2023/06/17/9e9b8e68ee899b038777e626e8ab6ae2_1686997946.jpg',
       },
       {
-        property_id: '9',
+        propertyId: '9',
         type: 'IMAGE',
         url: 'https://pt123.cdn.static123.com/images/thumbs/900x600/fit/2023/06/17/870d627df044cef9c81b869f48c80447_1686997941.jpg',
       },
       {
-        property_id: '9',
+        propertyId: '9',
         type: 'IMAGE',
         url: 'https://pt123.cdn.static123.com/images/thumbs/900x600/fit/2023/06/17/698ca5f9cd4ead81824028844dcc11a0_1686997941.jpg',
       },
       {
-        property_id: '9',
+        propertyId: '9',
         type: 'IMAGE',
         url: 'https://pt123.cdn.static123.com/images/thumbs/900x600/fit/2023/06/17/11c874d516379eb8e507e5342160a933_1686997951.jpg',
       },
       {
-        property_id: '9',
+        propertyId: '9',
         type: 'IMAGE',
         url: 'https://pt123.cdn.static123.com/images/thumbs/900x600/fit/2023/06/17/img-1475_1686997951.jpg',
       },
       {
-        property_id: '9',
+        propertyId: '9',
         type: 'IMAGE',
         url: 'https://pt123.cdn.static123.com/images/thumbs/450x300/fit/2023/06/16/img-6342_1686925907.jpg',
       },
       {
-        property_id: '9',
+        propertyId: '9',
         type: 'IMAGE',
         url: 'https://pt123.cdn.static123.com/images/thumbs/450x300/fit/2021/10/27/17f127e466893fd370b536e3d9cd0b15-2742471474502885792_1635303858.jpg',
       },
     ],
     features: [
       {
-        property_id: "9",
-        feature_id: BigInt(1),
+        propertyId: "9",
+        featureId: BigInt(1),
       },
       {
-        property_id: "9",
-        feature_id: BigInt(3),
+        propertyId: "9",
+        featureId: BigInt(3),
       },
       {
-        property_id: "9",
-        feature_id: BigInt(4),
+        propertyId: "9",
+        featureId: BigInt(4),
       },
     ],
     tags: [
       {
         id: BigInt(14),
-        property_id: "1",
+        propertyId: "1",
         tag: "Căn hộ chung cư",
       },
       {
         id: BigInt(15),
-        property_id: "1",
+        propertyId: "1",
         tag: "Căn hộ cao cấp",
       },
     ],
-    created_at: new Date('2021-09-22'),
-    updated_at: new Date('2021-09-22'),
+    createdAt: new Date('2021-09-22'),
+    updatedAt: new Date('2021-09-22'),
   },
   {
-    id: '10',
+    id: "f6ca05c0-fad5-46fc-a237-a8e930e7cb10",
     name: 'Property 10',
     area: 145,
-    number_of_floors: 50,
-    year_built: 2021,
+    numberOfFloors: 50,
+    yearBuilt: 2021,
     orientation: 'Đông Bắc',
-    full_address: '132 Lạc Long Quân, Quận 4, TP. Hồ Chí Minh',
+    fullAdress: '132 Lạc Long Quân, Quận 4, TP. Hồ Chí Minh',
     district: 'Quận 4',
     city: 'TP. Hồ Chí Minh',
     lat: 10.764,
@@ -803,78 +803,78 @@ export const mockupProperties: Property[] = [
     type: 'APARTMENT',
     media: [
       {
-        property_id: '10',
+        propertyId: '10',
         type: 'IMAGE',
         url: 'https://pt123.cdn.static123.com/images/thumbs/900x600/fit/2023/06/17/9e9b8e68ee899b038777e626e8ab6ae2_1686997946.jpg',
       },
       {
-        property_id: '10',
+        propertyId: '10',
         type: 'IMAGE',
         url: 'https://pt123.cdn.static123.com/images/thumbs/900x600/fit/2023/06/17/870d627df044cef9c81b869f48c80447_1686997941.jpg',
       },
       {
-        property_id: '10',
+        propertyId: '10',
         type: 'IMAGE',
         url: 'https://pt123.cdn.static123.com/images/thumbs/900x600/fit/2023/06/17/698ca5f9cd4ead81824028844dcc11a0_1686997941.jpg',
       },
       {
-        property_id: '10',
+        propertyId: '10',
         type: 'IMAGE',
         url: 'https://pt123.cdn.static123.com/images/thumbs/900x600/fit/2023/06/17/11c874d516379eb8e507e5342160a933_1686997951.jpg',
       },
       {
-        property_id: '10',
+        propertyId: '10',
         type: 'IMAGE',
         url: 'https://pt123.cdn.static123.com/images/thumbs/900x600/fit/2023/06/17/img-1475_1686997951.jpg',
       },
       {
-        property_id: '10',
+        propertyId: '10',
         type: 'IMAGE',
         url: 'https://pt123.cdn.static123.com/images/thumbs/450x300/fit/2023/06/16/img-6342_1686925907.jpg',
       },
       {
-        property_id: '10',
+        propertyId: '10',
         type: 'IMAGE',
         url: 'https://pt123.cdn.static123.com/images/thumbs/450x300/fit/2021/10/27/17f127e466893fd370b536e3d9cd0b15-2742471474502885792_1635303858.jpg',
       },
     ],
     features: [
       {
-        property_id: "10",
-        feature_id: BigInt(1),
+        propertyId: "10",
+        featureId: BigInt(1),
       },
       {
-        property_id: "10",
-        feature_id: BigInt(3),
+        propertyId: "10",
+        featureId: BigInt(3),
       },
       {
-        property_id: "10",
-        feature_id: BigInt(4),
+        propertyId: "10",
+        featureId: BigInt(4),
       },
     ],
     tags: [
       {
         id: BigInt(16),
-        property_id: "1",
+        propertyId: "1",
         tag: "Căn hộ chung cư",
       },
       {
         id: BigInt(17),
-        property_id: "1",
+        propertyId: "1",
         tag: "Căn hộ cao cấp",
       },
     ],
-    created_at: new Date('2021-10-02'),
-    updated_at: new Date('2021-10-02'),
+    createdAt: new Date('2021-10-02'),
+    updatedAt: new Date('2021-10-02'),
   },
   {
-    id: '11',
+    id: "f6ca05c0-fad5-46fc-a237-a8e930e7cb11",
     name: 'Property 11',
     area: 150,
-    number_of_floors: 55,
-    year_built: 2020,
+    numberOfFloors: 55,
+    yearBuilt: 2020,
     orientation: 'Tây Nam',
-    full_address: '133 Nguyễn Văn Linh, Quận 7, TP. Hồ Chí Minh',
+    fullAdress: '133 Nguyễn Văn Linh, Quận 7, TP. Hồ Chí Minh',
     district: 'Quận 7',
     city: 'TP. Hồ Chí Minh',
     lat: 10.765,
@@ -882,78 +882,78 @@ export const mockupProperties: Property[] = [
     type: 'APARTMENT',
     media: [
       {
-        property_id: '11',
+        propertyId: '11',
         type: 'IMAGE',
         url: 'https://pt123.cdn.static123.com/images/thumbs/900x600/fit/2023/06/17/9e9b8e68ee899b038777e626e8ab6ae2_1686997946.jpg',
       },
       {
-        property_id: '11',
+        propertyId: '11',
         type: 'IMAGE',
         url: 'https://pt123.cdn.static123.com/images/thumbs/900x600/fit/2023/06/17/870d627df044cef9c81b869f48c80447_1686997941.jpg',
       },
       {
-        property_id: '11',
+        propertyId: '11',
         type: 'IMAGE',
         url: 'https://pt123.cdn.static123.com/images/thumbs/900x600/fit/2023/06/17/698ca5f9cd4ead81824028844dcc11a0_1686997941.jpg',
       },
       {
-        property_id: '11',
+        propertyId: '11',
         type: 'IMAGE',
         url: 'https://pt123.cdn.static123.com/images/thumbs/900x600/fit/2023/06/17/11c874d516379eb8e507e5342160a933_1686997951.jpg',
       },
       {
-        property_id: '11',
+        propertyId: '11',
         type: 'IMAGE',
         url: 'https://pt123.cdn.static123.com/images/thumbs/900x600/fit/2023/06/17/img-1475_1686997951.jpg',
       },
       {
-        property_id: '11',
+        propertyId: '11',
         type: 'IMAGE',
         url: 'https://pt123.cdn.static123.com/images/thumbs/450x300/fit/2023/06/16/img-6342_1686925907.jpg',
       },
       {
-        property_id: '11',
+        propertyId: '11',
         type: 'IMAGE',
         url: 'https://pt123.cdn.static123.com/images/thumbs/450x300/fit/2021/10/27/17f127e466893fd370b536e3d9cd0b15-2742471474502885792_1635303858.jpg',
       },
     ],
     features: [
       {
-        property_id: "11",
-        feature_id: BigInt(1),
+        propertyId: "11",
+        featureId: BigInt(1),
       },
       {
-        property_id: "11",
-        feature_id: BigInt(3),
+        propertyId: "11",
+        featureId: BigInt(3),
       },
       {
-        property_id: "11",
-        feature_id: BigInt(4),
+        propertyId: "11",
+        featureId: BigInt(4),
       },
     ],
     tags: [
       {
         id: BigInt(18),
-        property_id: "1",
+        propertyId: "1",
         tag: "Căn hộ chung cư",
       },
       {
         id: BigInt(19),
-        property_id: "1",
+        propertyId: "1",
         tag: "Căn hộ cao cấp",
       },
     ],
-    created_at: new Date('2021-11-12'),
-    updated_at: new Date('2021-11-12'),
+    createdAt: new Date('2021-11-12'),
+    updatedAt: new Date('2021-11-12'),
   },
   {
-    id: '12',
+    id: "f6ca05c0-fad5-46fc-a237-a8e930e7cb12",
     name: 'Property 12',
     area: 155,
-    number_of_floors: 60,
-    year_built: 2021,
+    numberOfFloors: 60,
+    yearBuilt: 2021,
     orientation: 'Tây Bắc',
-    full_address: '134 Lạc Long Quân, Quận 4, TP. Hồ Chí Minh',
+    fullAdress: '134 Lạc Long Quân, Quận 4, TP. Hồ Chí Minh',
     district: 'Quận 4',
     city: 'TP. Hồ Chí Minh',
     lat: 10.764,
@@ -961,78 +961,78 @@ export const mockupProperties: Property[] = [
     type: 'APARTMENT',
     media: [
       {
-        property_id: '12',
+        propertyId: '12',
         type: 'IMAGE',
         url: 'https://pt123.cdn.static123.com/images/thumbs/900x600/fit/2023/06/17/9e9b8e68ee899b038777e626e8ab6ae2_1686997946.jpg',
       },
       {
-        property_id: '12',
+        propertyId: '12',
         type: 'IMAGE',
         url: 'https://pt123.cdn.static123.com/images/thumbs/900x600/fit/2023/06/17/870d627df044cef9c81b869f48c80447_1686997941.jpg',
       },
       {
-        property_id: '12',
+        propertyId: '12',
         type: 'IMAGE',
         url: 'https://pt123.cdn.static123.com/images/thumbs/900x600/fit/2023/06/17/698ca5f9cd4ead81824028844dcc11a0_1686997941.jpg',
       },
       {
-        property_id: '12',
+        propertyId: '12',
         type: 'IMAGE',
         url: 'https://pt123.cdn.static123.com/images/thumbs/900x600/fit/2023/06/17/11c874d516379eb8e507e5342160a933_1686997951.jpg',
       },
       {
-        property_id: '12',
+        propertyId: '12',
         type: 'IMAGE',
         url: 'https://pt123.cdn.static123.com/images/thumbs/900x600/fit/2023/06/17/img-1475_1686997951.jpg',
       },
       {
-        property_id: '12',
+        propertyId: '12',
         type: 'IMAGE',
         url: 'https://pt123.cdn.static123.com/images/thumbs/450x300/fit/2023/06/16/img-6342_1686925907.jpg',
       },
       {
-        property_id: '12',
+        propertyId: '12',
         type: 'IMAGE',
         url: 'https://pt123.cdn.static123.com/images/thumbs/450x300/fit/2021/10/27/17f127e466893fd370b536e3d9cd0b15-2742471474502885792_1635303858.jpg',
       },
     ],
     features: [
       {
-        property_id: "12",
-        feature_id: BigInt(1),
+        propertyId: "12",
+        featureId: BigInt(1),
       },
       {
-        property_id: "12",
-        feature_id: BigInt(3),
+        propertyId: "12",
+        featureId: BigInt(3),
       },
       {
-        property_id: "12",
-        feature_id: BigInt(4),
+        propertyId: "12",
+        featureId: BigInt(4),
       },
     ],
     tags: [
       {
         id: BigInt(20),
-        property_id: "1",
+        propertyId: "1",
         tag: "Căn hộ chung cư",
       },
       {
         id: BigInt(21),
-        property_id: "1",
+        propertyId: "1",
         tag: "Căn hộ cao cấp",
       },
     ],
-    created_at: new Date('2021-12-22'),
-    updated_at: new Date('2021-12-22'),
+    createdAt: new Date('2021-12-22'),
+    updatedAt: new Date('2021-12-22'),
   },
   {
-    id: '13',
+    id: "f6ca05c0-fad5-46fc-a237-a8e930e7cb13",
     name: 'Property 13',
     area: 160,
-    number_of_floors: 65,
-    year_built: 2020,
+    numberOfFloors: 65,
+    yearBuilt: 2020,
     orientation: 'Đông Nam',
-    full_address: '135 Nguyễn Văn Linh, Quận 7, TP. Hồ Chí Minh',
+    fullAdress: '135 Nguyễn Văn Linh, Quận 7, TP. Hồ Chí Minh',
     district: 'Quận 7',
     city: 'TP. Hồ Chí Minh',
     lat: 10.765,
@@ -1040,68 +1040,68 @@ export const mockupProperties: Property[] = [
     type: 'APARTMENT',
     media: [
       {
-        property_id: '13',
+        propertyId: '13',
         type: 'IMAGE',
         url: 'https://pt123.cdn.static123.com/images/thumbs/900x600/fit/2023/06/17/9e9b8e68ee899b038777e626e8ab6ae2_1686997946.jpg',
       },
       {
-        property_id: '13',
+        propertyId: '13',
         type: 'IMAGE',
         url: 'https://pt123.cdn.static123.com/images/thumbs/900x600/fit/2023/06/17/870d627df044cef9c81b869f48c80447_1686997941.jpg',
       },
       {
-        property_id: '13',
+        propertyId: '13',
         type: 'IMAGE',
         url: 'https://pt123.cdn.static123.com/images/thumbs/900x600/fit/2023/06/17/698ca5f9cd4ead81824028844dcc11a0_1686997941.jpg',
       },
       {
-        property_id: '13',
+        propertyId: '13',
         type: 'IMAGE',
         url: 'https://pt123.cdn.static123.com/images/thumbs/900x600/fit/2023/06/17/11c874d516379eb8e507e5342160a933_1686997951.jpg',
       },
       {
-        property_id: '13',
+        propertyId: '13',
         type: 'IMAGE',
         url: 'https://pt123.cdn.static123.com/images/thumbs/900x600/fit/2023/06/17/img-1475_1686997951.jpg',
       },
       {
-        property_id: '13',
+        propertyId: '13',
         type: 'IMAGE',
         url: 'https://pt123.cdn.static123.com/images/thumbs/450x300/fit/2023/06/16/img-6342_1686925907.jpg',
       },
       {
-        property_id: '13',
+        propertyId: '13',
         type: 'IMAGE',
         url: 'https://pt123.cdn.static123.com/images/thumbs/450x300/fit/2021/10/27/17f127e466893fd370b536e3d9cd0b15-2742471474502885792_1635303858.jpg',
       },
     ],
     features: [
       {
-        property_id: "13",
-        feature_id: BigInt(1),
+        propertyId: "13",
+        featureId: BigInt(1),
       },
       {
-        property_id: "13",
-        feature_id: BigInt(3),
+        propertyId: "13",
+        featureId: BigInt(3),
       },
       {
-        property_id: "13",
-        feature_id: BigInt(4),
+        propertyId: "13",
+        featureId: BigInt(4),
       },
     ],
     tags: [
       {
         id: BigInt(22),
-        property_id: "1",
+        propertyId: "1",
         tag: "Căn hộ chung cư",
       },
       {
         id: BigInt(23),
-        property_id: "1",
+        propertyId: "1",
         tag: "Căn hộ cao cấp",
       },
     ],
-    created_at: new Date('2021-01-02'),
-    updated_at: new Date('2021-01-02'),
+    createdAt: new Date('2021-01-02'),
+    updatedAt: new Date('2021-01-02'),
   },
 ]

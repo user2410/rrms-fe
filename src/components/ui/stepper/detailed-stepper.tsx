@@ -1,9 +1,5 @@
 import clsx from "clsx";
-
-export interface Step {
-  title: string;
-  description?: string;
-}
+import { Step } from "./step";
 
 export default function DetailedStepper({
   steps,
