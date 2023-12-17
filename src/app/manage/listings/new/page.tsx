@@ -2,7 +2,7 @@
 
 import * as z from 'zod';
 
-import PreviewModal from '@/components/page/manage/listings/new/preview-modal';
+import PreviewModal from './_components/preview-modal';
 import { Button } from "@/components/ui/button";
 import { Form } from '@/components/ui/form';
 import Modal from '@/components/ui/modal';
@@ -16,6 +16,7 @@ import Step2 from './step2';
 import Step3 from './step3';
 import { format } from 'date-fns';
 import CreateListing from '@/actions/listings/create';
+import { useSession } from 'next-auth/react';
 
 const listingFormSchema = z.object({
   contact: z.object({
@@ -91,11 +92,13 @@ const defaultValues: DeepPartial<ListingFormValues> = {
     postAt: format(new Date(), "yyyy-MM-dd'T'HH:mm"),
     active: true,
   },
-}
+};
 
 export default function NewListingPage() {
   const [step, setStep] = useState<number>(0);
   const [showModal, setShowModal] = useState<boolean>(false);
+
+  const {data: session} = useSession();
 
   const form = useForm<ListingFormValues>({
     resolver: zodResolver(listingFormSchema),
@@ -105,7 +108,7 @@ export default function NewListingPage() {
   async function onSubmit(values: ListingFormValues) {
     console.log("submit", JSON.stringify(values));
     try {
-      CreateListing(values);
+      CreateListing(values, session!.user.accessToken);
     } catch (err) {
       console.error(err);
     }
@@ -149,7 +152,7 @@ export default function NewListingPage() {
           </div>
           <div className="col-span-12 bg-card rounded-lg shadow-sm lg:col-span-8 xl:col-span-9 p-8">
             <Form {...form}>
-              <form onSubmit={(e) => { e.preventDefault() }}>
+              <form onSubmit={(e) => { e.preventDefault(); }}>
                 {
                   step === 0 ? (
                     <Step1 />
@@ -182,26 +185,26 @@ export default function NewListingPage() {
                     type="button"
                     variant="default"
                     onClick={(e) => {
-                      console.log(form.getValues())
+                      console.log(form.getValues());
                       switch (step) {
                         case 0:
                           form.trigger('contact')
                             .then(res => {
                               setStep(res ? step + 1 : step);
-                            })
+                            });
                           break;
                         case 1:
                           form.trigger('propertyID')
                             .then(res => {
                               setStep(res ? step + 1 : step);
-                            })
+                            });
                           break;
                         case 2:
                           form.trigger('listing')
                             .then(res => {
                               console.log('res', res);
                               setStep(res ? step + 1 : step);
-                            })
+                            });
                           break;
                         default:
                           form.trigger('config')
@@ -209,7 +212,7 @@ export default function NewListingPage() {
                               if(res) {
                                 onSubmit(form.getValues());
                               }
-                            })
+                            });
                           break;
                       }
                     }}

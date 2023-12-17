@@ -10,7 +10,7 @@ interface State {
 
 const initialState: State = {
   displaySidebar: false,
-}
+};
 
 type Action = 
   | {
@@ -28,12 +28,12 @@ function uiReducer(state: State, action: Action) {
       return {
         ...state,
         displaySidebar: true, 
-      }
+      };
     case 'CLOSE_SIDEBAR':
       return {
         ...state,
         displaySidebar: false,
-      }
+      };
   }
 }
 
@@ -64,7 +64,7 @@ export function ManagedUIContext({ children }: PropsWithChildren<{}>) {
   return (
     <UIProvider>
       <ModalProvider>
-        <ThemeProvider attribute="class" defaultTheme="system" enableSystem>
+        <ThemeProvider attribute="class" defaultTheme="light" enableSystem>
           {children}
         </ThemeProvider>
       </ModalProvider>

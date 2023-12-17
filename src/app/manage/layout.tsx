@@ -1,27 +1,27 @@
 "use client";
 
 import { ScrollArea } from "@/components/ui/scroll-area";
-import ManageDashboardNavbar from "@components/page/manage/navbar";
-import Sidebar from "@components/page/manage/sidebar";
-// import { useSession } from "next-auth/react";
-// import { useRouter } from "next/navigation";
+import ManageDashboardNavbar from "./_components/navbar";
+import Sidebar from "./_components/sidebar";
+import { useSession } from "next-auth/react";
+import { useRouter } from "next/navigation";
 
 export default function ManageLayout({ 
   children
 } : {
   children: React.ReactNode
 }) {
-  // const { status } = useSession()
-  // const router = useRouter();
+  const { status } = useSession();
+  const router = useRouter();
 
-  // if (status === "loading") {
-  //   return <p>Loading...</p>
-  // }
+  if (status === "loading") {
+    return <p>Loading...</p>;
+  }
 
-  // if (status === "unauthenticated") {
-  //   router.replace("/");
-  //   return <p>Access Denied</p>
-  // }
+  if (status === "unauthenticated") {
+    router.replace("/");
+    return <p>Access Denied</p>;
+  }
 
   return (
     <div className="w-full h-full grid grid-cols-12 bg-gray-100 dark:bg-background">

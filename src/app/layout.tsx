@@ -7,22 +7,25 @@ import NextAuthContext from '@/context/next-auth';
 import ReactQueryContext from '@/context/react-query';
 import { ManagedUIContext } from '@/context/ui.context';
 import GoogleMapContext from '@/context/google-map';
-import ManagedModal from '@components/ui/managed-modal';
+import ManagedModal from '@/components/managed-modal';
 
-import "@fortawesome/fontawesome-free/css/all.min.css";
+import '@fortawesome/fontawesome-free/css/all.min.css';
 import '../assets/globals.css';
 import 'swiper/css';
 import 'swiper/css/navigation';
 import "swiper/css/grid";
 import 'swiper/css/pagination';
 import 'swiper/css/scrollbar';
+import 'lightgallery/css/lightgallery.css';
+import 'lightgallery/css/lg-zoom.css';
+import 'lightgallery/css/lg-thumbnail.css';
 
-const inter = Inter({ subsets: ['latin'] })
+const inter = Inter({ subsets: ['latin'] });
 
 export const metadata: Metadata = {
   title: 'Rental Management System',
   description: 'Rentals made easy.',
-}
+};
 
 export default function RootLayout({
   children,
@@ -37,8 +40,8 @@ export default function RootLayout({
           <GoogleMapContext>
             <ReactQueryContext>
               <ManagedUIContext>
-                <Toaster/>
-                <ManagedModal/>
+                <Toaster />
+                <ManagedModal />
                 <div className="w-full h-full bg-background">
                   {children}
                 </div>
@@ -48,5 +51,5 @@ export default function RootLayout({
         </NextAuthContext>
       </body>
     </html>
-  )
+  );
 }

@@ -1,6 +1,6 @@
 "use client";
 
-import { createProperty } from "@/actions/properties/create";
+import { CreateProperty } from "@/actions/properties/create";
 import Step1 from "@/app/manage/properties/new/step1";
 import { Button } from "@/components/ui/button";
 import { Form } from "@/components/ui/form";
@@ -12,6 +12,7 @@ import { useForm } from "react-hook-form";
 import * as z from "zod";
 import Step2 from "./step2";
 import Summary from "./summary";
+import { useSession } from "next-auth/react";
 
 const propertyFormSchema = z.object({
   property: z.object({
@@ -142,12 +143,14 @@ const propertyFormSchema = z.object({
         ),
     })
   ),
-})
+});
 
 export type PropertyForm = z.infer<typeof propertyFormSchema>;
 
 export default function CreatePropertyPage() {  
   const [step, setStep] = useState<number>(0);
+
+  const { data: session } = useSession();
 
   const form = useForm<PropertyForm>({
     resolver: zodResolver(propertyFormSchema),
@@ -160,7 +163,7 @@ export default function CreatePropertyPage() {
     }
     try {
       // TODO: display step-by-step creating modal
-      await createProperty(data);
+      await CreateProperty(data, session!.user.accessToken);
     } catch(err) {
       console.error(err);
     }
@@ -257,5 +260,5 @@ export default function CreatePropertyPage() {
         </form>
       </Form>
     </div>
-  )
+  );
 }

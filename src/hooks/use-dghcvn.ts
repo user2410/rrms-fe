@@ -2,6 +2,18 @@ import { City, District, Ward } from "@/models/dghcvn";
 import { useQuery } from "@tanstack/react-query";
 import axios from "axios";
 
+export const useCity = (cityCode: string) => {
+  return useQuery<City>({
+    queryKey: ["dghcvn", "city", cityCode],
+    queryFn: async () => {
+      const res = await axios.get(`/api/location/dghcvn/cities/${cityCode}`);
+      return res.data;
+    },
+    staleTime: 24 * 60 * (60 * 1000), // 1 day
+    cacheTime: 25 * 60 * (60 * 1000), // 1 day
+  });
+};
+
 export const useCities = () => {
   return useQuery<City[]>({
     queryKey: ["dghcvn", "cities"],
@@ -12,7 +24,19 @@ export const useCities = () => {
     staleTime: 24 * 60 * (60 * 1000), // 1 day
     cacheTime: 25 * 60 * (60 * 1000), // 1 day
   });
-}
+};
+
+export const useDistrict = (districtCode: string) => {
+  return useQuery<District>({
+    queryKey: ["dghcvn", "district", districtCode],
+    queryFn: async ({ queryKey }) => {
+      const res = await axios.get(`/api/location/dghcvn/districts/${queryKey.at(2)}`);
+      return res.data;
+    },
+    staleTime: 24 * 60 * (60 * 1000), // 1 day
+    cacheTime: 25 * 60 * (60 * 1000), // 1 day
+  });
+};
 
 export const useDistricts = (cityCode: string) => {
   return useQuery<District[]>({
@@ -27,7 +51,19 @@ export const useDistricts = (cityCode: string) => {
     staleTime: 24 * 60 * (60 * 1000), // 1 day
     cacheTime: 25 * 60 * (60 * 1000), // 1 day
   });
-}
+};
+
+export const useWard = (wardCode: string) => {
+  return useQuery<District>({
+    queryKey: ["dghcvn", "ward", wardCode],
+    queryFn: async ({ queryKey }) => {
+      const res = await axios.get(`/api/location/dghcvn/wards/${queryKey.at(2)}`);
+      return res.data;
+    },
+    staleTime: 24 * 60 * (60 * 1000), // 1 day
+    cacheTime: 25 * 60 * (60 * 1000), // 1 day
+  });
+};
 
 export const useWards = (districtId: string) => {
   return useQuery<Ward[]>({
@@ -42,4 +78,4 @@ export const useWards = (districtId: string) => {
     staleTime: 24 * 60 * (60 * 1000), // 1 day
     cacheTime: 25 * 60 * (60 * 1000), // 1 day
   });
-}
+};

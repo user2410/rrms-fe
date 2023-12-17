@@ -2,12 +2,12 @@
 
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 
-import Step1Features from "@/components/page/manage/properties/new/step1-features";
-import Step1Address from "@components/page/manage/properties/new/step1-address";
-import Step1BasicInfo from "@components/page/manage/properties/new/step1-basicinfo";
-import Step1ExtraInfo from "@components/page/manage/properties/new/step1-extrainfo";
-import Step1MediaUpload from "@components/page/manage/properties/new/step1-mediaupload";
-import { Step1Tag } from "@components/page/manage/properties/new/step1-tag";
+import Step1Features from "./_components/step1-features";
+import Step1Address from "./_components/step1-address";
+import Step1BasicInfo from "./_components/step1-basicinfo";
+import Step1ExtraInfo from "./_components/step1-extrainfo";
+import Step1MediaUpload from "./_components/step1-mediaupload";
+import { Step1Tag } from "./_components/step1-tag";
 
 export default function Step1() {
 

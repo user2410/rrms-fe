@@ -18,10 +18,9 @@ export default function Logo({
   size?: number;
 }) {
   return (
-    <Link
-      href={href}
+    <span
       className={clsx(
-        'inline-flex items-center focus:outline-none w-auto md:w-32 lg:w-72 justify-center',
+        'inline-flex items-center focus:outline-none',
         className
       )}
     >
@@ -40,6 +39,6 @@ export default function Logo({
           titleClassName && '',
         )}>RRMS</span>
       }
-    </Link>
+    </span>
   );
 };

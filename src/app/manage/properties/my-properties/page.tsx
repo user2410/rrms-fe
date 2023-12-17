@@ -1,7 +1,7 @@
 "use client";
 
-import { columns } from "@/components/page/manage/properties/table/columns";
-import { DataTable } from "@/components/page/manage/properties/data-table";
+import { columns } from "./_components/table/columns";
+import { DataTable } from "./_components/data-table";
 import { mockupProperties } from "@/models/property";
 import wait from "@/models/wait-fn";
 import { useQuery } from "@tanstack/react-query";
@@ -13,11 +13,11 @@ export default function PropertiesPage() {
   });
   
   if (propertiesQuery.isLoading) {
-    return <div>Loading...</div>
+    return <div>Loading...</div>;
   }
 
   if (propertiesQuery.isError) {
-    return <div>Error: <pre>{JSON.stringify(propertiesQuery.error)}</pre></div>
+    return <div>Error: <pre>{JSON.stringify(propertiesQuery.error)}</pre></div>;
   }
 
   return (
@@ -28,5 +28,5 @@ export default function PropertiesPage() {
       </div>
       <DataTable columns={columns} data={propertiesQuery.data} />
     </div>
-  )
+  );
 }

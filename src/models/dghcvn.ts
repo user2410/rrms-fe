@@ -1,16 +1,29 @@
-export interface City {
+export type City = {
   name: string;
   id: string;
 }
 
-export interface District {
+export type District = {
   name: string;
   id: string;
   cityCode: string;
 }
 
-export interface Ward {
+export type Ward = {
   name: string;
   id: string;
   districtId: string;
+}
+
+export type Location = {
+  lat: number;
+  lng: number;
+}
+
+export type Place = {
+  location: Location;
+  viewport?: {
+    northeast: Location,
+    southwest: Location,
+  }
 }

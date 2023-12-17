@@ -18,7 +18,7 @@ export type UnitAmenity = {
   description?: string;
 }
 
-export default interface Unit {
+export type Unit = {
   id: string;
   propertyId: string;
   name: string;
@@ -34,13 +34,13 @@ export default interface Unit {
   amenities: UnitAmenity[];
   createdAt: string;
   updatedAt: string;
-}
+};
 
 export const mapUnitTypeToText = {
   ROOM: 'Phòng',
   APARTMENT: 'Căn hộ',
   STUDIO: 'Studio',
-}
+};
 
 export const uAmenities = [
   { id: 1, amenity: "u-amenity_furniture", text: "Nội thất" },

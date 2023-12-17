@@ -9,6 +9,7 @@ export type PropertyType =
 export type PropertyMedia = {
   url: string;
   propertyId: string;
+  description?: string;
   type: 'IMAGE' | 'VIDEO';
 };
 
@@ -19,19 +20,21 @@ export type PFeature = {
 
 export type PropertyFeature = {
   propertyId: string;
-  featureId: BigInt;
+  featureId: number;
   description?: string;
 };
 
 export type PropertyTag = {
-  id: BigInt;
+  id: number;
   propertyId: string;
   tag: string;
 }
 
-export default interface Property {
+export type Property = {
   id: string;
   name?: string;
+  building?: string;
+  project?: string;
   area: number;
   numberOfFloors: number;
   yearBuilt?: number;
@@ -47,7 +50,7 @@ export default interface Property {
   tags: PropertyTag[];
   createdAt: Date;
   updatedAt: Date;
-}
+};
 
 export const mapPropertyTypeToText = {
   APARTMENT: 'Căn hộ',
@@ -59,22 +62,62 @@ export const mapPropertyTypeToText = {
   OFFICE: 'Văn phòng',
   STORE: 'Cửa hàng',
   BLOCK: 'Dãy phòng trọ',
-}
+};
 
 export const pFeatures = [
-  {id: 1, feature: "p-feature_security", text: "An ninh"},
-  {id: 2, feature: "p-feature_fire-alarm", text: "Hệ thống báo cháy"},
-  {id: 3, feature: "p-feature_gym", text: "Phòng tập gym"},
-  {id: 4, feature: "p-feature_fitness-center", text: "Trung tâm thể dục"},
-  {id: 5, feature: "p-feature_swimming-pool", text: "Hồ bơi"},
-  {id: 6, feature: "p-feature_community-rooms", text: "Phòng cộng đồng"},
-  {id: 7, feature: "p-feature_public-library", text: "Thư viện công cộng"},
-  {id: 8, feature: "p-feature_parking", text: "Bãi đỗ xe"},
-  {id: 9, feature: "p-feature_outdoor-common-area", text: "Khu vực công cộng ngoài trời"},
-  {id: 10, feature: "p-feature_services", text: "Dịch vụ"},
-  {id: 11, feature: "p-feature_facilities", text: "Cơ sở vật chất"},
-  {id: 12, feature: "p-feature_others", text: "Khác"},
+  {id: 1, feature: "p-feature_security", text: "An ninh", icon: "fas fa-shield"},
+  {id: 2, feature: "p-feature_fire-alarm", text: "Hệ thống báo cháy", icon: 'fas fa-fire-extinguisher'},
+  {id: 3, feature: "p-feature_gym", text: "Phòng tập gym", icon: 'fas fa-dumbbell'},
+  {id: 4, feature: "p-feature_fitness-center", text: "Trung tâm thể dục", icon: 'fas fa-person-running'},
+  {id: 5, feature: "p-feature_swimming-pool", text: "Hồ bơi", icon: 'fas fa-person-swimming'},
+  {id: 6, feature: "p-feature_community-rooms", text: "Phòng cộng đồng", icon: 'fas fa-users'},
+  {id: 7, feature: "p-feature_public-library", text: "Thư viện công cộng", icon: 'fas fa-book-open-reader'},
+  {id: 8, feature: "p-feature_parking", text: "Bãi đỗ xe", icon: 'fas fa-square-parking'},
+  {id: 9, feature: "p-feature_outdoor-common-area", text: "Khu vực công cộng ngoài trời", icon: 'fas fa-square'},
+  {id: 10, feature: "p-feature_services", text: "Dịch vụ", icon: 'fas fa-servicestack'},
+  {id: 11, feature: "p-feature_facilities", text: "Cơ sở vật chất", icon: 'fas fa-faucet'},
+  {id: 12, feature: "p-feature_others", text: "Khác", icon: 'fas '},
 ];
+
+
+export const OrientationItems = [
+  {
+    value: "n",
+    label: "Bắc",
+  },
+  {
+    value: "ne",
+    label: "Đông Bắc",
+  },
+  {
+    value: "e",
+    label: "Đông",
+  },
+  {
+    value: "se",
+    label: "Đông Nam",
+  },
+  {
+    value: "s",
+    label: "Nam",
+  },
+  {
+    value: "sw",
+    label: "Tây Nam",
+  },
+  {
+    value: "w",
+    label: "Tây",
+  },
+  {
+    value: "nw",
+    label: "Tây Bắc",
+  },
+  {
+    value: "all",
+    label: "Tất cả",
+  },
+] as const;
 
 export const mockupProperties: Property[] = [
   {
@@ -84,7 +127,7 @@ export const mockupProperties: Property[] = [
     numberOfFloors: 10,
     yearBuilt: 2020,
     orientation: 'Đông Nam',
-    fullAdress: '123 Nguyễn Văn Linh, Quận 7, TP. Hồ Chí Minh',
+    fullAdress: '9 Nguyễn Xiển, Quận 7, TP. Hồ Chí Minh',
     district: 'Quận 7',
     city: 'TP. Hồ Chí Minh',
     lat: 10.765,
@@ -95,60 +138,70 @@ export const mockupProperties: Property[] = [
         propertyId: '1',
         type: 'IMAGE',
         url: 'https://pt123.cdn.static123.com/images/thumbs/900x600/fit/2023/06/17/9e9b8e68ee899b038777e626e8ab6ae2_1686997946.jpg',
+        description: 'Phong bep',
       },
       {
         propertyId: '1',
         type: 'IMAGE',
         url: 'https://pt123.cdn.static123.com/images/thumbs/900x600/fit/2023/06/17/870d627df044cef9c81b869f48c80447_1686997941.jpg',
+        description: 'Ban cong',
       },
       {
         propertyId: '1',
         type: 'IMAGE',
         url: 'https://pt123.cdn.static123.com/images/thumbs/900x600/fit/2023/06/17/698ca5f9cd4ead81824028844dcc11a0_1686997941.jpg',
+        description: 'Phong bep',
       },
       {
         propertyId: '1',
         type: 'IMAGE',
         url: 'https://pt123.cdn.static123.com/images/thumbs/900x600/fit/2023/06/17/11c874d516379eb8e507e5342160a933_1686997951.jpg',
+        description: 'Phong an',
       },
       {
         propertyId: '1',
         type: 'IMAGE',
         url: 'https://pt123.cdn.static123.com/images/thumbs/900x600/fit/2023/06/17/img-1475_1686997951.jpg',
+        description: 'Phong ngu',
       },
       {
         propertyId: '1',
         type: 'IMAGE',
         url: 'https://pt123.cdn.static123.com/images/thumbs/450x300/fit/2023/06/16/img-6342_1686925907.jpg',
+        description: 'Phong khach',
       },
       {
         propertyId: '1',
         type: 'IMAGE',
         url: 'https://pt123.cdn.static123.com/images/thumbs/450x300/fit/2021/10/27/17f127e466893fd370b536e3d9cd0b15-2742471474502885792_1635303858.jpg',
+        description: 'Phong tam',
       },
     ],
     features: [
       {
         propertyId: "1",
-        featureId: BigInt(1),
+        featureId: 1,
+        description: 'Bảo vệ khu vụe trực 24/7'
       },
       {
         propertyId: "1",
-        featureId: BigInt(3),
+        featureId: 3,
+        description: 'Phòng tập gym hiện đại'
       },
       {
         propertyId: "1",
-        featureId: BigInt(4),
+        featureId: 4,
+        description: 'Trung tâm thể dục cộng đồng'
       },
     ],
     tags: [
       {
-        id: BigInt(1),
+        id: 1,
         propertyId: "1",
         tag: "Biệt thự liền kề",
       },
       {
-        id: BigInt(2),
+        id: 2,
         propertyId: "1",
         tag: "Mặt phố",
       },
@@ -209,25 +262,25 @@ export const mockupProperties: Property[] = [
     features: [
       {
         propertyId: "2",
-        featureId: BigInt(1),
+        featureId: 1,
       },
       {
         propertyId: "2",
-        featureId: BigInt(3),
+        featureId: 3,
       },
       {
         propertyId: "2",
-        featureId: BigInt(4),
+        featureId: 4,
       },
     ],
     tags: [
       {
-        id: BigInt(3),
+        id: 3,
         propertyId: "1",
         tag: "Phòng trọ có gác xép",
       },
       {
-        id: BigInt(4),
+        id: 4,
         propertyId: "1",
         tag: "Phòng trọ đôi",
       },
@@ -288,25 +341,25 @@ export const mockupProperties: Property[] = [
     features: [
       {
         propertyId: "3",
-        featureId: BigInt(1),
+        featureId: 1,
       },
       {
         propertyId: "3",
-        featureId: BigInt(3),
+        featureId: 3,
       },
       {
         propertyId: "3",
-        featureId: BigInt(4),
+        featureId: 4,
       },
     ],
     tags: [
       {
-        id: BigInt(3),
+        id: 3,
         propertyId: "1",
         tag: "Phòng trọ có gác xép",
       },
       {
-        id: BigInt(4),
+        id: 4,
         propertyId: "1",
         tag: "Phòng trọ đôi",
       },
@@ -367,25 +420,25 @@ export const mockupProperties: Property[] = [
     features: [
       {
         propertyId: "4",
-        featureId: BigInt(1),
+        featureId: 1,
       },
       {
         propertyId: "4",
-        featureId: BigInt(3),
+        featureId: 3,
       },
       {
         propertyId: "4",
-        featureId: BigInt(4),
+        featureId: 4,
       },
     ],
     tags: [
       {
-        id: BigInt(8),
+        id: 8,
         propertyId: "4",
         tag: "Quận 4",
       },
       {
-        id: BigInt(9),
+        id: 9,
         propertyId: "4",
         tag: "Nhà mặt phố",
       },
@@ -446,25 +499,25 @@ export const mockupProperties: Property[] = [
     features: [
       {
         propertyId: "5",
-        featureId: BigInt(1),
+        featureId: 1,
       },
       {
         propertyId: "5",
-        featureId: BigInt(3),
+        featureId: 3,
       },
       {
         propertyId: "5",
-        featureId: BigInt(4),
+        featureId: 4,
       },
     ],
     tags: [
       {
-        id: BigInt(10),
+        id: 10,
         propertyId: "1",
         tag: "Căn hộ chung cư",
       },
       {
-        id: BigInt(11),
+        id: 11,
         propertyId: "1",
         tag: "Căn hộ cao cấp",
       },
@@ -525,25 +578,25 @@ export const mockupProperties: Property[] = [
     features: [
       {
         propertyId: "6",
-        featureId: BigInt(1),
+        featureId: 1,
       },
       {
         propertyId: "6",
-        featureId: BigInt(3),
+        featureId: 3,
       },
       {
         propertyId: "6",
-        featureId: BigInt(4),
+        featureId: 4,
       },
     ],
     tags: [
       {
-        id: BigInt(10),
+        id: 10,
         propertyId: "1",
         tag: "Căn hộ chung cư",
       },
       {
-        id: BigInt(11),
+        id: 11,
         propertyId: "1",
         tag: "Căn hộ cao cấp",
       },
@@ -604,25 +657,25 @@ export const mockupProperties: Property[] = [
     features: [
       {
         propertyId: "7",
-        featureId: BigInt(1),
+        featureId: 1,
       },
       {
         propertyId: "7",
-        featureId: BigInt(3),
+        featureId: 3,
       },
       {
         propertyId: "7",
-        featureId: BigInt(4),
+        featureId: 4,
       },
     ],
     tags: [
       {
-        id: BigInt(3),
+        id: 3,
         propertyId: "1",
         tag: "Phòng trọ có gác xép",
       },
       {
-        id: BigInt(4),
+        id: 4,
         propertyId: "1",
         tag: "Phòng trọ đôi",
       },
@@ -683,25 +736,25 @@ export const mockupProperties: Property[] = [
     features: [
       {
         propertyId: "8",
-        featureId: BigInt(1),
+        featureId: 1,
       },
       {
         propertyId: "8",
-        featureId: BigInt(3),
+        featureId: 3,
       },
       {
         propertyId: "8",
-        featureId: BigInt(4),
+        featureId: 4,
       },
     ],
     tags: [
       {
-        id: BigInt(12),
+        id: 12,
         propertyId: "1",
         tag: "Căn hộ chung cư",
       },
       {
-        id: BigInt(13),
+        id: 13,
         propertyId: "1",
         tag: "Căn hộ cao cấp",
       },
@@ -762,25 +815,25 @@ export const mockupProperties: Property[] = [
     features: [
       {
         propertyId: "9",
-        featureId: BigInt(1),
+        featureId: 1,
       },
       {
         propertyId: "9",
-        featureId: BigInt(3),
+        featureId: 3,
       },
       {
         propertyId: "9",
-        featureId: BigInt(4),
+        featureId: 4,
       },
     ],
     tags: [
       {
-        id: BigInt(14),
+        id: 14,
         propertyId: "1",
         tag: "Căn hộ chung cư",
       },
       {
-        id: BigInt(15),
+        id: 15,
         propertyId: "1",
         tag: "Căn hộ cao cấp",
       },
@@ -841,25 +894,25 @@ export const mockupProperties: Property[] = [
     features: [
       {
         propertyId: "10",
-        featureId: BigInt(1),
+        featureId: 1,
       },
       {
         propertyId: "10",
-        featureId: BigInt(3),
+        featureId: 3,
       },
       {
         propertyId: "10",
-        featureId: BigInt(4),
+        featureId: 4,
       },
     ],
     tags: [
       {
-        id: BigInt(16),
+        id: 16,
         propertyId: "1",
         tag: "Căn hộ chung cư",
       },
       {
-        id: BigInt(17),
+        id: 17,
         propertyId: "1",
         tag: "Căn hộ cao cấp",
       },
@@ -920,25 +973,25 @@ export const mockupProperties: Property[] = [
     features: [
       {
         propertyId: "11",
-        featureId: BigInt(1),
+        featureId: 1,
       },
       {
         propertyId: "11",
-        featureId: BigInt(3),
+        featureId: 3,
       },
       {
         propertyId: "11",
-        featureId: BigInt(4),
+        featureId: 4,
       },
     ],
     tags: [
       {
-        id: BigInt(18),
+        id: 18,
         propertyId: "1",
         tag: "Căn hộ chung cư",
       },
       {
-        id: BigInt(19),
+        id: 19,
         propertyId: "1",
         tag: "Căn hộ cao cấp",
       },
@@ -999,25 +1052,25 @@ export const mockupProperties: Property[] = [
     features: [
       {
         propertyId: "12",
-        featureId: BigInt(1),
+        featureId: 1,
       },
       {
         propertyId: "12",
-        featureId: BigInt(3),
+        featureId: 3,
       },
       {
         propertyId: "12",
-        featureId: BigInt(4),
+        featureId: 4,
       },
     ],
     tags: [
       {
-        id: BigInt(20),
+        id: 20,
         propertyId: "1",
         tag: "Căn hộ chung cư",
       },
       {
-        id: BigInt(21),
+        id: 21,
         propertyId: "1",
         tag: "Căn hộ cao cấp",
       },
@@ -1078,25 +1131,25 @@ export const mockupProperties: Property[] = [
     features: [
       {
         propertyId: "13",
-        featureId: BigInt(1),
+        featureId: 1,
       },
       {
         propertyId: "13",
-        featureId: BigInt(3),
+        featureId: 3,
       },
       {
         propertyId: "13",
-        featureId: BigInt(4),
+        featureId: 4,
       },
     ],
     tags: [
       {
-        id: BigInt(22),
+        id: 22,
         propertyId: "1",
         tag: "Căn hộ chung cư",
       },
       {
-        id: BigInt(23),
+        id: 23,
         propertyId: "1",
         tag: "Căn hộ cao cấp",
       },
@@ -1104,4 +1157,4 @@ export const mockupProperties: Property[] = [
     createdAt: new Date('2021-01-02'),
     updatedAt: new Date('2021-01-02'),
   },
-]
+];

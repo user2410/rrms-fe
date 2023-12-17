@@ -1,5 +1,5 @@
-import { columns } from "@/components/page/manage/listings/new/columns";
-import PropertyTable from "@/components/page/manage/listings/new/property-table";
+import { columns } from "./_components/columns";
+import PropertyTable from "./_components/property-table";
 import { mockupProperties } from "@/models/property";
 import wait from "@/models/wait-fn";
 import { useQuery } from "@tanstack/react-query";
@@ -15,11 +15,11 @@ export default function Step2() {
   });
 
   if (propertiesQuery.isLoading) {
-    return <div>Loading...</div>
+    return <div>Loading...</div>;
   }
 
   if (propertiesQuery.isError) {
-    return <div>Error: <pre>{JSON.stringify(propertiesQuery.error)}</pre></div>
+    return <div>Error: <pre>{JSON.stringify(propertiesQuery.error)}</pre></div>;
   }
 
   return (

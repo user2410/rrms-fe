@@ -1,7 +1,7 @@
-import Step2Apartment from "@components/page/manage/properties/new/step2-apartment";
-import Step2Block from "@components/page/manage/properties/new/step2-block";
-import Step2Room from "@components/page/manage/properties/new/step2-room";
-import Step2SR from "@components/page/manage/properties/new/step2-sr";
+import Step2Apartment from "./_components/step2-apartment";
+import Step2Block from "./_components/step2-block";
+import Step2Room from "./_components/step2-room";
+import Step2SR from "./_components/step2-sr";
 import { useFormContext } from "react-hook-form";
 import { PropertyForm } from "./page";
 

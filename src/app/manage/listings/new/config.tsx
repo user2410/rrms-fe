@@ -1,21 +1,16 @@
-import { Form, useFormContext } from "react-hook-form";
-import { ListingFormValues } from "./page";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { FormControl, FormDescription, FormField, FormItem, FormLabel, FormMessage } from "@/components/ui/form";
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
 import { Separator } from "@/components/ui/separator";
-import { Label } from "@/components/ui/label";
-import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
-import { Button } from "@/components/ui/button";
-import { format, add } from "date-fns";
-import { Calendar } from "@/components/ui/calendar";
-import clsx from "clsx";
-import { BsCalendar4 } from "react-icons/bs";
-import { Input } from "@/components/ui/input";
-import { useMemo } from "react";
-import { DiscountMap, ListingPriority } from "@/models/listing";
-import Link from "next/link";
 import { Switch } from "@/components/ui/switch";
+import { DiscountMap, ListingPriority } from "@/models/listing";
+import { add, format } from "date-fns";
+import Link from "next/link";
+import { useMemo } from "react";
+import { useFormContext } from "react-hook-form";
+import { ListingFormValues } from "./page";
 
 export default function ListingConfig() {
   const form = useFormContext<ListingFormValues>();
@@ -26,7 +21,7 @@ export default function ListingConfig() {
 
   const endDate = useMemo(() => {
     if (!postAt || !postDuration) return null;
-    return add(new Date(postAt), { days: parseInt(postDuration) })
+    return add(new Date(postAt), { days: parseInt(postDuration) });
   }, [postAt, postDuration]);
   const listingPriority = useMemo(() => {
     if (!priority) return null;
@@ -59,16 +54,11 @@ export default function ListingConfig() {
                   defaultValue={field.value}
                   className="w-full grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-8 pt-2"
                 >
-                  {[
-                    { label: "Tin thường", desc: "Từ 2.160 đ/ngày", value: "1" },
-                    { label: "Tin bạc", desc: "Từ 49.050 đ/ngày", value: "2" },
-                    { label: "Tin vàng", desc: "Từ 106.380 đ/ngày", value: "3", },
-                    { label: "Tin kim cương", desc: "Từ 270.000 đ/ngày", value: "4", },
-                  ].map((item, index) => (
+                  {ListingPriority.map((item, index) => (
                     <FormItem key={index}>
                       <FormLabel className="[&:has([data-state=checked])>div]:border-primary">
                         <FormControl>
-                          <RadioGroupItem value={item.value} className="sr-only" />
+                          <RadioGroupItem value={item.priority} className="sr-only" />
                         </FormControl>
                         <div className="rounded-md border-2 border-muted p-4 hover:border-accent flex flex-col items-center gap-2">
                           <h3 className="text-foreground font-medium">{item.label}</h3>
@@ -174,7 +164,7 @@ export default function ListingConfig() {
           <div className="space-y-2">
             <div className="flex justify-between">
               <div className="font-light">Loại tin</div>
-              <div className="font-medium">{listingPriority ? listingPriority.text : "N/A"}</div>
+              <div className="font-medium">{listingPriority ? listingPriority.label : "N/A"}</div>
             </div>
             <div className="flex justify-between">
               <div className="font-light">Đơn giá / ngày</div>

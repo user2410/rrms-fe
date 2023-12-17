@@ -1,5 +1,8 @@
 import { usePathname } from "next/navigation";
 import { useMemo } from "react";
+import { FaCaretSquareUp, FaClipboardList, FaFileAlt, FaFileContract, FaFileInvoiceDollar, FaFingerprint, FaHandHolding, FaHome, FaMoneyCheckAlt, FaTools, FaUsers } from "react-icons/fa";
+import { AiFillDashboard } from "react-icons/ai";
+import { BsBuildingFillAdd, BsBuildingFillCheck, BsFillBuildingsFill, BsFillFileTextFill, BsPersonFillGear } from "react-icons/bs";
 
 interface Route {
   label: string;
@@ -9,40 +12,42 @@ interface Route {
   active?: boolean;
 }
 
+const ICON_SIZE = 16;
+
 const useRoutes = () => {
 	const pathname = usePathname();
 
 	const routes = useMemo<Route>(() => ({
     label: 'Home',
     href: '/',
-    icon: <i className="fas fa-home" />,
+    icon: <FaHome size={ICON_SIZE} />,
     subroutes: [
       {
         label: 'Dashboard',
         href: '/manage',
-        icon: <i className="fas fa-home" />,
+        icon: <AiFillDashboard size={ICON_SIZE} />,
         subroutes: [
           {
             label: 'Properties',
             href: '/manage/properties',
-            icon: <i className="fas fa-building" />,
+            icon: <BsFillBuildingsFill size={ICON_SIZE}/>,
             subroutes: [
               {
                 label: 'My properties',
                 href: '/manage/properties/my-properties',
-                icon: <i className="fas fa-building" />,
+                icon: <BsBuildingFillCheck size={ICON_SIZE} />,
                 active: pathname === '/manage/properties/my-properties',
               },
               {
                 label: 'Create property',
                 href: '/manage/properties/new',
-                icon: <i className="fas fa-plus" />,
+                icon: <BsBuildingFillAdd size={ICON_SIZE}/>,
                 active: pathname === '/manage/properties/new',
               },
               {
                 label: 'Drafts',
                 href: '/manage/properties/drafts',
-                icon: <i className="fas fa-file" />,
+                icon: <BsFillFileTextFill size={ICON_SIZE} />,
                 active: pathname === '/manage/properties/drafts',
               },
             ]
@@ -50,64 +55,64 @@ const useRoutes = () => {
           {
             label: 'Rental',
             href: 'rental',
-            icon: <i className="fa-solid fa-hand-holding-hand"/>,
+            icon: <FaHandHolding size={ICON_SIZE}/>,
             subroutes: [
               {
                 label: 'Tenants',
                 href: '/manage/rental/tenants',
-                icon: <i className="fas fa-users" />,
+                icon: <FaUsers size={ICON_SIZE}/>,
               },
               {
                 label: 'Services',
                 href: '/manage/rental/services',
-                icon: <i className="fas fa-user-gear" />,
+                icon: <BsPersonFillGear size={ICON_SIZE} />,
               },
               {
                 label: 'Leases',
                 href: '/manage/rental/leases',
-                icon: <i className="fas fa-file-contract" />,
+                icon: <FaFileContract size={ICON_SIZE} />,
               },
               {
                 label: 'Payments',
                 href: '/manage/rental/payments',
-                icon: <i className="fas fa-money-check-alt" />,
+                icon: <FaMoneyCheckAlt size={ICON_SIZE} />,
               },
               {
                 label: 'Invoices',
                 href: '/manage/rental/invoices',
-                icon: <i className="fas fa-file-invoice-dollar" />,
+                icon: <FaFileInvoiceDollar size={ICON_SIZE} />,
               },
               {
                 label: 'Maintenance',
                 href: '/manage/rental/maintenance',
-                icon: <i className="fas fa-tools" />,
+                icon: <FaTools size={ICON_SIZE} />,
               },
               {
                 label: 'Reports',
                 href: '/manage/reports',
-                icon: <i className="fas fa-file-alt" />,
+                icon: <FaFileAlt size={ICON_SIZE} />,
               },
             ]
           },
           {
             label: 'Listings',
             href: '/manage/listings',
-            icon: <i className="fa-regular fa-square-caret-up"/>,
+            icon: <FaCaretSquareUp size={ICON_SIZE}/>,
             subroutes: [
               {
                 label: 'All listings',
                 href: '/manage/listings',
-                icon: <i className="fas fa-fingerprint" />,
+                icon: <FaFingerprint size={ICON_SIZE}/>,
               },
               {
                 label: 'Create new listings',
                 href: '/manage/listings/new',
-                icon: <i className="fas fa-clipboard-list" />,
+                icon: <FaClipboardList size={ICON_SIZE} />,
               },
               {
                 label: 'Drafts',
                 href: '/manage/listing/drafts',
-                icon: <i className="fas fa-file" />,
+                icon: <BsFillFileTextFill size={ICON_SIZE} />,
               },
             ]
           },
@@ -116,27 +121,27 @@ const useRoutes = () => {
       {
         label: 'Landlord',
         href: '/landlord',
-        active: pathname.startsWith('/landlord'),
+        active: pathname?.startsWith('/landlord'),
       },
       {
         label: 'Tenant',
         href: '/tenant',
-        active: pathname.startsWith('/tenant'),
+        active: pathname?.startsWith('/tenant'),
       },
       {
         label: 'News',
         href: '/news',
-        active: pathname.startsWith('/news'),
+        active: pathname?.startsWith('/news'),
       },
       {
         label: 'Contact',
         href: '/contact',
-        active: pathname.startsWith('/contact'),
+        active: pathname?.startsWith('/contact'),
       },
     ],
   }), [pathname]);
 
 	return routes;
-}
+};
 
 export default useRoutes;
