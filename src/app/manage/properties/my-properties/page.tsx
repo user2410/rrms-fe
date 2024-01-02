@@ -3,7 +3,7 @@
 import { columns } from "./_components/table/columns";
 import { DataTable } from "./_components/data-table";
 import { mockupProperties } from "@/models/property";
-import wait from "@/models/wait-fn";
+import wait from "@/utils/wait-fn";
 import { useQuery } from "@tanstack/react-query";
 
 export default function PropertiesPage() {

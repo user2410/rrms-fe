@@ -71,7 +71,7 @@ export const columns: ColumnDef<Property>[] = [
     header: 'Diện tích',
   },
   {
-    accessorKey: 'fullAdress',
+    accessorKey: 'fullAddress',
     header: 'Địa chỉ',
   },
   {

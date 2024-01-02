@@ -53,31 +53,30 @@ const TopBreadcrumb = ({
 };
 
 export default function ListingPage({ params }: { params: { id: string } }) {
-  const listingQuery = useQuery({
-    queryKey: ['listings', 'listing', params.id],
-    queryFn: async () => {
-      const listingQuery = await backendAPI.get(`/api/listings/listing/${params.id}`);
+  const detailListingQuery = useQuery({
+    queryKey: ['listings', 'listing', 'detail-view', params.id],
+    queryFn: async ({queryKey}) => {
+      const listingQuery = await backendAPI.get(`/api/listings/listing/${queryKey.at(3)}`);
       const listing = listingQuery.data;
-      console.log(listing);
       const propertyQuery = await backendAPI.get(`/api/properties/property/${listing.propertyId}`);
-      const property = propertyQuery.data;
-      console.log(property);
+      const unitsQuery = await backendAPI.get(`/api/units/property/${listing.propertyId}`);
       return {
         listing,
-        property,
+        property : propertyQuery.data,
+        units : unitsQuery.data,
       };
     },
     retry: 1,
     staleTime: 60 * 60 * 1000,
   });
-  const data = listingQuery.data;
+  const data = detailListingQuery.data;
 
-  if (listingQuery.isLoading) {
+  if (detailListingQuery.isLoading) {
     return <div>Loading...</div>;
   }
 
-  if (listingQuery.isError) {
-    return <div>Error {JSON.stringify(listingQuery.error)}</div>;
+  if (detailListingQuery.isError) {
+    return <div>Error {JSON.stringify(detailListingQuery.error)}</div>;
   }
 
   return (
@@ -91,7 +90,7 @@ export default function ListingPage({ params }: { params: { id: string } }) {
             <div className="space-y-3">
               <TopBreadcrumb cityCode={data!.property.city} districtCode={data!.property.district}/>
               <h1 className="font-semibold text-xl">{data!.listing.title}</h1>
-              <h3 className="font-normal">{data!.property.fullAdress}</h3>
+              <h3 className="font-normal">{data!.property.fullAddress}</h3>
               <h4 className="font-light text-sm">Đăng vào {format(new Date(2014, 1, 11), 'dd/MM/yyyy hh:mm')}</h4>
             </div>
 

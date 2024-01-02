@@ -59,7 +59,7 @@ export const columns: ColumnDef<Property>[] = [
     header: 'Area',
   },
   {
-    accessorKey: 'fullAdress',
+    accessorKey: 'fullAddress',
     header: 'Address',
   },
   {

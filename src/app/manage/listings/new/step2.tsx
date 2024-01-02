@@ -1,7 +1,7 @@
 import { columns } from "./_components/columns";
 import PropertyTable from "./_components/property-table";
 import { mockupProperties } from "@/models/property";
-import wait from "@/models/wait-fn";
+import wait from "@/utils/wait-fn";
 import { useQuery } from "@tanstack/react-query";
 import { useFormContext } from "react-hook-form";
 import { ListingFormValues } from "./page";

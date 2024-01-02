@@ -3,7 +3,6 @@ import { backendAPI } from "@/libs/axios";
 import { uploadFile } from "../upload-file";
 
 export async function CreateProperty({property, units} : PropertyForm, accessToken: string) {
-  console.log('createProperty', property, units);
   const _property = JSON.parse(JSON.stringify(property));
   const _units = JSON.parse(JSON.stringify(units));
   

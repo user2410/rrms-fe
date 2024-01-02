@@ -99,25 +99,6 @@ export default function SummaryBlock() {
               </td>
               <td className="px-6 py-4">
                 <div className="max-w-[160px]">
-                  {/* <Swiper
-                    modules={[Navigation]}
-                    slidesPerView={1}
-                    navigation={{
-                      prevEl: ,
-                      nextEl: ,
-                    }}
-                  >
-                    {unit.media?.map((media, index) => (
-                      <SwiperSlide key={index}>
-                        <div key={index} className="w-40 h-24 flex justify-center">
-                          <img
-                            src={media.url}
-                            className="object-contain max-w-full max-h-full"
-                          />
-                        </div>
-                      </SwiperSlide>
-                    ))}
-                  </Swiper> */}
                   <ImageSlider media={unit.media || []} />
                 </div>
               </td>

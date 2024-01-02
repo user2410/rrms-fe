@@ -3,18 +3,18 @@ import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle }
 import { Separator } from "@/components/ui/separator";
 import { useRef, useState } from "react";
 
-export interface FileUpload {
+export type FileUpload = {
   name: string;
   size: number;
   type: string;
   url: string;
 }
 
-interface MediaUploadProps {
+type MediaUploadProps = {
   accept?: string;
   multiple?: boolean;
   onAddFile: (file: FileUpload) => void;
-}
+};
 
 function displayFileSize(fsize: number): string {
   return fsize > 1024

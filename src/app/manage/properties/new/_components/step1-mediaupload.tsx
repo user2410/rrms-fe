@@ -6,24 +6,10 @@ import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle }
 import { FormDescription, FormField, FormItem, FormMessage } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
 import { Separator } from "@/components/ui/separator";
+import { DisplayFileSize } from "@/utils/file";
 import { Fragment, useRef, useState } from "react";
 import { UseFormReturn, useFieldArray, useFormContext } from "react-hook-form";
 import { IoClose } from "react-icons/io5";
-
-export interface FileUpload {
-  name: string;
-  size: number;
-  type: string;
-  url: string;
-}
-
-function displayFileSize(fsize: number): string {
-  return fsize > 1024
-    ? fsize > 1048576
-      ? Math.round(fsize / 1048576) + "mb"
-      : Math.round(fsize / 1024) + "kb"
-    : fsize + "b";
-}
 
 function VideoInput({ form }: { form: UseFormReturn<PropertyForm> }) {
   const [value, setValue] = useState<string>("");
@@ -171,7 +157,7 @@ export default function Step1MediaUpload({
             <Separator />
             <CardContent className="p-2 lg:p-4">
               <CardTitle className="text-sm font-normal truncate">{file.name}</CardTitle>
-              <CardDescription className="text-xs">{displayFileSize(file.size!)}</CardDescription>
+              <CardDescription className="text-xs">{DisplayFileSize(file.size!)}</CardDescription>
             </CardContent>
             <Separator />
             <CardFooter className="p-0">

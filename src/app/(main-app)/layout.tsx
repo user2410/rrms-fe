@@ -10,7 +10,7 @@ export default async function MainLayout({
   return (
     <Fragment>
       <main
-        className="relative min-h-screen"
+        className="bg-muted"
         style={{
           WebkitOverflowScrolling: 'touch',
         }}

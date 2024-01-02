@@ -1,6 +1,6 @@
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
-import DivisionSelector from "@/components/ui/division-selector";
+import DivisionSelector from "@/components/complex/division-selector";
 import { useFormContext } from "react-hook-form";
 import { SearchFormValues } from "../search-bar";
 

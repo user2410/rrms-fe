@@ -45,7 +45,7 @@ export default function DivisionSelector<T>({
           <FormItem className="flex-grow">
             <FormLabel>
               Tỉnh / Thành phố
-              <span className="ml-1 text-red-600">*</span>
+              {/* <span className="ml-1 text-red-600">*</span> */}
             </FormLabel>
             {(cityQuery.isLoading || cityQuery.isError) ? (
               <FormControl>
@@ -86,7 +86,7 @@ export default function DivisionSelector<T>({
             <FormItem>
               <FormLabel>
                 Quận, huyện
-                <span className="ml-1 text-red-600">*</span>
+                {/* <span className="ml-1 text-red-600">*</span> */}
               </FormLabel>
               {(districtQuery.isLoading || districtQuery.isError) ? (
                 <FormControl>
@@ -131,7 +131,7 @@ export default function DivisionSelector<T>({
             <FormItem>
               <FormLabel>
                 Phường, xã
-                <span className="ml-1 text-red-600">*</span>
+                {/* <span className="ml-1 text-red-600">*</span> */}
               </FormLabel>
               {(wardQuery.isLoading || wardQuery.isError) ? (
                 <FormControl>

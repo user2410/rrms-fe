@@ -3,7 +3,7 @@ import { Separator } from "@/components/ui/separator";
 
 export default function FooterMain() {
   return (
-    <footer className="bg-slate-100 w-screen py-4">
+    <footer className="bg-slate-100 py-4 border-t">
       <div className="container space-y-4">
         <div className="sm:flex sm:items-center sm:justify-between space-y-4">
           <Logo size={40} />

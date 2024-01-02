@@ -9,3 +9,6 @@ RRMS frontend
 ```bash
 `cp node_modules/@babel/runtime/helpers/esm/interopRequireDefault.js node_modules/@babel/runtime/helpers/interopRequireDefault.js`
 ```
+
+## References
+- Rental application: https://www.propertynest.com/blog/rent/what-guarantor-rental-application/
