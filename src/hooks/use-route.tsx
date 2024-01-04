@@ -3,6 +3,7 @@ import { useMemo } from "react";
 import { FaCaretSquareUp, FaClipboardList, FaFileAlt, FaFileContract, FaFileInvoiceDollar, FaFingerprint, FaHandHolding, FaHome, FaMoneyCheckAlt, FaTools, FaUsers } from "react-icons/fa";
 import { AiFillDashboard } from "react-icons/ai";
 import { BsBuildingFillAdd, BsBuildingFillCheck, BsFillBuildingsFill, BsFillFileTextFill, BsPersonFillGear } from "react-icons/bs";
+import { FiLifeBuoy } from "react-icons/fi";
 
 interface Route {
   label: string;
@@ -34,7 +35,7 @@ const useRoutes = () => {
             subroutes: [
               {
                 label: 'My properties',
-                href: '/manage/properties/my-properties',
+                href: '/manage/properties',
                 icon: <BsBuildingFillCheck size={ICON_SIZE} />,
                 active: pathname === '/manage/properties/my-properties',
               },
@@ -116,6 +117,11 @@ const useRoutes = () => {
               },
             ]
           },
+          {
+            label: 'Feedback',
+            href: '/manage/feedback',
+            icon: <FiLifeBuoy size={ICON_SIZE}/>,
+          }
         ],
       },
       {

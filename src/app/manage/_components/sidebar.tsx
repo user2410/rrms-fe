@@ -10,12 +10,49 @@ import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from "@/
 import useRoutes from "@/hooks/use-route";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
+import { signOut, useSession } from "next-auth/react";
+import { Skeleton } from "@/components/ui/skeleton";
+import { Button } from "@/components/ui/button";
+import toast from "react-hot-toast";
 
+function UserCard() {
+  const {data, status} = useSession();
+
+  return status === 'loading' ? (
+    <div className="flex items-center space-x-4">
+      <Skeleton className="h-12 w-12 rounded-full" />
+      <div className="space-y-2">
+        <Skeleton className="h-4 w-[200px]" />
+        <Skeleton className="h-4 w-[250px]" />
+      </div>
+    </div>
+  ) :(
+    <CardHeader className="flex-1 p-0">
+      <CardTitle className="text-sm font-medium truncate">Pham Chinh</CardTitle>
+      <CardDescription className="text-sm">
+        {data?.user.user.email}
+      </CardDescription>
+    </CardHeader>
+  );
+}
 export default function Sidebar() {
+  
   const routeTree = useRoutes();
   const manageRoute = routeTree.subroutes?.find(r => r.href === '/manage');
   const [collapseShow, setCollapseShow] = React.useState("hidden");
-  
+
+  const handleSignout = async () => {
+    try {
+      await signOut({
+        callbackUrl: '/',
+      });
+      toast.success("Signed out successfully");
+    } catch (err) {
+      toast.error("Something went wrong");
+      console.error(err);
+    }
+  };
+
   return (
     <nav className="
       h-screen bg-background
@@ -105,12 +142,7 @@ export default function Sidebar() {
                     width={32}
                     height={32} />
                 </div>
-                <CardHeader className="flex-1 p-0">
-                  <CardTitle className="text-sm font-medium truncate">Pham Chinh</CardTitle>
-                  <CardDescription className="text-sm">
-                    email@pc.com
-                  </CardDescription>
-                </CardHeader>
+                <UserCard/>
               </div>
               <hr className="my-4 md:min-w-full" />
             </div>
@@ -123,7 +155,7 @@ export default function Sidebar() {
                   </AccordionTrigger>
                 </AccordionItem>
                 {manageRoute?.subroutes?.map((subroute, idx1) => (
-                  <AccordionItem value={(idx1+1).toString()} key={idx1+1}>
+                  <AccordionItem value={(idx1 + 1).toString()} key={idx1 + 1}>
                     {/* Heading */}
                     <AccordionTrigger>
                       <span className="space-x-2 overflow-hidden">
@@ -156,36 +188,23 @@ export default function Sidebar() {
           <div className="w-full">
             <ul className="md:flex-col md:min-w-full flex flex-col list-none">
               <li className="items-center">
-                <Link
-                  href='/'
+                <Button
+                  variant="link"
                   className="text-slate-500 hover:text-slate-400 text-xs uppercase py-3 font-bold block"
                 >
-                  <i
-                    className={clsx(
-                      "w-4 mr-2 text-sm",
-                      'fas fa-gear'
-                    )
-                      // + (router.pathname.indexOf("/admin/dashboard") !== -1
-                      //   ? "opacity-75"
-                      //   : "text-slate-300")
-                    }
-                  ></i>{" "}
+                  <i className="w-4 mr-2 text-sm fas fa-right-from-bracket"></i>{" "}
                   Settings
-                </Link>
+                </Button>
               </li>
               <li className="items-center">
-                <Link
-                  href='/'
-                  className={
-                    "text-slate-500 hover:text-slate-400 text-xs uppercase py-3 font-bold block"
-                    // + (router.pathname.indexOf("/admin/dashboard") !== -1
-                    //   ? "text-lightBlue-500 hover:text-lightBlue-600"
-                    //   : "text-slate-500 hover:text-slate-500")
-                  }
+                <Button
+                  variant="link"
+                  className="text-slate-500 hover:text-slate-400 text-xs uppercase py-3 font-bold block"
+                  onClick={handleSignout}
                 >
                   <i className="w-4 mr-2 text-sm fas fa-right-from-bracket"></i>{" "}
                   Sign out
-                </Link>
+                </Button>
               </li>
             </ul>
           </div>
