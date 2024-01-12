@@ -42,6 +42,7 @@ export type Property = {
   fullAddress: string;
   district: string;
   city: string;
+  ward?: string;
   lat: number;
   lng: number;
   type: PropertyType;

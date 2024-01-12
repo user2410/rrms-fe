@@ -14,9 +14,10 @@ import { signOut, useSession } from "next-auth/react";
 import { Skeleton } from "@/components/ui/skeleton";
 import { Button } from "@/components/ui/button";
 import toast from "react-hot-toast";
+import { Separator } from "@/components/ui/separator";
 
 function UserCard() {
-  const {data, status} = useSession();
+  const { data, status } = useSession();
 
   return status === 'loading' ? (
     <div className="flex items-center space-x-4">
@@ -26,7 +27,7 @@ function UserCard() {
         <Skeleton className="h-4 w-[250px]" />
       </div>
     </div>
-  ) :(
+  ) : (
     <CardHeader className="flex-1 p-0">
       <CardTitle className="text-sm font-medium truncate">Pham Chinh</CardTitle>
       <CardDescription className="text-sm">
@@ -35,10 +36,61 @@ function UserCard() {
     </CardHeader>
   );
 }
-export default function Sidebar() {
-  
+
+function SidebarNavigation() {
   const routeTree = useRoutes();
   const manageRoute = routeTree.subroutes?.find(r => r.href === '/manage');
+
+  return (
+    <ScrollArea className="h-[60vh] border-none">
+      <Link href="/manage" className="group py-4 mb-2 flex flex-row gap-4">
+        <span className="inline-block text-sm w-4">{manageRoute?.icon}</span>
+        <span className="text-xl font-semibold group-hover:underline">Main dashboard</span>
+      </Link>
+      <Accordion type="single" collapsible className="w-full">
+        {manageRoute?.subroutes?.map((subroute, idx1) =>
+          (!subroute.subroutes ||
+             subroute.subroutes.length === 0)
+            ? (
+              <AccordionItem value={(idx1).toString()} key={idx1}>
+                <Link href={subroute.href} className="group flex flex-row gap-4 flex-1 items-center justify-start py-4 font-medium">
+                  <span className="inline-block text-sm w-4">{subroute.icon}</span>
+                  <span className="text-xs uppercase group-hover:underline">{subroute.label}</span>
+                </Link>
+              </AccordionItem>
+            ) : (
+              <AccordionItem value={(idx1).toString()} key={idx1}>
+                {/* Heading */}
+                <AccordionTrigger>
+                  <span className="space-x-2 overflow-hidden !no-underline">
+                    <span className="inline-block text-sm w-4 mr-2">{subroute.icon}</span>
+                    <Link href={subroute.href} className="text-xs uppercase !no-underline">{subroute.label}</Link>
+                  </span>
+                </AccordionTrigger>
+                {/* Navigation */}
+                <AccordionContent>
+                  <ul className="min-w-full flex flex-col list-none pl-1 md:pl-2">
+                    {subroute?.subroutes?.map((item, idx2) => (
+                      <li className="items-center" key={idx2}>
+                        <Link
+                          href={item.href}
+                          className="py-1 md:py-2 text-slate-500 hover:text-slate-300  text-xs uppercase font-bold block"
+                        >
+                          <span className="inline-block text-sm w-4 mr-2">{item.icon}</span>{" "}
+                          {item.label}
+                        </Link>
+                      </li>
+                    ))}
+                  </ul>
+                </AccordionContent>
+              </AccordionItem>
+            ))}
+      </Accordion>
+    </ScrollArea>
+  );
+}
+
+export default function Sidebar() {
   const [collapseShow, setCollapseShow] = React.useState("hidden");
 
   const handleSignout = async () => {
@@ -120,69 +172,8 @@ export default function Sidebar() {
                 </div>
               </div>
             </div>
-            {/* Search Form */}
-            <form className="md:hidden">
-              <div className="mb-3 pt-0">
-                <input
-                  type="text"
-                  placeholder="Search"
-                  className="px-3 py-2 h-12 border border-solid  border-blueGray-500 placeholder-blueGray-300 text-slate-600 bg-white rounded text-base leading-snug shadow-none outline-none focus:outline-none w-full font-normal"
-                />
-              </div>
-            </form>
-            {/* User */}
-            <div className="hidden md:block">
-              <hr className="my-4 md:min-w-full" />
-              <div className="flex items-center space-x-4">
-                <div className="flex-shrink-0">
-                  <Image
-                    className="w-12 h-12 rounded-full"
-                    src="/img/avatar_placeholder.png"
-                    alt="Neil image"
-                    width={32}
-                    height={32} />
-                </div>
-                <UserCard/>
-              </div>
-              <hr className="my-4 md:min-w-full" />
-            </div>
             {/* Navigation */}
-            <ScrollArea className="h-[60vh] border-none">
-              <Accordion type="single" collapsible className="w-full">
-                <AccordionItem value="0">
-                  <AccordionTrigger>
-                    <Link href="/manage">Main dashboard</Link>
-                  </AccordionTrigger>
-                </AccordionItem>
-                {manageRoute?.subroutes?.map((subroute, idx1) => (
-                  <AccordionItem value={(idx1 + 1).toString()} key={idx1 + 1}>
-                    {/* Heading */}
-                    <AccordionTrigger>
-                      <span className="space-x-2 overflow-hidden">
-                        <span className="inline-block text-sm w-4 mr-2">{subroute.icon}</span>
-                        <span className="text-xs uppercase !no-underline">{subroute.label}</span>
-                      </span>
-                    </AccordionTrigger>
-                    {/* Navigation */}
-                    <AccordionContent>
-                      <ul className="min-w-full flex flex-col list-none pl-1 md:pl-2">
-                        {subroute?.subroutes?.map((item, idx2) => (
-                          <li className="items-center" key={idx2}>
-                            <Link
-                              href={item.href}
-                              className="py-1 md:py-2 text-slate-500 hover:text-slate-300  text-xs uppercase font-bold block"
-                            >
-                              <span className="inline-block text-sm w-4 mr-2">{item.icon}</span>{" "}
-                              {item.label}
-                            </Link>
-                          </li>
-                        ))}
-                      </ul>
-                    </AccordionContent>
-                  </AccordionItem>
-                ))}
-              </Accordion>
-            </ScrollArea>
+            <SidebarNavigation />
           </div>
 
           <div className="w-full">

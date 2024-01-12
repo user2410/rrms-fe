@@ -28,7 +28,11 @@ function MainContent({ listingId }: { listingId: string }) {
         const listing = listingQuery.data;
         console.log('listing', listing);
         const propertyQuery = await backendAPI.get(`/api/properties/property/${listing.propertyId}`);
-        const unitsQuery = await backendAPI.get(`/api/units/property/${listing.propertyId}`);
+        const unitsQuery = await backendAPI.get('/api/units/search', {
+          params: {
+            upropertyId: listing.propertyId,
+          }
+        });
         setData({
           listing,
           property: propertyQuery.data,

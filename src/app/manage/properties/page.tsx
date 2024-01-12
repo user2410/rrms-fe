@@ -8,6 +8,7 @@ import { useEffect, useState } from "react";
 import PropertiesGrid from "./_components/properties_grid";
 import wait from "@/utils/wait-fn";
 import { Button } from "@/components/ui/button";
+import { useRouter } from "next/navigation";
 
 export type ManagedProperty = {
   role: string;
@@ -16,14 +17,14 @@ export type ManagedProperty = {
 
 export default function ManagePropertiesPage() {
   const session = useSession();
+  const router = useRouter();
 
-  const [properties, setProperties] = useState<ManagedProperty[]>([]);
-  const [isLoading, setIsLoading] = useState(true);
+  const [properties, setProperties] = useState<ManagedProperty[] | null>(null);
+  const [isLoading, setIsLoading] = useState<boolean>(true);
   const [error, setError] = useState<any>();
 
   useEffect(() => {
-    if (session.status !== "authenticated") return;
-    console.log(session.status, session.data?.user.accessToken);
+    if (session.status !== "authenticated" || properties !== null) return;
     (async () => {
       try {
         setIsLoading(true);
@@ -44,31 +45,29 @@ export default function ManagePropertiesPage() {
         setIsLoading(false);
       }
     })();
-  }, [session.status, session.data?.user.accessToken]);
+  }, [session.status]);
 
   return (
     <div className="container h-full py-10">
-      {/* Top search and filter bar */}
-      {isLoading
-        ? (
-          <div className="w-full h-full flex justify-center items-center">
-            <Spinner size={32} color="green" />
-          </div>
-        )
-        : error
+      <div className="space-y-4">
+        <div className="flex flex-row justify-between items-center w-full">
+          <h1 className="text-2xl lg:text-3xl font-light">Bất động sản của bạn</h1>
+          <Button type="button" variant="default" onClick={() => router.push('/manage/properties/new')}>Tạo một bất động sản mới</Button>
+        </div>
+        {isLoading
           ? (
+            <div className="w-full h-full flex justify-center items-center">
+              <Spinner size={32} />
+            </div>
+          ) : error ? (
             <div className="w-full h-full flex justify-center items-center">
               <p className="text-red-500">Error: {JSON.stringify(error)}</p>
             </div>
-          )
-          : (
-            <div className="space-y-4">
-              <PropertiesGrid initialProperties={properties} />
-              <div className="w-full flex flex-row justify-center">
-                <Button variant="outline">Xem thêm</Button>
-              </div>
-            </div>
-          )}
+          ) : properties ? (
+            <PropertiesGrid initialProperties={properties} />
+
+          ) : (null)}
+      </div>
     </div>
   );
 };

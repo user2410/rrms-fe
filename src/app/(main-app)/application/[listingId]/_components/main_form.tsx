@@ -4,14 +4,13 @@ import { Property } from "@/models/property";
 import { Unit } from "@/models/unit";
 import { zodResolver } from "@hookform/resolvers/zod";
 import * as Tabs from '@radix-ui/react-tabs';
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { DeepPartial, useForm } from "react-hook-form";
 import * as z from "zod";
 import styles from '../_styles/page.module.css';
 import ApplicationOccupants from "./application_occupants";
 import Finish from "./finish";
 import YourDetails from "./your_details";
-import { Listing } from "@/models/listing";
 
 const applicationFormSchema = z.object({
   propertyId: z.string(),

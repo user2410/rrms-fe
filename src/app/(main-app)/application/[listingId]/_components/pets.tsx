@@ -146,27 +146,27 @@ export default function Pets() {
         <div className="flex flex-col gap-2">
           {parentForm.watch("ao.pets").map((field, index) => (
             <div key={index} className="border flex flex-row justify-between py-2">
-            <div className="space-y-2 px-4">
-              <div className="text-lg font-semibold">{field.type}</div>
-              <div className="text-md font-normal flex flex-row items-center gap-2">
-                <FaWeight size={16} />
-                <span>{field.weight} kg</span>
+              <div className="space-y-2 px-4">
+                <div className="text-lg font-semibold">{field.type}</div>
+                <div className="text-md font-normal flex flex-row items-center gap-2">
+                  <FaWeight size={16} />
+                  <span>{field.weight} kg</span>
+                </div>
+                <div className="text-sm font-light truncate">{field.description}</div>
               </div>
-              <div className="text-sm font-light truncate">{field.description}</div>
+              <div className="flex flex-row">
+                <Button
+                  type="button" variant="link"
+                  onClick={() => {
+                    setEditing(index);
+                    editBtnRef.current?.click();
+                  }}
+                >
+                  Sửa
+                </Button>
+                <Button type="button" variant="link" className="text-red-600" onClick={() => remove(index)}>Xóa</Button>
+              </div>
             </div>
-            <div className="flex flex-row">
-              <Button
-                type="button" variant="link"
-                onClick={() => {
-                  setEditing(index);
-                  editBtnRef.current?.click();
-                }}
-              >
-                Sửa
-              </Button>
-              <Button type="button" variant="link" className="text-red-600" onClick={() => remove(index)}>Xóa</Button>
-            </div>
-          </div>
           ))}
         </div>
         <InputForm

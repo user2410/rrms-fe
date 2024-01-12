@@ -1,8 +1,7 @@
 import { usePathname } from "next/navigation";
 import { useMemo } from "react";
-import { FaCaretSquareUp, FaClipboardList, FaFileAlt, FaFileContract, FaFileInvoiceDollar, FaFingerprint, FaHandHolding, FaHome, FaMoneyCheckAlt, FaTools, FaUsers } from "react-icons/fa";
-import { AiFillDashboard } from "react-icons/ai";
-import { BsBuildingFillAdd, BsBuildingFillCheck, BsFillBuildingsFill, BsFillFileTextFill, BsPersonFillGear } from "react-icons/bs";
+import { BsBuildingFillAdd, BsFillBuildingsFill, BsPersonFillGear } from "react-icons/bs";
+import { FaFileAlt, FaFileContract, FaFileInvoiceDollar, FaHandHolding, FaHome, FaMoneyCheckAlt, FaTools, FaUsers } from "react-icons/fa";
 import { FiLifeBuoy } from "react-icons/fi";
 
 interface Route {
@@ -26,45 +25,33 @@ const useRoutes = () => {
       {
         label: 'Dashboard',
         href: '/manage',
-        icon: <AiFillDashboard size={ICON_SIZE} />,
+        icon: <FaHome size={ICON_SIZE*1.5} />,
         subroutes: [
           {
-            label: 'Properties',
+            label: 'Nhà cho thuê',
             href: '/manage/properties',
             icon: <BsFillBuildingsFill size={ICON_SIZE}/>,
             subroutes: [
               {
-                label: 'My properties',
-                href: '/manage/properties',
-                icon: <BsBuildingFillCheck size={ICON_SIZE} />,
-                active: pathname === '/manage/properties/my-properties',
-              },
-              {
-                label: 'Create property',
-                href: '/manage/properties/new',
+                label: 'Tin đăng',
+                href: '/manage/listings',
                 icon: <BsBuildingFillAdd size={ICON_SIZE}/>,
-                active: pathname === '/manage/properties/new',
-              },
-              {
-                label: 'Drafts',
-                href: '/manage/properties/drafts',
-                icon: <BsFillFileTextFill size={ICON_SIZE} />,
-                active: pathname === '/manage/properties/drafts',
+                active: pathname?.startsWith('/manage/properties'),
               },
             ]
           },
           {
-            label: 'Rental',
+            label: 'Quản lý thuê',
             href: 'rental',
             icon: <FaHandHolding size={ICON_SIZE}/>,
             subroutes: [
               {
-                label: 'Tenants',
-                href: '/manage/rental/tenants',
+                label: 'Đơn ứng tuyển',
+                href: '/manage/rental/applications',
                 icon: <FaUsers size={ICON_SIZE}/>,
               },
               {
-                label: 'Services',
+                label: 'Khách thuê',
                 href: '/manage/rental/services',
                 icon: <BsPersonFillGear size={ICON_SIZE} />,
               },
@@ -74,46 +61,24 @@ const useRoutes = () => {
                 icon: <FaFileContract size={ICON_SIZE} />,
               },
               {
-                label: 'Payments',
+                label: 'Chi trả',
                 href: '/manage/rental/payments',
                 icon: <FaMoneyCheckAlt size={ICON_SIZE} />,
               },
               {
-                label: 'Invoices',
-                href: '/manage/rental/invoices',
+                label: 'Chi tiêu',
+                href: '/manage/rental/expenses',
                 icon: <FaFileInvoiceDollar size={ICON_SIZE} />,
               },
               {
-                label: 'Maintenance',
+                label: 'Bảo trì',
                 href: '/manage/rental/maintenance',
                 icon: <FaTools size={ICON_SIZE} />,
               },
               {
-                label: 'Reports',
+                label: 'Báo cáo',
                 href: '/manage/reports',
                 icon: <FaFileAlt size={ICON_SIZE} />,
-              },
-            ]
-          },
-          {
-            label: 'Listings',
-            href: '/manage/listings',
-            icon: <FaCaretSquareUp size={ICON_SIZE}/>,
-            subroutes: [
-              {
-                label: 'All listings',
-                href: '/manage/listings',
-                icon: <FaFingerprint size={ICON_SIZE}/>,
-              },
-              {
-                label: 'Create new listings',
-                href: '/manage/listings/new',
-                icon: <FaClipboardList size={ICON_SIZE} />,
-              },
-              {
-                label: 'Drafts',
-                href: '/manage/listing/drafts',
-                icon: <BsFillFileTextFill size={ICON_SIZE} />,
               },
             ]
           },

@@ -31,6 +31,10 @@ const nextConfig = {
         protocol: 'https',
         hostname: '**.batdongsan.com.vn',
       },
+      {
+        protocol: 'https',
+        hostname: '**.cdn.static123.com',
+      },
     ]
   }
 };

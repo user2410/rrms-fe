@@ -30,7 +30,7 @@ type InputFormProps = {
   onSubmit: (value: InputForm) => void;
 };
 const InputForm = forwardRef<HTMLButtonElement, InputFormProps>(function Render({
-  title, description, hideTriggerBtn = false, submitBtnText, 
+  title, description, hideTriggerBtn = false, submitBtnText,
   defaultValues, onSubmit,
 }, triggerBtnRef) {
   const minorForm = useForm<InputForm>({
@@ -45,7 +45,7 @@ const InputForm = forwardRef<HTMLButtonElement, InputFormProps>(function Render(
     }}>
       <DialogTrigger asChild>
         {hideTriggerBtn ? (
-          <button type="button" ref={triggerBtnRef} hidden/>
+          <button type="button" ref={triggerBtnRef} hidden />
         ) : (
           <Button type="button" ref={triggerBtnRef} variant="link">Thêm trẻ vị thành niên</Button>
         )}
@@ -61,53 +61,53 @@ const InputForm = forwardRef<HTMLButtonElement, InputFormProps>(function Render(
         </DialogHeader>
         <Form {...minorForm}>
           <form>
-          <div className="py-4 space-y-3">
-                  <FormField
-                    name="fullName"
-                    control={minorForm.control}
-                    render={({ field }) => (
-                      <FormItem className="grid grid-cols-4 items-center gap-2">
-                        <FormLabel>Họ và tên</FormLabel>
-                        <FormControl className="col-span-3">
-                          <Input {...field} placeholder="Nguyen Van A" />
-                        </FormControl>
-                      </FormItem>
-                    )}
-                  />
-                  <FormField
-                    name="dob"
-                    control={minorForm.control}
-                    render={({ field }) => (
-                      <FormItem className="grid grid-cols-4 items-center gap-2">
-                        <FormLabel>Sinh nhật</FormLabel>
-                        <FormControl>
-                          <Input
-                            type="date"
-                            value={field.value && format(field.value, "yyyy-MM-dd")}
-                            onChange={(e) => {
-                              if (!e.currentTarget.value) return;
-                              field.onChange(new Date(e.currentTarget.value));
-                            }}
-                            max={format(new Date(), "yyyy-MM-dd")}
-                            className="w-full p-3"
-                          />
-                        </FormControl>
-                      </FormItem>
-                    )}
-                  />
-                  <FormField
-                    name="description"
-                    control={minorForm.control}
-                    render={({ field }) => (
-                      <FormItem className="grid grid-cols-4 items-center gap-2">
-                        <FormLabel>Mô tả thêm</FormLabel>
-                        <FormControl className="col-span-3">
-                          <Textarea {...field} rows={3} placeholder="Thông tin thêm về trẻ (trường học của trẻ, tình trạng sức khỏe, dị ứng,...)" />
-                        </FormControl>
-                      </FormItem>
-                    )}
-                  />
-                </div>
+            <div className="py-4 space-y-3">
+              <FormField
+                name="fullName"
+                control={minorForm.control}
+                render={({ field }) => (
+                  <FormItem className="grid grid-cols-4 items-center gap-2">
+                    <FormLabel>Họ và tên</FormLabel>
+                    <FormControl className="col-span-3">
+                      <Input {...field} placeholder="Nguyen Van A" />
+                    </FormControl>
+                  </FormItem>
+                )}
+              />
+              <FormField
+                name="dob"
+                control={minorForm.control}
+                render={({ field }) => (
+                  <FormItem className="grid grid-cols-4 items-center gap-2">
+                    <FormLabel>Sinh nhật</FormLabel>
+                    <FormControl>
+                      <Input
+                        type="date"
+                        value={field.value && format(field.value, "yyyy-MM-dd")}
+                        onChange={(e) => {
+                          if (!e.currentTarget.value) return;
+                          field.onChange(new Date(e.currentTarget.value));
+                        }}
+                        max={format(new Date(), "yyyy-MM-dd")}
+                        className="w-full p-3"
+                      />
+                    </FormControl>
+                  </FormItem>
+                )}
+              />
+              <FormField
+                name="description"
+                control={minorForm.control}
+                render={({ field }) => (
+                  <FormItem className="grid grid-cols-4 items-center gap-2">
+                    <FormLabel>Mô tả thêm</FormLabel>
+                    <FormControl className="col-span-3">
+                      <Textarea {...field} rows={3} placeholder="Thông tin thêm về trẻ (trường học của trẻ, tình trạng sức khỏe, dị ứng,...)" />
+                    </FormControl>
+                  </FormItem>
+                )}
+              />
+            </div>
             <DialogFooter className="sm:justify-start">
               <DialogClose asChild>
                 <Button type="button" onClick={() => {
@@ -148,27 +148,27 @@ export default function Minors() {
         <div className="flex flex-col gap-2">
           {parentForm.watch("ao.minors").map((field, index) => (
             <div key={index} className="border flex flex-row justify-between py-2">
-            <div className="space-y-2 px-4">
-              <div className="text-lg font-semibold">{field.fullName}</div>
-              <div className="text-md font-normal flex flex-row items-center gap-2">
-                <FaBirthdayCake size={16} />
-                <span>{format(field.dob, "dd/MM/yyyy")} ({(new Date()).getFullYear() - field.dob.getFullYear()} tuổi)</span>
+              <div className="space-y-2 px-4">
+                <div className="text-lg font-semibold">{field.fullName}</div>
+                <div className="text-md font-normal flex flex-row items-center gap-2">
+                  <FaBirthdayCake size={16} />
+                  <span>{format(field.dob, "dd/MM/yyyy")} ({(new Date()).getFullYear() - field.dob.getFullYear()} tuổi)</span>
+                </div>
+                <div className="text-sm font-light truncate">{field.description}</div>
               </div>
-              <div className="text-sm font-light truncate">{field.description}</div>
+              <div className="flex flex-row">
+                <Button
+                  type="button" variant="link"
+                  onClick={() => {
+                    setEditing(index);
+                    editBtnRef.current?.click();
+                  }}
+                >
+                  Sửa
+                </Button>
+                <Button type="button" variant="link" className="text-red-600" onClick={() => remove(index)}>Xóa</Button>
+              </div>
             </div>
-            <div className="flex flex-row">
-              <Button
-                type="button" variant="link"
-                onClick={() => {
-                  setEditing(index);
-                  editBtnRef.current?.click();
-                }}
-              >
-                Sửa
-              </Button>
-              <Button type="button" variant="link" className="text-red-600" onClick={() => remove(index)}>Xóa</Button>
-            </div>
-          </div>
           ))}
         </div>
         <InputForm
