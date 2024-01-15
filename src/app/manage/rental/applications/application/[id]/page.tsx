@@ -5,23 +5,22 @@ import * as Tabs from "@radix-ui/react-tabs";
 import { MoveLeft } from "lucide-react";
 import { useRouter } from "next/navigation";
 
+import { GetLocationName } from "@/utils/dghcvn";
+import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 import Loading from "@/components/ui/loading";
+import { Separator } from "@/components/ui/separator";
 import { backendAPI } from "@/libs/axios";
 import { Application, ManagedApplication, TransformApplicationRESTResponse } from "@/models/application";
 import { Listing } from "@/models/listing";
 import { Property } from "@/models/property";
-import { Unit } from "@/models/unit";
+import { DialogTrigger } from "@radix-ui/react-dialog";
 import { useSession } from "next-auth/react";
 import { useEffect, useState } from "react";
+import { FaCheckCircle } from "react-icons/fa";
 import styles from "../../_components/application_list.module.css";
 import StatusCard from "../../_components/status_card";
 import BasicInfo from "./_components/basic";
-import { GetCityName, GetDistrictName, GetLocationName, GetWardName } from "@/components/ui/dghcvn/name";
 import Personal from "./_components/personal";
-import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle } from "@/components/ui/dialog";
-import { DialogTrigger } from "@radix-ui/react-dialog";
-import { FaCheckCircle } from "react-icons/fa";
-import { Separator } from "@/components/ui/separator";
 
 export default function ApplicationPage({ params }: { params: { id: string } }) {
   const router = useRouter();
@@ -83,11 +82,11 @@ export default function ApplicationPage({ params }: { params: { id: string } }) 
         <div className="space-y-2">
           <h1 className="text-2xl ">{data?.property.fullAddress}</h1>
           <h2 className="text-xl">
-            <GetLocationName 
-              cityId={data.property.city}
-              distId={data.property.district}
-              wardId={data.property.ward ? data.property.ward : ""}
-            />
+            {GetLocationName(
+              data.property.city,
+              data.property.district,
+              data.property.ward ? data.property.ward : "",
+            )}
           </h2>
         </div>
       </div>

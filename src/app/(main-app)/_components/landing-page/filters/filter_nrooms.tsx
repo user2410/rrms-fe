@@ -1,7 +1,7 @@
 import { FormControl, FormField, FormItem, FormLabel } from "@/components/ui/form";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { useFormContext } from "react-hook-form";
-import { SearchFormValues } from "../search-bar";
+import { SearchFormValues } from "../search_box";
 import { Label } from "@/components/ui/label";
 
 const nRoomsItems = [
@@ -69,7 +69,7 @@ export default function FilterNRooms() {
               <FormLabel className="font-normal text-xs">{item.label}</FormLabel>
               <Select
                 onValueChange={field.onChange}
-                defaultValue={field.value}
+                value={form.watch(item.fieldName as any) || ""}
               >
                 <FormControl>
                   <SelectTrigger type="button">

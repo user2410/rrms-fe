@@ -1,6 +1,7 @@
 import { PropertyForm } from "@/app/manage/properties/new/page";
-import { useCities, useDistricts, useWards } from "@/hooks/use-dghcvn";
+import { GetCityById, GetDistrictById, GetWardById } from "@/utils/dghcvn";
 import { GoogleMap, MarkerF } from "@react-google-maps/api";
+import { useMemo } from "react";
 import { useFormContext } from "react-hook-form";
 import { FaToilet } from "react-icons/fa";
 import { MdBalcony, MdBathtub, MdBed } from "react-icons/md";
@@ -10,9 +11,9 @@ export default function SummaryBasicInfo() {
   const property = form.getValues("property");
   const units = form.getValues("units");
 
-  const cityQuery = useCities();
-  const districtQuery = useDistricts(property.city);
-  const wardQuery = useWards(property.district);
+  const city = useMemo(() => GetCityById(property.city), []);
+  const district = useMemo(() => GetDistrictById(property.district), []);
+  const ward = useMemo(() => GetWardById(property.ward || ""), []);
 
   return (
     <div className="space-y-6 px-2">
@@ -43,31 +44,22 @@ export default function SummaryBasicInfo() {
                     key === "area" ? (<span>{value.toString()}m<sup>2</sup></span>) :
                     key === "numberOfFloors" ? `${value} tầng` :
                     key === "fullAddress" ? value.toString() :
-                    key === "city" ? (
-                      (cityQuery.isLoading || cityQuery.isError) ? 'N/A' :
-                      (cityQuery.data.find(item => item.id == value)?.name)
-                    ) :
-                    key === "district" ? (
-                      (districtQuery.isLoading || districtQuery.isError) ? 'N/A' :
-                      (districtQuery.data.find(item => item.id == value)?.name)
-                    ) :
-                    key === "ward" ? (
-                      (wardQuery.isLoading || wardQuery.isError) ? 'N/A' :
-                      (wardQuery.data.find(item => item.id == value)?.name)
-                    ) :
-                      key === "yearBuilt" ? (!value ? 'N/A' : value.toString()) :
-                      key === "description" ? (!value ? 'N/A' : value.toString()) :
-                      key === "entranceWidth" ? (!value ? 'N/A' : value.toString()) :
-                      key === "facade" ? (!value ? 'N/A' : (<span>{value.toString()}m<sup>2</sup></span>)) :
-                      key === "orientation" ? (!value ? 'N/A' : (
-                        value === "ne" ? "Đông Bắc" :
-                        value === "nw" ? "Tây Bắc" :
-                        value === "se" ? "Đông Nam" :
-                        value === "sw" ? "Tây Nam" :
-                        value === "n" ? "Bắc" :
-                        value === "s" ? "Nam" :
-                        value === "e" ? "Đông" :
-                        value === "w" ? "Tây" :
+                    key === "city" ? (city ? city.name : 'N/A') :
+                    key === "district" ? (district ? district.name : 'N/A') :
+                    key === "ward" ? (ward ? ward.name : 'N/A') :
+                    key === "yearBuilt" ? (!value ? 'N/A' : value.toString()) :
+                    key === "description" ? (!value ? 'N/A' : value.toString()) :
+                    key === "entranceWidth" ? (!value ? 'N/A' : value.toString()) :
+                    key === "facade" ? (!value ? 'N/A' : (<span>{value.toString()}m<sup>2</sup></span>)) :
+                    key === "orientation" ? (!value ? 'N/A' : (
+                      value === "ne" ? "Đông Bắc" :
+                      value === "nw" ? "Tây Bắc" :
+                      value === "se" ? "Đông Nam" :
+                      value === "sw" ? "Tây Nam" :
+                      value === "n" ? "Bắc" :
+                      value === "s" ? "Nam" :
+                      value === "e" ? "Đông" :
+                      value === "w" ? "Tây" :
                       null
                     )) : null
                     }

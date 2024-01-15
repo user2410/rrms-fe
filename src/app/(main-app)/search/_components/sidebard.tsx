@@ -2,7 +2,7 @@
 
 import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from "@/components/ui/accordion";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { useCity, useDistrict, useDistricts, useWards } from "@/hooks/use-dghcvn";
+import { GetCityById, GetDistrictById, GetDistricts, GetWards } from "@/utils/dghcvn";
 import Link from "next/link";
 
 const DistrictDropdownContent = ({
@@ -10,21 +10,21 @@ const DistrictDropdownContent = ({
 }: {
   cityCode: string;
 }) => {
-  const cityQuery = useCity(cityCode);
-  const districtQuery = useDistricts(cityCode);
+  const city = GetCityById(cityCode);
+  const districts = GetDistricts(cityCode);
 
   return (
     <Card>
       <CardHeader>
-        <CardTitle className="text-lg">Nhà đất cho thuê tại {cityQuery.data?.name}</CardTitle>
+        <CardTitle className="text-lg">Nhà đất cho thuê tại {city!.name}</CardTitle>
       </CardHeader>
       <CardContent className="flex flex-col space-y-2">
         <Accordion type="multiple">
-          {districtQuery.data?.map((dist, index) => (
+          {districts.map((dist, index) => (
             <AccordionItem value={`item-${index}`} key={index}>
               <AccordionTrigger>{dist.name}</AccordionTrigger>
               <AccordionContent>
-                <Link key={index} href={`/search?ward=${dist.id}`} className="hover:underline">{dist.name}</Link>
+                <Link key={index} href={`/search?district=${dist.id}`} className="hover:underline">{dist.name}</Link>
               </AccordionContent>
             </AccordionItem>
           ))}
@@ -39,21 +39,16 @@ const WardDropdownContent = ({
 }: {
   districtCode: string;
 }) => {
-  const districtQuery = useDistrict(districtCode);
-  const wardQuery = useWards(districtCode);
-
-  if (districtQuery.isError) {
-    console.log(districtQuery.error);
-    return null;
-  }
+  const district = GetDistrictById(districtCode);
+  const wards = GetWards(districtCode);
   
   return (
     <Card>
       <CardHeader>
-        <CardTitle className="text-lg">Nhà đất cho thuê tại quận {districtQuery.data?.name}</CardTitle>
+        <CardTitle className="text-lg">Nhà đất cho thuê tại quận {district!.name}</CardTitle>
       </CardHeader>
       <CardContent className="flex flex-col space-y-2">
-        {wardQuery.data?.map((ward, index) => (
+        {wards.map((ward, index) => (
           <Link key={index} href={`/search?ward=${ward.id}`} className="hover:underline">{ward.name}</Link>
         ))}
       </CardContent>

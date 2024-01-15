@@ -1,5 +1,5 @@
 import { Card, CardContent, CardHeader } from "@/components/ui/card";
-import { GetLocationName } from "@/components/ui/dghcvn/name";
+import { GetLocationName } from "@/utils/dghcvn";
 import { ManagedApplication } from "@/models/application";
 
 export default function PersonalRentalHistory({
@@ -18,11 +18,11 @@ export default function PersonalRentalHistory({
             <div className="text-lg font-medium">Địa chỉ thuê trọ</div>
             <div className="text-base font-normal">{data.application.rhAddress}</div>
             <div className="text-base font-normal">
-              <GetLocationName
-                cityId={data.property.city}
-                distId={data.property.district}
-                wardId={data.property.ward ? data.property.ward : ""}
-              />
+              {GetLocationName(
+                data.property.city,
+                data.property.district,
+                data.property.ward ? data.property.ward : "",
+              )}
             </div>
           </div>
           <div className="grid grid-cols-2 gap-4">
@@ -32,7 +32,7 @@ export default function PersonalRentalHistory({
             </div>
             <div className="space-y-2">
               <div className="text-lg font-medium">Giá thuê</div>
-              <div className="text-base font-normal">{(data.application.rhMonthlyPayment!/1e6).toFixed(1)} triệu/tháng</div>
+              <div className="text-base font-normal">{(data.application.rhMonthlyPayment! / 1e6).toFixed(1)} triệu/tháng</div>
             </div>
             <div className="space-y-2">
               <div className="text-lg font-medium">Lý do tạm dừng thuê</div>

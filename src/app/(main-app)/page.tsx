@@ -1,4 +1,4 @@
-import SearchBar from "./_components/landing-page/search-bar";
+import SearchBox from "./_components/landing-page/search_box";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 
 export default function Home() {
@@ -11,13 +11,13 @@ export default function Home() {
         space-y-10
       ">
         <div className="absolute bg-gray-200 opacity-70" />
-        <Card className="w-full md:w-1/2">
+        <Card className="w-full md:w-3/5 border-none">
           <CardHeader>
             <CardTitle>RRMS</CardTitle>
             <CardDescription>Discover Your New Rental</CardDescription>
           </CardHeader>
           <CardContent>
-            <SearchBar />
+            <SearchBox />
           </CardContent>
         </Card>
       </div>

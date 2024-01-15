@@ -1,11 +1,17 @@
+"use client";
+
 import Breadcrumb from "@/components/ui/breadcrumb";
 import ListingCard from "./_components/listing-card";
 import TopSearchBar from "./_components/top-searchbar";
 import Sidebar from "./_components/sidebard";
 import { mockupSearchingListings } from "@/models/listing";
 import Link from "next/link";
+import { useSearchParams } from "next/navigation";
 
 export default function SearchPage() {
+  const searchParams = useSearchParams();
+  console.log(searchParams?.entries);
+  
   return (
     <div>
       <TopSearchBar/>

@@ -1,9 +1,7 @@
 "use client";
 
-import { SearchFormDefaultValues, SearchFormSchema, SearchFormValues } from "../../_components/landing-page/search-bar";
-import { Button } from "@/components/ui/button";
-import { GetCityName, GetDistrictName, GetWardName } from "@/components/ui/dghcvn/name";
 import DivisionSelector from "@/components/complex/division-selector";
+import { Button } from "@/components/ui/button";
 import { Form, FormControl, FormDescription, FormField, FormItem, FormLabel } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
 import MultipleSelector from "@/components/ui/multiple-selector";
@@ -11,10 +9,14 @@ import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Separator } from "@/components/ui/separator";
 import { OrientationItems, mapPropertyTypeToText } from "@/models/property";
+import { GetLocationName } from "@/utils/dghcvn";
 import { zodResolver } from "@hookform/resolvers/zod";
+import { useMemo } from "react";
 import { useForm, useFormContext } from "react-hook-form";
 import { BsChevronDown, BsListUl } from "react-icons/bs";
 import { MdRestartAlt } from "react-icons/md";
+import { SearchFormDefaultValues, SearchFormSchema, SearchFormValues } from "../../_components/landing-page/search_box";
+import SearchbarSuggestion from "../../_components/landing-page/searchbar_suggestion";
 
 // const FilterButton = ({
 //   title,
@@ -41,6 +43,8 @@ const RegionPopover = (): JSX.Element => {
   const pdistrict = form.watch('pdistrict');
   const pward = form.watch('pward');
 
+  const locationName = useMemo(() => GetLocationName(pcity || "", pdistrict || "", pward || ""), [pcity, pdistrict, pward]);
+
   function handleResetFields() {
     form.resetField("pcity");
     form.resetField("pdistrict");
@@ -56,7 +60,7 @@ const RegionPopover = (): JSX.Element => {
             <BsChevronDown size={16} />
           </div>
           <div className="text-sm font-light">
-            {pcity ? (`${GetCityName(pcity)}${pdistrict ? `, ${GetDistrictName(pdistrict)}` : ''}${pward ? `, ${GetWardName(pward)}` : ''}`) : "Toàn quốc"}
+            {locationName ? locationName : "Toàn quốc"}
           </div>
         </Button>
       </PopoverTrigger>
@@ -207,27 +211,18 @@ export default function TopSearchBar() {
         className="flex items-center lg:px-2 px-1 h-[72px] border-y shadow-md"
         onSubmit={form.handleSubmit(onSubmit)}
       >
-        <FormField
-          control={form.control}
-          name="ltitle"
-          render={({ field }) => (
-            <FormItem className="flex-1">
-              <FormControl>
-                <Input
-                  className="flex-1 px-2 lg:px-3 py-1 lg:py-2 focus-visible:ring-transparent !ring-transparent"
-                  placeholder="Tìm kiếm theo địa chỉ, tiêu đề tin đăng"
-                  {...field}
-                />
-              </FormControl>
-            </FormItem>
-          )}
-        />
+        <div className="flex-1">
+          <SearchbarSuggestion
+            placeholder="Tìm kiếm theo khu vực"
+            type="search"
+          />
+        </div>
 
         <Separator orientation="vertical" />
 
         <FormField
           control={form.control}
-          name="ptypes[]"
+          name="ptypes"
           render={({ field }) => (
             <MultipleSelector
               title="Loại bât động sản"

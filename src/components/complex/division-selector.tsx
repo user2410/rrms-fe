@@ -4,15 +4,15 @@ import { FormControl, FormField, FormItem, FormLabel, FormMessage } from "@/comp
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { FieldValues, useFormContext, useWatch } from "react-hook-form";
 
-import { Input } from "@/components/ui/input";
 import { ScrollArea } from "@/components/ui/scroll-area";
-import { useCities, useDistricts, useWards } from "@/hooks/use-dghcvn";
+import { GetCities, GetDistricts, GetWards } from "@/utils/dghcvn";
+import { useMemo } from "react";
 
 export default function DivisionSelector<T>({
   cityFieldName,
   districtFieldName,
   wardFieldName,
-} : {
+}: {
   cityFieldName: string;
   districtFieldName: string;
   wardFieldName: string;
@@ -32,9 +32,9 @@ export default function DivisionSelector<T>({
     name: wardFieldName,
   });
 
-  const cityQuery = useCities();
-  const districtQuery = useDistricts(cityCode);
-  const wardQuery = useWards(districtId);
+  const cities = useMemo(() => GetCities(), []);
+  const districts = useMemo(() => GetDistricts(cityCode), [cityCode]);
+  const wards = useMemo(() => GetWards(districtId), [districtId]);
 
   return (
     <div className="flex flex-col gap-3">
@@ -47,33 +47,27 @@ export default function DivisionSelector<T>({
               Tỉnh / Thành phố
               {/* <span className="ml-1 text-red-600">*</span> */}
             </FormLabel>
-            {(cityQuery.isLoading || cityQuery.isError) ? (
+            <Select
+              onValueChange={(e) => {
+                resetField('property.district');
+                resetField('property.ward');
+                field.onChange(e);
+              }}
+              defaultValue={field.value}
+            >
               <FormControl>
-                <Input {...field} />
+                <SelectTrigger>
+                  <SelectValue placeholder="Chọn tỉnh thành" />
+                </SelectTrigger>
               </FormControl>
-            ) : (
-              <Select 
-                onValueChange={(e) => {
-                  resetField(districtFieldName);
-                  resetField(wardFieldName);
-                  field.onChange(e);
-                }}
-                defaultValue={field.value}
-              >
-                <FormControl>
-                  <SelectTrigger>
-                    <SelectValue placeholder="Chọn tỉnh thành" />
-                  </SelectTrigger>
-                </FormControl>
-                <SelectContent>
-                  <ScrollArea className="h-72">
-                    {cityQuery.data.map((c, i) => (
-                      <SelectItem key={i} value={c.id}>{c.name}</SelectItem>
-                    ))}
-                  </ScrollArea>
-                </SelectContent>
-              </Select>
-            )}
+              <SelectContent>
+                <ScrollArea className="h-72">
+                  {cities.map((c, i) => (
+                    <SelectItem key={i} value={c.id}>{c.name}</SelectItem>
+                  ))}
+                </ScrollArea>
+              </SelectContent>
+            </Select>
             <FormMessage />
           </FormItem>
         )}
@@ -88,38 +82,28 @@ export default function DivisionSelector<T>({
                 Quận, huyện
                 {/* <span className="ml-1 text-red-600">*</span> */}
               </FormLabel>
-              {(districtQuery.isLoading || districtQuery.isError) ? (
+              <Select
+                onValueChange={(e) => {
+                  resetField('property.ward');
+                  field.onChange(e);
+                }}
+                defaultValue={field.value}
+                value={districtId}
+                disabled={!cityCode}
+              >
                 <FormControl>
-                  <Input
-                    {...field}
-                    placeholder="Quận huyện"
-                    disabled={!cityCode}
-                  />
+                  <SelectTrigger>
+                    <SelectValue placeholder="Chọn quận huyện" />
+                  </SelectTrigger>
                 </FormControl>
-              ) : (
-                <Select
-                  onValueChange={(e) => {
-                    resetField(wardFieldName);
-                    field.onChange(e);
-                  }}
-                  defaultValue={field.value}
-                  value={districtId}
-                  disabled={!cityCode}
-                >
-                  <FormControl>
-                    <SelectTrigger>
-                      <SelectValue placeholder="Chọn quận huyện"/>
-                    </SelectTrigger>
-                  </FormControl>
-                  <SelectContent>
-                    <ScrollArea className="h-72">
-                      {districtQuery.data.map((d, i) => (
-                        <SelectItem key={i} value={d.id.toString()}>{d.name}</SelectItem>
-                      ))}
-                    </ScrollArea>
-                  </SelectContent>
-                </Select>
-              )}
+                <SelectContent>
+                  <ScrollArea className="h-72">
+                    {districts.map((d, i) => (
+                      <SelectItem key={i} value={d.id.toString()}>{d.name}</SelectItem>
+                    ))}
+                  </ScrollArea>
+                </SelectContent>
+              </Select>
               <FormMessage />
             </FormItem>
           )}
@@ -133,37 +117,27 @@ export default function DivisionSelector<T>({
                 Phường, xã
                 {/* <span className="ml-1 text-red-600">*</span> */}
               </FormLabel>
-              {(wardQuery.isLoading || wardQuery.isError) ? (
+              <Select
+                onValueChange={field.onChange}
+                defaultValue={field.value}
+                value={wardId}
+                disabled={!districtId}
+              >
                 <FormControl>
-                  <Input
-                    {...field}
-                    placeholder="Phường xã"
-                    disabled={!districtId}
-                  />
+                  <SelectTrigger>
+                    <SelectValue placeholder="Chọn phường xã" />
+                  </SelectTrigger>
                 </FormControl>
-              ) : (
-                <Select
-                  onValueChange={field.onChange}
-                  defaultValue={field.value}
-                  value={wardId}
-                  disabled={!districtId}
-                >
-                  <FormControl>
-                    <SelectTrigger>
-                      <SelectValue placeholder="Chọn phường xã" />
-                    </SelectTrigger>
-                  </FormControl>
-                  <SelectContent>
-                    <ScrollArea className="h-72">
-                      {
-                        wardQuery.data.map((w, i) => (
-                          <SelectItem key={i} value={w.id.toString()}>{w.name}</SelectItem>
-                        ))
-                      }
-                    </ScrollArea>
-                  </SelectContent>
-                </Select>
-              )}
+                <SelectContent>
+                  <ScrollArea className="h-72">
+                    {
+                      wards.map((w, i) => (
+                        <SelectItem key={i} value={w.id.toString()}>{w.name}</SelectItem>
+                      ))
+                    }
+                  </ScrollArea>
+                </SelectContent>
+              </Select>
               <FormMessage />
             </FormItem>
           )}
