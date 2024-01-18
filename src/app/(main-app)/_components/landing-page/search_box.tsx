@@ -40,8 +40,7 @@ export const SearchFormSchema = z.object({
     .min(0)
     .optional(),
   pcity: z
-    .string()
-    .optional(),
+    .string(),
   pdistrict: z
     .string()
     .optional(),
@@ -109,7 +108,7 @@ export default function SearchBox() {
     <Form {...form}>
       <form className="space-y-3" onSubmit={form.handleSubmit(onSubmit)}>
         <div className="w-full flex flex-row gap-2">
-          <div className="flex-1">
+          <div className="flex-1 px-2">
             <SearchbarSuggestion
               placeholder="Tìm kiếm theo khu vực"
               type="search"

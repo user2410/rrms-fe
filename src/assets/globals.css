@@ -65,7 +65,9 @@
 @import url('https://cdn.jsdelivr.net/npm/lightgallery@2.4.0/css/lg-video.css');
 
 .text-oneline {
+  display: -webkit-box;
   -webkit-box-orient: vertical;
   -webkit-line-clamp: 1;
-  display: -webkit-box;
+  text-overflow: ellipsis;
+  overflow: hidden;
 }

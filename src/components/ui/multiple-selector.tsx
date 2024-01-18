@@ -21,6 +21,8 @@ export default function MultipleSelector({
   selectedValues: string[],
   setSelectedValues: (values: string[]) => void;
 }) {
+  console.log("selectedValues", selectedValues);
+
   return (
     <Popover>
       <PopoverTrigger asChild>

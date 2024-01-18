@@ -1,26 +1,15 @@
-import { Check, ChevronDown } from "lucide-react";
-
 import { Button } from "@/components/ui/button";
-import {
-  Command,
-  CommandEmpty,
-  CommandGroup,
-  CommandInput,
-  CommandItem,
-  CommandSeparator,
-} from "@/components/ui/command";
-import {
-  Popover,
-  PopoverContent,
-  PopoverTrigger,
-} from "@/components/ui/popover";
+import { Command, CommandEmpty, CommandGroup, CommandInput, CommandItem, CommandSeparator } from "@/components/ui/command";
+import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
 import { mapPropertyTypeToText } from "@/models/property";
 import clsx from "clsx";
-import { useFormContext } from "react-hook-form";
-import { SearchFormValues } from "../search_box";
+import { Check } from "lucide-react";
 import { useState } from "react";
+import { useFormContext } from "react-hook-form";
+import { BsChevronDown } from "react-icons/bs";
+import { SearchFormValues } from "../../_components/landing-page/search_box";
 
-export function PropTypesFilter() {
+export default function PropTypesFilter() {
   const [open, setOpen] = useState(false);
   const form = useFormContext<SearchFormValues>();
   const ptypes = form.watch('ptypes');
@@ -28,21 +17,19 @@ export function PropTypesFilter() {
   return (
     <Popover open={open} onOpenChange={setOpen}>
       <PopoverTrigger asChild>
-        <Button
-          variant="outline"
-          role="combobox"
-          aria-expanded={open}
-          className="justify-between"
-        >
-          <span className="text-oneline text-ellipsis">
+        <Button type="button" variant="ghost" className="block text-left rounded-none h-full">
+          <div className="flex items-center gap-2 text-md font-medium">
+            Loại nhà cho thuê
+            <BsChevronDown size={16} />
+          </div>
+          <div className="text-sm font-light text-oneline text-ellipsis">
             {ptypes && ptypes.length > 0
               ? ptypes.map(t => mapPropertyTypeToText[t as keyof typeof mapPropertyTypeToText]).join(", ")
               : "Loaị nhà cho thuê..."}
-          </span>
-          <ChevronDown className="ml-2 h-4 w-4 shrink-0 opacity-50" />
+          </div>
         </Button>
       </PopoverTrigger>
-      <PopoverContent className="w-[400px] p-0">
+      <PopoverContent className="w-80">
         <Command>
           <CommandInput placeholder="Lọc nhanh..." />
           <CommandEmpty>Không tìm thấy.</CommandEmpty>
@@ -72,7 +59,7 @@ export function PropTypesFilter() {
                 {item[1]}
               </CommandItem>
             ))}
-            <CommandSeparator/>
+            <CommandSeparator />
           </CommandGroup>
         </Command>
         <div className="w-full flex flex-row justify-end gap-2 p-2">
@@ -94,4 +81,4 @@ export function PropTypesFilter() {
       </PopoverContent>
     </Popover>
   );
-}
+};

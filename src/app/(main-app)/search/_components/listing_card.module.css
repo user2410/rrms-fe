@@ -1,0 +1,8 @@
+.pcontainer {
+  width: 100%; /* Set the width of the container */
+  overflow: hidden;
+  display: -webkit-box;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 2; /* Number of lines to display */
+  text-overflow: ellipsis;
+}
