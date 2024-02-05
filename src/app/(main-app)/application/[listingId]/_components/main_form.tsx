@@ -11,6 +11,7 @@ import styles from '../_styles/page.module.css';
 import ApplicationOccupants from "./application_occupants";
 import Finish from "./finish";
 import YourDetails from "./your_details";
+import { ListingDetail } from "../page";
 
 const applicationFormSchema = z.object({
   propertyId: z.string(),
@@ -107,22 +108,18 @@ const defaultValues: DeepPartial<ApplicationForm> = {
 };
 
 export default function MainForm({
-  listingId,
-  property,
-  units,
+  data
 } : {
-  listingId: string;
-  property: Property;
-  units: Unit[];
+  data: ListingDetail;
 }) {
   const [tab, setTab] = useState<string>("1");
   const form = useForm<ApplicationForm>({
     resolver: zodResolver(applicationFormSchema),
     defaultValues: {
       ...defaultValues, 
-      listingId: listingId,
-      propertyId: property.id,
-      unitIds: units.map((unit: Unit) => unit.id),
+      listingId: data.listing.id,
+      propertyId: data.property.id,
+      unitIds: data.units.map((unit: Unit) => unit.id),
     },
   });
 
@@ -147,7 +144,7 @@ export default function MainForm({
             </Tabs.List>
             <Tabs.Content className={styles.TabsContent} value="1">
               <div className="container">
-                <ApplicationOccupants units={units}/>
+                <ApplicationOccupants data={data}/>
               </div>
             </Tabs.Content>
             <Tabs.Content className={styles.TabsContent} value="2">

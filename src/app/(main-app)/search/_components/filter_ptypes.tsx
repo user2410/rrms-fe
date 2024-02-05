@@ -8,8 +8,12 @@ import { useState } from "react";
 import { useFormContext } from "react-hook-form";
 import { BsChevronDown } from "react-icons/bs";
 import { SearchFormValues } from "../../_components/landing-page/search_box";
+import { objectToQueryString } from "@/utils/query";
+import { useRouter } from "next/navigation";
+import { beforeSubmitSearchForm } from "./top-searchbar";
 
 export default function PropTypesFilter() {
+  const router = useRouter();
   const [open, setOpen] = useState(false);
   const form = useFormContext<SearchFormValues>();
   const ptypes = form.watch('ptypes');
@@ -73,9 +77,12 @@ export default function PropTypesFilter() {
           <Button
             type="button"
             variant="default"
-            onClick={() => setOpen(false)}
+            onClick={() => {
+              setOpen(false);
+              router.push(`/search?${objectToQueryString(beforeSubmitSearchForm(form.getValues()))}`);
+            }}
           >
-            OK
+            Tìm kiếm
           </Button>
         </div>
       </PopoverContent>

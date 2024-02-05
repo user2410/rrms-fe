@@ -3,17 +3,17 @@ import { GetCityById, GetDistrictById, GetWardById } from "@/utils/dghcvn";
 import { GoogleMap, MarkerF } from "@react-google-maps/api";
 import { useMemo } from "react";
 import { useFormContext } from "react-hook-form";
-import { FaToilet } from "react-icons/fa";
-import { MdBalcony, MdBathtub, MdBed } from "react-icons/md";
+import { FaCouch, FaToilet } from "react-icons/fa";
+import { MdBalcony, MdBathtub, MdBed, MdKitchen } from "react-icons/md";
 
 export default function SummaryBasicInfo() {
   const form = useFormContext<PropertyForm>();
   const property = form.getValues("property");
   const units = form.getValues("units");
 
-  const city = useMemo(() => GetCityById(property.city), []);
-  const district = useMemo(() => GetDistrictById(property.district), []);
-  const ward = useMemo(() => GetWardById(property.ward || ""), []);
+  const city = useMemo(() => GetCityById(property.city), [property]);
+  const district = useMemo(() => GetDistrictById(property.district), [property]);
+  const ward = useMemo(() => GetWardById(property.ward || ""), [property]);
 
   return (
     <div className="space-y-6 px-2">
@@ -41,8 +41,8 @@ export default function SummaryBasicInfo() {
                   </th>
                   <td className="px-6 py-4">
                     {
-                    key === "area" ? (<span>{value.toString()}m<sup>2</sup></span>) :
-                    key === "numberOfFloors" ? `${value} tầng` :
+                    key === "area" ?  (value ? (<span>m<sup>2</sup></span>) : "N/A") :
+                    key === "numberOfFloors" ? (value ? `${value} tầng` : "N/A") :
                     key === "fullAddress" ? value.toString() :
                     key === "city" ? (city ? city.name : 'N/A') :
                     key === "district" ? (district ? district.name : 'N/A') :
@@ -69,73 +69,6 @@ export default function SummaryBasicInfo() {
           )}
         </tbody>
       </table>
-      <div className="w-full">
-        {(!['BLOCK', 'COMPLEX'].includes(property.type)) && (
-          <div className="grid grid-cols-2 xl:grid-cols-3 gap-2">
-            {units[0].numberOfBedrooms && (
-              <div className="border-y grid grid-cols-2">
-                <div className="flex items-center gap-1">
-                  <MdBed size={24} />
-                  <span>Phòng ngủ</span>
-                </div>
-                <div className="py-4">{units[0].numberOfBedrooms}</div>
-              </div>
-            )}
-            {units[0].numberOfBathrooms && (
-              <div className="border-y grid grid-cols-2">
-                <div className="flex items-center gap-1">
-                  <MdBathtub size={24} />
-                  <span>Phòng tắm</span>
-                </div>
-                <div className="py-4">{units[0].numberOfBathrooms}</div>
-              </div>
-            )}
-            {units[0].numberOfToilets && (
-              <div className="border-y grid grid-cols-2">
-                <div className="flex items-center gap-1">
-                  <FaToilet size={24} />
-                  <span>Toilet</span>
-                </div>
-                <div className="py-4">{units[0].numberOfToilets}</div>
-              </div>
-            )}
-            {units[0].numberOfLivingRooms && (
-              <div className="border-y grid grid-cols-2">
-                <div className="flex items-center gap-1">
-                  <FaToilet size={24} />
-                  <span>Phòng khách</span>
-                </div>
-                <div className="py-4">{units[0].numberOfLivingRooms}</div>
-              </div>
-            )}
-            {units[0].numberOfKitchens && (
-              <div className="border-y grid grid-cols-2">
-                <div className="flex items-center gap-1">
-                  <FaToilet size={24} />
-                  <span>Phòng bếp</span>
-                </div>
-                <div className="py-4">{units[0].numberOfKitchens}</div>
-              </div>
-            )}
-            {units[0].hasBalcony ? (
-              <div className="border-y">
-                <div className="flex items-center gap-1">
-                  <FaToilet size={24} />
-                  <span>Có ban công</span>
-                </div>
-              </div>
-            ) : units[0].numberOfBalconies ? (
-              <div className="border-y grid grid-cols-2">
-                <div className="flex items-center gap-1">
-                  <MdBalcony size={24} />
-                  <span>Ban công</span>
-                </div>
-                <div className="py-4">{units[0].numberOfBalconies}</div>
-              </div>
-            ) : null}
-          </div>
-        )}
-      </div>
       <div className="w-full">
         <div className="text-lg my-2">Vị trí trên bản đồ</div>
         <GoogleMap

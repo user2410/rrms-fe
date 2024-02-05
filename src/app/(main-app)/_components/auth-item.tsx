@@ -1,16 +1,14 @@
 "use client";
 
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
-import { Button } from "@/components/ui/button";
 import { DropdownMenu, DropdownMenuContent, DropdownMenuGroup, DropdownMenuItem, DropdownMenuLabel, DropdownMenuSeparator, DropdownMenuTrigger } from "@/components/ui/dropdown-menu";
-import { useModalAction } from "@/context/modal.context";
 import { signOut, useSession } from "next-auth/react";
 import Link from "next/link";
 import { Fragment } from "react";
 import toast from "react-hot-toast";
+import AuthModal from "./auth.modal";
 
 export default function AuthItem() {
-  const {openModal} = useModalAction();
   const { data: session, status: sessionStat } = useSession();
 
   const handleSignout = async () => {
@@ -53,6 +51,6 @@ export default function AuthItem() {
       </DropdownMenuContent>
     </DropdownMenu>
   ) : (
-    <Button variant="ghost" onClick={() => openModal("AUTH_VIEW")}>Sign in</Button>
+    <AuthModal/>
   );
 }

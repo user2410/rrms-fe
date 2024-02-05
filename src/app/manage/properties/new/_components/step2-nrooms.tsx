@@ -4,35 +4,35 @@ import { Input } from "@/components/ui/input";
 import { Fragment } from "react";
 import { useFormContext } from "react-hook-form";
 
-export default function Step2NRooms() {
+export default function Step2NRooms({
+  nth,
+}: {
+  nth?: number;
+}) {
   const {control} = useFormContext<PropertyForm>();
 
   return (
     <Fragment>
       {[
         {
-          fieldName: "units.0.numberOfLivingRooms",
-          label: "Phòng khách",
-        },
-        {
-          fieldName: "units.0.numberOfBedrooms",
+          fieldName: `units.${nth}.numberOfBedrooms`,
           label: "Phòng ngủ",
         },
         {
-          fieldName: "units.0.numberOfBathrooms",
+          fieldName: `units.${nth}.numberOfBathrooms`,
           label: "Phòng tắm",
         },
         {
-          fieldName: "units.0.numberOfKitchens",
+          fieldName: `units.${nth}.numberOfBalconies`,
+          label: "Ban công",
+        },
+        {
+          fieldName: `units.${nth}.numberOfKitchens`,
           label: "Phòng bếp",
         },
         {
-          fieldName: "units.0.numberOfToilets",
+          fieldName: `units.${nth}.numberOfToilets`,
           label: "Toilet",
-        },
-        {
-          fieldName: "units.0.numberOfBalconies",
-          label: "Ban công",
         },
       ].map((item) => (
         <FormField

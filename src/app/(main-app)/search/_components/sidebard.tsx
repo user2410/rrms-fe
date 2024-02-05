@@ -16,7 +16,7 @@ const DistrictDropdownContent = ({
   return (
     <Card>
       <CardHeader>
-        <CardTitle className="text-lg">Nhà đất cho thuê tại {city!.name}</CardTitle>
+        <CardTitle className="text-lg">Nhà đất cho thuê tại {city?.name}</CardTitle>
       </CardHeader>
       <CardContent className="flex flex-col space-y-2">
         <Accordion type="multiple">
@@ -24,7 +24,7 @@ const DistrictDropdownContent = ({
             <AccordionItem value={`item-${index}`} key={index}>
               <AccordionTrigger>{dist.name}</AccordionTrigger>
               <AccordionContent>
-                <Link key={index} href={`/search?district=${dist.id}`} className="hover:underline">{dist.name}</Link>
+                <Link key={index} href={`/search?pcity=${cityCode}&pdistrict=${dist.id}`} className="hover:underline">{dist.name}</Link>
               </AccordionContent>
             </AccordionItem>
           ))}
@@ -35,8 +35,10 @@ const DistrictDropdownContent = ({
 };
 
 const WardDropdownContent = ({
+  cityCode,
   districtCode,
 }: {
+  cityCode: string;
   districtCode: string;
 }) => {
   const district = GetDistrictById(districtCode);
@@ -45,11 +47,11 @@ const WardDropdownContent = ({
   return (
     <Card>
       <CardHeader>
-        <CardTitle className="text-lg">Nhà đất cho thuê tại quận {district!.name}</CardTitle>
+        <CardTitle className="text-lg">Nhà đất cho thuê tại quận {district?.name}</CardTitle>
       </CardHeader>
       <CardContent className="flex flex-col space-y-2">
         {wards.map((ward, index) => (
-          <Link key={index} href={`/search?ward=${ward.id}`} className="hover:underline">{ward.name}</Link>
+          <Link key={index} href={`/search?pcity=${cityCode}&pdistrict=${districtCode}&pward=${ward.id}`} className="hover:underline">{ward.name}</Link>
         ))}
       </CardContent>
     </Card>
@@ -107,7 +109,7 @@ export default function Sidebar({
   return (
     <div className="flex flex-col w-full gap-4">
       {districtCode ? (
-        <WardDropdownContent districtCode={districtCode} />
+        <WardDropdownContent cityCode={cityCode} districtCode={districtCode} />
       ) : (
         <DistrictDropdownContent cityCode={cityCode} />
       )}

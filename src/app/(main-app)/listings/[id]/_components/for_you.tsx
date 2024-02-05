@@ -1,24 +1,49 @@
 "use client";
 
-import { PropertyMedia } from "@/models/property";
+import { CardContent, CardHeader } from "@/components/ui/card";
+import { ToMillion } from "@/utils/currency";
+import Image from "next/image";
+import Link from "next/link";
+import { useCallback, useRef } from "react";
 import { Navigation } from 'swiper';
 import { Swiper, SwiperSlide } from "swiper/react";
-import { ReducedListing } from "@/models/listing";
-import ListingCard from "./listing_card";
-import { useCallback, useRef } from "react";
 
 import 'swiper/css';
 import 'swiper/css/navigation';
 
-type ListingCard = {
+type ReducedListing = {
+  id: string;
+  coverImg: string;
   title: string;
   price: number;
   area: number;
   city: string;
   district: string;
-  ward: string;
   postedAt: Date;
-  media: PropertyMedia[];
+}
+
+function ListingCard({listing} : {listing: ReducedListing}) {
+  return (
+    <Link href={`listings/${listing.id}`}>
+      <CardContent className="rounded-sm w-full p-0">
+        <CardHeader className="block relative w-full p-0 aspect-video">
+          <Image 
+            src={listing.coverImg} 
+            alt={listing.title}
+            fill
+            className="object-cover"/>
+        </CardHeader>
+        <CardContent className="p-3">
+          <h3 className="truncate">{listing.title}</h3>
+          <h4 className="text-red-600">{ToMillion(listing.price)}/tháng - {listing.area}m<sup>2</sup></h4>
+          <h5 className="text-gray-500 space-x-2">
+            <i className="fas fa-location-dot"/>
+            <span>{listing.city}, {listing.district}</span>
+          </h5>
+        </CardContent>
+      </CardContent>
+    </Link>
+  );
 }
 
 export default function ListingsForyou({listings} : {listings: ReducedListing[]}) {
@@ -48,11 +73,11 @@ export default function ListingsForyou({listings} : {listings: ReducedListing[]}
         ref={sliderRef}
         modules={[Navigation]}
         slidesPerView={4}
-        spaceBetween={20}
+        spaceBetween={10}
         className="w-full h-full"
       >
         {listings.map((listing, index) => (
-          <SwiperSlide key={index} className="m-4">
+          <SwiperSlide key={index}>
             <ListingCard listing={listing}/>
           </SwiperSlide>  
         ))}

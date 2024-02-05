@@ -7,23 +7,27 @@ import { Form } from "@/components/ui/form";
 import { Separator } from "@/components/ui/separator";
 import DetailedStepper from "@/components/ui/stepper/detailed-stepper";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { useState } from "react";
-import { useForm } from "react-hook-form";
+import { Fragment, useRef, useState } from "react";
+import { DeepPartial, useForm } from "react-hook-form";
 import * as z from "zod";
 import Step2 from "./step2";
 import Summary from "./summary";
 import { useSession } from "next-auth/react";
+import { AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent, AlertDialogFooter, AlertDialogTrigger } from "@/components/ui/alert-dialog";
+import UploadDialog from "./_components/upload-dialog";
 
 const propertyFormSchema = z.object({
   property: z.object({
     name: z
       .string()
-      .min(3, "Property name must be at least 3 characters long")
-      .max(30, "Property name must be at most 50 characters long"),
+      .min(3, "Tên nhà cho thuê phải có ít nhất 3 ký tự")
+      .max(30, "Tên nhà cho thuê không được quá 30 ký tự"),
     type: z
       .string({
-        required_error: "Please select a property type",
+        required_error: "Xin hãy chọn loại nhà cho thuê",
       }),
+    multiUnit: z
+      .boolean(),
     building: z
       .string()
       .optional(),
@@ -31,10 +35,12 @@ const propertyFormSchema = z.object({
       .string()
       .optional(),
     numberOfFloors: z
-      .number(),
+      .number()
+      .optional(),
     area: z
       .number()
-      .min(1, "Area must be at least 1"),
+      .min(1, "Diện tích không hợp lệ")
+      .optional(),
     description: z
       .string()
       .optional(),
@@ -45,12 +51,14 @@ const propertyFormSchema = z.object({
           size: z.number().optional(),
           type: z.string(),
           url: z.string(),
+          description: z.string().max(30).optional(),
         })
       )
+      .max(24)
       .nonempty(),
     fullAddress: z
       .string({
-        required_error: "Please enter your property address",
+        required_error: "Xin hãy nhập địa chỉ",
       }),
     city: z
       .string(),
@@ -84,13 +92,6 @@ const propertyFormSchema = z.object({
           description: z.string().optional(),
         })
       ),
-    tags: z
-      .array(
-        z.object({
-          tag: z.string(),
-        })
-      )
-      .optional(),
   }),
   units: z.array(
     z.object({
@@ -139,126 +140,135 @@ const propertyFormSchema = z.object({
             size: z.number(),
             type: z.string(),
             url: z.string(),
+            description: z.string().max(30).optional(),
           })
-        ),
+        )
+        .max(3, "Tối đa 3 ảnh"),
     })
   ),
 });
 
 export type PropertyForm = z.infer<typeof propertyFormSchema>;
 
-export default function CreatePropertyPage() {  
-  const [step, setStep] = useState<number>(0);
+const defaultValues: DeepPartial<PropertyForm> = {
+  property: {
+    name: "",
+    fullAddress: "",
+    city: "",
+    district: "",
+    ward: "",
+    multiUnit: false,
+    placeUrl: "",
+    description: "",
+    media: [],
+    features: [],
+  },
+  units: [],
+};
 
-  const { data: session } = useSession();
+export default function CreatePropertyPage() {
+  const [step, setStep] = useState<number>(0);
+  const [openUploadDialog, setOpenUploadDialog] = useState<boolean>(false);
 
   const form = useForm<PropertyForm>({
     resolver: zodResolver(propertyFormSchema),
+    defaultValues,
   });
 
   async function onSubmit(data: PropertyForm) {
     console.log('submit data', step, data);
-    if(step < 2) {
+    if (step < 2) {
       return;
     }
-    try {
-      // TODO: display step-by-step creating modal
-      await CreateProperty(data, session!.user.accessToken);
-    } catch(err) {
-      console.error(err);
-    }
+    setOpenUploadDialog(true);
   }
 
   return (
-    <div className="container mx-auto py-10 space-y-8">
-      <div className="">
-        <span className="font-light text-md">Properties /</span>
-        <span className="font-bold text-lg"> Add property </span>
-      </div>
-      <DetailedStepper
-        steps={[
-          {
-            title: "Tổng quan",
-            description: "Thông tin cơ bản về bất động sản của bạn",
-          },
-          {
-            title: "Chi tiết",
-            description: "Thông tin chi tiết về bất động sản của bạn",
-          },
-          {
-            title: "Tổng kết",
-          },
-        ]}
-        currentStep={step}
+    <Fragment>
+      <UploadDialog 
+        form={form}
+        open={openUploadDialog} 
+        changeOpen={() => setOpenUploadDialog(v => !v)}
       />
-      <Separator />
-      <Form {...form}>
-        <form>
-          {
-            step === 0 ? (
-              <Step1/>
-            ) : step === 1 ? (
-              <Step2/>
-            ) : step === 2 ? (
-              <Summary/>
-            ) : null
-          }
-          <div className="flex justify-between w-full mt-4">
-            <Button 
-              type="button" 
-              disabled={step === 0}
-              variant="outline"
-              onClick={() => setStep(step-1)}
-            >
-              Previous
-            </Button>
-            <Button 
-              type="button"
-              variant="default"
-              onClick={(e) => {
-                switch(step) {
-                  case 0:
-                    form.trigger('property')
-                      .then(res => {
-                        if(res) {
-                          form.setValue(
-                            'units', 
-                            [['BLOCK', 'COMPLEX'].includes(form.getValues('property.type')) 
-                              ? ({
-                                media: [],
-                                amenities: [],
-                                type: 'ROOM',
-                              } as any) 
-                              : ({
-                                area: form.getValues('property.area'), 
-                                media: [],
-                                amenities: [],
-                                type: 'APARTMENT'
-                              } as any)
-                            ]
-                          );
-                          setStep(step+1);
-                        } else {
-                          setStep(step);
-                        }
-                        console.log(form.getValues());
-                      });
-                    break;
-                  case 1:
-                    form.trigger('units')
-                      .then(res => setStep(res ? (step+1) : step));
-                    break;
-                  default:
-                    onSubmit(form.getValues());
-                    break;
-                }
-              }}
-            >
-              {step === 2 ? 'Submit' : 'Next'}
-            </Button>
-          </div>
-        </form>
-      </Form>
-    </div>
+      <div className="container mx-auto py-10 space-y-8">
+        <div className="">
+          <span className="font-light text-md">Properties /</span>
+          <span className="font-bold text-lg"> Add property </span>
+        </div>
+        <DetailedStepper
+          steps={[
+            {
+              title: "Tổng quan",
+              description: "Thông tin cơ bản về nhà cho thuê của bạn",
+            },
+            {
+              title: "Đơn vị Căn hộ / Phòng trọ",
+              description: "Thông tin quỹ căn hộ / dãy phòng trọ",
+            },
+            {
+              title: "Tổng kết",
+            },
+          ]}
+          currentStep={step}
+        />
+        <Separator />
+        <Form {...form}>
+          <form>
+            {
+              step === 0 ? (
+                <Step1 />
+              ) : step === 1 ? (
+                <Step2 />
+              ) : step === 2 ? (
+                <Summary />
+              ) : null
+            }
+            <div className="flex justify-between w-full mt-4">
+              <Button
+                type="button"
+                disabled={step === 0}
+                variant="outline"
+                onClick={() => setStep(step - 1)}
+              >
+                Previous
+              </Button>
+              <Button
+                type="button"
+                variant="default"
+                onClick={(e) => {
+                  switch (step) {
+                    case 0:
+                      form.trigger('property')
+                        .then(res => {
+                          if(res) {
+                            setStep(step + 1);
+                          } else {
+                            console.log(form.formState.errors);
+                          }
+                        });
+                      break;
+                    case 1:
+                      form.trigger('units')
+                        .then(res => {
+                          if(res) {
+                            setStep(step + 1);
+                          } else {
+                            console.log(form.formState.errors);
+                          }
+                        });
+                      break;
+                    default:
+                      onSubmit(form.getValues());
+                      break;
+                  }
+                }}
+              >
+                {step === 2 ? 'Submit' : 'Next'}
+              </Button>
+            </div>
+          </form>
+        </Form>
+      </div>
+    </Fragment>
   );
 }

@@ -1,11 +1,11 @@
 "use client";
 
 import { Button } from "@/components/ui/button";
-import { Form, FormField } from "@/components/ui/form";
-import MultipleSelector from "@/components/ui/multiple-selector";
+import { Form } from "@/components/ui/form";
 import { Separator } from "@/components/ui/separator";
-import { mapPropertyTypeToText } from "@/models/property";
+import { objectToQueryString } from "@/utils/query";
 import { zodResolver } from "@hookform/resolvers/zod";
+import { useRouter } from "next/navigation";
 import { useForm } from "react-hook-form";
 import { MdRestartAlt } from "react-icons/md";
 import { SearchFormSchema, SearchFormValues } from "../../_components/landing-page/search_box";
@@ -14,8 +14,16 @@ import ExtraFilter from "./filter_extra";
 import LocationFilter from "./filter_location";
 import PriceFilter from "./filter_price";
 import PropTypesFilter from "./filter_ptypes";
-import { useRouter } from "next/navigation";
-import { objectToQueryString } from "@/utils/query";
+
+export function beforeSubmitSearchForm(data: SearchFormValues) : SearchFormValues {
+  if(data.lminPrice) {
+    data.lminPrice *= 1000000;
+  }
+  if(data.lmaxPrice) {
+    data.lmaxPrice *= 1000000;
+  }
+  return data;
+}
 
 export default function TopSearchBar({
   defaultValues,
@@ -27,6 +35,8 @@ export default function TopSearchBar({
     resolver: zodResolver(SearchFormSchema),
     defaultValues: {
       ...defaultValues,
+      lminPrice: defaultValues.lminPrice ? defaultValues.lminPrice / 1000000 : undefined,
+      lmaxPrice: defaultValues.lmaxPrice ? defaultValues.lmaxPrice / 1000000 : undefined,
       ptypes: defaultValues.ptypes || [],
       pfeatures: defaultValues.pfeatures || [],
       uamenities: defaultValues.uamenities || [],
@@ -34,7 +44,7 @@ export default function TopSearchBar({
   });
 
   function onSubmit(data: SearchFormValues) {
-    // console.log(data);
+    console.log(data);
     router.push(`/search?${objectToQueryString(data)}`);
   }
 

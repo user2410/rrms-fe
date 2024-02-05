@@ -54,14 +54,14 @@ function Location({
             setError("Link không hợp lệ");
             break;
           default:
-            setError("Network error");
+            setError("Lỗi mạng");
             break;
         }
       })
       .finally(() => {
         setLoading(false);
       });
-  }, [debouncedValue]);
+  }, [form, debouncedValue]);
 
   return (
     <FormField
@@ -88,7 +88,7 @@ function Location({
             {message && (<span className="italic text-muted-foreground">{message}</span>)}
             {error && (<span className="text-red-600">{error}</span>)}
             <br></br>
-            Chọn vị trí bất động sản trên <a target="_blank" rel="noopener noreferrer" className="underline hover:text-primary" href="https://www.google.com/maps">bản đồ</a> và gán link vào đây. <a target="_blank" rel="noopener noreferrer" className="underline hover:text-primary" href="#">Hướng dẫn chi tiết</a>
+            Chọn vị trí nhà cho thuê trên <a target="_blank" rel="noopener noreferrer" className="underline hover:text-primary" href="https://www.google.com/maps">bản đồ</a> và gán link vào đây. <a target="_blank" rel="noopener noreferrer" className="underline hover:text-primary" href="#">Hướng dẫn chi tiết</a>
           </FormDescription>
           <FormMessage />
         </FormItem>
@@ -108,11 +108,11 @@ export default function Step1Address() {
         render={({ field }) => (
           <FormItem>
             <FormLabel>
-              Địa chỉ đầy đủ
+              Địa chỉ (số nhà + tên đường / ngõ ngách)
               <span className="ml-1 text-red-600">*</span>
             </FormLabel>
             <FormControl>
-              <Input placeholder="VD: Số 1 Đại Cồ Việt, Hai Bà Trưng, Hà Nội" {...field} />
+              <Input placeholder="VD: Số 1, Đại Cồ Việt" {...field} />
             </FormControl>
             <FormMessage />
           </FormItem>

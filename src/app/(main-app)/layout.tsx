@@ -1,3 +1,4 @@
+import { FavListingsContext, FavListingsProvider } from "@/context/favorite_listings.context";
 import FooterMain from "./_components/footer";
 import HeaderMain from "./_components/header";
 import { Fragment } from "react";
@@ -8,7 +9,7 @@ export default async function MainLayout({
   children: React.ReactNode
 }) {
   return (
-    <Fragment>
+    <FavListingsProvider>
       <main
         className="bg-muted"
         style={{
@@ -21,6 +22,6 @@ export default async function MainLayout({
         </div>
       </main>
       <FooterMain />
-    </Fragment>
+    </FavListingsProvider>
   );
 }

@@ -38,6 +38,8 @@ export default function Step2MediaUpload({
   const inputFileRef = useRef<HTMLInputElement>(null);
 
   const form = useFormContext<PropertyForm>();
+  const {formState: {errors}} = form;
+
   const { fields, append, remove } = useFieldArray({
     control: form.control,
     name: `units.${nth}.media`,
@@ -65,7 +67,7 @@ export default function Step2MediaUpload({
   return (
     <Card className="border-none">
       <CardHeader className="flex flex-row justify-between items-center px-0">
-        <CardTitle>Upload ảnh (tối đa 3 ảnh)</CardTitle>
+        <CardTitle className="text-base">Upload ảnh (tối đa 3 ảnh)</CardTitle>
         <Button type="button" onClick={() => inputFileRef.current && inputFileRef.current.click()}>
           Upload ảnh
         </Button>
@@ -104,6 +106,15 @@ export default function Step2MediaUpload({
           </Card>
         ))}
       </CardContent>
+      <CardFooter>
+        {(() => {
+          const unitError = errors.units;
+          if (!unitError || !Array.isArray(unitError)) return null;
+          return (
+            <div className="text-red-600">{unitError.at(nth).media.message}</div>
+          );
+        })()}
+      </CardFooter>
     </Card>
   );
 }

@@ -17,6 +17,7 @@ import Image from "next/image";
 import { Listing } from "@/models/listing";
 import { MdLocalPhone, MdOutlineEmail } from "react-icons/md";
 import { Separator } from "@/components/ui/separator";
+import { useRouter } from "next/navigation";
 
 const ContactFormSchema = z.object({
   name: z.string(),
@@ -56,6 +57,7 @@ const FormBtn = ({
 );
 
 export default function ContactForm({listing} : {listing: Listing}) {
+  const router = useRouter();
   const form = useForm<ContactFormValues>({
     resolver: zodResolver(ContactFormSchema),
     defaultValues,
@@ -150,7 +152,7 @@ export default function ContactForm({listing} : {listing: Listing}) {
         <Separator/>
         <div className="w-full flex flex-col items-center gap-3">
           <h2>Sẵn sàng thuê bất động sản này</h2>
-          <Button className="text-xl w-4/5">Ứng tuyển ngay</Button>
+          <Button className="text-xl w-4/5" onClick={() => router.push(`/application/${listing.id}?units=481909e8-165c-41e9-9190-66bd8a13b58e`)}>Ứng tuyển ngay</Button>
         </div>
       </CardContent>
     </Card>

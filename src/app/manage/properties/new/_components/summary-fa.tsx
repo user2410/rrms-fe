@@ -11,7 +11,7 @@ export default function SummaryFA() {
   return (
     <div className="space-y-6 px-2">
       <div className="w-full">
-        <div className="text-xl my-2">Tiện ích bất động sản</div>
+        <div className="text-xl my-2">Tiện ích nhà cho thuê</div>
         <table className="w-full text-sm text-left text-gray-500 dark:text-gray-400">
           <thead className="text-xs text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400">
             <tr>
@@ -37,36 +37,6 @@ export default function SummaryFA() {
           </tbody>
         </table>
       </div>
-      {(!['COMPLEX', 'BLOCK'].includes(property.type)) && (
-        <div className="w-full">
-          <div className="text-xl my-2">Tiện nghi căn hộ</div>
-          <table className="w-full text-sm text-left text-gray-500 dark:text-gray-400">
-            <thead className="text-xs text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400">
-              <tr>
-                <th scope="col" className="px-6 py-3">
-                  Tên
-                </th>
-                <th scope="col" className="px-6 py-3">
-                  Mô tả
-                </th>
-              </tr>
-            </thead>
-            <tbody>
-              {units[0].amenities?.map((amenity, index) => (
-                <tr key={index} className="bg-white border-b dark:bg-gray-800 dark:border-gray-700">
-                  <th scope="row" className="px-6 py-4 font-medium text-gray-900 whitespace-nowrap dark:text-white">
-                    {uAmenities.find(a => a.id.toString() === amenity.amenityId)!.text}
-                  </th>
-                  <td className="px-6 py-4">
-                    {amenity.description || "N/A"}
-                  </td>
-                </tr>
-              ))}
-            </tbody>
-          </table>
-
-        </div>
-      )}
     </div>
   );
 }

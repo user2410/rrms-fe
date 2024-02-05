@@ -50,7 +50,10 @@ export default function Step1ExtraInfo() {
                 type="number"
                 min={1000}
                 {...field}
-                onChange={(e) => field.onChange(e.target.valueAsNumber)} />
+                onChange={(e) => {
+                  if(e.target.value === "") { form.resetField("property.yearBuilt"); }
+                  field.onChange(e.target.valueAsNumber);
+                }} />
             </FormControl>
             <FormMessage />
           </FormItem>
@@ -67,7 +70,10 @@ export default function Step1ExtraInfo() {
                 type="number"
                 min={1}
                 {...field}
-                onChange={(e) => field.onChange(e.target.valueAsNumber)} />
+                onChange={(e) => {
+                  if(e.target.value === "") { form.resetField("property.entranceWidth"); }
+                  field.onChange(e.target.valueAsNumber);
+                }} />
             </FormControl>
             <FormMessage />
           </FormItem>
@@ -84,7 +90,10 @@ export default function Step1ExtraInfo() {
                 type="number"
                 min={1}
                 {...field}
-                onChange={(e) => field.onChange(e.target.valueAsNumber)} />
+                onChange={(e) => {
+                  if(e.target.value === "") { form.resetField("property.facade"); }
+                  field.onChange(e.target.valueAsNumber);
+                }} />
             </FormControl>
             <FormMessage />
           </FormItem>

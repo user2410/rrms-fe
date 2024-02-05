@@ -9,10 +9,11 @@ import Sidebar from "./_components/sidebard";
 import TopSearchBar from "./_components/top-searchbar";
 import { GetCityById, GetDistrictById, GetLocationName, GetWardById } from "@/utils/dghcvn";
 import ListingsList from "./_components/listings_list";
+import { Pagination, PaginationContent, PaginationEllipsis, PaginationItem, PaginationLink, PaginationNext, PaginationPrevious } from "@/components/ui/pagination";
 
 export type SearchResult = {
   count: number;
-  items: {lid: string;}[];
+  items: { lid: string; }[];
   limit: number;
   offset: number;
   sortby: string;
@@ -57,7 +58,7 @@ export default function SearchPage() {
         case "offset":
           q.offset = parseInt(value);
           break;
-        case "sortby": 
+        case "sortby":
           q.sortby = value;
           break;
         case "order":
@@ -122,6 +123,41 @@ export default function SearchPage() {
             {!loading && !error && (
               <ListingsList searchResult={data} />
             )}
+            <Pagination className="w-full flex flex-row justify-center">
+              <PaginationContent>
+                <PaginationItem 
+                  onClick={() => {
+                    if(data.offset >= 10) {
+                      setData(v => ({
+                        ...v,
+                        offset: v.offset - 10,
+                      }));
+                    }
+                }}>
+                  <PaginationPrevious isActive={data.offset > 10} href="#">Trước</PaginationPrevious>
+                </PaginationItem>
+                {Array.from({length: data.count/10}, (_, i) => i + 1).map((i) => (
+                  <PaginationItem key={i} onClick={() => setData(v => ({
+                    ...v,
+                    offset: (i-1) * 10,
+                  }))}>
+                    <PaginationLink href="#" isActive={(i-1) === data.offset/10}>{i}</PaginationLink>
+                  </PaginationItem>
+                ))}
+                <PaginationItem
+                  onClick={() => {
+                    if(data.offset < data.count - 10) {
+                      setData(v => ({
+                        ...v,
+                        offset: v.offset + 10,
+                      }));
+                    }
+                  }}
+                >
+                  <PaginationNext isActive={data.offset > 10} href="#">Sau</PaginationNext>
+                </PaginationItem>
+              </PaginationContent>
+            </Pagination>
           </div>
           <div className="hidden md:block md:col-span-4">
             <aside className="sticky top-4">

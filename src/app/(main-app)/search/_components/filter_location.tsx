@@ -2,13 +2,16 @@ import DivisionSelector from "@/components/complex/division-selector";
 import { Button } from "@/components/ui/button";
 import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
 import { GetLocationName } from "@/utils/dghcvn";
-import { ChevronDown } from "lucide-react";
+import { objectToQueryString } from "@/utils/query";
+import { useRouter } from "next/navigation";
 import { useMemo } from "react";
 import { useFormContext } from "react-hook-form";
-import { SearchFormValues } from "../../_components/landing-page/search_box";
 import { BsChevronDown } from "react-icons/bs";
+import { SearchFormValues } from "../../_components/landing-page/search_box";
+import { beforeSubmitSearchForm } from "./top-searchbar";
 
 export default function LocationFilter() {
+  const router = useRouter();
   const form = useFormContext<SearchFormValues>();
 
   const pcity = form.watch('pcity');
@@ -42,9 +45,20 @@ export default function LocationFilter() {
           districtFieldName="pdistrict"
           wardFieldName="pward"
         />
-        <Button type="button" variant="outline" className="mt-3" onClick={handleResetFields}>
-          Đặt lại
-        </Button>
+        <div className="flex flex-row items-center mt-3 gap-2">
+          <Button type="button" variant="outline" onClick={handleResetFields}>
+            Đặt lại
+          </Button>
+          <Button
+            type="button"
+            variant="default"
+            onClick={() => {
+              router.push(`/search?${objectToQueryString(beforeSubmitSearchForm(form.getValues()))}`);
+            }}
+          >
+            Tìm kiếm
+          </Button>
+        </div>
       </PopoverContent>
     </Popover>
   );

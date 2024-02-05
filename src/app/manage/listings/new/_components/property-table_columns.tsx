@@ -14,8 +14,9 @@ import {
 import toast from "react-hot-toast";
 import { IoIosMore } from "react-icons/io";
 import { Checkbox } from "@/components/ui/checkbox";
+import Image from "next/image";
 
-export const columns: ColumnDef<Property>[] = [
+export const propertyTColumns: ColumnDef<Property>[] = [
   {
     id: "select",
     cell: ({ row }) => (
@@ -41,11 +42,12 @@ export const columns: ColumnDef<Property>[] = [
 
       return (
         <div className="flex">
-          <div className="w-10 h-10 rounded-sm md:rounded-md">
-            <img 
+          <div className="w-10 h-10 relative rounded-sm md:rounded-md">
+            <Image
               src={media[0].url} 
               alt="" 
-              className="w-full h-full object-cover" 
+              fill
+              objectFit="cover"
             />
           </div>
           <div className="ml-2">

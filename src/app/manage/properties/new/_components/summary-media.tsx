@@ -1,5 +1,12 @@
 import { PropertyForm } from '@/app/manage/properties/new/page';
+import LightGallery from 'lightgallery/react';
 import { useFormContext } from 'react-hook-form';
+
+import 'lightgallery/css/lg-thumbnail.css';
+import 'lightgallery/css/lg-zoom.css';
+import 'lightgallery/css/lightgallery.css';
+import lgThumbnail from 'lightgallery/plugins/thumbnail';
+import lgZoom from 'lightgallery/plugins/zoom';
 
 export default function SummaryMedia() {
   const form = useFormContext<PropertyForm>();
@@ -11,22 +18,31 @@ export default function SummaryMedia() {
       <div className="w-full">
         <div className="text-xl my-2">Hình ảnh</div>
         {/* Uploaded images gallery */}
-        <div className="w-full flex flex-wrap gap-2">
-          {images.map((media, index) => (
-              <div key={index} className="w-40 h-24 flex justify-center">
+        <div className="w-full">
+          <LightGallery plugins={[lgZoom, lgThumbnail]} mode="lg-fade" elementClassNames="flex flex-row flex-wrap gap-2">
+            {images.map((media, index) => (
+              <a
+                key={index}
+                className="gallery-item"
+                data-src={media.url}
+                data-sub-html={media.description && `<h4>${media.description}</h4>`}
+              >
                 <img
                   src={media.url}
-                  className="object-contain max-w-full max-h-full"
+                  alt={media.description}
+                  className="m-2 max-w-[320px] aspect-video object-contain"
                 />
-              </div>
-          ))}
-        </div>        
+              </a>
+            ))}
+          </LightGallery>
+        </div>
       </div>
       <div className="w-full">
         <div className="text-xl my-2">Video</div>
         {/* Youtube video gallery */}
         {videos.map((media, index) => (
-          <div key={index}>{media.url}</div>
+          // <iframe key={index} width="720" height="540" src={media.url} frameBorder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowFullScreen></iframe>
+          <a key={index} href={media.url} target="_blank" rel="noreferrer" className="text-blue-500 underline">{media.url}</a>
         ))}
       </div>
     </div>

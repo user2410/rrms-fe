@@ -6,6 +6,7 @@ export async function CreateProperty({property, units} : PropertyForm, accessTok
   const _property = JSON.parse(JSON.stringify(property));
   const _units = JSON.parse(JSON.stringify(units));
   
+  // 1. Upload all images
   for(const image of _property.media.filter((m: any) => m.type.startsWith('IMAGE'))) {
     const fileUrl = await uploadFile({
       name: image.name as string,
@@ -30,16 +31,22 @@ export async function CreateProperty({property, units} : PropertyForm, accessTok
     }
   }
 
-  // preprocess data
+  // 2. Preprocess data
   for(const feature of _property.features) {
     feature.featureId = parseInt(feature.featureId);
   }
+  const isMultiUnit = (["APARTMENT", "ROOM"].includes(property.type) && property.multiUnit) || property.type === "MINIAPARTMENT";
+  var totalUnitArea = 0;
   for(const unit of _units) {
+    if (isMultiUnit) {totalUnitArea += unit.area;}
     for(const amenity of unit.amenities) {
       amenity.amenityId = parseInt(amenity.amenityId);
     }
   }
-  
+  if(isMultiUnit) {
+    _property.area = totalUnitArea / _units.length;
+  }
+
   // 2. Create a new property record
   const newProperty = (await backendAPI.post('/api/properties', {
     ..._property,

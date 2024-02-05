@@ -1,10 +1,12 @@
+import { GetLocationName } from "@/utils/dghcvn";
+
 export type PropertyType = 
   'APARTMENT' |
-  'PRIVATE' | 'TOWNHOUSE' | 'SHOPHOUSE' | 'VILLA' |
-  'ROOM' | 'STORE' |
+  'PRIVATE' |
+  'ROOM' | 
+  'STORE' |
   'OFFICE' |
-  'BLOCK';
-  // 'COMPLEX'; // Quỹ căn hộ / biệt thự
+  'MINIAPARTMENT'
 
 export type PropertyMedia = {
   url: string;
@@ -36,7 +38,7 @@ export type Property = {
   building?: string;
   project?: string;
   area: number;
-  numberOfFloors: number;
+  numberOfFloors?: number;
   yearBuilt?: number;
   orientation?: string;
   fullAddress: string;
@@ -46,6 +48,7 @@ export type Property = {
   lat: number;
   lng: number;
   type: PropertyType;
+  multiUnit: boolean;
   media: PropertyMedia[];
   features: PropertyFeature[];
   tags: PropertyTag[];
@@ -53,16 +56,23 @@ export type Property = {
   updatedAt: Date;
 };
 
+export function getPropertyFullAddress(property: Property) {
+  return `${property.fullAddress}, ${GetLocationName(property.city!, property.district!, property.ward || '')}`;
+}
+
+export function getPropertyTypeText(p: Property) {
+  return p.multiUnit ?
+    (p.type === 'APARTMENT' ? `Quỹ căn hộ` : p.type === 'ROOM' ? 'Dãy phòng trọ' : '') :
+    mapPropertyTypeToText[p.type as keyof typeof mapPropertyTypeToText];
+}
+
 export const mapPropertyTypeToText = {
   APARTMENT: 'Căn hộ',
   PRIVATE: 'Nhà riêng',
-  TOWNHOUSE: 'Nhà mặt phố',
-  SHOPHOUSE: 'Shophouse, nhà phố thương mại',
-  VILLA: 'Biệt thự',
   ROOM: 'Phòng trọ',
   OFFICE: 'Văn phòng',
   STORE: 'Cửa hàng',
-  BLOCK: 'Dãy phòng trọ',
+  MINIAPARTMENT: 'Chung cư mini',
 };
 
 export const pFeatures = [
@@ -134,6 +144,7 @@ export const mockupProperties: Property[] = [
     lat: 10.765,
     lng: 106.674,
     type: 'APARTMENT',
+    multiUnit: false,
     media: [
       {
         propertyId: '1',
@@ -223,6 +234,7 @@ export const mockupProperties: Property[] = [
     lat: 10.764,
     lng: 106.674,
     type: 'ROOM',
+    multiUnit: false,
     media: [
       {
         propertyId: '2',
@@ -302,6 +314,7 @@ export const mockupProperties: Property[] = [
     lat: 10.765,
     lng: 106.675,
     type: 'ROOM',
+    multiUnit: false,
     media: [
       {
         propertyId: '3',
@@ -381,6 +394,7 @@ export const mockupProperties: Property[] = [
     lat: 10.764,
     lng: 106.675,
     type: 'PRIVATE',
+    multiUnit: false,
     media: [
       {
         propertyId: '4',
@@ -460,6 +474,7 @@ export const mockupProperties: Property[] = [
     lat: 10.765,
     lng: 106.676,
     type: 'APARTMENT',
+    multiUnit: false,
     media: [
       {
         propertyId: '5',
@@ -539,6 +554,7 @@ export const mockupProperties: Property[] = [
     lat: 10.764,
     lng: 106.676,
     type: 'APARTMENT',
+    multiUnit: false,
     media: [
       {
         propertyId: '6',
@@ -618,6 +634,7 @@ export const mockupProperties: Property[] = [
     lat: 10.765,
     lng: 106.677,
     type: 'ROOM',
+    multiUnit: false,
     media: [
       {
         propertyId: '7',
@@ -697,6 +714,7 @@ export const mockupProperties: Property[] = [
     lat: 10.764,
     lng: 106.677,
     type: 'APARTMENT',
+    multiUnit: false,
     media: [
       {
         propertyId: '8',
@@ -776,6 +794,7 @@ export const mockupProperties: Property[] = [
     lat: 10.765,
     lng: 106.678,
     type: 'APARTMENT',
+    multiUnit: false,
     media: [
       {
         propertyId: '9',
@@ -855,6 +874,7 @@ export const mockupProperties: Property[] = [
     lat: 10.764,
     lng: 106.678,
     type: 'APARTMENT',
+    multiUnit: false,
     media: [
       {
         propertyId: '10',
@@ -934,6 +954,7 @@ export const mockupProperties: Property[] = [
     lat: 10.765,
     lng: 106.679,
     type: 'APARTMENT',
+    multiUnit: false,
     media: [
       {
         propertyId: '11',
@@ -1013,6 +1034,7 @@ export const mockupProperties: Property[] = [
     lat: 10.764,
     lng: 106.679,
     type: 'APARTMENT',
+    multiUnit: false,
     media: [
       {
         propertyId: '12',
@@ -1092,6 +1114,7 @@ export const mockupProperties: Property[] = [
     lat: 10.765,
     lng: 106.680,
     type: 'APARTMENT',
+    multiUnit: false,
     media: [
       {
         propertyId: '13',

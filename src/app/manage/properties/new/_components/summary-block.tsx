@@ -1,49 +1,13 @@
 import { PropertyForm } from "@/app/manage/properties/new/page";
 import { uAmenities } from "@/models/unit";
-import { useCallback, useRef } from "react";
 import { useFormContext } from "react-hook-form";
+import LightGallery from 'lightgallery/react';
 
-import { Navigation } from 'swiper';
-import { Swiper, SwiperSlide } from 'swiper/react';
-
-function ImageSlider({media} : { media: { url: string }[] }) {
-  const sliderRef = useRef(null);
-
-  const handlePrev = useCallback(() => {
-    if (!sliderRef.current) return;
-    (sliderRef.current as any).swiper.slidePrev();
-  }, []);
-
-  const handleNext = useCallback(() => {
-    if (!sliderRef.current) return;
-    (sliderRef.current as any).swiper.slideNext();
-  }, []);
-
-  return (
-    <>
-      <Swiper
-        ref={sliderRef}
-        modules={[Navigation]}
-        slidesPerView={1}
-      >
-        {media.map((media, index) => (
-          <SwiperSlide key={index}>
-            <div key={index} className="w-40 h-24 flex justify-center">
-              <img
-                src={media.url}
-                className="object-contain max-w-full max-h-full"
-              />
-            </div>
-          </SwiperSlide>
-        ))}
-      </Swiper>
-      <div className="w-full">
-        <span className="inline-block cursor-pointer py-2 prev-arrow w-1/2 h-full text-center border hover:border-none bg-accent" onClick={handlePrev}>Prev</span>
-        <span className="inline-block cursor-pointer py-2 next-arrow w-1/2 h-full text-center border hover:border-none bg-accent" onClick={handleNext}>Next</span>
-      </div>
-    </>
-  );
-}
+import 'lightgallery/css/lightgallery.css';
+import 'lightgallery/css/lg-zoom.css';
+import 'lightgallery/css/lg-thumbnail.css';
+import lgThumbnail from 'lightgallery/plugins/thumbnail';
+import lgZoom from 'lightgallery/plugins/zoom';
 
 export default function SummaryBlock() {
   const form = useFormContext<PropertyForm>();
@@ -55,7 +19,7 @@ export default function SummaryBlock() {
         <thead className="text-xs text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400">
           <tr>
             <th scope="col" className="px-6 py-3">
-              Tên phòng
+              {form.getValues("property.type") === "ROOM" ? "Phòng" : "Căn hộ"}
             </th>
             <th scope="col" className="px-6 py-3">
               Diện tích (m<sup>2</sup>)
@@ -66,8 +30,8 @@ export default function SummaryBlock() {
             <th scope="col" className="px-6 py-3">
               Tiện nghi
             </th>
-            <th scope="col" className="px-6 py-3">
-              Ảnh chụp
+            <th scope="col" className="px-6 py-3 text-center">
+              Ảnh
             </th>
           </tr>
         </thead>
@@ -97,10 +61,23 @@ export default function SummaryBlock() {
                   </ul>
                 ) : "N/A"}
               </td>
-              <td className="px-6 py-4">
-                <div className="max-w-[160px]">
-                  <ImageSlider media={unit.media || []} />
-                </div>
+              <td className="max-w-[540px]">
+                <LightGallery plugins={[lgZoom, lgThumbnail]} mode="lg-fade" elementClassNames="flex flex-row justify-center flex-wrap gap-2">
+                  {unit.media.map((media, index) => (
+                    <a
+                      key={index}
+                      className="gallery-item"
+                      data-src={media.url}
+                      data-sub-html={media.description && `<h4>${media.description}</h4>`}
+                    >
+                      <img
+                        src={media.url}
+                        alt={media.description}
+                        className="m-2 max-w-[100px] aspect-video object-contain"
+                      />
+                    </a>
+                  ))}
+                </LightGallery>
               </td>
             </tr>
           ))}

@@ -15,7 +15,7 @@ export default function GeneralInfo({
           <div className="space-y-2">
             <h5 className="font-extralight">Mức giá</h5>
             <h4 className="font-semibold">{ToMillion(listingDetail.listing.price)}</h4>
-            <h5 className="font-light">~{ToMillion(listingDetail.listing.price / listingDetail.property.area)}/m<sup>2</sup></h5>
+            <h5 className="font-light">~{ToMillion(listingDetail.listing.price / listingDetail.property.area, 2)}/m<sup>2</sup></h5>
           </div>
           <div className="space-y-2">
             <h5 className="font-extralight">Diện tích</h5>

@@ -4,119 +4,179 @@ import { PropertyForm } from "@/app/manage/properties/new/page";
 import { FormControl, FormDescription, FormField, FormItem, FormLabel, FormMessage } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
+import { Switch } from "@/components/ui/switch";
 import { Textarea } from "@/components/ui/textarea";
 import { mapPropertyTypeToText } from "@/models/property";
 import { Fragment } from "react";
 import { useFormContext } from "react-hook-form";
 
-const propertyTypePlaceholders = {
+const propertyNamePlaceholders = {
   APARTMENT: 'VD: Căn hộ đường Giải Phóng',
   PRIVATE: 'VD: Nhà riêng đường Giang Văn Minh',
-  TOWNHOUSE: 'VD: Nhà phố 108 Lò Đúc',
-  SHOPHOUSE: 'VD: Shophouse đường Giải Phóng',
-  VILLA: 'VD: Biệt thự song lập Phú Mỹ Hưng',
   ROOM: 'VD: Phòng trọ đường Nguyễn Văn Cừ',
   OFFICE: 'VD: Văn phòng đường Lê Văn Lương',
   STORE: 'VD: Cửa hàng đường Lê Văn Lương',
-  BLOCK: 'VD: Khu nhà trọ đường Lê Văn Lương',
 };
 
+// APARTMENT có nhiều unit = quỹ căn hộ
+// ROOM có nhiều unit = dãy nhà trọ
+// PRIVATE, dãy nhà trọ nhập số tầng
+// Quỹ căn hộ không nhập diện tích
 export default function Step1BasicInfo() {
   const form = useFormContext<PropertyForm>();
-  
+  const propertyType = form.watch('property.type');
+
   return (
     <Fragment>
-      <FormField
-        control={form.control}
-        name="property.type"
-        render={({ field }) => (
-          <FormItem>
-            <FormLabel>Loại bất động sản <span className="ml-1 text-red-600">*</span></FormLabel>
-            <Select 
-              defaultValue={field.value}
-              value={form.watch('property.type')}
-              onValueChange={(e: string) => {
-                if (['APARTMENT', 'ROOM', 'STUDIO'].includes(e)) {
-                  form.setValue("property.numberOfFloors", 1);
-                }
-                field.onChange(e);
-              }}
-            >
-              <FormControl>
-                <SelectTrigger>
-                  <SelectValue placeholder="VD: Nhà riêng" />
-                </SelectTrigger>
-              </FormControl>
-              <SelectContent>
-                {Object.entries(mapPropertyTypeToText).map(([key, value]) => (
-                  <SelectItem 
-                    key={key} 
-                    value={key}
-                  >
-                    {value}
-                  </SelectItem>
-                ))}
-              </SelectContent>
-            </Select>
-            <FormMessage />
-          </FormItem>
+      <div className="flex flex-row items-center gap-2">
+        <FormField
+          control={form.control}
+          name="property.type"
+          render={({ field }) => (
+            <FormItem className="flex-1">
+              <FormLabel>Loại nhà cho thuê <span className="ml-1 text-red-600">*</span></FormLabel>
+              <Select
+                defaultValue={field.value}
+                onValueChange={field.onChange}
+              >
+                <FormControl>
+                  <SelectTrigger className="ring-0 focus:ring-0">
+                    <SelectValue placeholder="VD: Nhà riêng" />
+                  </SelectTrigger>
+                </FormControl>
+                <SelectContent>
+                  {Object.entries(mapPropertyTypeToText).map(([key, value]) => (
+                    <SelectItem key={key} value={key}>
+                      {value}
+                    </SelectItem>
+                  ))}
+                </SelectContent>
+              </Select>
+              <FormMessage />
+            </FormItem>
+          )}
+        />
+        {propertyType === "APARTMENT" && (
+          <FormField
+            control={form.control}
+            name="property.multiUnit"
+            render={({ field }) => (
+              <FormItem>
+                <FormLabel>Là quỹ căn ?</FormLabel><br/>
+                <FormControl>
+                  <Switch
+                    checked={field.value}
+                    onCheckedChange={field.onChange}
+                    aria-readonly
+                  />
+                </FormControl>
+              </FormItem>
+            )}
+          />
         )}
-      />
+        {propertyType === "ROOM" && (
+          <FormField
+            control={form.control}
+            name="property.multiUnit"
+            render={({ field }) => (
+              <FormItem>
+                <FormLabel>Là dãy phòng trọ ?</FormLabel><br/>
+                <FormControl>
+                  <Switch
+                    checked={field.value}
+                    onCheckedChange={field.onChange}
+                    aria-readonly
+                  />
+                </FormControl>
+              </FormItem>
+            )}
+          />
+        )}
+      </div>
+      {propertyType === "APARTMENT" && (
+        <div className="flex flex-row justify-between gap-2">
+          <FormField
+            control={form.control}
+            name="property.project"
+            render={({ field }) => (
+              <FormItem className="grow">
+                <FormLabel>Dự án</FormLabel>
+                <FormControl>
+                  <Input {...field} placeholder="Dự án Thống Nhất Complex"/>
+                </FormControl>
+              </FormItem>
+            )}
+          />
+          <FormField
+            control={form.control}
+            name="property.building"
+            render={({ field }) => (
+              <FormItem className="grow">
+                <FormLabel>Toà nhà</FormLabel>
+                <FormControl>
+                  <Input {...field} placeholder="Tòa nhà Thống Nhất"/>
+                </FormControl>
+              </FormItem>
+            )}
+          />
+        </div>
+      )}
       <FormField
         control={form.control}
         name="property.name"
         render={({ field }) => (
           <FormItem>
-            <FormLabel>Tên bất động sản <span className="ml-1 text-red-600">*</span></FormLabel>
+            <FormLabel>Tên nhà cho thuê <span className="ml-1 text-red-600">*</span></FormLabel>
             <FormControl>
-              <Input placeholder={propertyTypePlaceholders[form.watch('property.type') as keyof typeof propertyTypePlaceholders]} {...field} />
+              <Input placeholder={propertyNamePlaceholders[form.watch('property.type') as keyof typeof propertyNamePlaceholders]} {...field} />
             </FormControl>
-            <FormDescription>Tên của bất động sản phân biệt các bất động sản được quản lý.</FormDescription>
+            <FormDescription>Tên của nhà cho thuê phân biệt các nhà cho thuê được quản lý.</FormDescription>
             <FormMessage />
           </FormItem>
         )}
       />
-      <div className="flex justify-between gap-1">
-        <FormField
-          control={form.control}
-          name="property.numberOfFloors"
-          render={({ field }) => (
-            <FormItem className="grow">
-              <FormLabel>
-                Số tầng
-                <span className="ml-1 text-red-600">*</span>
-              </FormLabel>
-              <FormControl>
-                <Input 
-                  type="number" 
-                  {...field} 
-                  disabled={['APARTMENT', 'ROOM'].includes(form.watch('property.type'))}
-                  onChange={(e) => field.onChange(e.target.valueAsNumber)}/>
-              </FormControl>
-              <FormMessage />
-            </FormItem>
-          )}
-        />
-        <FormField
-          control={form.control}
-          name="property.area"
-          render={({ field }) => (
-            <FormItem className="grow">
-              <FormLabel>
-                Tổng diện tích (tính bằng m<sup>2</sup>)
-                <span className="ml-1 text-red-600">*</span>
-              </FormLabel>
-              <FormControl>
-                <Input 
-                  type="number" 
-                  min={1} 
-                  {...field} 
-                  onChange={(e) => field.onChange(e.target.valueAsNumber)} />
-              </FormControl>
-              <FormMessage />
-            </FormItem>
-          )}
-        />
+      <div className="flex justify-between gap-2">
+        {["PRIVATE", "MINIAPARTMENT"].includes(propertyType) && (
+          <FormField
+            control={form.control}
+            name="property.numberOfFloors"
+            render={({ field }) => (
+              <FormItem className="grow">
+                <FormLabel>
+                  Số tầng
+                </FormLabel>
+                <FormControl>
+                  <Input
+                    type="number"
+                    {...field}
+                    onChange={(e) => field.onChange(e.target.valueAsNumber)} />
+                </FormControl>
+                <FormMessage />
+              </FormItem>
+            )}
+          />
+        )}
+        {!(["APARTMENT", "ROOM"].includes(propertyType) && form.watch("property.multiUnit")) && (
+          <FormField
+            control={form.control}
+            name="property.area"
+            render={({ field }) => (
+              <FormItem className="grow">
+                <FormLabel>
+                  Diện tích (m<sup>2</sup>)<span className="ml-1 text-red-600">*</span>
+                </FormLabel>
+                <FormControl>
+                  <Input
+                    type="number"
+                    min={1}
+                    {...field}
+                    onChange={(e) => field.onChange(e.target.valueAsNumber)} />
+                </FormControl>
+                <FormMessage />
+              </FormItem>
+            )}
+          />
+        )}
       </div>
       <FormField
         control={form.control}
@@ -126,7 +186,7 @@ export default function Step1BasicInfo() {
             <FormLabel>Mô tả</FormLabel>
             <FormControl>
               <Textarea
-                placeholder="Nhập mô tả chung về bất động sản của bạn. Ví dụ: Khu nhà có vị trí thuận lợi, gần công viên, gần trường học ... "
+                placeholder="Nhập mô tả chung về nhà cho thuê của bạn. Ví dụ: Khu nhà có vị trí thuận lợi, gần công viên, gần trường học ... "
                 className="resize-none"
                 {...field}
               />

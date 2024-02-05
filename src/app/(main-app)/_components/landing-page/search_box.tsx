@@ -3,7 +3,6 @@
 import { Button } from "@/components/ui/button";
 import { Dialog, DialogContent, DialogFooter, DialogHeader, DialogTrigger } from "@/components/ui/dialog";
 import { Form } from "@/components/ui/form";
-import { ScrollArea } from "@/components/ui/scroll-area";
 import { objectToQueryString } from "@/utils/query";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { DialogClose } from "@radix-ui/react-dialog";
@@ -101,6 +100,8 @@ export default function SearchBox() {
 
   async function onSubmit(data: SearchFormValues) {
     // console.log(data);
+    data.lmaxPrice = data.lmaxPrice ? data.lmaxPrice * 1000000 : undefined;
+    data.lminPrice = data.lminPrice ? data.lminPrice * 1000000 : undefined;
     router.push(`/search?${objectToQueryString(data)}`);
   }
 
@@ -128,9 +129,7 @@ export default function SearchBox() {
               </DialogTrigger>
               <DialogContent className="w-[582px]">
                 <DialogHeader>Lọc thêm</DialogHeader>
-                <ScrollArea className="h-[75vh]">
-                  <ExtraFilter />
-                </ScrollArea>
+                <ExtraFilter />
                 <DialogFooter className="justify-end gap-2">
                   <Button type="button" variant="outline" onClick={() => {
                     form.setValue("unumberOfLivingRooms", undefined);
@@ -151,7 +150,9 @@ export default function SearchBox() {
                 </DialogFooter>
               </DialogContent>
             </Dialog>
-            <Button type="submit" variant="destructive">Search</Button>
+            <DialogClose asChild>
+              <Button type="submit" variant="destructive">Search</Button>
+            </DialogClose>
           </div>
         </div>
         <div className="grid grid-cols-2 gap-2">

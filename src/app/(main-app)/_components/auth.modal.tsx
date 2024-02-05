@@ -1,58 +1,122 @@
 "use client";
 
-import Button from "@/components/ui/buttons/button_1";
-import CheckboxInput from "@/components/ui/input/checkbox";
-import TextInput from "@/components/ui/input/text";
-import Logo from "@/components/ui/logo";
-import { useModalAction } from "@/context/modal.context";
-import { Switch } from "@headlessui/react";
+import { Button } from "@/components/ui/button";
+import { Dialog, DialogContent, DialogTrigger } from "@/components/ui/dialog";
+import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from "@/components/ui/form";
+import { Icons } from "@/components/ui/icons";
+import { Input } from "@/components/ui/input";
+import { Switch } from "@/components/ui/switch";
+import { zodResolver } from "@hookform/resolvers/zod";
+import * as Tabs from '@radix-ui/react-tabs';
 import axios from "axios";
-import clsx from "clsx";
+import { Eye, EyeOff } from "lucide-react";
 import { signIn } from "next-auth/react";
 import Image from "next/image";
 import Link from "next/link";
-import { useMemo, useState } from "react";
-import { FieldValues, SubmitHandler, useForm } from "react-hook-form";
+import { useRef, useState } from "react";
+import { SubmitHandler, useForm } from "react-hook-form";
 import toast from "react-hot-toast";
-import { FaFacebook, FaLinkedinIn, FaTwitter } from "react-icons/fa";
+import * as z from "zod";
+import styles from "../_styles/page.module.css";
+import clsx from "clsx";
+import ForgetPasswordModal from "./forget-pass.modal";
+
+const authFormSchema = z.object({
+  email: z.string({required_error: "Yêu cầu email"}).email("Email không hợp lệ"),
+  password: z.string().min(8, "Mật khẩu phải có ít nhất 8 kí tự"),
+    // .regex(/^(?=.*[A-Z])(?=.*[a-z])(?=.*[0-9])(?=.*[!@#$%^&*])(.{8,})$/),
+  remember: z.boolean().default(false),
+});
+
+type AuthFormValues = z.infer<typeof authFormSchema>;
 
 type VARIANT = "login" | "register";
 
 export default function AuthModal() {
-  const [variant, setVariant] = useState<VARIANT>("login");
+  const modalTriggerBtnRef = useRef<HTMLButtonElement>(null);
+
+  return (
+    <Dialog>
+      <DialogTrigger asChild>
+        <Button ref={modalTriggerBtnRef} type="button" variant="outline">Sign in</Button>
+      </DialogTrigger>
+      <DialogContent className="max-w-[80vw] lg:max-w-[960px] xl:max-w-[1024px] 2xl:max-w-[1200px]">
+        <div className="grid grid-cols-2 gap-3 w-full">
+          <div className="relative hidden h-full flex-col bg-muted p-10 md:flex dark:border-r">
+            <Image
+              src="/img/login.png"
+              fill
+              objectFit="cover"
+              alt="Authentication"
+              className="inset-0"
+            />
+          </div>
+          <div className="col-span-2 md:col-span-1 lg:p-8">
+            <div className="mx-auto flex w-full flex-col justify-center gap-6">
+              <h1 className="text-2xl font-semibold tracking-tight">
+                Chào mừng đến với RRMS
+              </h1>
+              <Tabs.Root defaultValue="login" className={styles.TabsRoot}>
+                <Tabs.List className={styles.TabsList}>
+                  <Tabs.Trigger className={clsx(styles.TabsTrigger, "!focus:ring-0")} value="login">Đăng nhập</Tabs.Trigger>
+                  <Tabs.Trigger className={clsx(styles.TabsTrigger, "!focus:ring-0")} value="register">Đăng kí</Tabs.Trigger>
+                </Tabs.List>
+                <Tabs.Content className={styles.TabsContent} value="login">
+                  <UserAuthForm variant="login"/>
+                </Tabs.Content>
+                <Tabs.Content className={styles.TabsContent} value="register">
+                  <UserAuthForm variant="register"/>
+                </Tabs.Content>
+              </Tabs.Root>
+              <p className="px-8 text-center text-sm text-muted-foreground">
+                Khi chọn tiếp tục, bạn đồng ý với điều khoản {" "}
+                <Link
+                  href="/terms"
+                  className="underline underline-offset-4 hover:text-primary"
+                >
+                  Terms of Service
+                </Link>{" and "}
+                <Link
+                  href="/privacy"
+                  className="underline underline-offset-4 hover:text-primary"
+                >
+                  Privacy Policy
+                </Link>{" "}
+                của RRMS.
+              </p>
+            </div>
+          </div>
+        </div>
+      </DialogContent>
+    </Dialog>
+  );
+}
+
+const defaultValues: Partial<AuthFormValues> = {
+  email: "",
+  password: "",
+  remember: false,
+};
+
+export function UserAuthForm({
+  variant,
+}: {
+  variant: VARIANT;
+}) {
   const [isLoading, setLoading] = useState<boolean>(false);
-  const [remember, setRemember] = useState<boolean>(false);
-  const [agreeTerms, setAgreeTerms] = useState<boolean>(false);
-  const [proCheck, setProCheck] = useState<boolean>(false);
+  const [showPassword, setShowPassword] = useState<boolean>(false);
 
-  useMemo(() => {
-    setRemember(false);
-    if (variant === "login") {
-      setProCheck(false);
-    }
-  }, [variant]);
-
-  const { closeModal } = useModalAction();
-  const {
-    control,
-    register,
-    setValue,
-    handleSubmit,
-    formState: { errors },
-  } = useForm<FieldValues>({
-    defaultValues: {
-      email: "",
-      password: "",
-    },
+  const form = useForm<AuthFormValues>({
+    resolver: zodResolver(authFormSchema),
+    defaultValues,
   });
 
-  const onSubmit: SubmitHandler<FieldValues> = async (data) => {
+  const onSubmit: SubmitHandler<AuthFormValues> = async (data) => {
     setLoading(true);
     console.log(data);
     try {
-      if(variant === "register") {
+      if (variant === "register") {
         const res = await axios.post("/api/register", data);
-        // TODO: save to context
         console.log(res);
         toast.success("Registered successfully");
       } else {
@@ -61,245 +125,141 @@ export default function AuthModal() {
           redirect: false
         });
         if (cb?.error) {
+          console.error(cb.error);
           toast.error("Invalid credential");
         } else if (cb?.ok) {
           toast.success(`Logged in as ${data.email}!`);
-          closeModal();
+          // modalTriggerBtnRef.current?.click();
         }
       }
     } catch (err) {
-      toast.error("Something went wrong");
       console.error(err);
+      toast.error("Something went wrong");
     } finally {
       setLoading(false);
     }
   };
 
   return (
-    <div className="w-full md:w-[720px] lg:w-[920px] xl:w-[1000px] 2xl:w-[1200px] relative">
-      <div className="flex mx-auto overflow-hidden rounded-lg bg-brand-light">
-        <div className="md:w-1/2 lg:w-[55%] xl:w-[60%] hidden md:block relative">
-          <Image src="/img/login.png" alt="signin Image" layout="fill" />
-        </div>
-        <div className="w-full md:w-1/2 lg:w-[45%] xl:w-[40%] max-h-[570px] py-6 sm:py-10 px-3.5 sm:px-5 md:px-6 lg:px-7 xl:px-11 rounded-md flex flex-col justify-center">
-          <div className="mb-6 text-center">
-            <div className="flex justify-center">
-              <Logo logoOnly={true} />
-            </div>
-            <h4 className="text-xl font-semibold text-brand-dark sm:text-2xl sm:pt-3 ">
-              {variant === "login" ? "Welcome back" : "Signup for free"}
-            </h4>
-            <div className="mt-3 mb-1 text-sm text-center text-body">
-              {variant === "login" ? "Don't have an account" : "Already registered?"}
-              <button
-                type="button"
-                className="text-sm font-semibold ml-1 no-underline hover:text-slate-500"
-                onClick={() => {
-                  setVariant(variant === "login" ? "register" : "login");
-                }}
-              >
-                {variant === "login" ? "Create an account" : "Sign in"}
-              </button>
-            </div>
-          </div>
-          <form onSubmit={handleSubmit(onSubmit)}>
-            <div className="flex flex-col space-y-3.5">
-              <TextInput
-                id="email"
-                label="Email address"
-                type="email"
-                register={register}
-                disabled={isLoading}
-                errors={errors}
-                registerOption={{
-                  required: true,
-                  pattern: {
-                    value: /^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$/,
-                    message: "Invalid email address",
-                  },
-                }}
-              />
-              <TextInput
-                id="password"
-                label="Password"
-                type="password"
-                register={register}
-                errors={errors}
-                disabled={isLoading}
-                registerOption={{
-                  required: true,
-                  pattern: {
-                    value:
-                      // regex matches alphanumeric string at least 8 characters long
-                      /^[A-Za-z\d]{8,}$/,
-                    message:
-                      "Password must be at least 8 characters long",
-                  },
-                }}
-              />
-              {(variant === "register") && (
-                <CheckboxInput
-                  id="proCheck"
-                  checked={proCheck}
-                  onChange={() => setProCheck(!proCheck)}
-                  label="I am a landlord or industry professional"
-                />
+    <div className="grid gap-6">
+      <Form {...form}>
+        <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4">
+          <div className="space-y-3">
+            <FormField
+              control={form.control}
+              name="email"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>Email</FormLabel>
+                  <FormControl>
+                    <Input
+                      {...field}
+                      placeholder="name@example.com"
+                      type="email"
+                      autoCapitalize="none"
+                      autoComplete="email"
+                      autoCorrect="off"
+                      disabled={isLoading}
+                    />
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
               )}
-              <div className={clsx(
-                "flex items-center",
-                variant === "login" ? "justify-between" : "justify-start")}>
-                <div className={variant === "login" ? "block" : "hidden"}>
-                  <Switch.Group as="div" className="flex items-center space-x-4">
-                    <Switch
-                      as="button"
-                      checked={remember}
-                      onChange={setRemember}
-                      className={`${remember ? "bg-indigo-600" : "bg-gray-200"
-                        } relative inline-flex flex-shrink-0 h-6 transition-colors duration-200 ease-in-out border-2 border-transparent rounded-full cursor-pointer w-11 focus:outline-none focus:shadow-outline`}
-                    >
-                      {({ checked }) => (
-                        <span
-                          className={`${checked ? "translate-x-5" : "translate-x-0"
-                            } inline-block w-5 h-5 transition duration-200 ease-in-out transform bg-white rounded-full`}
-                        />
-                      )}
-                    </Switch>
-                    <Switch.Label className="ml-1 text-sm">Remember me</Switch.Label>
-                  </Switch.Group>
-                </div>
-                {variant === "login" ? (
-                  <button
-                    type="button"
-                    className="text-sm text-right no-underline hover:text-slate-500"
-                  >
-                    Forgot password ?
-                  </button>
-                ) : (
-                  <CheckboxInput
-                    id="terms"
-                    checked={agreeTerms}
-                    onChange={() => setAgreeTerms(!agreeTerms)}
-                    label={
-                      <p>
-                        I agree with the &#32;
-                        <Link
-                          className="ml-1 text-cyan-600 hover:underline dark:text-cyan-500"
-                          href="/terms"
-                          target="_blank"
-                          rel="noopener noreferrer"
-                        >
-                          terms and conditions
-                        </Link>
-                      </p>
-                    }
-                  />
+            />
+            <FormField
+              control={form.control}
+              name="password"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>Mật khẩu</FormLabel>
+                  <FormControl>
+                    <div className="relative">
+                      <Input
+                        type={showPassword ? 'text' : 'password'}
+                        {...field}
+                        autoCapitalize="none"
+                        autoComplete="email"
+                        autoCorrect="off"
+                        disabled={isLoading}
+                      />
+                      <div className="absolute inset-y-0 right-0 pr-3 flex items-center text-gray-400 cursor-pointer">
+                        {showPassword ? (
+                          <Eye className="h-6 w-6" onClick={() => setShowPassword(v => !v)} />
+                        ) : (
+                          <EyeOff className="h-6 w-6" onClick={() => setShowPassword(v => !v)} />
+                        )}
+                      </div>
+                    </div>
+                  </FormControl>
+                  {variant === "register" && (
+                    <ul className="text-sm text-muted-foreground list-disc list-inside">
+                      <li>Tối thiểu 8 kí tự</li>
+                      <li>Chứa ít nhất 1 chữ cái và 1 số</li>
+                      <li>Chứa ít nhất 1 ký tự đặc biệt</li>
+                      <li>Chứa ít nhất 1 ký tự hoa và thường</li>
+                    </ul>
+                  )}
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+          </div>
+          {variant === "login" && (
+            <div className="flex flex-row justify-between items-center">
+              <FormField
+                control={form.control}
+                name="remember"
+                render={({ field }) => (
+                  <FormItem className="flex flex-row items-center gap-2">
+                    <FormControl>
+                      <Switch
+                        checked={field.value}
+                        onCheckedChange={field.onChange}
+                      />
+                    </FormControl>
+                    <FormLabel className="text-slate-500 !m-0">Remember me</FormLabel>
+                  </FormItem>
                 )}
-              </div>
-              <div className="w-full">
-                <div className="mx-auto w-1/2">
-                  <Button type="submit" fullWidth disabled={isLoading}>
-                    {variant === "login" ? "Sign in" : "Sign up"}
-                  </Button>
-                </div>
-              </div>
+              />
+              <ForgetPasswordModal/>
             </div>
-          </form>
-          <div className="relative flex flex-col items-center justify-center text-sm">
-            <span className="mt-6 text-sm text-brand-dark opacity-70">
-              or continue with
-            </span>
-          </div>
-
-          <div className="flex justify-center mt-5 space-x-2.5">
-            <button
-              className="flex items-center justify-center w-10 h-10 transition-all border rounded-full cursor-pointer group border-border-one hover:border-brand focus:border-brand focus:outline-none"
-              onClick={() => { }}
-            >
-              <FaFacebook className="w-4 h-4 text-opacity-50 transition-all text-brand-dark group-hover:text-brand " />
-            </button>
-            <button
-              className="flex items-center justify-center w-10 h-10 transition-all border rounded-full cursor-pointer group border-border-one hover:border-brand focus:border-brand focus:outline-none"
-              onClick={() => { }}
-            >
-              <FaTwitter className="w-4 h-4 text-opacity-50 transition-all text-brand-dark group-hover:text-brand" />
-            </button>
-            <button
-              className="flex items-center justify-center w-10 h-10 transition-all border rounded-full cursor-pointer group border-border-one hover:border-brand focus:border-brand focus:outline-none"
-              onClick={() => { }}
-            >
-              <FaLinkedinIn className="w-4 h-4 text-opacity-50 transition-all text-brand-dark group-hover:text-brand" />
-            </button>
-          </div>
+          )}
+          <Button disabled={isLoading} type="submit" className="w-full">
+            {isLoading && (
+              <Icons.spinner className="mr-2 h-4 w-4 animate-spin" />
+            )}
+            {variant === "login" ? "Đăng nhập" : "Đăng kí"}
+          </Button>
+        </form>
+      </Form>
+      <div className="relative">
+        <div className="absolute inset-0 flex items-center">
+          <span className="w-full border-t" />
         </div>
+        <div className="relative flex justify-center text-xs uppercase">
+          <span className="bg-background px-2 text-muted-foreground">
+            Hoặc đăng nhập bằng
+          </span>
+        </div>
+      </div>
+      <div className="flex flex-col gap-2">
+        <Button variant="outline" type="button" disabled={isLoading} className="bg-black hover:bg-gray-900 text-white hover:text-white">
+          {isLoading ? (
+            <Icons.spinner className="mr-2 h-4 w-4 animate-spin" />
+          ) : (
+            <Icons.gitHub className="mr-2 h-4 w-4" />
+          )}{" "}
+          GitHub
+        </Button>
+        <Button variant="outline" type="button" disabled={isLoading} className="bg-blue-600 hover:bg-blue-500 text-white hover:text-white">
+          {isLoading ? (
+            <Icons.spinner className="mr-2 h-4 w-4 animate-spin" color="red" />
+          ) : (
+            <Icons.google className="mr-2 h-4 w-4" />
+          )}{" "}
+          Google
+        </Button>
       </div>
     </div>
   );
 }
-
-
-// <div className={proCheck ? "flex flex-col space-y-3" : "hidden"}>
-// <h3>Professional Information</h3>
-// <DropdownInput 
-//   id="prof_type" 
-//   label="Professional type"
-//   control={control}
-//   values={[
-//     {
-//       label: "Landlord",
-//       value: "landlord"
-//     },
-//     {
-//       label: "Real estate agent",
-//       value: "real_estate_agent"
-//     },
-//     {
-//       label: "Property manager",
-//       value: "property_manager"
-//     },
-//   ]}
-//   setValue={setValue}
-//   register={register}
-//   errors={errors}
-//   registerOption={{
-//     required: true,
-//   }}/>
-// <div className="flex flex-row w-full">
-//   <TextInput
-//     id="first_name"
-//     label="First name"
-//     type="text"
-//     register={register}
-//     errors={errors}
-//     disabled={isLoading}
-//     registerOption={{
-//       required: true,
-//     }}
-//   />
-//   <TextInput
-//     id="last_name"
-//     label="Last name"
-//     type="text"
-//     register={register}
-//     errors={errors}
-//     disabled={isLoading}
-//     registerOption={{
-//       required: true,
-//     }}
-//   />
-// </div>
-// <TextInput
-//   id="phone"
-//   label="Phone number"
-//   type="tel"
-//   register={register}
-//   errors={errors}
-//   disabled={isLoading}
-//   registerOption={{
-//     required: true,
-//     pattern: {
-//       value: /^\d{10}$/,
-//       message: "Invalid phone number",
-//     },
-//   }}
-// />
-// </div>

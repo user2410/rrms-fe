@@ -19,11 +19,13 @@ import MapNNearby from "./_components/map_nearby";
 import PostedBy from "./_components/posted-by";
 import RentalPolicies from "./_components/rental_policies";
 import Tags from "./_components/tags";
+import { Unit } from "@/models/unit";
+import UnitsList from "./_components/units";
 
 export type ListingDetail = {
   listing: Listing;
   property: Property;
-  // units: Unit[];
+  units: Unit[];
 };
 
 const TopBreadcrumb = ({
@@ -46,22 +48,26 @@ const TopBreadcrumb = ({
 };
 
 export default function ListingPage({ params }: { params: { id: string } }) {
-  const detailListingQuery = useQuery({
+  const detailListingQuery = useQuery<ListingDetail>({
     queryKey: ['listings', 'listing', 'detail-view', params.id],
     queryFn: async ({queryKey}) => {
       const listingQuery = await backendAPI.get(`/api/listings/listing/${queryKey.at(3)}`);
       const listing = listingQuery.data;
       const propertyQuery = await backendAPI.get(`/api/properties/property/${listing.propertyId}`);
-      const unitsQuery = await backendAPI.get(`/api/units/property/${listing.propertyId}`);
-      return {
+      const unitsQuery = await backendAPI.get(`/api/properties/property/${listing.propertyId}/units`);
+      const data = {
         listing,
         property : propertyQuery.data,
         units : unitsQuery.data,
       };
+      console.log(data);
+      return data;
     },
     retry: 1,
-    staleTime: 60 * 60 * 1000,
+    staleTime: 60 * 60 * 1000, // 1 hour
+    cacheTime: 60 * 60 * 1000, // 1 hour
   });
+
   const data = detailListingQuery.data;
 
   if (detailListingQuery.isLoading) {
@@ -102,10 +108,15 @@ export default function ListingPage({ params }: { params: { id: string } }) {
 
             <ListingDetails listingDetail={data!} />
 
-            <Separator />
+            <Separator/>
+
+            <UnitsList listingDetail={data!} />
 
             {data!.listing.policies && data!.listing.policies.length > 0 && (
-              <RentalPolicies policies={data!.listing.policies} />
+              <>
+                <Separator />
+                <RentalPolicies policies={data!.listing.policies} />
+              </>
             )}
 
             <Separator />
@@ -123,7 +134,7 @@ export default function ListingPage({ params }: { params: { id: string } }) {
                 city: 'Hồ Chí Minh',
                 district: 'Quận 7',
                 coverImg: 'https://file4.batdongsan.com.vn/crop/393x222/2023/11/21/20231121175328-c0af_wm.jpg',
-                postAt: new Date(2023, 11, 21),
+                postedAt: new Date(2023, 11, 21),
               },
               {
                 id: 'f6ca05c0-fad5-46fc-a237-a8e930e7cb01',
@@ -133,7 +144,7 @@ export default function ListingPage({ params }: { params: { id: string } }) {
                 city: 'Hồ Chí Minh',
                 district: 'Quận 7',
                 coverImg: 'https://file4.batdongsan.com.vn/crop/393x222/2023/11/21/20231121175328-c0af_wm.jpg',
-                postAt: new Date(2023, 11, 21),
+                postedAt: new Date(2023, 11, 21),
               },
               {
                 id: 'f6ca05c0-fad5-46fc-a237-a8e930e7cb01',
@@ -143,7 +154,7 @@ export default function ListingPage({ params }: { params: { id: string } }) {
                 city: 'Hồ Chí Minh',
                 district: 'Quận 7',
                 coverImg: 'https://file4.batdongsan.com.vn/crop/393x222/2023/11/21/20231121175328-c0af_wm.jpg',
-                postAt: new Date(2023, 11, 21),
+                postedAt: new Date(2023, 11, 21),
               },
               {
                 id: 'f6ca05c0-fad5-46fc-a237-a8e930e7cb01',
@@ -153,7 +164,7 @@ export default function ListingPage({ params }: { params: { id: string } }) {
                 city: 'Hồ Chí Minh',
                 district: 'Quận 7',
                 coverImg: 'https://file4.batdongsan.com.vn/crop/393x222/2023/11/21/20231121175328-c0af_wm.jpg',
-                postAt: new Date(2023, 11, 21),
+                postedAt: new Date(2023, 11, 21),
               },
               {
                 id: 'f6ca05c0-fad5-46fc-a237-a8e930e7cb01',
@@ -163,7 +174,7 @@ export default function ListingPage({ params }: { params: { id: string } }) {
                 city: 'Hồ Chí Minh',
                 district: 'Quận 7',
                 coverImg: 'https://file4.batdongsan.com.vn/crop/393x222/2023/11/21/20231121175328-c0af_wm.jpg',
-                postAt: new Date(2023, 11, 21),
+                postedAt: new Date(2023, 11, 21),
               },
             ]} />
           </div>

@@ -8,6 +8,7 @@ import { Property } from "@/models/property";
 import { useSession } from "next-auth/react";
 import { useEffect, useState } from "react";
 import ListingsList from "./_components/listings_list";
+import { useRouter } from "next/navigation";
 
 export type ManagedListing = {
   listing: Listing;
@@ -17,6 +18,7 @@ export type ManagedListing = {
 
 export default function ManageListingsPage() {
   const session = useSession();
+  const router = useRouter();
 
   const [listings, setListings] = useState<ManagedListing[] | null>(null);
   const [isLoading, setIsLoading] = useState(true);
@@ -64,7 +66,7 @@ export default function ManageListingsPage() {
       <div className="space-y-4">
         <div className="flex flex-row justify-between items-center w-full">
           <h1 className="text-2xl lg:text-3xl font-light">Tin đăng của bạn</h1>
-          <Button variant="default">Tạo tin đăng mới</Button>
+          <Button type="button" variant="default" onClick={() => router.push('/manage/listings/new')}>Tạo tin đăng mới</Button>
         </div>
         {isLoading
           ? (

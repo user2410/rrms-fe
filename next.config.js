@@ -24,6 +24,10 @@ const nextConfig = {
   images: {
     remotePatterns: [
       {
+        protocol: 'http',
+        hostname: 'localhost',
+      },
+      {
         protocol: 'https',
         hostname: '**.s3.ap-southeast-1.amazonaws.com',
       },

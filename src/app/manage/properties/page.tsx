@@ -1,14 +1,13 @@
 "use client";
 
+import { Button } from "@/components/ui/button";
 import Spinner from "@/components/ui/spinner";
 import { backendAPI } from "@/libs/axios";
 import { Property } from "@/models/property";
 import { useSession } from "next-auth/react";
+import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 import PropertiesGrid from "./_components/properties_grid";
-import wait from "@/utils/wait-fn";
-import { Button } from "@/components/ui/button";
-import { useRouter } from "next/navigation";
 
 export type ManagedProperty = {
   role: string;

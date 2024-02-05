@@ -2,12 +2,16 @@ import { Button } from "@/components/ui/button";
 import { FormControl, FormDescription, FormItem } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
 import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
+import { objectToQueryString } from "@/utils/query";
+import { useRouter } from "next/navigation";
 import { useMemo, useState } from "react";
 import { useFormContext } from "react-hook-form";
 import { BsChevronDown } from "react-icons/bs";
 import { SearchFormValues } from "../../_components/landing-page/search_box";
+import { beforeSubmitSearchForm } from "./top-searchbar";
 
 export default function PriceFilter() {
+  const router = useRouter();
   const form = useFormContext<SearchFormValues>();
   const [open, setOpen] = useState(false);
 
@@ -97,9 +101,10 @@ export default function PriceFilter() {
               form.setValue("lminPrice", min);
               form.setValue("lmaxPrice", max);
               setOpen(false);
+              router.push(`/search?${objectToQueryString(beforeSubmitSearchForm(form.getValues()))}`);
             }}
           >
-            OK
+            Tìm kiếm
           </Button>
 
         </div>

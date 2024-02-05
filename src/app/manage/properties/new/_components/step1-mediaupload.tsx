@@ -151,8 +151,8 @@ export default function Step1MediaUpload({
         )}
         {images.map((file, index) => (
           <Card key={file.id} className="w-[180px] shadow-md">
-            <CardHeader className="h-[180px] p-2 lg:p-4">
-              <img src={file.url} alt="" className="max-w-full max-h-full object-cover" />
+            <CardHeader className="h-[180px] p-0">
+              <img src={file.url} alt="" className="object-contain h-full " />
             </CardHeader>
             <Separator />
             <CardContent className="p-2 lg:p-4">
@@ -160,8 +160,17 @@ export default function Step1MediaUpload({
               <CardDescription className="text-xs">{DisplayFileSize(file.size!)}</CardDescription>
             </CardContent>
             <Separator />
+            <FormField
+              control={form.control}
+              name={`property.media.${index}.description`}
+              render={({ field }) => (
+                <FormItem>
+                  <Input {...field} placeholder="Mô tả ảnh" className="rounded-none ring-0 focus:ring-0 focus-visible:ring-0"/>
+                </FormItem>
+              )}
+            />
             <CardFooter className="p-0">
-              <Button className="w-full h-full bg-secondary text-secondary-foreground rounded-none" onClick={() => handleRemoveFile(file.url, index)}>Remove</Button>
+              <Button className="w-full h-full bg-secondary text-secondary-foreground rounded-none" onClick={() => handleRemoveFile(file.url, index)}>Xóa</Button>
             </CardFooter>
           </Card>
         ))}
@@ -170,8 +179,8 @@ export default function Step1MediaUpload({
       <VideoInput form={form} />
       <CardFooter>
         <FormField
-          name="property.media"
           control={form.control}
+          name="property.media"
           render={() => (
             <FormItem>
               <FormMessage />

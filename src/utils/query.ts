@@ -11,5 +11,5 @@ export const objectToQueryString = (params: Object): string => {
     }
   });
 
-  return searchParams.toString();
+  return searchParams.toString() + `&_r=${new Date().getTime()}`;
 };

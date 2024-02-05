@@ -27,7 +27,7 @@ export default function ListingsList({
         setLoading(true);
         const ls = (await backendAPI.get<Partial<Listing>[]>('/api/listings/ids', {
           params: {
-            listingIds: items.map(i => i.lid),
+            listingIds: items.slice(searchResult.offset, searchResult.offset + 10).map(i => i.lid),
             fields: "priority,price,title,description,created_at,updated_at,creator_id,property_id",
           }
         })).data;
@@ -71,7 +71,7 @@ export default function ListingsList({
         ) : error ? (
           <div>{JSON.stringify(error)}</div>
         ) : listings.map((l, index) => (
-          <Link key={index} href={`/listings/${l.listing.id}`}><ListingCard listing={l} /></Link>
+          <ListingCard key={index} listing={l} />
         ))}
       </div>
     </div>

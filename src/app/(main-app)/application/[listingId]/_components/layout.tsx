@@ -1,23 +1,21 @@
 'use client';
 
 import { Button } from "@/components/ui/button";
-import { Media } from "@/models/media";
+import { Listing } from "@/models/listing";
+import { Property } from "@/models/property";
 import { ToMillion } from "@/utils/currency";
 import Image from "next/image";
 import { useData } from "../_context/data.context";
-import { Listing } from "@/models/listing";
-import { Property, PropertyMedia } from "@/models/property";
+import { ListingDetail } from "../page";
 
 export default function Layout({
-  listing,
-  property,
+  data,
   children,
-}: {
-  listing: Listing;
-  property: Property;
-  children: React.ReactNode,
+} : {
+  data: ListingDetail;
+  children: React.ReactNode;
 }) {
-  const dataCtx = useData();
+  const {listing, property} = data;
 
   return (
     <div className="space-y-4">

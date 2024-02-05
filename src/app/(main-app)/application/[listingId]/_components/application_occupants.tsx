@@ -7,15 +7,20 @@ import MoveIn from "./move_in";
 import Pets from "./pets";
 import SelectedUnits from "./selected_units";
 import { Unit } from "@/models/unit";
+import { ListingDetail } from "../page";
 
-export default function ApplicationOccupants({units} : {units: Unit[]}) {
+export default function ApplicationOccupants({
+  data
+} : {
+  data: ListingDetail;
+}) {
   return (
     <div className="space-y-4">
       <BasicInfo/>
       <Card>
         <MoveIn/>
         <Separator />
-        <SelectedUnits units={units}/>
+        <SelectedUnits data={data}/>
         <Separator />
         <CoApplicants/>
         <Separator />

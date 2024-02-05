@@ -11,9 +11,25 @@ import { useFormContext } from "react-hook-form";
 import { BsListUl } from "react-icons/bs";
 import FilterNRooms from "../../_components/landing-page/filters/filter_nrooms";
 import { SearchFormValues } from "../../_components/landing-page/search_box";
+import { useRouter } from "next/navigation";
+import { objectToQueryString } from "@/utils/query";
+import { beforeSubmitSearchForm } from "./top-searchbar";
 
 export default function ExtraFilter() {
+  const router = useRouter();
   const form = useFormContext<SearchFormValues>();
+
+  function handleResetFields() {
+    form.setValue("unumberOfLivingRooms", undefined);
+    form.setValue("unumberOfBedrooms", undefined);
+    form.setValue("unumberOfBathrooms", undefined);
+    form.setValue("unumberOfKitchens", undefined);
+    form.setValue("unumberOfToilets", undefined);
+    form.setValue("unumberOfBalconies", undefined);
+    form.setValue("porientation", undefined);
+    form.setValue("pfeatures", []);
+    form.setValue("uamenities", []);
+  }
 
   return (
     <Popover>
@@ -31,8 +47,8 @@ export default function ExtraFilter() {
           render={({ field }) => (
             <FormItem>
               <FormLabel>Hướng nhà</FormLabel>
-              <Select 
-                onValueChange={field.onChange} 
+              <Select
+                onValueChange={field.onChange}
                 value={field.value || ""}
               >
                 <FormControl>
@@ -70,6 +86,20 @@ export default function ExtraFilter() {
             selectedValues={form.watch("uamenities")}
             setSelectedValues={(values) => form.setValue("uamenities", values)}
           />
+        </div>
+        <div className="flex flex-row items-center gap-2">
+          <Button type="button" variant="outline" onClick={handleResetFields}>
+            Đặt lại
+          </Button>
+          <Button
+            type="button"
+            variant="default"
+            onClick={() => {
+              router.push(`/search?${objectToQueryString(beforeSubmitSearchForm(form.getValues()))}`);
+            }}
+          >
+            Tìm kiếm
+          </Button>
         </div>
       </PopoverContent>
     </Popover>

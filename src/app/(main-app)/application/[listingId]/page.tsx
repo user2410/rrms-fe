@@ -11,8 +11,14 @@ import { useEffect, useState } from "react";
 import Layout from "./_components/layout";
 import MainForm from "./_components/main_form";
 
+export type ListingDetail = {
+  listing: Listing; 
+  property: Property; 
+  units: Unit[];
+};
+
 function MainContent({ listingId }: { listingId: string }) {
-  const [data, setData] = useState<{listing: Listing; property: Property; units: Unit[]}>();
+  const [data, setData] = useState<ListingDetail>();
   const [unitIds, setUnitIds] = useState<string[]>([]);
   const [loading, setLoading] = useState<boolean>(true);
   const [error, setError] = useState<any>(null);
@@ -67,8 +73,8 @@ function MainContent({ listingId }: { listingId: string }) {
   ) : error ? (
     <div>Error {JSON.stringify(error)}</div>
   ) : (
-    <Layout listing={data!.listing} property={data!.property}>
-      <MainForm listingId={listingId} property={data!.property} units={data!.units}/>
+    <Layout data={data!}>
+      <MainForm data={data!}/>
     </Layout>
   );
 

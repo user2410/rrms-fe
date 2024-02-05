@@ -11,6 +11,12 @@ export type ListingPolicy = {
   note?: string;
 };
 
+export type ListingUnit = {
+  listingId: string;
+  unitId: string;
+  price: number;
+};
+
 export type Listing = {
   id: string;
   creatorId: string;
@@ -33,7 +39,7 @@ export type Listing = {
   expiredAt: Date;
   postAt: Date;
   policies: ListingPolicy[];
-  units?: Unit[];
+  units: ListingUnit[];
 };
 
 export type ReducedListing = {
@@ -75,7 +81,7 @@ export const DiscountMap = new Map<string, number>([
   ["30", 0.8],
 ]);
 
-export const mockupListings : Listing[] = [
+export const mockupListings : Partial<Listing>[] = [
   {
     id: 'f6ca05c0-fad5-46fc-a237-a8e930e7cb01',
     creatorId: 'f6ca05c0-fad5-46fc-a237-a8e930e7cb01',
