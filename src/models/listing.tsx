@@ -81,7 +81,7 @@ export const DiscountMap = new Map<string, number>([
   ["30", 0.8],
 ]);
 
-export const mockupListings : Partial<Listing>[] = [
+export const mockupListings : Listing[] = [
   {
     id: 'f6ca05c0-fad5-46fc-a237-a8e930e7cb01',
     creatorId: 'f6ca05c0-fad5-46fc-a237-a8e930e7cb01',
@@ -99,6 +99,7 @@ export const mockupListings : Partial<Listing>[] = [
     numberOfResidents: 12,
     priority: 2,
     active: true,
+    units: [],
     policies: [
       {
         listingId: 'f6ca05c0-fad5-46fc-a237-a8e930e7cb01',
@@ -139,6 +140,7 @@ export const mockupListings : Partial<Listing>[] = [
     numberOfResidents: 12,
     priority: 2,
     active: true,
+    units: [],
     policies: [
       {
         listingId: 'f6ca05c0-fad5-46fc-a237-a8e930e7cb01',
@@ -179,6 +181,7 @@ export const mockupListings : Partial<Listing>[] = [
     numberOfResidents: 12,
     priority: 3,
     active: true,
+    units: [],
     policies: [
       {
         listingId: 'f6ca05c0-fad5-46fc-a237-a8e930e7cb01',

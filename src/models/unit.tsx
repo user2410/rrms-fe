@@ -36,6 +36,7 @@ export type Unit = {
   numberOfToilets: number;
   numberOfBalconies: number;
   numberOfKitchens: number;
+  type: UnitType;
   media: UnitMedia[];
   amenities: UnitAmenity[];
   createdAt: string;
@@ -43,9 +44,9 @@ export type Unit = {
 };
 
 export const mapUnitTypeToText = {
-  ROOM: 'Phòng',
+  ROOM: 'Phòng trọ thường',
   APARTMENT: 'Căn hộ',
-  STUDIO: 'Studio',
+  STUDIO: 'Phòng trọ Studio',
 };
 
 export const uAmenities = [

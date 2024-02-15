@@ -1,9 +1,8 @@
 import { useFormContext } from "react-hook-form";
+import Step2MultiRooms from "./_components/step2-block";
 import Step2MultiApartments from "./_components/step2-multiapartments";
-import Step2Room from "./_components/step2-room";
 import Step2SingleUnit from "./_components/step2-sr";
 import { PropertyForm } from "./page";
-import Step2MultiRooms from "./_components/step2-block";
 
 
 export default function Step2() {

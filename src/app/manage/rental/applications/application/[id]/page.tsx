@@ -17,7 +17,7 @@ import { DialogTrigger } from "@radix-ui/react-dialog";
 import { useSession } from "next-auth/react";
 import { useEffect, useState } from "react";
 import { FaCheckCircle } from "react-icons/fa";
-import styles from "../../_components/application_list.module.css";
+import styles from "../../_styles/application_list.module.css";
 import StatusCard from "../../_components/status_card";
 import BasicInfo from "./_components/basic";
 import Personal from "./_components/personal";

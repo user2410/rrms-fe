@@ -64,7 +64,7 @@ export default function Step1ExtraInfo() {
         name="property.entranceWidth"
         render={({ field }) => (
           <FormItem>
-            <FormLabel>Đường vào (m)</FormLabel>
+            <FormLabel>Lối vào (m)</FormLabel>
             <FormControl>
               <Input
                 type="number"

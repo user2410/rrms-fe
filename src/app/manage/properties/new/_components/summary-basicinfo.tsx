@@ -1,7 +1,7 @@
 import { PropertyForm } from "@/app/manage/properties/new/page";
 import { GetCityById, GetDistrictById, GetWardById } from "@/utils/dghcvn";
 import { GoogleMap, MarkerF } from "@react-google-maps/api";
-import { useMemo } from "react";
+import React, { useMemo } from "react";
 import { useFormContext } from "react-hook-form";
 import { FaCouch, FaToilet } from "react-icons/fa";
 import { MdBalcony, MdBathtub, MdBed, MdKitchen } from "react-icons/md";
@@ -20,7 +20,7 @@ export default function SummaryBasicInfo() {
       <table className="w-full text-sm text-left text-gray-500 dark:text-gray-400">
         <tbody>
           {Object.entries(property).map(([key, value], index) =>
-            (!['name', 'type', 'media', 'features', 'tags', 'lat', 'lng', 'placeUrl'].includes(key))
+            (!['name', 'type', 'media', 'features', 'tags', 'lat', 'lng', 'multiUnit', 'primaryImage'].includes(key))
               ? (
                 <tr className="bg-white border-b dark:bg-gray-800 dark:border-gray-700" key={index}>
                   <th scope="row" className="px-6 py-4 font-medium text-gray-900 whitespace-nowrap dark:text-white">
@@ -48,7 +48,7 @@ export default function SummaryBasicInfo() {
                     key === "district" ? (district ? district.name : 'N/A') :
                     key === "ward" ? (ward ? ward.name : 'N/A') :
                     key === "yearBuilt" ? (!value ? 'N/A' : value.toString()) :
-                    key === "description" ? (!value ? 'N/A' : value.toString()) :
+                    key === "description" ? (!value ? 'N/A' : <div dangerouslySetInnerHTML={{__html: value}} />) :
                     key === "entranceWidth" ? (!value ? 'N/A' : value.toString()) :
                     key === "facade" ? (!value ? 'N/A' : (<span>{value.toString()}m<sup>2</sup></span>)) :
                     key === "orientation" ? (!value ? 'N/A' : (

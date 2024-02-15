@@ -9,6 +9,8 @@ interface FileUpload {
 }
 
 export async function uploadFile(fileUpload: FileUpload, accessToken: string) : Promise<string> {
+  console.log('uploadFile', fileUpload.url, fileUpload.name, fileUpload.size, fileUpload.type);
+  
   const blob = (await axios.get<Blob>(fileUpload.url, { responseType: 'blob' })).data;
   const file = new File([blob], fileUpload.name, { type: fileUpload.type });
 

@@ -34,7 +34,8 @@ export type PropertyTag = {
 
 export type Property = {
   id: string;
-  name?: string;
+  name: string;
+  description?: string;
   building?: string;
   project?: string;
   area: number;
@@ -45,10 +46,10 @@ export type Property = {
   district: string;
   city: string;
   ward?: string;
+  placeUrl: string;
   lat: number;
   lng: number;
   type: PropertyType;
-  multiUnit: boolean;
   media: PropertyMedia[];
   features: PropertyFeature[];
   tags: PropertyTag[];
@@ -60,7 +61,7 @@ export function getPropertyFullAddress(property: Property) {
   return `${property.fullAddress}, ${GetLocationName(property.city!, property.district!, property.ward || '')}`;
 }
 
-export function getPropertyTypeText(p: Property) {
+export function getPropertyTypeText(p: Property & {multiUnit?: boolean}) {
   return p.multiUnit ?
     (p.type === 'APARTMENT' ? `Quỹ căn hộ` : p.type === 'ROOM' ? 'Dãy phòng trọ' : '') :
     mapPropertyTypeToText[p.type as keyof typeof mapPropertyTypeToText];
@@ -141,10 +142,10 @@ export const mockupProperties: Property[] = [
     fullAddress: '9 Nguyễn Xiển, Quận 7, TP. Hồ Chí Minh',
     district: 'Quận 7',
     city: 'TP. Hồ Chí Minh',
-    lat: 10.765,
-    lng: 106.674,
+    lat: 21.0042788,
+    lng: 105.8433151,
+    placeUrl: "https://maps.app.goo.gl/Y5Rk429srd7a3rut8",
     type: 'APARTMENT',
-    multiUnit: false,
     media: [
       {
         propertyId: '1',
@@ -231,10 +232,10 @@ export const mockupProperties: Property[] = [
     fullAddress: '124 Lạc Long Quân, Quận 4, TP. Hồ Chí Minh',
     district: 'Quận 4',
     city: 'TP. Hồ Chí Minh',
-    lat: 10.764,
-    lng: 106.674,
+    lat: 21.0042788,
+    lng: 105.8433151,
+    placeUrl: "https://maps.app.goo.gl/Y5Rk429srd7a3rut8",
     type: 'ROOM',
-    multiUnit: false,
     media: [
       {
         propertyId: '2',
@@ -311,10 +312,10 @@ export const mockupProperties: Property[] = [
     fullAddress: '125 Nguyễn Văn Linh, Quận 7, TP. Hồ Chí Minh',
     district: 'Quận 7',
     city: 'TP. Hồ Chí Minh',
-    lat: 10.765,
-    lng: 106.675,
+    lat: 21.0042788,
+    lng: 105.8433151,
+    placeUrl: "https://maps.app.goo.gl/Y5Rk429srd7a3rut8",
     type: 'ROOM',
-    multiUnit: false,
     media: [
       {
         propertyId: '3',
@@ -391,10 +392,10 @@ export const mockupProperties: Property[] = [
     fullAddress: '126 Lạc Long Quân, Quận 4, TP. Hồ Chí Minh',
     district: 'Quận 4',
     city: 'TP. Hồ Chí Minh',
-    lat: 10.764,
-    lng: 106.675,
+    lat: 21.0042788,
+    lng: 105.8433151,
+    placeUrl: "https://maps.app.goo.gl/Y5Rk429srd7a3rut8",
     type: 'PRIVATE',
-    multiUnit: false,
     media: [
       {
         propertyId: '4',
@@ -471,10 +472,10 @@ export const mockupProperties: Property[] = [
     fullAddress: '127 Nguyễn Văn Linh, Quận 7, TP. Hồ Chí Minh',
     district: 'Quận 7',
     city: 'TP. Hồ Chí Minh',
-    lat: 10.765,
-    lng: 106.676,
+    lat: 21.0042788,
+    lng: 105.8433151,
+    placeUrl: "https://maps.app.goo.gl/Y5Rk429srd7a3rut8",
     type: 'APARTMENT',
-    multiUnit: false,
     media: [
       {
         propertyId: '5',
@@ -551,10 +552,10 @@ export const mockupProperties: Property[] = [
     fullAddress: '128 Lạc Long Quân, Quận 4, TP. Hồ Chí Minh',
     district: 'Quận 4',
     city: 'TP. Hồ Chí Minh',
-    lat: 10.764,
-    lng: 106.676,
+    lat: 21.0042788,
+    lng: 105.8433151,
+    placeUrl: "https://maps.app.goo.gl/Y5Rk429srd7a3rut8",
     type: 'APARTMENT',
-    multiUnit: false,
     media: [
       {
         propertyId: '6',
@@ -631,10 +632,10 @@ export const mockupProperties: Property[] = [
     fullAddress: '129 Nguyễn Văn Linh, Quận 7, TP. Hồ Chí Minh',
     district: 'Quận 7',
     city: 'TP. Hồ Chí Minh',
-    lat: 10.765,
-    lng: 106.677,
+    lat: 21.0042788,
+    lng: 105.8433151,
+    placeUrl: "https://maps.app.goo.gl/Y5Rk429srd7a3rut8",
     type: 'ROOM',
-    multiUnit: false,
     media: [
       {
         propertyId: '7',
@@ -711,10 +712,10 @@ export const mockupProperties: Property[] = [
     fullAddress: '130 Lạc Long Quân, Quận 4, TP. Hồ Chí Minh',
     district: 'Quận 4',
     city: 'TP. Hồ Chí Minh',
-    lat: 10.764,
-    lng: 106.677,
+    lat: 21.0042788,
+    lng: 105.8433151,
+    placeUrl: "https://maps.app.goo.gl/Y5Rk429srd7a3rut8",
     type: 'APARTMENT',
-    multiUnit: false,
     media: [
       {
         propertyId: '8',
@@ -791,10 +792,10 @@ export const mockupProperties: Property[] = [
     fullAddress: '131 Nguyễn Văn Linh, Quận 7, TP. Hồ Chí Minh',
     district: 'Quận 7',
     city: 'TP. Hồ Chí Minh',
-    lat: 10.765,
-    lng: 106.678,
+    lat: 21.0042788,
+    lng: 105.8433151,
+    placeUrl: "https://maps.app.goo.gl/Y5Rk429srd7a3rut8",
     type: 'APARTMENT',
-    multiUnit: false,
     media: [
       {
         propertyId: '9',
@@ -871,10 +872,10 @@ export const mockupProperties: Property[] = [
     fullAddress: '132 Lạc Long Quân, Quận 4, TP. Hồ Chí Minh',
     district: 'Quận 4',
     city: 'TP. Hồ Chí Minh',
-    lat: 10.764,
-    lng: 106.678,
+    lat: 21.0042788,
+    lng: 105.8433151,
+    placeUrl: "https://maps.app.goo.gl/Y5Rk429srd7a3rut8",
     type: 'APARTMENT',
-    multiUnit: false,
     media: [
       {
         propertyId: '10',
@@ -951,10 +952,10 @@ export const mockupProperties: Property[] = [
     fullAddress: '133 Nguyễn Văn Linh, Quận 7, TP. Hồ Chí Minh',
     district: 'Quận 7',
     city: 'TP. Hồ Chí Minh',
-    lat: 10.765,
-    lng: 106.679,
+    lat: 21.0042788,
+    lng: 105.8433151,
+    placeUrl: "https://maps.app.goo.gl/Y5Rk429srd7a3rut8",
     type: 'APARTMENT',
-    multiUnit: false,
     media: [
       {
         propertyId: '11',
@@ -1031,10 +1032,10 @@ export const mockupProperties: Property[] = [
     fullAddress: '134 Lạc Long Quân, Quận 4, TP. Hồ Chí Minh',
     district: 'Quận 4',
     city: 'TP. Hồ Chí Minh',
-    lat: 10.764,
-    lng: 106.679,
+    lat: 21.0042788,
+    lng: 105.8433151,
+    placeUrl: "https://maps.app.goo.gl/Y5Rk429srd7a3rut8",
     type: 'APARTMENT',
-    multiUnit: false,
     media: [
       {
         propertyId: '12',
@@ -1111,10 +1112,10 @@ export const mockupProperties: Property[] = [
     fullAddress: '135 Nguyễn Văn Linh, Quận 7, TP. Hồ Chí Minh',
     district: 'Quận 7',
     city: 'TP. Hồ Chí Minh',
-    lat: 10.765,
-    lng: 106.680,
+    lat: 21.0042788,
+    lng: 105.8433151,
+    placeUrl: "https://maps.app.goo.gl/Y5Rk429srd7a3rut8",
     type: 'APARTMENT',
-    multiUnit: false,
     media: [
       {
         propertyId: '13',

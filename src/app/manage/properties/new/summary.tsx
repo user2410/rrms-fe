@@ -20,9 +20,9 @@ export default function Summary() {
         <div>
           <div className="relative max-w-[320px] aspect-[3/4]">
             <Image
-              src={property.media.find((media) => media.type.startsWith("IMAGE"))!.url}
+              src={property.media[property.primaryImage].url}
               fill
-              objectFit="cover"
+              objectFit="contain"
               alt="Property cover image"
             />
           </div>

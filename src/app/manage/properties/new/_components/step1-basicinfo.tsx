@@ -1,6 +1,7 @@
 "use client";
 
 import { PropertyForm } from "@/app/manage/properties/new/page";
+import { Editor } from "@/components/ui/editor";
 import { FormControl, FormDescription, FormField, FormItem, FormLabel, FormMessage } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
@@ -185,10 +186,9 @@ export default function Step1BasicInfo() {
           <FormItem>
             <FormLabel>Mô tả</FormLabel>
             <FormControl>
-              <Textarea
-                placeholder="Nhập mô tả chung về nhà cho thuê của bạn. Ví dụ: Khu nhà có vị trí thuận lợi, gần công viên, gần trường học ... "
-                className="resize-none"
+              <Editor
                 {...field}
+                placeholder="Nhập mô tả chung về nhà cho thuê của bạn. Ví dụ: Khu nhà có vị trí thuận lợi, gần công viên, gần trường học ... "
               />
             </FormControl>
             <FormMessage />

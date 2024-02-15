@@ -22,6 +22,7 @@ function Location({
 
   const debouncedValue = useDebounce<string>(input, 1500);
 
+  // BUG: too many requests
   useEffect(() => {
     if (!debouncedValue) {
       setMessage("");

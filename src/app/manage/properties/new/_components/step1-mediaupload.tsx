@@ -7,6 +7,7 @@ import { FormDescription, FormField, FormItem, FormMessage } from "@/components/
 import { Input } from "@/components/ui/input";
 import { Separator } from "@/components/ui/separator";
 import { DisplayFileSize } from "@/utils/file";
+import clsx from "clsx";
 import { Fragment, useRef, useState } from "react";
 import { UseFormReturn, useFieldArray, useFormContext } from "react-hook-form";
 import { IoClose } from "react-icons/io5";
@@ -96,6 +97,7 @@ export default function Step1MediaUpload({
   });
   // const [isDragEnter, setIsDragEnter] = useState<boolean>(false);
   const images = fields.filter((item) => item.type.startsWith("IMAGE"));
+  const primaryImage = form.watch('property.primaryImage');
 
   function handleFileInputChange(event: React.ChangeEvent<HTMLInputElement>) {
     Object.entries(event.target.files!).forEach((e) => {
@@ -106,11 +108,17 @@ export default function Step1MediaUpload({
         url: URL.createObjectURL(e[1])
       });
     });
-    console.log(fields);
+    // console.log(fields);
   }
 
   function handleRemoveFile(fileUrl: string, i: number) {
     remove(i);
+    // console.log(primaryImage, i);
+    if(primaryImage === i) {
+      form.setValue('property.primaryImage', 0);
+    } else if(primaryImage > i) {
+      form.setValue('property.primaryImage', primaryImage - 1);
+    }
     URL.revokeObjectURL(fileUrl);
   }
 
@@ -150,13 +158,20 @@ export default function Step1MediaUpload({
           </div>
         )}
         {images.map((file, index) => (
-          <Card key={file.id} className="w-[180px] shadow-md">
-            <CardHeader className="h-[180px] p-0">
+          <Card 
+            key={file.id} 
+            className={clsx("w-[180px] shadow-md", primaryImage === index && "ring-1")}
+          >
+            <CardHeader 
+              className="h-[180px] p-0"
+              onClick={() => form.setValue('property.primaryImage', index)}
+            >
               <img src={file.url} alt="" className="object-contain h-full " />
             </CardHeader>
             <Separator />
             <CardContent className="p-2 lg:p-4">
-              <CardTitle className="text-sm font-normal truncate">{file.name}</CardTitle>
+              {primaryImage === index && (<p className="w-full text-xs font-normal text-center text-blue-600">Ảnh chính</p>)}
+              <CardTitle className="text-sm font-normal text-ellipsis overflow-hidden">{file.name}</CardTitle>
               <CardDescription className="text-xs">{DisplayFileSize(file.size!)}</CardDescription>
             </CardContent>
             <Separator />
@@ -170,7 +185,13 @@ export default function Step1MediaUpload({
               )}
             />
             <CardFooter className="p-0">
-              <Button className="w-full h-full bg-secondary text-secondary-foreground rounded-none" onClick={() => handleRemoveFile(file.url, index)}>Xóa</Button>
+              <Button 
+                type="button"
+                className="w-full h-full bg-secondary text-secondary-foreground rounded-none" 
+                onClick={() => handleRemoveFile(file.url, index)}
+              >
+                Xóa
+              </Button>
             </CardFooter>
           </Card>
         ))}
