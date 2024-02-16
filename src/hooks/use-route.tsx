@@ -1,8 +1,8 @@
 import { usePathname } from "next/navigation";
 import { useMemo } from "react";
 import { BsBuildingFillAdd, BsFillBuildingsFill, BsPersonFillGear } from "react-icons/bs";
-import { FaFileAlt, FaFileContract, FaFileInvoiceDollar, FaHandHolding, FaHome, FaMoneyCheckAlt, FaTools, FaUsers } from "react-icons/fa";
-import { FiLifeBuoy } from "react-icons/fi";
+import { FaFileAlt, FaFileContract, FaFileInvoiceDollar, FaHandHolding, FaHome, FaMoneyBill, FaMoneyCheckAlt, FaTools, FaUser, FaUsers } from "react-icons/fa";
+import { FiLifeBuoy, FiUser } from "react-icons/fi";
 
 interface Route {
   label: string;
@@ -51,24 +51,14 @@ const useRoutes = () => {
                 icon: <FaUsers size={ICON_SIZE}/>,
               },
               {
-                label: 'Khách thuê',
+                label: 'Dịch vụ',
                 href: '/manage/rental/services',
                 icon: <BsPersonFillGear size={ICON_SIZE} />,
               },
               {
-                label: 'Leases',
+                label: 'Hợp đồng thuê',
                 href: '/manage/rental/leases',
                 icon: <FaFileContract size={ICON_SIZE} />,
-              },
-              {
-                label: 'Chi trả',
-                href: '/manage/rental/payments',
-                icon: <FaMoneyCheckAlt size={ICON_SIZE} />,
-              },
-              {
-                label: 'Chi tiêu',
-                href: '/manage/rental/expenses',
-                icon: <FaFileInvoiceDollar size={ICON_SIZE} />,
               },
               {
                 label: 'Bảo trì',
@@ -83,10 +73,27 @@ const useRoutes = () => {
             ]
           },
           {
+            label: 'Tài khoản',
+            href: '/manage/my-account',
+            icon: <FaUser size={ICON_SIZE}/>,
+            subroutes: [
+              {
+                label: 'Tài khoản của tôi',
+                href: '/manage/my-account',
+                icon: <FiUser size={ICON_SIZE} />,
+              },
+              {
+                label: 'Lịch sử thanh toán',
+                href: '/manage/my-account/billing-history',
+                icon: <FaMoneyBill size={ICON_SIZE} />,
+              },
+            ],
+          },
+          {
             label: 'Feedback',
             href: '/manage/feedback',
             icon: <FiLifeBuoy size={ICON_SIZE}/>,
-          }
+          },
         ],
       },
       {

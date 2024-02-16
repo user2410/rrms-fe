@@ -14,6 +14,15 @@ declare module "next-auth" {
         created_by: string;
         updated_at: string;
         deleted_f: boolean;
+        firstName: string;
+        lastName: string;
+        address: string;
+        city: string;
+        district: string;
+        ward: string;
+        phone: string;
+        avatar: string;
+        // role: string;
       }
     }
   }

@@ -17,6 +17,7 @@ import Step3 from './step3';
 import { format } from 'date-fns';
 import CreateListing from '@/actions/listings/create';
 import { useSession } from 'next-auth/react';
+import { useSearchParams } from 'next/navigation';
 
 const listingFormSchema = z.object({
   contact: z.object({
@@ -30,7 +31,7 @@ const listingFormSchema = z.object({
     contactType: z
       .string(),
   }),
-  propertyID: z
+  propertyId: z
     .string()
     .uuid(),
   listing: z
@@ -82,27 +83,30 @@ const listingFormSchema = z.object({
 
 export type ListingFormValues = z.infer<typeof listingFormSchema>;
 
-const defaultValues: DeepPartial<ListingFormValues> = {
-  listing: {
-    priceNegotiable: false,
-  },
-  config: {
-    priority: "1",
-    postDuration: "15",
-    postAt: format(new Date(), "yyyy-MM-dd'T'HH:mm"),
-    active: true,
-  },
-};
 
 export default function NewListingPage() {
   const [step, setStep] = useState<number>(0);
   const [showModal, setShowModal] = useState<boolean>(false);
 
+  const searchParams = useSearchParams();
+  const propertyId = searchParams?.get('propertyId');
+
   const {data: session} = useSession();
 
   const form = useForm<ListingFormValues>({
     resolver: zodResolver(listingFormSchema),
-    defaultValues: defaultValues,
+    defaultValues: {
+      listing: {
+        priceNegotiable: false,
+      },
+      propertyId: propertyId || '',
+      config: {
+        priority: "1",
+        postDuration: "15",
+        postAt: format(new Date(), "yyyy-MM-dd'T'HH:mm"),
+        active: true,
+      },
+    },
   });
 
   async function onSubmit(values: ListingFormValues) {
@@ -194,7 +198,7 @@ export default function NewListingPage() {
                             });
                           break;
                         case 1:
-                          form.trigger('propertyID')
+                          form.trigger('propertyId')
                             .then(res => {
                               setStep(res ? step + 1 : step);
                             });

@@ -4,7 +4,7 @@ import { backendAPI } from "@/libs/axios";
 export default async function CreateListing(data: ListingFormValues, accessToken: string) {
   const sendData = {
     ...data.listing,
-    propertyID: data.propertyID,
+    propertyID: data.propertyId,
     ...data.contact,
     ...data.config,
     priority: parseInt(data.config.priority),

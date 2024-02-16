@@ -1,12 +1,13 @@
 import { FormLabel } from "@/components/ui/form";
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/components/ui/tooltip";
+import React from "react";
 
 export default function FormLabelWithInfo({
   label,
   info,
 }: {
   label: string;
-  info: string;
+  info: React.ReactNode;
 }) {
   return (
     <FormLabel>
@@ -17,7 +18,7 @@ export default function FormLabelWithInfo({
             <i className="fas fa-circle-info"></i>
           </TooltipTrigger>
           <TooltipContent>
-            <p>{info}</p>
+            {info}
           </TooltipContent>
         </Tooltip>
       </TooltipProvider>

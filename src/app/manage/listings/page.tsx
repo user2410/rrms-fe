@@ -5,33 +5,24 @@ import Spinner from "@/components/ui/spinner";
 import { backendAPI } from "@/libs/axios";
 import { Listing } from "@/models/listing";
 import { Property } from "@/models/property";
+import { useQuery } from "@tanstack/react-query";
 import { useSession } from "next-auth/react";
-import { useEffect, useState } from "react";
-import ListingsList from "./_components/listings_list";
 import { useRouter } from "next/navigation";
+import ListingsList from "./_components/listings_list";
 
 export type ManagedListing = {
   listing: Listing;
   property: Property;
-  // units: Unit[];
 }
 
 export default function ManageListingsPage() {
   const session = useSession();
   const router = useRouter();
 
-  const [listings, setListings] = useState<ManagedListing[] | null>(null);
-  const [isLoading, setIsLoading] = useState(true);
-  const [error, setError] = useState<any>();
-
-  useEffect(() => {
-    if (session.status !== "authenticated" || listings !== null) {
-      return;
-    }
-    (async () => {
-      try {
-        setIsLoading(true);
-        const managedListings: ManagedListing[] = [];
+  const query = useQuery({
+    queryKey: ['manage', 'listings'],
+    queryFn: async () => {
+      const managedListings: ManagedListing[] = [];
         const listingsQuery = await backendAPI.get("api/listings/my-listings", {
           params: {
             fields: "property_id,title,price,active,created_at,updated_at,post_at,expired_at",
@@ -51,15 +42,12 @@ export default function ManageListingsPage() {
             property: propertyQuery.data,
           });
         }
-        setListings(managedListings);
-      } catch (err) {
-        console.error(err);
-        setError(err);
-      } finally {
-        setIsLoading(false);
-      }
-    })();
-  }, [session.status]);
+      return managedListings;
+    },
+    enabled: session.status === 'authenticated',
+    staleTime: 1 * 60 * 1000,
+    cacheTime: 1 * 60 * 1000,
+  });
 
   return (
     <div className="container h-full py-10">
@@ -68,18 +56,18 @@ export default function ManageListingsPage() {
           <h1 className="text-2xl lg:text-3xl font-light">Tin đăng của bạn</h1>
           <Button type="button" variant="default" onClick={() => router.push('/manage/listings/new')}>Tạo tin đăng mới</Button>
         </div>
-        {isLoading
+        {query.isLoading
           ? (
             <div className="w-full h-full flex justify-center items-center">
               <Spinner size={32}/>
             </div>
-          ) : error ? (
+          ) : query.isError ? (
             <div className="w-full h-full flex justify-center items-center">
-              <p className="text-red-500">Error: {JSON.stringify(error)}</p>
+              <p className="text-red-500">Error: {JSON.stringify(query.error)}</p>
             </div>
-          ) : listings ? (
-            <ListingsList initialListings={listings} />
-          ) : (null)}
+          ) : (
+            <ListingsList initialListings={query.data} />
+          ) }
       </div>
     </div>
   );
