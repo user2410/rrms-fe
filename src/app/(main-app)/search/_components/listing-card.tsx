@@ -1,7 +1,7 @@
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardFooter, CardHeader } from "@/components/ui/card";
-import { ListingPriority } from "@/models/listing";
+import { ListingPriorities } from "@/models/listing";
 import clsx from "clsx";
 import Image from "next/image";
 import { BsHeart, BsHeartFill } from "react-icons/bs";
@@ -21,7 +21,7 @@ const ListingCard = ({
 }): JSX.Element => {
   const { listing: l, property } = listing;
   const favListingCtx = useContext(FavListingsContext);
-  const listingPriority = ListingPriority.find(item => item.priority === listing.listing.priority!.toString());
+  const listingPriority = ListingPriorities.find(item => item.priority === listing.listing.priority!.toString());
 
   return (
     <Card className="relative hover:shadow-md cursor-pointer">

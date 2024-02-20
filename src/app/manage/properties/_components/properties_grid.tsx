@@ -18,7 +18,7 @@ export default function PropertiesGrid({
   return (
     <Fragment>
       <div className="flex flex-row justify-between w-full">
-        <h2>Hiển thị {initialProperties.length} bất động sản</h2>
+        <h2>Hiển thị {initialProperties.length} nhà cho thuê</h2>
         <div className="flex flex-row items-center gap-2">
           <span className="text-sm font-light whitespace-nowrap">Sắp xếp theo</span>
           <Select defaultValue="name">

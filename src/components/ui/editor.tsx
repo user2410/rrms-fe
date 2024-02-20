@@ -1,7 +1,7 @@
 "use client";
 
 import dynamic from "next/dynamic";
-import { useMemo } from "react";
+import { forwardRef, useMemo } from "react";
 
 import "react-quill/dist/quill.snow.css";
 
@@ -14,7 +14,7 @@ interface EditorProps {
 
 const defaultToolbarOptions = [
   ['bold', 'italic', 'underline', 'strike'],        // toggled buttons
-  ['blockquote'],
+  ['image', 'blockquote'],
 
   [{ 'header': 1 }, { 'header': 2 }],               // custom button values
   [{ 'list': 'ordered'}, { 'list': 'bullet' }],
@@ -32,11 +32,11 @@ const defaultToolbarOptions = [
   ['clean']                                         // remove formatting button
 ];
 
-export const Editor = (props: EditorProps) => {
+const Editor = forwardRef<HTMLDivElement, EditorProps>(function Render(props, ref) {
   const ReactQuill = useMemo(() => dynamic(() => import("react-quill"), { ssr: false }), []);
 
   return (
-    <div className="bg-white">
+    <div className="bg-white" ref={ref}>
       <ReactQuill
         modules={{
           toolbar: props.toolbarOptions || defaultToolbarOptions
@@ -46,4 +46,6 @@ export const Editor = (props: EditorProps) => {
       />
     </div>
   );
-};
+});
+
+export default Editor;

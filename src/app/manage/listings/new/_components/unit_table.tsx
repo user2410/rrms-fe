@@ -22,11 +22,16 @@ export default function UnitTable<TData, TValue>({
   const [columnFilters, setColumnFilters] = useState<ColumnFiltersState>([]);
   const [columnVisibility, setColumnVisibility] = useState<VisibilityState>({
     "id": false,
-    "yearBuilt": false,
-    "createdAt": false,
-    "updatedAt": false,
   });
-  const [rowSelection, setRowSelection] = useState({});
+  const [rowSelection, setRowSelection] = useState((() => {
+    const o = {};
+    const units = form.getValues("units");
+    for(const u of units) {
+      o[u.unitId as keyof typeof o] = true as never;
+    }
+    // console.log("o", o);
+    return o;
+  })());
   
   const table = useReactTable({
     data,
@@ -42,7 +47,6 @@ export default function UnitTable<TData, TValue>({
     getFilteredRowModel: getFilteredRowModel(),
     onColumnVisibilityChange: setColumnVisibility,
     onRowSelectionChange: setRowSelection,
-    enableMultiRowSelection: false,
     state: {
       sorting,
       columnFilters,
@@ -60,9 +64,10 @@ export default function UnitTable<TData, TValue>({
     console.log("rowSelection", rowSelection);
     const selectedRows = Object.keys(rowSelection);
     if(selectedRows.length === 0) {
-      form.resetField("propertyID");
+      form.resetField("units");
     } else {
-      form.setValue("propertyID", selectedRows[0]);
+      // @ts-ignore
+      form.setValue("units", selectedRows.map(r => ({unitId: r, price: 0})));
     }
   }, [rowSelection]);
 

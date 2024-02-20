@@ -3,7 +3,7 @@
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuLabel, DropdownMenuSeparator, DropdownMenuTrigger } from "@/components/ui/dropdown-menu";
-import { Listing, ListingPriority } from "@/models/listing";
+import { Listing, ListingPriorities } from "@/models/listing";
 import { ColumnDef } from "@tanstack/react-table";
 import { format } from "date-fns";
 import { MoreHorizontal } from "lucide-react";
@@ -13,7 +13,7 @@ export const columns: ColumnDef<Listing>[] = [
     accessorKey: "title",
     header: "Tin đăng",
     cell: (({row}) => {
-      const priorityLabel = ListingPriority.find(lp => lp.priority === row.original.priority.toString())?.label;
+      const priorityLabel = ListingPriorities.find(lp => lp.priority === row.original.priority.toString())?.label;
 
       return (
         <div className="flex flex-row gap-1">

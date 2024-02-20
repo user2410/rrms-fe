@@ -64,7 +64,7 @@ export default function PropertyCard({ property }: { property: Property }) {
         <CardContent className="mt-3 space-y-2">
           <div className="flex flex-row justify-between">
             <CardTitle className="font-medium text-lg">
-              <Link href={`/manage/properties/property/${property.id}`}>{property.fullAddress}</Link>
+              <Link href={`/manage/properties/property/${property.id}`}>{property.name}</Link>
             </CardTitle>
             <DropdownMenu>
               <DropdownMenuTrigger asChild>

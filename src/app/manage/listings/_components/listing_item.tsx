@@ -14,7 +14,7 @@ function durationToString(duration: Duration): string {
   return days ? `${days} ngày ` : hours ? `${hours} giờ ` : minutes ? `${minutes} phút ` : seconds ? `${seconds} giây ` : "";
 }
 
-function ExpDuration({exp} : {exp: Date}) {
+function ExpDuration({ exp }: { exp: Date }) {
   // console.log('exp', exp);
   const [expDuration, setExpDuration] = useState(intervalToDuration({
     start: new Date(),
@@ -24,7 +24,7 @@ function ExpDuration({exp} : {exp: Date}) {
   useEffect(() => {
     const interval = setInterval(() => {
       const now = new Date();
-      if(new Date().getTime() >= exp.getTime()) {
+      if (new Date().getTime() >= exp.getTime()) {
         return;
       }
       setExpDuration(intervalToDuration({
@@ -73,31 +73,21 @@ export default function ListingItem({
             <span className="w-4 h-4 rounded-full bg-green-500" />
             <p className="uppercase">{listing.active ? "Active" : "Inactive"}</p>
           </div>
-          {listing.active
-            ? (
-              <Fragment>
-                <div className="w-full h-full flex flex-col justify-center items-center gap-2 border">
-                  <h5>Thời gian còn lại</h5>
-                  <ExpDuration exp={new Date(listing.expiredAt)}/>
-                  <p className="uppercase"></p>
-                </div>
-                <div className="w-full h-full flex flex-col justify-center items-center gap-2 border">
-                  <h5>Lượt xem (30 ngày trước)</h5>
-                  <span className="text-sm font-light">96</span>
-                  <p className="uppercase"></p>
-                </div>
-              </Fragment>
-            ) : (
-              <div className="col-span-2 border p-2 lg:p-3">
-                Tin đăng của bạn đã được nhập vào hệ thống. Vui lòng chờ trong giây lát.
-              </div>
-            )
-          }
+          <div className="w-full h-full flex flex-col justify-center items-center gap-2 border">
+            <h5>Thời gian còn lại</h5>
+            <ExpDuration exp={new Date(listing.expiredAt)} />
+            <p className="uppercase"></p>
+          </div>
+          <div className="w-full h-full flex flex-col justify-center items-center gap-2 border">
+            <h5>Lượt xem (30 ngày trước)</h5>
+            <span className="text-sm font-light">96</span>
+            <p className="uppercase"></p>
+          </div>
         </div>
         <div className="bg-slate-200 p-2 flex flex-row items-center justify-between">
           <div className="flex flex-row gap-1 items-center">
-            <FaClock size={10}/>
-            <span className="text-xs font-light">Cập nhật {listing.postAt.toLocaleString()}</span>
+            <FaClock size={10} />
+            <span className="text-xs font-light">Cập nhật {listing.updatedAt.toLocaleString()}</span>
           </div>
           <div className="flex flex-row gap-2">
             <Button variant="outline">Xem</Button>

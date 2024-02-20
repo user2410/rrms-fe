@@ -39,8 +39,8 @@ export default function ManagePropertiesPage() {
     <div className="container h-full py-10">
       <div className="space-y-4">
         <div className="flex flex-row justify-between items-center w-full">
-          <h1 className="text-2xl lg:text-3xl font-light">Bất động sản của bạn</h1>
-          <Button type="button" variant="default" onClick={() => router.push('/manage/properties/new')}>Tạo một bất động sản mới</Button>
+          <h1 className="text-2xl lg:text-3xl font-light">Nhà cho thuê của bạn</h1>
+          <Button type="button" variant="default" onClick={() => router.push('/manage/properties/new')}>Tạo một nhà cho thuê mới</Button>
         </div>
         {myPropertiesQuery.isLoading
           ? (

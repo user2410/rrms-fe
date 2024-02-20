@@ -5,7 +5,7 @@ import { Label } from "@/components/ui/label";
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
 import { Separator } from "@/components/ui/separator";
 import { Switch } from "@/components/ui/switch";
-import { DiscountMap, ListingPriority } from "@/models/listing";
+import { ListingDiscount, ListingPriorities } from "@/models/listing";
 import { add, format } from "date-fns";
 import Link from "next/link";
 import { useMemo } from "react";
@@ -16,20 +16,21 @@ export default function ListingConfig() {
   const form = useFormContext<ListingFormValues>();
 
   const postDuration = form.watch("config.postDuration");
-  const postAt = form.watch("config.postAt");
+  // const postAt = form.watch("config.postAt");
   const priority = form.watch("config.priority");
 
-  const endDate = useMemo(() => {
-    if (!postAt || !postDuration) return null;
-    return add(new Date(postAt), { days: parseInt(postDuration) });
-  }, [postAt, postDuration]);
+  const expiryDate = useMemo(() => {
+    if (!postDuration) return null;
+    return add(new Date(), { days: postDuration });
+  }, [postDuration]);
   const listingPriority = useMemo(() => {
     if (!priority) return null;
-    return ListingPriority.find(item => item.priority === priority);
+    return ListingPriorities.find(item => item.priority.toString() === priority.toString());
   }, [priority]);
-  const totalCost = useMemo(() => {
+  const discountedBasePrice = useMemo(() => {
     if (!postDuration || !listingPriority) return null;
-    return DiscountMap.get(postDuration)! * (listingPriority!.basePrice * parseInt(postDuration));
+    const ld = ListingDiscount.find(item => item.duration === postDuration);
+    return (100 - ld!.discount) / 100 * listingPriority!.basePrice;
   }, [postDuration, listingPriority]);
 
   return (
@@ -51,14 +52,14 @@ export default function ListingConfig() {
                 <FormMessage />
                 <RadioGroup
                   onValueChange={field.onChange}
-                  defaultValue={field.value}
+                  defaultValue={field.value.toString()}
                   className="w-full grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-8 pt-2"
                 >
-                  {ListingPriority.map((item, index) => (
+                  {ListingPriorities.map((item, index) => (
                     <FormItem key={index}>
                       <FormLabel className="[&:has([data-state=checked])>div]:border-primary">
                         <FormControl>
-                          <RadioGroupItem value={item.priority} className="sr-only" />
+                          <RadioGroupItem value={item.priority.toString()} className="sr-only" />
                         </FormControl>
                         <div className="rounded-md border-2 border-muted p-4 hover:border-accent flex flex-col items-center gap-2">
                           <h3 className="text-foreground font-medium">{item.label}</h3>
@@ -79,27 +80,23 @@ export default function ListingConfig() {
               name="config.postDuration"
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel>Số ngày đăng <span className="ml-1 text-red-600">*</span></FormLabel>
+                  <FormLabel>Thời gian đăng tin<span className="ml-1 text-red-600">*</span></FormLabel>
                   <FormMessage />
                   <RadioGroup
                     onValueChange={field.onChange}
-                    defaultValue={field.value}
+                    defaultValue={field.value.toString()}
                     className="grid w-full grid-cols-3 gap-8 pt-2"
                   >
-                    {[
-                      { label: "7 ngày", desc: "2.160 đ/ngày", discount: 0, value: "7" },
-                      { label: "15 ngày", desc: "49.050 đ/ngày", discount: 10, value: "15" },
-                      { label: "30 ngày", desc: "49.050 đ/ngày", discount: 20, value: "30" },
-                    ].map((item, index) => (
+                    {ListingDiscount.map((item, index) => (
                       <FormItem key={index}>
                         <FormLabel className="[&:has([data-state=checked])>div]:border-primary">
                           <FormControl>
-                            <RadioGroupItem value={item.value} className="sr-only" />
+                            <RadioGroupItem value={item.duration.toString()} className="sr-only" />
                           </FormControl>
                           <div className="rounded-md border-2 border-muted p-4 hover:border-accent flex justify-between items-center gap-2 max-w-xs">
                             <div className="space-y-2">
-                              <h3 className="text-foreground font-medium">{item.label}</h3>
-                              <p className="text-muted-foreground text-sm">{item.desc}</p>
+                              <h3 className="text-foreground font-medium">{item.duration} ngày</h3>
+                              <p className="text-muted-foreground text-sm">{(100 - item.discount) / 100 * listingPriority!.basePrice} đ/ngày</p>
                             </div>
                             <span className="bg-red-100 text-red-800 text-xs font-medium mr-2 px-2.5 py-0.5 rounded dark:bg-red-900 dark:text-red-300">{item.discount}%</span>
                           </div>
@@ -110,7 +107,7 @@ export default function ListingConfig() {
                 </FormItem>
               )}
             />
-            <FormField
+            {/* <FormField
               control={form.control}
               name="config.active"
               render={({ field }) => (
@@ -126,13 +123,15 @@ export default function ListingConfig() {
                             <Input
                               type="datetime-local"
                               {...field2}
+                              value={field2.value ? format(field2.value, "yyyy-MM-dd'T'HH:mm") : ""}
+                              onChange={(e) => field2.onChange(e.target.valueAsDate)}
                               min={format(new Date(), "yyyy-MM-dd'T'HH:mm")}
                             />
                           </FormControl>
                         </FormItem>
                       )} />
                     <FormDescription>
-                      {endDate && `Kết thúc ngày ${format(endDate, "dd/MM/yyyy")}`}
+                      {endDate && `Hết hạn ${format(endDate, "HH:mm dd/MM/yyyy")}`}
                     </FormDescription>
                     <FormMessage />
                   </div>
@@ -144,7 +143,7 @@ export default function ListingConfig() {
                         onCheckedChange={(e) => {
                           field.onChange(e);
                           if (e) {
-                            form.setValue("config.postAt", format(new Date(), "yyyy-MM-dd'T'HH:mm"));
+                            form.setValue("config.postAt", new Date());
                           }
                         }}
                       />
@@ -152,7 +151,7 @@ export default function ListingConfig() {
                   </div>
                 </FormItem>
               )}
-            />
+            /> */}
           </div>
         </CardContent>
       </Card>
@@ -168,17 +167,17 @@ export default function ListingConfig() {
             </div>
             <div className="flex justify-between">
               <div className="font-light">Đơn giá / ngày</div>
-              <div className="font-medium">{listingPriority ? `${listingPriority.basePrice} đ` : "N/A"}</div>
+              <div className="font-medium">{listingPriority ? `${discountedBasePrice} đ` : "N/A"}</div>
             </div>
             <div className="flex justify-between">
               <div className="font-light">Thời gian đăng tin</div>
-              <div className="font-medium">{postDuration ? `${postDuration} ngày` : "N/A"}</div>
+              <div className="font-medium">{(postDuration && expiryDate) ? `${postDuration} ngày (hết hạn ${format(expiryDate, "dd/MM/yyyy")})` : "N/A"}</div>
             </div>
           </div>
           <Separator />
           <div className="flex justify-between">
             <div className="font-light">Phí đăng tin</div>
-            <div className="font-medium">{totalCost ? `${totalCost} đ` : "N/A"}</div>
+            <div className="font-medium">{discountedBasePrice ? `${discountedBasePrice * postDuration} đ` : "N/A"}</div>
           </div>
         </CardContent>
       </Card>

@@ -43,7 +43,6 @@ export default function PropertyDetailPage({ params }: { params: { id: string } 
     },
     cacheTime: 1000 * 60 * 5, // 5 minutes
     staleTime: 1000 * 60 * 5, // 5 minutes
-    retry: 3,
     enabled: session.status === "authenticated",
   });
 
@@ -56,7 +55,7 @@ export default function PropertyDetailPage({ params }: { params: { id: string } 
       <div className="space-y-4">
         <Link href="/manage/properties" className="flex flex-row items-center gap-1">
           <FaArrowLeft size={16}/>
-          <span>Properties</span>
+          <span>Nhà cho thuê</span>
         </Link>
         <div className="w-full flex flex-row items-center justify-between">
           <div>

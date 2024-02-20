@@ -25,7 +25,7 @@ export async function uploadFile(fileUpload: FileUpload, accessToken: string) : 
   // upload file
   await axios.put(presignedURL.url, file, {
     headers: {
-      "Content-Type": file.type,
+      "Content-Type": fileUpload.type,
     },
   });
 

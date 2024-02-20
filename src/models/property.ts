@@ -9,6 +9,7 @@ export type PropertyType =
   'MINIAPARTMENT'
 
 export type PropertyMedia = {
+  id: number;
   url: string;
   propertyId: string;
   description?: string;
@@ -50,6 +51,7 @@ export type Property = {
   lat: number;
   lng: number;
   type: PropertyType;
+  primaryImage: number;
   media: PropertyMedia[];
   features: PropertyFeature[];
   tags: PropertyTag[];
@@ -146,44 +148,52 @@ export const mockupProperties: Property[] = [
     lng: 105.8433151,
     placeUrl: "https://maps.app.goo.gl/Y5Rk429srd7a3rut8",
     type: 'APARTMENT',
+    primaryImage: 0,
     media: [
       {
+        id: 1,
         propertyId: '1',
         type: 'IMAGE',
         url: 'https://pt123.cdn.static123.com/images/thumbs/900x600/fit/2023/06/17/9e9b8e68ee899b038777e626e8ab6ae2_1686997946.jpg',
         description: 'Phong bep',
       },
       {
+        id: 2,
         propertyId: '1',
         type: 'IMAGE',
         url: 'https://pt123.cdn.static123.com/images/thumbs/900x600/fit/2023/06/17/870d627df044cef9c81b869f48c80447_1686997941.jpg',
         description: 'Ban cong',
       },
       {
+        id: 3,
         propertyId: '1',
         type: 'IMAGE',
         url: 'https://pt123.cdn.static123.com/images/thumbs/900x600/fit/2023/06/17/698ca5f9cd4ead81824028844dcc11a0_1686997941.jpg',
         description: 'Phong bep',
       },
       {
+        id: 4,
         propertyId: '1',
         type: 'IMAGE',
         url: 'https://pt123.cdn.static123.com/images/thumbs/900x600/fit/2023/06/17/11c874d516379eb8e507e5342160a933_1686997951.jpg',
         description: 'Phong an',
       },
       {
+        id: 5,
         propertyId: '1',
         type: 'IMAGE',
         url: 'https://pt123.cdn.static123.com/images/thumbs/900x600/fit/2023/06/17/img-1475_1686997951.jpg',
         description: 'Phong ngu',
       },
       {
+        id: 6,
         propertyId: '1',
         type: 'IMAGE',
         url: 'https://pt123.cdn.static123.com/images/thumbs/450x300/fit/2023/06/16/img-6342_1686925907.jpg',
         description: 'Phong khach',
       },
       {
+        id: 7,
         propertyId: '1',
         type: 'IMAGE',
         url: 'https://pt123.cdn.static123.com/images/thumbs/450x300/fit/2021/10/27/17f127e466893fd370b536e3d9cd0b15-2742471474502885792_1635303858.jpg',
@@ -236,38 +246,46 @@ export const mockupProperties: Property[] = [
     lng: 105.8433151,
     placeUrl: "https://maps.app.goo.gl/Y5Rk429srd7a3rut8",
     type: 'ROOM',
+    primaryImage: 0,
     media: [
       {
+        id: 1,
         propertyId: '2',
         type: 'IMAGE',
         url: 'https://pt123.cdn.static123.com/images/thumbs/900x600/fit/2023/06/17/9e9b8e68ee899b038777e626e8ab6ae2_1686997946.jpg',
       },
       {
+        id: 1,
         propertyId: '2',
         type: 'IMAGE',
         url: 'https://pt123.cdn.static123.com/images/thumbs/900x600/fit/2023/06/17/870d627df044cef9c81b869f48c80447_1686997941.jpg',
       },
       {
+        id: 1,
         propertyId: '2',
         type: 'IMAGE',
         url: 'https://pt123.cdn.static123.com/images/thumbs/900x600/fit/2023/06/17/698ca5f9cd4ead81824028844dcc11a0_1686997941.jpg',
       },
       {
+        id: 1,
         propertyId: '2',
         type: 'IMAGE',
         url: 'https://pt123.cdn.static123.com/images/thumbs/900x600/fit/2023/06/17/11c874d516379eb8e507e5342160a933_1686997951.jpg',
       },
       {
+        id: 1,
         propertyId: '2',
         type: 'IMAGE',
         url: 'https://pt123.cdn.static123.com/images/thumbs/900x600/fit/2023/06/17/img-1475_1686997951.jpg',
       },
       {
+        id: 1,
         propertyId: '2',
         type: 'IMAGE',
         url: 'https://pt123.cdn.static123.com/images/thumbs/450x300/fit/2023/06/16/img-6342_1686925907.jpg',
       },
       {
+        id: 1,
         propertyId: '2',
         type: 'IMAGE',
         url: 'https://pt123.cdn.static123.com/images/thumbs/450x300/fit/2021/10/27/17f127e466893fd370b536e3d9cd0b15-2742471474502885792_1635303858.jpg',
@@ -316,38 +334,46 @@ export const mockupProperties: Property[] = [
     lng: 105.8433151,
     placeUrl: "https://maps.app.goo.gl/Y5Rk429srd7a3rut8",
     type: 'ROOM',
+    primaryImage: 0,
     media: [
       {
+        id: 1,
         propertyId: '3',
         type: 'IMAGE',
         url: 'https://pt123.cdn.static123.com/images/thumbs/900x600/fit/2023/06/17/9e9b8e68ee899b038777e626e8ab6ae2_1686997946.jpg',
       },
       {
+        id: 1,
         propertyId: '3',
         type: 'IMAGE',
         url: 'https://pt123.cdn.static123.com/images/thumbs/900x600/fit/2023/06/17/870d627df044cef9c81b869f48c80447_1686997941.jpg',
       },
       {
+        id: 1,
         propertyId: '3',
         type: 'IMAGE',
         url: 'https://pt123.cdn.static123.com/images/thumbs/900x600/fit/2023/06/17/698ca5f9cd4ead81824028844dcc11a0_1686997941.jpg',
       },
       {
+        id: 1,
         propertyId: '3',
         type: 'IMAGE',
         url: 'https://pt123.cdn.static123.com/images/thumbs/900x600/fit/2023/06/17/11c874d516379eb8e507e5342160a933_1686997951.jpg',
       },
       {
+        id: 1,
         propertyId: '3',
         type: 'IMAGE',
         url: 'https://pt123.cdn.static123.com/images/thumbs/900x600/fit/2023/06/17/img-1475_1686997951.jpg',
       },
       {
+        id: 1,
         propertyId: '3',
         type: 'IMAGE',
         url: 'https://pt123.cdn.static123.com/images/thumbs/450x300/fit/2023/06/16/img-6342_1686925907.jpg',
       },
       {
+        id: 1,
         propertyId: '3',
         type: 'IMAGE',
         url: 'https://pt123.cdn.static123.com/images/thumbs/450x300/fit/2021/10/27/17f127e466893fd370b536e3d9cd0b15-2742471474502885792_1635303858.jpg',
@@ -396,38 +422,46 @@ export const mockupProperties: Property[] = [
     lng: 105.8433151,
     placeUrl: "https://maps.app.goo.gl/Y5Rk429srd7a3rut8",
     type: 'PRIVATE',
+    primaryImage: 0,
     media: [
       {
+        id: 1,
         propertyId: '4',
         type: 'IMAGE',
         url: 'https://pt123.cdn.static123.com/images/thumbs/900x600/fit/2023/06/17/9e9b8e68ee899b038777e626e8ab6ae2_1686997946.jpg',
       },
       {
+        id: 1,
         propertyId: '4',
         type: 'IMAGE',
         url: 'https://pt123.cdn.static123.com/images/thumbs/900x600/fit/2023/06/17/870d627df044cef9c81b869f48c80447_1686997941.jpg',
       },
       {
+        id: 1,
         propertyId: '4',
         type: 'IMAGE',
         url: 'https://pt123.cdn.static123.com/images/thumbs/900x600/fit/2023/06/17/698ca5f9cd4ead81824028844dcc11a0_1686997941.jpg',
       },
       {
+        id: 1,
         propertyId: '4',
         type: 'IMAGE',
         url: 'https://pt123.cdn.static123.com/images/thumbs/900x600/fit/2023/06/17/11c874d516379eb8e507e5342160a933_1686997951.jpg',
       },
       {
+        id: 1,
         propertyId: '4',
         type: 'IMAGE',
         url: 'https://pt123.cdn.static123.com/images/thumbs/900x600/fit/2023/06/17/img-1475_1686997951.jpg',
       },
       {
+        id: 1,
         propertyId: '4',
         type: 'IMAGE',
         url: 'https://pt123.cdn.static123.com/images/thumbs/450x300/fit/2023/06/16/img-6342_1686925907.jpg',
       },
       {
+        id: 1,
         propertyId: '4',
         type: 'IMAGE',
         url: 'https://pt123.cdn.static123.com/images/thumbs/450x300/fit/2021/10/27/17f127e466893fd370b536e3d9cd0b15-2742471474502885792_1635303858.jpg',
@@ -476,38 +510,46 @@ export const mockupProperties: Property[] = [
     lng: 105.8433151,
     placeUrl: "https://maps.app.goo.gl/Y5Rk429srd7a3rut8",
     type: 'APARTMENT',
+    primaryImage: 0,
     media: [
       {
+        id: 1,
         propertyId: '5',
         type: 'IMAGE',
         url: 'https://pt123.cdn.static123.com/images/thumbs/900x600/fit/2023/06/17/9e9b8e68ee899b038777e626e8ab6ae2_1686997946.jpg',
       },
       {
+        id: 1,
         propertyId: '5',
         type: 'IMAGE',
         url: 'https://pt123.cdn.static123.com/images/thumbs/900x600/fit/2023/06/17/870d627df044cef9c81b869f48c80447_1686997941.jpg',
       },
       {
+        id: 1,
         propertyId: '5',
         type: 'IMAGE',
         url: 'https://pt123.cdn.static123.com/images/thumbs/900x600/fit/2023/06/17/698ca5f9cd4ead81824028844dcc11a0_1686997941.jpg',
       },
       {
+        id: 1,
         propertyId: '5',
         type: 'IMAGE',
         url: 'https://pt123.cdn.static123.com/images/thumbs/900x600/fit/2023/06/17/11c874d516379eb8e507e5342160a933_1686997951.jpg',
       },
       {
+        id: 1,
         propertyId: '5',
         type: 'IMAGE',
         url: 'https://pt123.cdn.static123.com/images/thumbs/900x600/fit/2023/06/17/img-1475_1686997951.jpg',
       },
       {
+        id: 1,
         propertyId: '5',
         type: 'IMAGE',
         url: 'https://pt123.cdn.static123.com/images/thumbs/450x300/fit/2023/06/16/img-6342_1686925907.jpg',
       },
       {
+        id: 1,
         propertyId: '5',
         type: 'IMAGE',
         url: 'https://pt123.cdn.static123.com/images/thumbs/450x300/fit/2021/10/27/17f127e466893fd370b536e3d9cd0b15-2742471474502885792_1635303858.jpg',
@@ -556,38 +598,46 @@ export const mockupProperties: Property[] = [
     lng: 105.8433151,
     placeUrl: "https://maps.app.goo.gl/Y5Rk429srd7a3rut8",
     type: 'APARTMENT',
+    primaryImage: 0,
     media: [
       {
+        id: 1,
         propertyId: '6',
         type: 'IMAGE',
         url: 'https://pt123.cdn.static123.com/images/thumbs/900x600/fit/2023/06/17/9e9b8e68ee899b038777e626e8ab6ae2_1686997946.jpg',
       },
       {
+        id: 1,
         propertyId: '6',
         type: 'IMAGE',
         url: 'https://pt123.cdn.static123.com/images/thumbs/900x600/fit/2023/06/17/870d627df044cef9c81b869f48c80447_1686997941.jpg',
       },
       {
+        id: 1,
         propertyId: '6',
         type: 'IMAGE',
         url: 'https://pt123.cdn.static123.com/images/thumbs/900x600/fit/2023/06/17/698ca5f9cd4ead81824028844dcc11a0_1686997941.jpg',
       },
       {
+        id: 1,
         propertyId: '6',
         type: 'IMAGE',
         url: 'https://pt123.cdn.static123.com/images/thumbs/900x600/fit/2023/06/17/11c874d516379eb8e507e5342160a933_1686997951.jpg',
       },
       {
+        id: 1,
         propertyId: '6',
         type: 'IMAGE',
         url: 'https://pt123.cdn.static123.com/images/thumbs/900x600/fit/2023/06/17/img-1475_1686997951.jpg',
       },
       {
+        id: 1,
         propertyId: '6',
         type: 'IMAGE',
         url: 'https://pt123.cdn.static123.com/images/thumbs/450x300/fit/2023/06/16/img-6342_1686925907.jpg',
       },
       {
+        id: 1,
         propertyId: '6',
         type: 'IMAGE',
         url: 'https://pt123.cdn.static123.com/images/thumbs/450x300/fit/2021/10/27/17f127e466893fd370b536e3d9cd0b15-2742471474502885792_1635303858.jpg',
@@ -636,38 +686,46 @@ export const mockupProperties: Property[] = [
     lng: 105.8433151,
     placeUrl: "https://maps.app.goo.gl/Y5Rk429srd7a3rut8",
     type: 'ROOM',
+    primaryImage: 0,
     media: [
       {
+        id: 1,
         propertyId: '7',
         type: 'IMAGE',
         url: 'https://pt123.cdn.static123.com/images/thumbs/900x600/fit/2023/06/17/9e9b8e68ee899b038777e626e8ab6ae2_1686997946.jpg',
       },
       {
+        id: 1,
         propertyId: '7',
         type: 'IMAGE',
         url: 'https://pt123.cdn.static123.com/images/thumbs/900x600/fit/2023/06/17/870d627df044cef9c81b869f48c80447_1686997941.jpg',
       },
       {
+        id: 1,
         propertyId: '7',
         type: 'IMAGE',
         url: 'https://pt123.cdn.static123.com/images/thumbs/900x600/fit/2023/06/17/698ca5f9cd4ead81824028844dcc11a0_1686997941.jpg',
       },
       {
+        id: 1,
         propertyId: '7',
         type: 'IMAGE',
         url: 'https://pt123.cdn.static123.com/images/thumbs/900x600/fit/2023/06/17/11c874d516379eb8e507e5342160a933_1686997951.jpg',
       },
       {
+        id: 1,
         propertyId: '7',
         type: 'IMAGE',
         url: 'https://pt123.cdn.static123.com/images/thumbs/900x600/fit/2023/06/17/img-1475_1686997951.jpg',
       },
       {
+        id: 1,
         propertyId: '7',
         type: 'IMAGE',
         url: 'https://pt123.cdn.static123.com/images/thumbs/450x300/fit/2023/06/16/img-6342_1686925907.jpg',
       },
       {
+        id: 1,
         propertyId: '7',
         type: 'IMAGE',
         url: 'https://pt123.cdn.static123.com/images/thumbs/450x300/fit/2021/10/27/17f127e466893fd370b536e3d9cd0b15-2742471474502885792_1635303858.jpg',
@@ -716,38 +774,46 @@ export const mockupProperties: Property[] = [
     lng: 105.8433151,
     placeUrl: "https://maps.app.goo.gl/Y5Rk429srd7a3rut8",
     type: 'APARTMENT',
+    primaryImage: 0,
     media: [
       {
+        id: 1,
         propertyId: '8',
         type: 'IMAGE',
         url: 'https://pt123.cdn.static123.com/images/thumbs/900x600/fit/2023/06/17/9e9b8e68ee899b038777e626e8ab6ae2_1686997946.jpg',
       },
       {
+        id: 1,
         propertyId: '8',
         type: 'IMAGE',
         url: 'https://pt123.cdn.static123.com/images/thumbs/900x600/fit/2023/06/17/870d627df044cef9c81b869f48c80447_1686997941.jpg',
       },
       {
+        id: 1,
         propertyId: '8',
         type: 'IMAGE',
         url: 'https://pt123.cdn.static123.com/images/thumbs/900x600/fit/2023/06/17/698ca5f9cd4ead81824028844dcc11a0_1686997941.jpg',
       },
       {
+        id: 1,
         propertyId: '8',
         type: 'IMAGE',
         url: 'https://pt123.cdn.static123.com/images/thumbs/900x600/fit/2023/06/17/11c874d516379eb8e507e5342160a933_1686997951.jpg',
       },
       {
+        id: 1,
         propertyId: '8',
         type: 'IMAGE',
         url: 'https://pt123.cdn.static123.com/images/thumbs/900x600/fit/2023/06/17/img-1475_1686997951.jpg',
       },
       {
+        id: 1,
         propertyId: '8',
         type: 'IMAGE',
         url: 'https://pt123.cdn.static123.com/images/thumbs/450x300/fit/2023/06/16/img-6342_1686925907.jpg',
       },
       {
+        id: 1,
         propertyId: '8',
         type: 'IMAGE',
         url: 'https://pt123.cdn.static123.com/images/thumbs/450x300/fit/2021/10/27/17f127e466893fd370b536e3d9cd0b15-2742471474502885792_1635303858.jpg',
@@ -796,38 +862,46 @@ export const mockupProperties: Property[] = [
     lng: 105.8433151,
     placeUrl: "https://maps.app.goo.gl/Y5Rk429srd7a3rut8",
     type: 'APARTMENT',
+    primaryImage: 0,
     media: [
       {
+        id: 1,
         propertyId: '9',
         type: 'IMAGE',
         url: 'https://pt123.cdn.static123.com/images/thumbs/900x600/fit/2023/06/17/9e9b8e68ee899b038777e626e8ab6ae2_1686997946.jpg',
       },
       {
+        id: 1,
         propertyId: '9',
         type: 'IMAGE',
         url: 'https://pt123.cdn.static123.com/images/thumbs/900x600/fit/2023/06/17/870d627df044cef9c81b869f48c80447_1686997941.jpg',
       },
       {
+        id: 1,
         propertyId: '9',
         type: 'IMAGE',
         url: 'https://pt123.cdn.static123.com/images/thumbs/900x600/fit/2023/06/17/698ca5f9cd4ead81824028844dcc11a0_1686997941.jpg',
       },
       {
+        id: 1,
         propertyId: '9',
         type: 'IMAGE',
         url: 'https://pt123.cdn.static123.com/images/thumbs/900x600/fit/2023/06/17/11c874d516379eb8e507e5342160a933_1686997951.jpg',
       },
       {
+        id: 1,
         propertyId: '9',
         type: 'IMAGE',
         url: 'https://pt123.cdn.static123.com/images/thumbs/900x600/fit/2023/06/17/img-1475_1686997951.jpg',
       },
       {
+        id: 1,
         propertyId: '9',
         type: 'IMAGE',
         url: 'https://pt123.cdn.static123.com/images/thumbs/450x300/fit/2023/06/16/img-6342_1686925907.jpg',
       },
       {
+        id: 1,
         propertyId: '9',
         type: 'IMAGE',
         url: 'https://pt123.cdn.static123.com/images/thumbs/450x300/fit/2021/10/27/17f127e466893fd370b536e3d9cd0b15-2742471474502885792_1635303858.jpg',
@@ -876,38 +950,46 @@ export const mockupProperties: Property[] = [
     lng: 105.8433151,
     placeUrl: "https://maps.app.goo.gl/Y5Rk429srd7a3rut8",
     type: 'APARTMENT',
+    primaryImage: 0,
     media: [
       {
+        id: 1,
         propertyId: '10',
         type: 'IMAGE',
         url: 'https://pt123.cdn.static123.com/images/thumbs/900x600/fit/2023/06/17/9e9b8e68ee899b038777e626e8ab6ae2_1686997946.jpg',
       },
       {
+        id: 1,
         propertyId: '10',
         type: 'IMAGE',
         url: 'https://pt123.cdn.static123.com/images/thumbs/900x600/fit/2023/06/17/870d627df044cef9c81b869f48c80447_1686997941.jpg',
       },
       {
+        id: 1,
         propertyId: '10',
         type: 'IMAGE',
         url: 'https://pt123.cdn.static123.com/images/thumbs/900x600/fit/2023/06/17/698ca5f9cd4ead81824028844dcc11a0_1686997941.jpg',
       },
       {
+        id: 1,
         propertyId: '10',
         type: 'IMAGE',
         url: 'https://pt123.cdn.static123.com/images/thumbs/900x600/fit/2023/06/17/11c874d516379eb8e507e5342160a933_1686997951.jpg',
       },
       {
+        id: 1,
         propertyId: '10',
         type: 'IMAGE',
         url: 'https://pt123.cdn.static123.com/images/thumbs/900x600/fit/2023/06/17/img-1475_1686997951.jpg',
       },
       {
+        id: 1,
         propertyId: '10',
         type: 'IMAGE',
         url: 'https://pt123.cdn.static123.com/images/thumbs/450x300/fit/2023/06/16/img-6342_1686925907.jpg',
       },
       {
+        id: 1,
         propertyId: '10',
         type: 'IMAGE',
         url: 'https://pt123.cdn.static123.com/images/thumbs/450x300/fit/2021/10/27/17f127e466893fd370b536e3d9cd0b15-2742471474502885792_1635303858.jpg',
@@ -956,38 +1038,46 @@ export const mockupProperties: Property[] = [
     lng: 105.8433151,
     placeUrl: "https://maps.app.goo.gl/Y5Rk429srd7a3rut8",
     type: 'APARTMENT',
+    primaryImage: 0,
     media: [
       {
+        id: 1,
         propertyId: '11',
         type: 'IMAGE',
         url: 'https://pt123.cdn.static123.com/images/thumbs/900x600/fit/2023/06/17/9e9b8e68ee899b038777e626e8ab6ae2_1686997946.jpg',
       },
       {
+        id: 1,
         propertyId: '11',
         type: 'IMAGE',
         url: 'https://pt123.cdn.static123.com/images/thumbs/900x600/fit/2023/06/17/870d627df044cef9c81b869f48c80447_1686997941.jpg',
       },
       {
+        id: 1,
         propertyId: '11',
         type: 'IMAGE',
         url: 'https://pt123.cdn.static123.com/images/thumbs/900x600/fit/2023/06/17/698ca5f9cd4ead81824028844dcc11a0_1686997941.jpg',
       },
       {
+        id: 1,
         propertyId: '11',
         type: 'IMAGE',
         url: 'https://pt123.cdn.static123.com/images/thumbs/900x600/fit/2023/06/17/11c874d516379eb8e507e5342160a933_1686997951.jpg',
       },
       {
+        id: 1,
         propertyId: '11',
         type: 'IMAGE',
         url: 'https://pt123.cdn.static123.com/images/thumbs/900x600/fit/2023/06/17/img-1475_1686997951.jpg',
       },
       {
+        id: 1,
         propertyId: '11',
         type: 'IMAGE',
         url: 'https://pt123.cdn.static123.com/images/thumbs/450x300/fit/2023/06/16/img-6342_1686925907.jpg',
       },
       {
+        id: 1,
         propertyId: '11',
         type: 'IMAGE',
         url: 'https://pt123.cdn.static123.com/images/thumbs/450x300/fit/2021/10/27/17f127e466893fd370b536e3d9cd0b15-2742471474502885792_1635303858.jpg',
@@ -1036,38 +1126,46 @@ export const mockupProperties: Property[] = [
     lng: 105.8433151,
     placeUrl: "https://maps.app.goo.gl/Y5Rk429srd7a3rut8",
     type: 'APARTMENT',
+    primaryImage: 0,
     media: [
       {
+        id: 1,
         propertyId: '12',
         type: 'IMAGE',
         url: 'https://pt123.cdn.static123.com/images/thumbs/900x600/fit/2023/06/17/9e9b8e68ee899b038777e626e8ab6ae2_1686997946.jpg',
       },
       {
+        id: 1,
         propertyId: '12',
         type: 'IMAGE',
         url: 'https://pt123.cdn.static123.com/images/thumbs/900x600/fit/2023/06/17/870d627df044cef9c81b869f48c80447_1686997941.jpg',
       },
       {
+        id: 1,
         propertyId: '12',
         type: 'IMAGE',
         url: 'https://pt123.cdn.static123.com/images/thumbs/900x600/fit/2023/06/17/698ca5f9cd4ead81824028844dcc11a0_1686997941.jpg',
       },
       {
+        id: 1,
         propertyId: '12',
         type: 'IMAGE',
         url: 'https://pt123.cdn.static123.com/images/thumbs/900x600/fit/2023/06/17/11c874d516379eb8e507e5342160a933_1686997951.jpg',
       },
       {
+        id: 1,
         propertyId: '12',
         type: 'IMAGE',
         url: 'https://pt123.cdn.static123.com/images/thumbs/900x600/fit/2023/06/17/img-1475_1686997951.jpg',
       },
       {
+        id: 1,
         propertyId: '12',
         type: 'IMAGE',
         url: 'https://pt123.cdn.static123.com/images/thumbs/450x300/fit/2023/06/16/img-6342_1686925907.jpg',
       },
       {
+        id: 1,
         propertyId: '12',
         type: 'IMAGE',
         url: 'https://pt123.cdn.static123.com/images/thumbs/450x300/fit/2021/10/27/17f127e466893fd370b536e3d9cd0b15-2742471474502885792_1635303858.jpg',
@@ -1116,38 +1214,46 @@ export const mockupProperties: Property[] = [
     lng: 105.8433151,
     placeUrl: "https://maps.app.goo.gl/Y5Rk429srd7a3rut8",
     type: 'APARTMENT',
+    primaryImage: 0,
     media: [
       {
+        id: 1,
         propertyId: '13',
         type: 'IMAGE',
         url: 'https://pt123.cdn.static123.com/images/thumbs/900x600/fit/2023/06/17/9e9b8e68ee899b038777e626e8ab6ae2_1686997946.jpg',
       },
       {
+        id: 1,
         propertyId: '13',
         type: 'IMAGE',
         url: 'https://pt123.cdn.static123.com/images/thumbs/900x600/fit/2023/06/17/870d627df044cef9c81b869f48c80447_1686997941.jpg',
       },
       {
+        id: 1,
         propertyId: '13',
         type: 'IMAGE',
         url: 'https://pt123.cdn.static123.com/images/thumbs/900x600/fit/2023/06/17/698ca5f9cd4ead81824028844dcc11a0_1686997941.jpg',
       },
       {
+        id: 1,
         propertyId: '13',
         type: 'IMAGE',
         url: 'https://pt123.cdn.static123.com/images/thumbs/900x600/fit/2023/06/17/11c874d516379eb8e507e5342160a933_1686997951.jpg',
       },
       {
+        id: 1,
         propertyId: '13',
         type: 'IMAGE',
         url: 'https://pt123.cdn.static123.com/images/thumbs/900x600/fit/2023/06/17/img-1475_1686997951.jpg',
       },
       {
+        id: 1,
         propertyId: '13',
         type: 'IMAGE',
         url: 'https://pt123.cdn.static123.com/images/thumbs/450x300/fit/2023/06/16/img-6342_1686925907.jpg',
       },
       {
+        id: 1,
         propertyId: '13',
         type: 'IMAGE',
         url: 'https://pt123.cdn.static123.com/images/thumbs/450x300/fit/2021/10/27/17f127e466893fd370b536e3d9cd0b15-2742471474502885792_1635303858.jpg',

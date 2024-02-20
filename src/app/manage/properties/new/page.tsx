@@ -149,20 +149,200 @@ const propertyFormSchema = z.object({
 export type PropertyForm = z.infer<typeof propertyFormSchema>;
 
 const defaultValues: DeepPartial<PropertyForm> = {
-  property: {"name":"Căn hộ chung cư Thống Nhất","fullAddress":"82 Nguyễn Tuân","city":"HN","district":"5","ward":"9339","multiUnit":false,"primaryImage": 1,"placeUrl":"https://maps.app.goo.gl/1HfXsR4d5ZDjrVcW9","description":"<p class=\"ql-align-center\"><strong>Chung cư Thống Nhất</strong></p><p class=\"ql-align-center\"><br></p><p>Nằm tại trung tâm thủ đô Hà Nội, chung cư Thống Nhất là lựa chọn thích hợp chọn làm nơi định cư, thuê văn phòng.</p>","media":[{"url":"https://www.youtube.com/watch?v=dQw4w9WgXcQ","type":"VIDEO"},{"name":"Screenshot from 2024-02-13 17-27-05.png","size":284984,"type":"IMAGE/PNG","url":"blob:http://localhost:3000/46e0db59-e90a-4d42-b139-b13ce5ba936c"},{"name":"Screenshot from 2024-02-08 01-04-44.png","size":490497,"type":"IMAGE/PNG","url":"blob:http://localhost:3000/ed3994db-cc2b-4c04-8a38-c1ddf44dbd0a"},{"name":"Screenshot from 2024-02-05 00-58-33.png","size":674574,"type":"IMAGE/PNG","url":"blob:http://localhost:3000/f838e190-a0ec-4fdc-b9e4-a405b278a67a"},{"name":"Screenshot from 2024-02-03 17-51-08.png","size":552216,"type":"IMAGE/PNG","url":"blob:http://localhost:3000/3417059a-0f70-4a3f-9b86-a63d36f950b5"}],"features":[{"featureId":"1","description":"Bảo vệ 24/7"},{"featureId":"3","description":"Gym love 24"}],"type":"APARTMENT","area":120,"orientation":"se","yearBuilt":2019,"entranceWidth":5,"facade":12,"project":"Thống Nhất Complex","building":"Thống Nhất","lat":20.9972238,"lng":105.8021945},
-  units: [{
-    name: "Căn hộ chung cư Thống Nhất",
-    area: 120,
-    numberOfBedrooms: 3,
-    numberOfBathrooms: 2,
-    numberOfBalconies: 2,
-    type: "APARTMENT",
-    amenities: [
-      {amenityId: "1", description: "Bàn ghế"},
-      {amenityId: "2", description: "Tủ lạnh"},
-    ],
-    media: []
-  }],
+  "property": {
+      "name": "Phòng trọ Bình Minh",
+      "fullAddress": "Số 10, Đại Cồ Việt",
+      "city": "HN",
+      "district": "4",
+      "ward": "74",
+      "multiUnit": true,
+      "primaryImage": 0,
+      "placeUrl": "https://maps.app.goo.gl/1HfXsR4d5ZDjrVcW9",
+      "description": "<p><strong>Phòng trọ Bình Minh giá rẻ cho sinh viên</strong></p><p>Dãy Phòng trọ giá rẻ cao cấp cho sinh viên và người lao động. Các phòng trọ có diện tích từ 20 - 30 m2, có đủ diện tích để sinh hoạt, làm việc, học tập. Tọa lạc tại Số 10 Đại Cồ Việt, nhà trọ gần các trường đại học lớn (Bách Khoa, Xây Dựng), thuận tiện cho việc đi lại của sinh viên.</p>",
+      "media": [
+          {
+              "name": "Screenshot from 2024-02-13 17-27-05.png",
+              "size": 284984,
+              "type": "IMAGE/PNG",
+              "url": "blob:http://localhost:3000/dfd40fb6-caef-43c4-bded-12d3d4d4bc11",
+              "description": "Phòng ngủ"
+          },
+          {
+              "name": "Screenshot from 2024-02-05 00-58-33.png",
+              "size": 674574,
+              "type": "IMAGE/PNG",
+              "url": "blob:http://localhost:3000/368a4c46-287e-4acf-a72f-40deeeca77be",
+              "description": "Phòng khách 1"
+          },
+          {
+              "name": "Screenshot from 2024-02-03 17-51-08.png",
+              "size": 552216,
+              "type": "IMAGE/PNG",
+              "url": "blob:http://localhost:3000/f4e7db39-2c9d-427b-80fc-de17d6f2ab15",
+              "description": "Phòng khách 2"
+          }
+      ],
+      "features": [
+          {
+              "featureId": "8",
+              "description": "Bãi đỗ xe mở dưới sân trước khu, đủ chỗ cho 40 xe máy"
+          },
+          {
+              "featureId": "1",
+              "description": "Bảo vệ 24/7"
+          }
+      ],
+      "type": "ROOM",
+      "area": 30,
+      "lat": 20.9972238,
+      "lng": 105.8021945
+  },
+  "units": [
+      {
+          "name": "201",
+          "type": "ROOM",
+          "amenities": [
+              {
+                  "amenityId": "1",
+                  "description": "Sàn gỗ và bàn ghế gỗ"
+              },
+              {
+                  "amenityId": "4",
+                  "description": "Máy giạt Panasonic"
+              }
+          ],
+          "media": [
+              {
+                  "name": "Screenshot from 2024-02-03 17-28-09.png",
+                  "size": 532174,
+                  "type": "IMAGE/PNG",
+                  "url": "blob:http://localhost:3000/56eec3a2-c9c6-4f91-9b4e-cd85157abfb7"
+              },
+              {
+                  "name": "421104767_1113507463014805_3893774932420359370_n.jpg",
+                  "size": 83165,
+                  "type": "IMAGE/JPEG",
+                  "url": "blob:http://localhost:3000/4daf7e44-80d4-4d27-9e15-c0872b299ec7"
+              },
+              {
+                  "name": "140212504_1848317805325995_4597924637237713222_n.jpg",
+                  "size": 109721,
+                  "type": "IMAGE/JPEG",
+                  "url": "blob:http://localhost:3000/bd093de0-ea05-4d19-a4b5-31a57f7a2750"
+              }
+          ],
+          "area": 20,
+          "floor": 2
+      },
+      {
+          "name": "202",
+          "type": "ROOM",
+          "amenities": [
+              {
+                  "amenityId": "1",
+                  "description": "Sàn gỗ và bàn ghế gỗ"
+              },
+              {
+                  "amenityId": "4",
+                  "description": "Máy giạt Panasonic"
+              }
+          ],
+          "media": [
+              {
+                  "name": "Screenshot from 2024-02-01 01-02-14.png",
+                  "size": 89492,
+                  "type": "IMAGE/PNG",
+                  "url": "blob:http://localhost:3000/6cc90e32-0099-40cb-bc0c-03fbe7aeb048"
+              },
+              {
+                  "name": "Screenshot from 2024-02-01 00-56-39.png",
+                  "size": 224979,
+                  "type": "IMAGE/PNG",
+                  "url": "blob:http://localhost:3000/3b08dabc-5cce-473d-9715-4f6ccfca880f"
+              },
+              {
+                  "name": "Screenshot from 2024-02-01 00-56-26.png",
+                  "size": 231868,
+                  "type": "IMAGE/PNG",
+                  "url": "blob:http://localhost:3000/37864c47-de6a-4a63-b1a8-bd246315abcd"
+              }
+          ],
+          "area": 20,
+          "floor": 2
+      },
+      {
+          "name": "301",
+          "type": "ROOM",
+          "amenities": [
+              {
+                  "amenityId": "1",
+                  "description": "Sàn gỗ và bàn ghế gỗ"
+              },
+              {
+                  "amenityId": "4",
+                  "description": "Máy giạt Panasonic"
+              }
+          ],
+          "media": [
+              {
+                  "name": "Screenshot from 2024-01-11 12-29-15.png",
+                  "size": 169081,
+                  "type": "IMAGE/PNG",
+                  "url": "blob:http://localhost:3000/e1225503-1bec-4c0f-af05-f1790044f4c0"
+              },
+              {
+                  "name": "Screenshot from 2024-01-11 12-29-10.png",
+                  "size": 181904,
+                  "type": "IMAGE/PNG",
+                  "url": "blob:http://localhost:3000/3aba727f-a0a3-4a5e-bce0-a2b0f81b3fb6"
+              },
+              {
+                  "name": "Screenshot from 2024-01-11 11-57-16.png",
+                  "size": 114953,
+                  "type": "IMAGE/PNG",
+                  "url": "blob:http://localhost:3000/337d31f2-138d-429d-88e4-1a28f91cb674"
+              }
+          ],
+          "area": 25,
+          "floor": 3
+      },
+      {
+          "name": "302",
+          "type": "STUDIO",
+          "amenities": [
+              {
+                  "amenityId": "1",
+                  "description": "Sàn gỗ và bàn ghế gỗ"
+              },
+              {
+                  "amenityId": "4",
+                  "description": "Máy giạt Panasonic"
+              }
+          ],
+          "media": [
+              {
+                  "name": "Screenshot from 2023-12-19 12-42-31.png",
+                  "size": 68083,
+                  "type": "IMAGE/PNG",
+                  "url": "blob:http://localhost:3000/01c9db4a-7143-4138-9c3b-073937092a40"
+              },
+              {
+                  "name": "Screenshot from 2023-12-19 09-17-56.png",
+                  "size": 256159,
+                  "type": "IMAGE/PNG",
+                  "url": "blob:http://localhost:3000/3e1fd6c3-c233-4fce-ad05-c1df49331bfa"
+              },
+              {
+                  "name": "Screenshot from 2023-12-18 23-40-23.png",
+                  "size": 475536,
+                  "type": "IMAGE/PNG",
+                  "url": "blob:http://localhost:3000/e1752326-9a14-4340-aa8f-69d873ef4d3d"
+              }
+          ],
+          "area": 26,
+          "floor": 3
+      }
+  ]
 };
 
 export default function CreatePropertyPage() {
@@ -174,7 +354,7 @@ export default function CreatePropertyPage() {
     defaultValues,
   });
 
-  async function onSubmit(data: PropertyForm) {
+  function onSubmit(data: PropertyForm) {
     console.log('submit data', step, data);
     if (step < 2) {
       return;

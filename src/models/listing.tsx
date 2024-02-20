@@ -29,7 +29,7 @@ export type Listing = {
   contactType: string;
   price: number;
   securityDeposit: number;
-  leaseTerm: number;
+  leaseTerm?: number;
   petsAllowed?: boolean;
   numberOfResidents?: number;
   priority: number;
@@ -37,7 +37,7 @@ export type Listing = {
   createdAt: Date;
   updatedAt: Date;
   expiredAt: Date;
-  postAt: Date;
+  // postAt: Date;
   policies: ListingPolicy[];
   units: ListingUnit[];
 };
@@ -68,18 +68,18 @@ export const rentalPolicies = [
   { id: 12, policy: "rental_policy-other", text: "Khác", icon: 'fas' },
 ];
 
-export const ListingPriority = [
-  {priority: "1", basePrice: 2700 ,label: "Tin thường", desc: "Từ 2.160 đ/ngày"},
-  {priority: "2", basePrice: 2700 ,label: "Tin bạc", desc: "Từ 49.050 đ/ngày"},
-  {priority: "3", basePrice: 2700 ,label: "Tin vàng", desc: "Từ 106.380 đ/ngày"},
-  {priority: "4", basePrice: 2700 ,label: "Tin kim cương", desc: "Từ 270.000 đ/ngày"},
+export const ListingPriorities = [
+  {priority: 1, basePrice: 2000 ,label: "Tin thường", desc: "Từ 2,000 đ/ngày"},
+  {priority: 2, basePrice: 5000 ,label: "Tin bạc", desc: "Từ 5,000 đ/ngày"},
+  {priority: 3, basePrice: 7000 ,label: "Tin vàng", desc: "Từ 7,000 đ/ngày"},
+  {priority: 4, basePrice: 9000 ,label: "Tin kim cương", desc: "Từ 9,000 đ/ngày"},
 ];
 
-export const DiscountMap = new Map<string, number>([
-  ["7", 1],
-  ["15", 0.9],
-  ["30", 0.8],
-]);
+export const ListingDiscount = [
+  {duration: 7, discount: 0},
+  {duration: 15, discount: 10},
+  {duration: 30, discount: 20},
+];
 
 export const mockupListings : Listing[] = [
   {
@@ -121,7 +121,7 @@ export const mockupListings : Listing[] = [
     createdAt: new Date(2023, 12, 5),
     updatedAt: new Date(2023, 12, 5),
     expiredAt: new Date(2024, 1, 25),
-    postAt: new Date(2024, 1, 25),
+    // postAt: new Date(2024, 1, 25),
   },
   {
     id: 'f6ca05c0-fad5-46fc-a237-a8e930e7cb01',
@@ -162,7 +162,7 @@ export const mockupListings : Listing[] = [
     createdAt: new Date(2023, 12, 5),
     updatedAt: new Date(2023, 12, 5),
     expiredAt: new Date(2024, 1, 25),
-    postAt: new Date(2024, 1, 25),
+    // postAt: new Date(2024, 1, 25),
   },
   {
     id: 'f6ca05c0-fad5-46fc-a237-a8e930e7cb01',
@@ -202,7 +202,7 @@ export const mockupListings : Listing[] = [
     createdAt: new Date(2023, 12, 5),
     updatedAt: new Date(2023, 12, 5),
     expiredAt: new Date(2024, 1, 25),
-    postAt: new Date(2024, 1, 25),
+    // postAt: new Date(2024, 1, 25),
   },
 ];
 

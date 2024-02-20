@@ -21,30 +21,12 @@ import RentalPolicies from "./_components/rental_policies";
 import Tags from "./_components/tags";
 import { Unit } from "@/models/unit";
 import UnitsList from "./_components/units";
+import ListingContent from "./_components/listing_content";
 
 export type ListingDetail = {
   listing: Listing;
   property: Property;
   units: Unit[];
-};
-
-const TopBreadcrumb = ({
-  cityCode,
-  districtCode,
-}: {
-  cityCode: string;
-  districtCode: string;
-}) => {
-
-  return (
-    <Breadcrumb
-      items={[
-        { label: GetCityById(cityCode)!.name, href: `/city/${cityCode}` },
-        { label: GetDistrictById(districtCode)!.name, href: `/city/${cityCode}/district/${districtCode}` }
-      ]}
-      className="mt-4"
-    />
-  );
 };
 
 export default function ListingPage({ params }: { params: { id: string } }) {
@@ -79,120 +61,12 @@ export default function ListingPage({ params }: { params: { id: string } }) {
   }
 
   return (
-    <div className="my-4">
-      <div className="container space-y-4">
-        <Gallery items={data!.property.media} />
-
-        <div className="grid grid-cols-6 gap-6">
-          {/* Main content */}
-          <div className="space-y-4 col-span-4">
-            <div className="space-y-3">
-              <TopBreadcrumb cityCode={data!.property.city} districtCode={data!.property.district}/>
-              <h1 className="font-semibold text-xl">{data!.listing.title}</h1>
-              <h3 className="font-normal">{data!.property.fullAddress}</h3>
-              <h4 className="font-light text-sm">Đăng vào {format(new Date(2014, 1, 11), 'dd/MM/yyyy hh:mm')}</h4>
-            </div>
-
-            <Separator />
-
-            <GeneralInfo listingDetail={data!} />
-
-            <Separator />
-
-            <div>
-              <h2 className="font-semibold text-xl mb-2">Thông tin mô tả</h2>
-              <p>{data!.listing.description}</p>
-            </div>
-
-            <Separator />
-
-            <ListingDetails listingDetail={data!} />
-
-            <Separator/>
-
-            <UnitsList listingDetail={data!} />
-
-            {data!.listing.policies && data!.listing.policies.length > 0 && (
-              <>
-                <Separator />
-                <RentalPolicies policies={data!.listing.policies} />
-              </>
-            )}
-
-            <Separator />
-
-            <MapNNearby property={data!.property} />
-
-            <Separator />
-
-            <ListingsForyou listings={[
-              {
-                id: 'f6ca05c0-fad5-46fc-a237-a8e930e7cb01',
-                title: 'Phòng trọ giá rẻ',
-                price: 3000000,
-                area: 25,
-                city: 'Hồ Chí Minh',
-                district: 'Quận 7',
-                coverImg: 'https://file4.batdongsan.com.vn/crop/393x222/2023/11/21/20231121175328-c0af_wm.jpg',
-                postedAt: new Date(2023, 11, 21),
-              },
-              {
-                id: 'f6ca05c0-fad5-46fc-a237-a8e930e7cb01',
-                title: 'Nhà cho thuê 2 tầng',
-                price: 3000000,
-                area: 25,
-                city: 'Hồ Chí Minh',
-                district: 'Quận 7',
-                coverImg: 'https://file4.batdongsan.com.vn/crop/393x222/2023/11/21/20231121175328-c0af_wm.jpg',
-                postedAt: new Date(2023, 11, 21),
-              },
-              {
-                id: 'f6ca05c0-fad5-46fc-a237-a8e930e7cb01',
-                title: 'Cho thuê căn hộ cao cấp DCapitale Trần Duy Hưng quỹ căn từ studio - 1/2/3pn giá tốt',
-                price: 3000000,
-                area: 25,
-                city: 'Hồ Chí Minh',
-                district: 'Quận 7',
-                coverImg: 'https://file4.batdongsan.com.vn/crop/393x222/2023/11/21/20231121175328-c0af_wm.jpg',
-                postedAt: new Date(2023, 11, 21),
-              },
-              {
-                id: 'f6ca05c0-fad5-46fc-a237-a8e930e7cb01',
-                title: 'Tổng hợp tất cả các căn hộ cho thuê tại Smart City Tây Mỗ, LH: 0385 901 *** Thành Đạt',
-                price: 3000000,
-                area: 25,
-                city: 'Hồ Chí Minh',
-                district: 'Quận 7',
-                coverImg: 'https://file4.batdongsan.com.vn/crop/393x222/2023/11/21/20231121175328-c0af_wm.jpg',
-                postedAt: new Date(2023, 11, 21),
-              },
-              {
-                id: 'f6ca05c0-fad5-46fc-a237-a8e930e7cb01',
-                title: 'Quản lý quỹ căn độc quyền hot nhà đẹp cho thuê chung cư DCapitale tháng 12 giá 10 triệu/ 01 tháng',
-                price: 3000000,
-                area: 25,
-                city: 'Hồ Chí Minh',
-                district: 'Quận 7',
-                coverImg: 'https://file4.batdongsan.com.vn/crop/393x222/2023/11/21/20231121175328-c0af_wm.jpg',
-                postedAt: new Date(2023, 11, 21),
-              },
-            ]} />
-          </div>
-          {/* Contact and relavant search */}
-          <div className="col-span-2">
-            <div className="space-y-4">
-
-              <PostedBy listing={data!.listing} />
-
-              <ContactForm listing={data!.listing} />
-
-              {data!.listing.policies && data!.listing.policies.length > 0 && (
-                <Tags tags={data!.property.tags} />
-              )}
-            </div>
-          </div>
-        </div>
-      </div>
+    <div className="container my-4">
+      <ListingContent
+        listing={data!.listing}
+        property={data!.property}
+        units={data!.units}
+      />
     </div>
   );
 }

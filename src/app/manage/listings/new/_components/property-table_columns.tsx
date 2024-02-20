@@ -1,20 +1,8 @@
-import { Property, PropertyType, mapPropertyTypeToText } from "@/models/property";
+import { OrientationItems, Property, PropertyType, mapPropertyTypeToText } from "@/models/property";
 import { ColumnDef, Row } from "@tanstack/react-table";
 import { format } from "date-fns";
 
-import { Button } from "@/components/ui/button";
-import {
-  DropdownMenu,
-  DropdownMenuContent,
-  DropdownMenuItem,
-  DropdownMenuLabel,
-  DropdownMenuSeparator,
-  DropdownMenuTrigger,
-} from "@/components/ui/dropdown-menu";
-import toast from "react-hot-toast";
-import { IoIosMore } from "react-icons/io";
 import { Checkbox } from "@/components/ui/checkbox";
-import Image from "next/image";
 
 export const propertyTColumns: ColumnDef<Property>[] = [
   {
@@ -38,16 +26,16 @@ export const propertyTColumns: ColumnDef<Property>[] = [
     header: 'Tên',
     cell: (cellProp) => {
       const name = cellProp.row.getValue('name');
-      const media = cellProp.row.original.media;
+      const property = cellProp.row.original;
+      const primaryImage = property.media[property.primaryImage];
 
       return (
         <div className="flex">
           <div className="w-10 h-10 relative rounded-sm md:rounded-md">
-            <Image
-              src={media[0].url} 
+            <img
+              src={primaryImage.url} 
               alt="" 
-              fill
-              objectFit="cover"
+              className="w-full h-full object-cover rounded-sm md:rounded-md"
             />
           </div>
           <div className="ml-2">
@@ -79,12 +67,18 @@ export const propertyTColumns: ColumnDef<Property>[] = [
   {
     accessorKey: 'orientation',
     header: 'Hướng nhà',
+    cell: ({row}) => {
+      const v = row.getValue('orientation');
+      const o = OrientationItems.find((o) => o.value === v);
+      return o ? o.label : v;
+    }
   },
   {
     accessorKey: 'yearBuilt',
     header: 'Năm xây dựng',
   },
   {
+    id: 'createdAt',
     accessorKey: 'createdAt',
     header: 'Created At',
     cell: ({row}) => {
@@ -106,38 +100,4 @@ export const propertyTColumns: ColumnDef<Property>[] = [
       return format(value, 'dd/MM/yyyy HH:mm:ss');
     }
   },
-  {
-    id: 'actions',
-    cell: ({ row }) => {
-      const property = row.original;
-
-      return (
-        <DropdownMenu>
-          <DropdownMenuTrigger asChild>
-            <Button variant="ghost" className="h-8 w-8 p-0">
-              <span className="sr-only">Open menu</span>
-              <IoIosMore size={16} />
-            </Button>
-          </DropdownMenuTrigger>
-          <DropdownMenuContent align="end">
-            <DropdownMenuLabel>Actions</DropdownMenuLabel>
-            <DropdownMenuItem
-              onClick={() => {
-                navigator.clipboard.writeText(property.id);
-                toast.success('Coppied to clipboard');
-              }}
-            >
-              Copy property id
-            </DropdownMenuItem>
-            <DropdownMenuItem>View details</DropdownMenuItem>
-            <DropdownMenuItem>Edit</DropdownMenuItem>
-            <DropdownMenuSeparator />
-            <DropdownMenuItem>
-              <div className="text-red-500">Delete</div>
-            </DropdownMenuItem>
-          </DropdownMenuContent>
-        </DropdownMenu>
-      );
-    }
-  }
 ];

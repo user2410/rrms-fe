@@ -18,7 +18,9 @@ export default function PropertyTable<TData, TValue>({
 }: DataTableProps<TData, TValue>) {
   const form = useFormContext<ListingFormValues>();
 
-  const [sorting, setSorting] = useState<SortingState>([]);
+  const [sorting, setSorting] = useState<SortingState>([
+    {id: "createdAt", desc: true}
+  ]);
   const [columnFilters, setColumnFilters] = useState<ColumnFiltersState>([]);
   const [columnVisibility, setColumnVisibility] = useState<VisibilityState>({
     "id": false,
@@ -26,7 +28,12 @@ export default function PropertyTable<TData, TValue>({
     "createdAt": false,
     "updatedAt": false,
   });
-  const [rowSelection, setRowSelection] = useState({});
+  const [rowSelection, setRowSelection] = useState((() => {
+    const o = {};
+    o[form.getValues("propertyId") as keyof typeof o] = true as never;
+    // console.log("o", o);
+    return o;
+  })());
   
   const table = useReactTable({
     data,
@@ -57,12 +64,12 @@ export default function PropertyTable<TData, TValue>({
   });
 
   useEffect(() => {
-    console.log("rowSelection", rowSelection);
+    // console.log("rowSelection", rowSelection);
     const selectedRows = Object.keys(rowSelection);
     if(selectedRows.length === 0) {
-      form.resetField("propertyID");
+      form.setValue("propertyId", "");
     } else {
-      form.setValue("propertyID", selectedRows[0]);
+      form.setValue("propertyId", selectedRows[0]);
     }
   }, [rowSelection]);
 

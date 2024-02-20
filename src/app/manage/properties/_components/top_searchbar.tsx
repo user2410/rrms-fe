@@ -24,7 +24,7 @@ export default function TopSearchbar() {
         </SelectTrigger>
         <SelectContent>
           <SelectGroup>
-            <SelectItem value="name">Tên bất động sản</SelectItem>
+            <SelectItem value="name">Tên nhà cho thuê</SelectItem>
             <SelectItem value="type">Loại</SelectItem>
             <SelectItem value="address">Địa chỉ</SelectItem>
           </SelectGroup>

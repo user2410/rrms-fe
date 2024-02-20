@@ -55,7 +55,7 @@ export default function Step1() {
           <FormItem>
             <FormLabel>Họ và tên <span className="ml-1 text-red-600">*</span> </FormLabel>
             <FormControl>
-              <Input {...field} />
+              <Input {...field} disabled/>
             </FormControl>
             <FormMessage />
           </FormItem>

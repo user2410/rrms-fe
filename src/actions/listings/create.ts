@@ -5,12 +5,17 @@ export default async function CreateListing(data: ListingFormValues, accessToken
   const sendData = {
     ...data.listing,
     propertyID: data.propertyId,
+    units: data.units,
     ...data.contact,
     ...data.config,
-    priority: parseInt(data.config.priority),
-    postAt: new Date(data.config.postAt).toISOString(),
-    postDuration: parseInt(data.config.postDuration),
   };
+  // if mulitple units are selected, the price is the average of all the units
+  if(data.units.length > 1) {
+    const unitsPrice = data.units.map(u => u.price);
+    unitsPrice.sort();
+    sendData.price = unitsPrice[unitsPrice.length >> 1];
+  }
+  console.log("sendData", sendData);
 
   await backendAPI.post("/api/listings", sendData, {
     headers: {
