@@ -7,7 +7,7 @@ import Image from "next/image";
 import { BsHeart, BsHeartFill } from "react-icons/bs";
 import { FaPhone } from "react-icons/fa";
 
-import styles from "./listing_card.module.css";
+import styles from "../_styles/listing_card.module.css";
 import { SearchListingItem } from "./listings_list";
 import { Skeleton } from "@/components/ui/skeleton";
 import { useContext } from "react";
@@ -21,7 +21,7 @@ const ListingCard = ({
 }): JSX.Element => {
   const { listing: l, property } = listing;
   const favListingCtx = useContext(FavListingsContext);
-  const listingPriority = ListingPriorities.find(item => item.priority === listing.listing.priority!.toString());
+  const listingPriority = ListingPriorities.find(item => item.priority === listing.listing.priority);
 
   return (
     <Card className="relative hover:shadow-md cursor-pointer">
@@ -29,10 +29,10 @@ const ListingCard = ({
         {listingPriority && (
           <Badge className={clsx(
             "text-white",
-            listingPriority.priority === "1" && "bg-slate-500",
-            listingPriority.priority === "2" && "bg-cyan-200",
-            listingPriority.priority === "3" && "bg-yellow-500",
-            listingPriority.priority === "4" && "bg-red-500",
+            listingPriority.priority === 1 && "bg-slate-500",
+            listingPriority.priority === 2 && "bg-cyan-200",
+            listingPriority.priority === 3 && "bg-yellow-500",
+            listingPriority.priority === 4 && "bg-red-500",
           )}>
             {listingPriority.label}
           </Badge>

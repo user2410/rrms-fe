@@ -1,15 +1,14 @@
 "use client";
 
 import Breadcrumb from "@/components/ui/breadcrumb";
-import { backendAPI } from "@/libs/axios";
+import { GetCityById, GetDistrictById, GetLocationName, GetWardById } from "@/utils/dghcvn";
 import { useSearchParams } from "next/navigation";
-import { useMemo, useState } from "react";
+import { useMemo } from "react";
 import { SearchFormValues } from "../_components/landing-page/search_box";
+import ListingsList from "./_components/listings_list";
 import Sidebar from "./_components/sidebard";
 import TopSearchBar from "./_components/top-searchbar";
-import { GetCityById, GetDistrictById, GetLocationName, GetWardById } from "@/utils/dghcvn";
-import ListingsList from "./_components/listings_list";
-import { Pagination, PaginationContent, PaginationEllipsis, PaginationItem, PaginationLink, PaginationNext, PaginationPrevious } from "@/components/ui/pagination";
+import Search from "./_components/search";
 
 export type SearchResult = {
   count: number;
@@ -22,10 +21,6 @@ export type SearchResult = {
 
 export default function SearchPage() {
   const searchParams = useSearchParams();
-
-  const [data, setData] = useState<SearchResult>({} as SearchResult);
-  const [loading, setLoading] = useState<boolean>(false);
-  const [error, setError] = useState<any>();
 
   // extract query to SearchFormValue
   const query = useMemo<SearchFormValues>(() => {
@@ -70,26 +65,6 @@ export default function SearchPage() {
       }
     }
 
-    (async () => {
-      try {
-        setLoading(true);
-        const r = await backendAPI.get<SearchResult>("/api/listings/", {
-          params: {
-            ...q,
-            ptypes: q.ptypes ? q.ptypes.join(",") : undefined,
-            pfeatures: q.pfeatures ? q.pfeatures.join(",") : undefined,
-            uamenities: q.uamenities ? q.uamenities.join(",") : undefined,
-            r: new Date().getTime(), // prevent cache
-          },
-        });
-        setData(r.data);
-      } catch (err) {
-        console.error(err);
-        setError(err);
-      } finally {
-        setLoading(false);
-      }
-    })();
     return q;
   }, [searchParams]);
 
@@ -120,48 +95,14 @@ export default function SearchPage() {
         <h1 className="font-semibold text-xl">Nhà cho thuê {GetLocationName(query.pcity, query.pdistrict || "", query.pward || "")}</h1>
         <div className="grid grid-cols-12 gap-4">
           <div className="col-span-12 md:col-span-8">
-            {!loading && !error && (
-              <ListingsList searchResult={data} />
-            )}
-            <Pagination className="w-full flex flex-row justify-center">
-              <PaginationContent>
-                <PaginationItem 
-                  onClick={() => {
-                    if(data.offset >= 10) {
-                      setData(v => ({
-                        ...v,
-                        offset: v.offset - 10,
-                      }));
-                    }
-                }}>
-                  <PaginationPrevious isActive={data.offset > 10} href="#">Trước</PaginationPrevious>
-                </PaginationItem>
-                {Array.from({length: data.count/10}, (_, i) => i + 1).map((i) => (
-                  <PaginationItem key={i} onClick={() => setData(v => ({
-                    ...v,
-                    offset: (i-1) * 10,
-                  }))}>
-                    <PaginationLink href="#" isActive={(i-1) === data.offset/10}>{i}</PaginationLink>
-                  </PaginationItem>
-                ))}
-                <PaginationItem
-                  onClick={() => {
-                    if(data.offset < data.count - 10) {
-                      setData(v => ({
-                        ...v,
-                        offset: v.offset + 10,
-                      }));
-                    }
-                  }}
-                >
-                  <PaginationNext isActive={data.offset > 10} href="#">Sau</PaginationNext>
-                </PaginationItem>
-              </PaginationContent>
-            </Pagination>
+            <Search query={query} />
           </div>
           <div className="hidden md:block md:col-span-4">
             <aside className="sticky top-4">
-              <Sidebar cityCode={query.pcity} districtCode={query.pdistrict} />
+              <Sidebar 
+                cityCode={query.pcity} 
+                districtCode={query.pdistrict}
+              />
             </aside>
           </div>
         </div>

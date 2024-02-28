@@ -18,17 +18,14 @@ const DistrictDropdownContent = ({
       <CardHeader>
         <CardTitle className="text-lg">Nhà đất cho thuê tại {city?.name}</CardTitle>
       </CardHeader>
-      <CardContent className="flex flex-col space-y-2">
-        <Accordion type="multiple">
-          {districts.map((dist, index) => (
-            <AccordionItem value={`item-${index}`} key={index}>
-              <AccordionTrigger>{dist.name}</AccordionTrigger>
-              <AccordionContent>
-                <Link key={index} href={`/search?pcity=${cityCode}&pdistrict=${dist.id}`} className="hover:underline">{dist.name}</Link>
-              </AccordionContent>
-            </AccordionItem>
+      <CardContent>
+        <ul className="space-y-2">
+          {districts.slice(0, 10).map((dist, index) => (
+            <li key={index}>
+              <Link key={index} href={`/search?pcity=${cityCode}&pdistrict=${dist.id}`} className="hover:underline">Quận {dist.name}</Link>
+            </li>
           ))}
-        </Accordion>
+        </ul>
       </CardContent>
     </Card>
   );
@@ -109,7 +106,10 @@ export default function Sidebar({
   return (
     <div className="flex flex-col w-full gap-4">
       {districtCode ? (
-        <WardDropdownContent cityCode={cityCode} districtCode={districtCode} />
+        <WardDropdownContent 
+          cityCode={cityCode} 
+          districtCode={districtCode} 
+        />
       ) : (
         <DistrictDropdownContent cityCode={cityCode} />
       )}
