@@ -107,7 +107,7 @@ export default function Employment() {
             )}
           />
         </div>
-        <FormItem className="col-span-2">
+        {/* <FormItem className="col-span-2">
           <div className="flex flex-row justify-between">
             <div>
               <FormLabel>Thống kê thu nhập (tùy chọn)</FormLabel>
@@ -143,7 +143,7 @@ export default function Employment() {
               </Card>
             ))}
           </CardContent>
-        </FormItem>
+        </FormItem> */}
         <FormField
           name="yd.employmentComment"
           control={form.control}

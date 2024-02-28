@@ -9,11 +9,12 @@ import { Textarea } from "@/components/ui/textarea";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { DialogClose } from "@radix-ui/react-dialog";
 import { format, sub } from "date-fns";
-import { Fragment, forwardRef, useRef, useState } from "react";
+import { Fragment, forwardRef, useEffect, useRef, useState } from "react";
 import { useFieldArray, useForm, useFormContext } from "react-hook-form";
 import { FaBirthdayCake, FaBusinessTime } from "react-icons/fa";
 import * as z from "zod";
 import { ApplicationForm } from "./main_form";
+import { Listing } from "@/models/listing";
 
 const inputFormSchema = z.object({
   fullName: z.string(),
@@ -39,6 +40,7 @@ const InputForm = forwardRef<HTMLButtonElement, InputFormProps>(function Render(
   title, description, hideTriggerBtn = false, submitBtnText, 
   defaultValues, onSubmit,
 }, triggerBtnRef) {
+  const applicationForm = useFormContext<ApplicationForm>();
   const minorForm = useForm<InputForm>({
     resolver: zodResolver(inputFormSchema),
     defaultValues,
@@ -150,7 +152,7 @@ const InputForm = forwardRef<HTMLButtonElement, InputFormProps>(function Render(
                   control={minorForm.control}
                   render={({ field }) => (
                     <FormItem>
-                      <FormLabel>Thu nhập (triệu đồng / tháng)</FormLabel>
+                      <FormLabel>Thu nhập (/tháng)</FormLabel>
                       <FormControl>
                         <Input {...field} type="number" onChange={(e) => field.onChange(e.target.valueAsNumber)} />
                       </FormControl>
@@ -191,7 +193,11 @@ const InputForm = forwardRef<HTMLButtonElement, InputFormProps>(function Render(
 });
 
 
-export default function CoApplicants() {
+export default function CoApplicants({
+  listing,
+} : {
+  listing: Listing;
+}) {
   const addBtnRef = useRef<HTMLButtonElement>(null);
   const editBtnRef = useRef<HTMLButtonElement>(null);
 
@@ -203,11 +209,21 @@ export default function CoApplicants() {
     name: "ao.coaps",
   });
 
+  useEffect(() => {
+    if(listing.numberOfResidents && addBtnRef.current) {
+      if(fields.length >= listing.numberOfResidents) {
+        addBtnRef.current.disabled = true;
+      } else {
+        addBtnRef.current.disabled = false;
+      }
+    }
+  }, [fields]);
+
   return (
     <Fragment>
       <CardHeader>
         <CardTitle>Người thuê cùng</CardTitle>
-        <CardDescription>Những người cùng thuê nhà với bạn trên 18 tuổi.</CardDescription>
+        <CardDescription>Những người cùng thuê nhà với bạn trên 18 tuổi {listing.numberOfResidents && (`(tối đa ${listing.numberOfResidents} người)`)}.</CardDescription>
       </CardHeader>
       <CardContent>
         <div className="flex flex-col gap-2">
@@ -221,7 +237,7 @@ export default function CoApplicants() {
                 </div>
                 <div className="text-md font-normal flex flex-row items-center gap-2">
                   <FaBusinessTime size={16} />
-                  <span>{field.job} - {field.income} triệu/tháng</span>
+                  <span>{field.job} - {field.income}đ/tháng</span>
                 </div>
                 <div className="text-sm font-light truncate">{field.description}</div>
               </div>

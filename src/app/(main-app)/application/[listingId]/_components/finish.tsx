@@ -13,63 +13,25 @@ import { Fragment, useRef, useState } from "react";
 import { useFormContext } from "react-hook-form";
 import { FaCheckCircle, FaUserShield } from "react-icons/fa";
 import { ApplicationForm } from "./main_form";
+import { useRouter } from "next/navigation";
+import UploadDialog from "./upload_dialog";
 
 const TermsAgreement = () => {
   const session = useSession();
   const form = useFormContext<ApplicationForm>();
-  const modalBtnRef = useRef<HTMLButtonElement>(null);
+
+  const [openUploadDialog, setOpenUploadDialog] = useState<boolean>(false);
 
   const [termsAgreed, setTermsAgreed] = useState(false);
   const [commitAgreed, setCommitAgreed] = useState(false);
 
-  const [uploading, setUploading] = useState<boolean>(false);
-  const [error, setError] = useState<any>();
-
-  async function handleUploading() {
-    console.log('handle uploading');
-    if(session.status !== 'authenticated') return;
-    try {
-      setUploading(true);
-      const data = form.getValues();
-      console.log(data);
-      const newApplication = await CreateApplication(data, session.data?.user.accessToken);
-      // wait 1s
-      // await wait(1000);
-      console.log(newApplication);
-    } catch (err) {
-      console.error(err);
-      setError(err);
-    } finally {
-      setUploading(false);
-    }
-  }
-
   return (
     <Fragment>
-      <Dialog>
-        <DialogTrigger asChild><button ref={modalBtnRef} hidden/></DialogTrigger>
-        <DialogContent className="sm:max-w-[425px]">
-          <DialogHeader className="w-full flex flex-row justify-center">
-            <DialogTitle>
-              {uploading ? "Đang tải lên dữ liệu ..." 
-              : error ? "Có lỗi xảy ra" 
-              : "Đăng kí thuê nhà thành công"}
-            </DialogTitle>
-          </DialogHeader>
-          <div className="w-full h-full flex justify-center items-center">
-            {uploading ? (<Spinner/>) 
-              : error ? (<div>Có lỗi xảy ra: {JSON.stringify(error)}</div> )
-              : <FaCheckCircle size={32} color="green" />}
-          </div>
-          {(!uploading && !error) && (
-            <DialogFooter className="flex flex-row !justify-center">
-              <DialogClose asChild>
-                <Button type="submit">OK</Button>
-              </DialogClose>
-            </DialogFooter>
-          )}
-        </DialogContent>
-      </Dialog>
+      <UploadDialog
+        form={form}
+        open={openUploadDialog} 
+        changeOpen={() => setOpenUploadDialog(v => !v)}
+      />
       <div className="flex items-center space-x-2">
         <Checkbox
           checked={termsAgreed}
@@ -106,8 +68,7 @@ const TermsAgreement = () => {
           disabled={!(termsAgreed && commitAgreed)} 
           onClick={() => {
             console.log("submitting");
-            modalBtnRef.current?.click();
-            handleUploading();
+            setOpenUploadDialog(true);
           }}
         >Nộp đơn ứng tuyển</Button>
       </div>

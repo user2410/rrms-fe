@@ -2,22 +2,21 @@
 
 import { Button, ButtonProps } from "@/components/ui/button";
 import { Calendar } from "@/components/ui/calendar";
-import { CalendarIcon } from "lucide-react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Form, FormControl, FormField, FormItem } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
 import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
 import { Textarea } from "@/components/ui/textarea";
+import { Listing } from "@/models/listing";
 import { zodResolver } from "@hookform/resolvers/zod";
 import clsx from "clsx";
 import { format } from "date-fns";
-import { useForm } from "react-hook-form";
-import * as z from "zod";
+import { CalendarIcon } from "lucide-react";
 import Image from "next/image";
-import { Listing } from "@/models/listing";
-import { MdLocalPhone, MdOutlineEmail } from "react-icons/md";
-import { Separator } from "@/components/ui/separator";
 import { useRouter } from "next/navigation";
+import { useForm } from "react-hook-form";
+import { MdLocalPhone, MdOutlineEmail } from "react-icons/md";
+import * as z from "zod";
 
 const ContactFormSchema = z.object({
   name: z.string(),
@@ -148,11 +147,6 @@ export default function ContactForm({listing} : {listing: Listing}) {
               <Image src="/img/zalo_icon.png" alt="zalo icon" fill/>
             </div>)} 
           />
-        </div>
-        <Separator/>
-        <div className="w-full flex flex-col items-center gap-3">
-          <h2>Sẵn sàng thuê bất động sản này</h2>
-          <Button className="text-xl w-4/5" onClick={() => router.push(`/application/${listing.id}?units=481909e8-165c-41e9-9190-66bd8a13b58e`)}>Ứng tuyển ngay</Button>
         </div>
       </CardContent>
     </Card>

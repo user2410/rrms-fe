@@ -8,27 +8,28 @@ export default function GeneralInfo({
 } : {
   listingDetail: ListingDetail
 }) {
+  const { listing, property } = listingDetail;
+
   return (
     <div>
       <div className="flex justify-between items-center">
         <div className="grid gap-4 grid-cols-3">
           <div className="space-y-2">
-            <h5 className="font-extralight">Mức giá</h5>
-            <h4 className="font-semibold">{ToMillion(listingDetail.listing.price)}</h4>
-            <h5 className="font-light">~{ToMillion(listingDetail.listing.price / listingDetail.property.area, 2)}/m<sup>2</sup></h5>
+            <h5 className="font-extralight">Giá thuê</h5>
+            <h4 className="font-semibold">{ToMillion(listing.price)}/tháng</h4>
           </div>
           <div className="space-y-2">
             <h5 className="font-extralight">Diện tích</h5>
-            <h4 className="font-semibold">{listingDetail.property.area}</h4>
-            <h5 className="font-light">{listingDetail.property.numberOfFloors} tầng</h5>
+            <h4 className="font-semibold">{property.area} m<sup>2</sup></h4>
+            {property.numberOfFloors && (<h5 className="font-light">{property.numberOfFloors} tầng</h5>)}
           </div>
-          {listingDetail.property.building && (<div className="space-y-2">
+          {property.building && (<div className="space-y-2">
             <h5 className="font-extralight">Toà nhà</h5>
-            <h4 className="font-semibold">{listingDetail.property.building}</h4>  
+            <h4 className="font-semibold">{property.building}</h4>  
           </div>)}
-          {listingDetail.property.project && (<div className="space-y-2">
+          {property.project && (<div className="space-y-2">
             <h5 className="font-extralight">Dự án</h5>
-            <h4 className="font-semibold">{listingDetail.property.project}</h4>  
+            <h4 className="font-semibold">{property.project}</h4>  
           </div>)}
         </div>
         <div className="flex gap-4">

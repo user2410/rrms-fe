@@ -13,6 +13,7 @@ import { GrBike } from "react-icons/gr";
 import { RiMotorbikeFill } from "react-icons/ri";
 import * as z from "zod";
 import { ApplicationForm } from "./main_form";
+import { Listing } from "@/models/listing";
 
 const inputFormSchema = z.object({
   type: z.enum(["car", "motorbike", "bicycle", "other"]),
@@ -125,7 +126,12 @@ const InputForm = forwardRef<HTMLButtonElement, InputFormProps>(function Render(
 
 type InputForm = z.infer<typeof inputFormSchema>;
 
-export default function CoApplicants() {
+export default function CoApplicants({
+  listing,
+} : {
+  listing: Listing;
+}) {
+  const parkingPolicy = listing.policies.find(p => p.policyId == 7);
   const addBtnRef = useRef<HTMLButtonElement>(null);
   const editBtnRef = useRef<HTMLButtonElement>(null);
 
@@ -140,8 +146,8 @@ export default function CoApplicants() {
   return (
     <Card>
       <CardHeader>
-        <CardTitle>Phương tiện di chuyển</CardTitle>
-        <CardDescription>Tìm nơi đỗ xe thích hợp.</CardDescription>
+        <CardTitle>Phương tiện cá nhân</CardTitle>
+        <CardDescription>{parkingPolicy ? (`Yêu cầu: ${parkingPolicy.note}`) : ("Tìm bãi đỗ thích hợp.")}</CardDescription>
       </CardHeader>
       <CardContent>
         <div className="flex flex-col gap-3">

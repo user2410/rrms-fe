@@ -57,7 +57,7 @@ export default function ListingContent({
             <TopBreadcrumb cityCode={property.city} districtCode={property.district} />
             <h1 className="font-semibold text-xl">{listing.title}</h1>
             <h3 className="font-normal">{property.fullAddress}</h3>
-            <h4 className="font-light text-sm">Đăng vào {format(new Date(2014, 1, 11), 'dd/MM/yyyy hh:mm')}</h4>
+            <h4 className="font-light text-sm">Đăng vào {format(new Date(2014, 1, 11), 'hh:mm dd/MM/yyyy')}</h4>
           </div>
 
           <Separator />

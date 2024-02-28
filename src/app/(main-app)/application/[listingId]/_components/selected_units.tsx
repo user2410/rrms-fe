@@ -7,14 +7,23 @@ import { ListingDetail } from "../page";
 
 export default function SelectedUnits({
   data
-} : {
+}: {
   data: ListingDetail;
 }) {
-  const {listing} = data;
-  const units = data.units.map(u => ({
-    ...u,
-    price: listing.units.find(lu => lu.unitId === u.id)!.price,
-  }));
+  const { property, listing } = data;
+  const unitTypeText =
+    ['APARTMENT', 'PRIVATE'].includes(property.type)
+      ? "Căn hộ"
+      : ['ROOM', 'STUDIO'].includes(property.type)
+        ? "Phòng trọ"
+        : null;
+  const units = data.units.map(u => {
+    const lu = listing.units.find(_u => u.id === _u.unitId)!;
+    return {
+      ...u,
+      price: lu.price,
+    };
+  });
 
   return (
     <Fragment>
@@ -25,30 +34,30 @@ export default function SelectedUnits({
         <Table>
           <TableHeader>
             <TableRow>
-              <TableHead/>
-              <TableHead>Phòng ốc</TableHead>
-              <TableHead>Diện tích (m<sup>2</sup>)</TableHead>
-              <TableHead className="text-right">Giá thuê nhà (triệu/tháng)</TableHead>
+              <TableHead className="text-left max-w-[50%]">{unitTypeText}</TableHead>
+              <TableHead className="text-left">Tầng</TableHead>
+              <TableHead className="text-left">Diện tích (m<sup>2</sup>)</TableHead>
+              <TableHead className="text-right">Giá thuê (tháng)</TableHead>
             </TableRow>
           </TableHeader>
           <TableBody>
             {units.map((unit, index) => (
               <TableRow key={index}>
-                <TableCell className="font-medium">{unit.name}</TableCell>
-                <TableCell>{unit.numberOfBedrooms} phòng ngủ</TableCell>
-                <TableCell>{unit.area}</TableCell>
-                <TableCell className="text-right">{(unit.price/1e6).toFixed(1)}</TableCell>
+                <TableCell className="text-left">{unit.name}</TableCell>
+                <TableCell className="text-left">{unit.floor}</TableCell>
+                <TableCell className="text-left">{unit.area}</TableCell>
+                <TableCell className="text-right">{unit.price}</TableCell>
               </TableRow>
             ))}
           </TableBody>
-          <TableFooter>
+          {/* <TableFooter>
             <TableRow>
               <TableCell colSpan={3}>Tổng giá thuê 1 tháng</TableCell>
-              <TableCell className="text-right">{(units.reduce((acc, u) => {
-                return acc + u.price; 
-              }, 0)/1e6).toFixed(1)} triệu</TableCell>
+              <TableCell className="text-right">{units.reduce((acc, u) => {
+                return acc + u.price;
+              }, 0)}</TableCell>
             </TableRow>
-          </TableFooter>
+          </TableFooter> */}
         </Table>
       </CardContent>
     </Fragment>

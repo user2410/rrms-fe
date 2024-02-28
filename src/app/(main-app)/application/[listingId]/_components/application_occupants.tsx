@@ -1,13 +1,12 @@
 import { Card } from "@/components/ui/card";
 import { Separator } from "@/components/ui/separator";
+import { ListingDetail } from "../page";
 import BasicInfo from "./basic_info";
 import CoApplicants from "./co-applicants";
 import Minors from "./minors";
 import MoveIn from "./move_in";
 import Pets from "./pets";
 import SelectedUnits from "./selected_units";
-import { Unit } from "@/models/unit";
-import { ListingDetail } from "../page";
 
 export default function ApplicationOccupants({
   data
@@ -22,13 +21,13 @@ export default function ApplicationOccupants({
         <Separator />
         <SelectedUnits data={data}/>
         <Separator />
-        <CoApplicants/>
+        <CoApplicants listing={data.listing}/>
         <Separator />
         <Minors/>
         <Separator />
         {/* <Guarantors/>
         <Separator /> */}
-        <Pets/>
+        <Pets listing={data.listing}/>
       </Card>
     </div>
   );

@@ -12,6 +12,7 @@ import * as z from "zod";
 import { DialogClose } from "@radix-ui/react-dialog";
 import { FaWeight } from "react-icons/fa";
 import { ApplicationForm } from "./main_form";
+import { Listing } from "@/models/listing";
 
 const inputFormSchema = z.object({
   type: z.enum(["dog", "cat", "other"]),
@@ -124,7 +125,11 @@ const InputForm = forwardRef<HTMLButtonElement, InputFormProps>(function Render(
 });
 
 
-export default function Pets() {
+export default function Pets({
+  listing,
+} : {
+  listing: Listing;
+}) {
   const addBtnRef = useRef<HTMLButtonElement>(null);
   const editBtnRef = useRef<HTMLButtonElement>(null);
 
@@ -169,26 +174,32 @@ export default function Pets() {
             </div>
           ))}
         </div>
-        <InputForm
-          ref={addBtnRef}
-          title="Thêm thú nuôi"
-          submitBtnText="Thêm"
-          onSubmit={(value) => {
-            console.log("add value", value);
-            append(value);
-          }}
-        />
-        <InputForm
-          ref={editBtnRef}
-          title="Sửa thông tin"
-          submitBtnText="Lưu"
-          hideTriggerBtn
-          defaultValues={editing > -1 ? fields[editing] : undefined}
-          onSubmit={(value) => {
-            console.log("edit value", value, "at index", editing);
-            parentForm.setValue(`ao.pets.${editing}`, value);
-          }}
-        />
+        {(listing.petsAllowed !== undefined && listing.petsAllowed) ? (
+          <>
+            <InputForm
+              ref={addBtnRef}
+              title="Thêm thú nuôi"
+              submitBtnText="Thêm"
+              onSubmit={(value) => {
+                console.log("add value", value);
+                append(value);
+              }}
+            />
+            <InputForm
+              ref={editBtnRef}
+              title="Sửa thông tin"
+              submitBtnText="Lưu"
+              hideTriggerBtn
+              defaultValues={editing > -1 ? fields[editing] : undefined}
+              onSubmit={(value) => {
+                console.log("edit value", value, "at index", editing);
+                parentForm.setValue(`ao.pets.${editing}`, value);
+              }}
+            />
+          </>  
+        ) : (
+          <div className="text-red-600">Chủ nhà không cho phép nuôi thú cưng</div>
+        )}
       </CardContent>
     </Fragment>
   );
