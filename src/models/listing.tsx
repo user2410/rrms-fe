@@ -8,7 +8,7 @@ export type RentalPolicy = {
 export type ListingPolicy = {
   listingId: string;
   policyId: number;
-  note?: string;
+  note: string;
 };
 
 export type ListingUnit = {

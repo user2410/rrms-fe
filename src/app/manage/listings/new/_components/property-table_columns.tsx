@@ -1,4 +1,4 @@
-import { OrientationItems, Property, PropertyType, mapPropertyTypeToText } from "@/models/property";
+import { OrientationItems, Property, PropertyType, getPrimaryImage, mapPropertyTypeToText } from "@/models/property";
 import { ColumnDef, Row } from "@tanstack/react-table";
 import { format } from "date-fns";
 
@@ -27,13 +27,12 @@ export const propertyTColumns: ColumnDef<Property>[] = [
     cell: (cellProp) => {
       const name = cellProp.row.getValue('name');
       const property = cellProp.row.original;
-      const primaryImage = property.media[property.primaryImage];
 
       return (
         <div className="flex">
           <div className="w-10 h-10 relative rounded-sm md:rounded-md">
             <img
-              src={primaryImage.url} 
+              src={getPrimaryImage(property)} 
               alt="" 
               className="w-full h-full object-cover rounded-sm md:rounded-md"
             />

@@ -26,33 +26,32 @@ export default function UploadDialog({
   const { data: session } = useSession();
   const accessToken = session!.user.accessToken;
 
-  const createListing = async (variables: ListingFormValues) => {
-    const sendData = {
-      ...variables.listing,
-      propertyID: variables.propertyId,
-      units: variables.units,
-      ...variables.contact,
-      ...variables.config,
-    };
-    // if mulitple units are selected, the price is the average of all the units
-    if (variables.units.length > 1) {
-      const unitsPrice = variables.units.map(u => u.price);
-      unitsPrice.sort();
-      sendData.price = unitsPrice[unitsPrice.length >> 1];
-    }
-    console.log("sendData", sendData);
-
-    return (await backendAPI.post("/api/listings", sendData, {
-      headers: {
-        Authorization: `Bearer ${accessToken}`
-      }
-    })).data;
-  };
-
   async function handleUpload() {
     setStage("CREATING_LISTING");
     try {
-      const listing = await createListing(form.getValues());
+      // preprocessing data
+      const data = form.getValues();
+      const sendData = {
+        ...data.listing,
+        propertyID: data.propertyId,
+        units: data.units,
+        ...data.contact,
+        ...data.config,
+      };
+      // if mulitple units are selected, the price is the average of all the units
+      if (data.units.length > 1) {
+        const unitsPrice = data.units.map(u => u.price);
+        unitsPrice.sort();
+        sendData.price = unitsPrice[unitsPrice.length >> 1];
+      }
+
+      // send POST request to backend
+      const listing = (await backendAPI.post("/api/listings", sendData, {
+        headers: {
+          Authorization: `Bearer ${accessToken}`
+        }
+      })).data;
+      
       setRes(listing);
       setStage("DONE");
     } catch (err) {

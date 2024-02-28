@@ -5,6 +5,7 @@ import { ThemeSwitcher } from "@/components/ui/theme-switcher";
 import { format } from "date-fns";
 import Link from "next/link";
 import { IoMdMail, IoMdNotifications } from "react-icons/io";
+import vi from "date-fns/locale/vi";
 
 const ICON_SIZE = 24;
 
@@ -22,7 +23,7 @@ export default function ManageDashboardNavbar() {
         Dashboard
       </Link>
       <div className="capitalize text-sm font-normal">
-        {format(new Date(), "EEEE, MMMM d, yyyy")}
+        {format(new Date(), "EEEE, d MMMM, yyyy", {locale: vi})}
       </div>
       {/* Form */}
       <div className="flex items-center gap-8">

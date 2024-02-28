@@ -2,7 +2,7 @@ import { FormItem, FormLabel, FormMessage } from "@/components/ui/form";
 import { Label } from "@/components/ui/label";
 import Spinner from "@/components/ui/spinner";
 import { backendAPI } from "@/libs/axios";
-import { Property, mapPropertyTypeToText } from "@/models/property";
+import { Property, getPrimaryImage, mapPropertyTypeToText } from "@/models/property";
 import { Unit } from "@/models/unit";
 import { useQuery } from "@tanstack/react-query";
 import { useSession } from "next-auth/react";
@@ -124,7 +124,6 @@ function SelectedProperty({
 
   const { property, units } = selectedPropQuery.data;
   console.log("Selected property: ", property, units);
-  const primaryImage = property.media.find(m => m.id === property.primaryImage)!.url;
   const multiUnits = (units.length > 1);
   form.setValue("propertyData", selectedPropQuery.data);
   if(!multiUnits){
@@ -135,7 +134,7 @@ function SelectedProperty({
       <div className="w-full flex flex-row gap-4">
         <div className="relative w-48 aspect-video">
           <Image
-            src={primaryImage}
+            src={getPrimaryImage(property)}
             alt=""
             fill
             objectFit="contain"
