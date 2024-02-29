@@ -2,6 +2,12 @@ import { Listing } from "./listing";
 import { Property } from "./property";
 import { Unit } from "./unit";
 
+export type ApplicationUnit = {
+  unitId: string;
+  listingPrice: number;
+  offeredPrice: number;
+}
+
 export type ApplicationMinor = {
   applicationId?: number;
   fullName: string;
@@ -54,6 +60,7 @@ export type Application = {
 
   moveinDate: Date;
   preferredTerm: number;
+  rentalIntention: "RESIDENCE" | "BUSINESS" | "OFFICE" | "TENANCY";
 
   rhAddress?: string;
   rhCity?: string;
@@ -75,6 +82,7 @@ export type Application = {
   identityIssueDate: Date;
   identityIssuedBy: string;
 
+  units: ApplicationUnit[];
   minors?: ApplicationMinor[];
   coaps?: ApplicationCoap[];
   pets?: ApplicationPet[];
@@ -86,6 +94,13 @@ export type ManagedApplication = {
   listing: Listing;
   property: Property;
   units: Unit[];
+};
+
+export const MapRentalIntentionToText = {
+  "RESIDENCE": "Để ở",
+  "BUSINESS": "Kinh doanh",
+  "OFFICE": "Văn phòng",
+  "TENANCY": "Nhà trọ",
 };
 
 export const MapEmploymentStatusToText = {
@@ -116,22 +131,22 @@ export const MapIdentityTypeToText = {
 };
 
 function transformDateValues(application: Application) {
-    application.dob = new Date(application.dob);
-    application.moveinDate = new Date(application.moveinDate);
-    application.identityIssueDate = new Date(
-      application.identityIssueDate,
-    );
-    application.createdAt = new Date(application.createdAt);
-    application.updatedAt = new Date(application.updatedAt);
+    if(application.dob) {application.dob = new Date(application.dob);}
+    if(application.moveinDate) {application.moveinDate = new Date(application.moveinDate);}
+    if(application.identityIssueDate) {application.identityIssueDate = new Date(application.identityIssueDate);}
+    if(application.createdAt) {application.createdAt = new Date(application.createdAt);}
+    if(application.updatedAt) {application.updatedAt = new Date(application.updatedAt);}
 
     if (application.minors) {
       for (let j = 0; j < application.minors.length; j++) {
-        application.minors[j].dob = new Date(application.minors[j].dob);
+        const v = application.minors[j].dob;
+        if(v) application.minors[j].dob = new Date(v);
       }
     }
     if (application.coaps) {
       for (let j = 0; j < application.coaps.length; j++) {
-        application.coaps[j].dob = new Date(application.coaps[j].dob);
+        const v = application.coaps[j].dob;
+        if(v) application.coaps[j].dob = new Date(v);
       }
     }
   return application;
@@ -169,6 +184,7 @@ export const mockupApplications: Application[] = [
     profileImage: "https://i.pravatar.cc/300",
     moveinDate: new Date("2024-01-01"),
     preferredTerm: 12,
+    rentalIntention: "RESIDENCE",
     rhAddress: "123 Chu Van An",
     rhCity: "Ha Noi",
     rhDistrict: "Ba Dinh",
@@ -181,13 +197,11 @@ export const mockupApplications: Application[] = [
     employmentPosition: "Ky su",
     employmentMonthlyIncome: 90000000,
     employmentComment: "sadnfjnưe gưeigơi qdqưmdqion qưdin",
-    employmentProofsOfIncome: [
-      "https://rrms-image.s3.ap-southeast-1.amazonaws.com/a2712956-2cbd-4c75-a57f-9d1d33a7fdcc/Basic-1704085942064",
-    ],
     identityType: "ID",
     identityNumber: "01292944238",
     identityIssueDate: new Date("2020-01-01"),
     identityIssuedBy: "Cục quản lý dân cư",
+    units: [],
     minors: [
       {
         applicationId: 1,

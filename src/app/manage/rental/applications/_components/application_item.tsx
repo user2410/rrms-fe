@@ -1,19 +1,21 @@
 import { Button } from "@/components/ui/button";
-import { Separator } from "@/components/ui/separator";
-import Link from "next/link";
-import { ManagedApplication } from "../page";
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuSeparator, DropdownMenuTrigger } from "@/components/ui/dropdown-menu";
+import { Separator } from "@/components/ui/separator";
+import { Check, X } from "lucide-react";
+import Link from "next/link";
 import { useRouter } from "next/navigation";
-import { Check, Search, X } from "lucide-react";
+import { PreviewApplication } from "./application_list";
 import StatusCard from "./status_card";
 
 export default function ApplicationItem({
   ma,
 }: {
-  ma: ManagedApplication;
+  ma: PreviewApplication;
 }) {
-  const { application, listing, property } = ma;
-
+  const { application, listing } = ma;
+  const createdAt = new Date(application.createdAt);
+  const moveinDate = new Date(application.moveinDate);
+  
   const router = useRouter();
 
   console.log('application', ma);
@@ -22,10 +24,10 @@ export default function ApplicationItem({
     <Link href={`/manage/rental/applications/application/${application.id}`} className="block p-4 space-y-3 bg-card border">
       <div className="flex flex-row justify-between">
         <span className="text-xl font-semibold">{application.fullName}</span>
-        <span className="text-sm font-light">Submitted at {application.createdAt.toLocaleDateString()} @{application.createdAt.toLocaleTimeString()}</span>
+        <span className="text-sm font-light">Submitted at {createdAt.toLocaleDateString("vi-VN")} @{createdAt.toLocaleTimeString()}</span>
       </div>
       <div className="flex flex-row gap-2">
-        <div>Ngày chuyển tới dự kiến: {application.moveinDate.toLocaleDateString()}</div>
+        <div>Ngày chuyển tới dự kiến: {moveinDate.toLocaleDateString("vi-VN")}</div>
         <Separator orientation="vertical" />
         <div>Thời gian thuê: {application.preferredTerm} tháng</div>
       </div>
@@ -49,11 +51,11 @@ export default function ApplicationItem({
           {application.status === "PENDING" ? (
             <StatusCard title="Trạng thái" value="Đang chờ" className="border-gray-400" />
           ) : application.status === "CONDITIONALLY_APPROVED" ? (
-            <StatusCard title="Trạng thái" value="Đã duyệt" className="border-green-400" />
+            <StatusCard title="Trạng thái" value="Đang xét duyệt" className="border-yellow-400" />
           ) : application.status === "APPROVED" ? (
-            <StatusCard title="Trạng thái" value="Đã duyệt thành công" className="border-green-400" />
+            <StatusCard title="Trạng thái" value="Đã chấp thuận" className="border-green-400" />
           ) : application.status === "REJECTED" ? (
-            <StatusCard title="Trạng thái" value="Đã từ chối" className="border-red-400" />
+            <StatusCard title="Trạng thái" value="Đã từ chối" className="border-red-600" />
           ) : null}
         </div>
         <DropdownMenu>

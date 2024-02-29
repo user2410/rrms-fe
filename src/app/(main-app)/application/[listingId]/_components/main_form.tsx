@@ -24,7 +24,13 @@ const applicationFormSchema = z.object({
     units: z.array(z.any()),
   }),
   propertyId: z.string(),
-  unitIds: z.array(z.string()),
+  units: z.array(
+    z.object({
+      unitId: z.string(),
+      listingPrice: z.number(),
+      offeredPrice: z.number(),
+    })
+  ),
   listingId: z.string(),
   ao: z.object({
     fullName: z.string(),
@@ -72,16 +78,16 @@ const applicationFormSchema = z.object({
     rhReasonForLeaving: z.string().optional(),
 
     employmentStatus: z.enum(["EMPLOYED", "STUDENT", "SELF-EMPLOYED", "UNEMPLOYED", "RETIRED"]),
-    employmentCompanyName: z.string().optional(),
-    employmentPosition: z.string().optional(),
-    employmentMonthlyIncome: z.number().optional(),
+    employmentCompanyName: z.string(),
+    employmentPosition: z.string(),
+    employmentMonthlyIncome: z.number(),
     employmentComment: z.string().optional(),
-    employmentProofsOfIncome: z.array(z.object({
-      url: z.string(),
-      name: z.string(),
-      size: z.number(),
-      type: z.string(),
-    })),
+    // employmentProofsOfIncome: z.array(z.object({
+    //   url: z.string(),
+    //   name: z.string(),
+    //   size: z.number(),
+    //   type: z.string(),
+    // })),
 
     identityType: z.enum(["ID", "CITIZENIDENTIFICATION", "PASSPORT", "DRIVERLICENSE"]),
     identityNumber: z.string(),
@@ -109,111 +115,30 @@ export default function MainForm({
   const [tab, setTab] = useState<string>("1");
   const form = useForm<ApplicationForm>({
     resolver: zodResolver(applicationFormSchema),
-    // defaultValues: {
-    //  ld: listingDetail,
-    //   ao: {
-    //     fullName: sessionData.user.user.firstName + " " + sessionData.user.user.lastName,
-    //     email: sessionData.user.user.email,
-    //     phone: sessionData.user.user.phone,
-    //     minors: [],
-    //     coaps: [],
-    //     pets: [],
-    //   },
-    //   yd: {
-    //     vehicles: [],
-    //   },
-    //   listingId: listing.id,
-    //   propertyId: property.id,
-    //   unitIds: units.map((unit: Unit) => unit.id),
-    // },
     defaultValues: {
-      "ld": data,
-      "ao": {
-          "fullName": "Albert Alpha",
-          "email": "alpha@email.com",
-          "phone": "0912142214",
-          "minors": [
-              {
-                  "fullName": "Pham Đức Hiếu",
-                  "dob": new Date("2009-02-02T00:00:00.000Z"),
-                  "description": "Học sinh THCS Lương Thế Vinh"
-              }
-          ],
-          "coaps": [
-              {
-                  "fullName": "Nguyen Minh Nguyet",
-                  "dob": new Date("1992-12-12T00:00:00.000Z"),
-                  "email": "alpha@email.com",
-                  "phone": "0912142214",
-                  "job": "Kế toán",
-                  "income": 30,
-                  "description": "Tập đoàn Viettel"
-              },
-              {
-                  "fullName": "Pham Minh Đức",
-                  "dob": new Date("2001-05-12T00:00:00.000Z"),
-                  "email": "cyPhr@email.com",
-                  "phone": "0912142214",
-                  "job": "Sinh Viên",
-                  "income": 4,
-                  "description": "sinh viên đại học bách khoa"
-              }
-          ],
-          "pets": [
-              {
-                  "type": "cat",
-                  "weight": 6,
-                  "description": "Đã triệt sản"
-              }
-          ],
-          "dob": new Date("1989-10-24T00:00:00.000Z"),
-          "profileImage": {
-              "name": "Mona_Lisa-restored.jpg",
-              "size": 353433,
-              "type": "image/jpeg",
-              "url": "blob:http://localhost:3000/25640691-1fdc-4e13-bca1-bb05c6ba3863"
-          },
-          "moveinDate": new Date("2024-12-15T00:00:00.000Z"),
-          "preferredTerm": 12,
-          "rentalIntention": "RESIDENCE",
+      ld: data,
+      ao: {
+        fullName: sessionData.user.user.firstName + " " + sessionData.user.user.lastName,
+        email: sessionData.user.user.email,
+        phone: sessionData.user.user.phone,
+        minors: [],
+        coaps: [],
+        pets: [],
       },
-      "yd": {
-          "vehicles": [
-              {
-                  "type": "car",
-                  "model": "Honda Civic",
-                  "code": "29G2-05465"
-              },
-              {
-                  "type": "motorbike",
-                  "model": "Honda Lead",
-                  "code": "29G2-05442"
-              }
-          ],
-          "employmentStatus": "EMPLOYED",
-          "employmentCompanyName": "Tập đoàn VinGroup",
-          "employmentPosition": "Kỹ sư phần mềm",
-          "employmentMonthlyIncome": 100,
-          "employmentComment": "Tiền tiết kiệm 50 triệu mỗi tháng",
-          "identityType": "ID",
-          "identityNumber": "1290148921039",
-          "identityIssuedDate": new Date("2020-02-03T00:00:00.000Z"),
-          "identityIssuedBy": "Hà Nội",
-          // "employmentProofsOfIncome": [
-          //     {
-          //         "name": "Basic.jpeg",
-          //         "size": 36335,
-          //         "type": "image/jpeg",
-          //         "url": "blob:http://localhost:3000/3a331610-784d-48f5-b2bc-534a444bbabb"
-          //     }
-          // ]
+      yd: {
+        vehicles: [],
       },
-      "listingId": "5d29802c-e9f8-4c6e-bf82-e505b1305351",
-      "propertyId": "73896343-80cb-4abf-8f2c-6f5fbca59af1",
-      "unitIds": [
-          "705698bb-cdd4-44a8-8c09-43413a086fe9"
-      ]
-  }
+      listingId: listing.id,
+      propertyId: property.id,
+      units: units.map((unit: Unit) => {
+        const lu = listing.units.find(_u => unit.id === _u.unitId)!;
+        return {
+          unitId: unit.id,
+          listingPrice: lu.price,
+          offeredPrice: lu.price,
+        };
+      }),
+    },
   });
 
   function onSubmit(data: ApplicationForm) {
@@ -290,19 +215,19 @@ export default function MainForm({
             const index = parseInt(tab);
             return (
               <div className="flex flex-row gap-4">
-                <Button 
+                <Button
                   type="button"
-                  variant="outline" 
-                  className="" 
+                  variant="outline"
+                  className=""
                   disabled={index <= 1}
                   onClick={() => setTab((index - 1).toString())}
                 >
                   Trước
                 </Button>
-                <Button 
-                  type={index<3 ? "button" : "submit"}
-                  className="" 
-                  disabled={index===3}
+                <Button
+                  type={index < 3 ? "button" : "submit"}
+                  className=""
+                  disabled={index === 3}
                   onClick={() => {
                     console.log("current form: ", form.getValues());
                     const screen = tab === "1" ? "ao" : tab === "2" ? "yd" : "";

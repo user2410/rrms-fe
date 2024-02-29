@@ -56,7 +56,7 @@ export default function UploadDialog({
         ...data.yd,
         listingId: data.listingId,
         propertyId: data.propertyId,
-        unitIds: data.unitIds,
+        units: data.units,
         profileImage,
         // employmentProofsOfIncome,
       };
@@ -107,11 +107,14 @@ export default function UploadDialog({
           <div className="w-full flex flex-col items-center justify-center gap-2">
             <FaCheckCircle size={20} color="green" />
             <h2>Thành công gửi đơn đăng kí </h2>
-            <Button variant="link" type="button" onClick={() => router.push(`/manage/rental/applications/${res.id}`)}>Xem chi tiết</Button>
+            <div className="flex flex-row gap-2">
+              <Button variant="link" type="button" onClick={() => router.replace("/")}>Quay lại</Button>
+              <Button variant="link" type="button" onClick={() => router.push(`/manage/rental/applications/${res.id}`)}>Xem chi tiết</Button>
+            </div>
           </div>
         )}
         {stage === "ERROR" && (
-          <div className="w-full flex flex-row justify-center">
+          <div className="w-full flex flex-col items-center justify-center gap-2">
             <h2>Đã có lỗi xảy ra</h2>
             <Button onClick={changeOpen}>Quay lại</Button>
           </div>

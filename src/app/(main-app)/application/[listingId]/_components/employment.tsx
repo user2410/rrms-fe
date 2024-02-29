@@ -12,32 +12,7 @@ import { useFieldArray, useFormContext } from "react-hook-form";
 import { ApplicationForm } from "./main_form";
 
 export default function Employment() {
-  const filesInputRef = useRef<HTMLInputElement>(null);
-
   const form = useFormContext<ApplicationForm>();
-
-  const { fields: fileFields, append, remove } = useFieldArray({
-    control: form.control,
-    name: "yd.employmentProofsOfIncome",
-  });
-
-  function handleFilesUpload(event: React.ChangeEvent<HTMLInputElement>) {
-    const filesArr = Object.entries(event.target.files!).map((e) => {
-      const { name, size, type } = e[1];
-      const newFile: FileUpload = {
-        name, size, type,
-        url: URL.createObjectURL(e[1])
-      };
-      return newFile;
-    });
-    console.log(filesArr);
-    append(filesArr);
-  }
-
-  function handleRemoveFile(fileUrl: string, i: number) {
-    remove(i);
-    URL.revokeObjectURL(fileUrl);
-  }
 
   return (
     <Card>

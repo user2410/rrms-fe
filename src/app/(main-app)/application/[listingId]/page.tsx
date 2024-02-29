@@ -48,17 +48,15 @@ export default function ApplicationPage({ params: {listingId} }: { params: { lis
       const listingId = queryKey.at(3) as string;
       const unitIds = queryKey.at(4) as string[];
 
-      const listingQuery = await backendAPI.get(`/api/listings/listing/${listingId}`);
-      const listing = listingQuery.data;
-      if(_.intersection(listing.units.map((u: ListingUnit) => u.unitId), unitIds).length < unitIds.length){
+      const listing = (await backendAPI.get<Listing>(`/api/listings/listing/${listingId}`)).data;
+      if(_.intersection(listing.units.map((u) => u.unitId), unitIds).length < unitIds.length){
         throw new Error("Invalid unit id");
       }
       const property = (await backendAPI.get<Property>(`/api/properties/property/${listing.propertyId}`)).data;
       if(property.managers.map(m => m.managerId).includes(userId)){
         throw new Error("You are not authorized to apply for this listing");
-      }
-      
-      const units = (await backendAPI.get('/api/units/ids', {
+      }      
+      const units = (await backendAPI.get<Unit[]>('/api/units/ids', {
         params: {
           unitIds: unitIds,
           fields: "name,floor,area"

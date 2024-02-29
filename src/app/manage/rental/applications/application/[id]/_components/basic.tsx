@@ -5,6 +5,7 @@ import BasicTenant from "./basic_tenant";
 import BasicUnits from "./basic_units";
 import BasicPets from "./basic_pets";
 import BasicIdentity from "./basic_identity";
+import PersonalVehicles from "./personal_vehicles";
 
 export default function BasicInfo({
   data,
@@ -14,11 +15,12 @@ export default function BasicInfo({
   return (
     <div className="space-y-4">
       <BasicTenant data={data}/>
-      <BasicIdentity data={data}/>
       <BasicUnits data={data}/>
+      <BasicIdentity data={data}/>
       <BasicCoaps data={data}/>
       <BasicMinors data={data}/>
       <BasicPets data={data}/>
+      <PersonalVehicles data={data}/>
     </div>
   );
 };
