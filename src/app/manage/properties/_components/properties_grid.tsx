@@ -1,12 +1,10 @@
 "use client";
 
 import { Button } from "@/components/ui/button";
-import { Fragment, useState } from "react";
+import { Select, SelectContent, SelectGroup, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
+import { Fragment } from "react";
 import { ManagedProperty } from "../page";
 import PropertyCard from "./property_card";
-import * as Tabs from '@radix-ui/react-tabs';
-import styles from "./propertie_grid.module.css";
-import { Select, SelectContent, SelectGroup, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 
 // type PropertyTab = "active" | "archived" | "draft";
 
@@ -35,22 +33,11 @@ export default function PropertiesGrid({
           </Select>
         </div>
       </div>
-      <Tabs.Root defaultValue="active" className={styles.TabsRoot}>
-        <Tabs.List className={styles.TabsList}>
-          <Tabs.Trigger value="active" className={styles.TabsTrigger}>Active</Tabs.Trigger>
-          <Tabs.Trigger value="archived" className={styles.TabsTrigger}>Archived</Tabs.Trigger>
-          <Tabs.Trigger value="draft" className={styles.TabsTrigger}>Draft</Tabs.Trigger>
-        </Tabs.List>
-        <Tabs.Content className={styles.TabsContent} value="active">
-          <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 w-full">
-            {initialProperties.map((p, i) => (
-              <PropertyCard key={i} property={p.property}></PropertyCard>
-            ))}
-          </div>
-        </Tabs.Content>
-        <Tabs.Content className={styles.TabsContent} value="archived"></Tabs.Content>
-        <Tabs.Content className={styles.TabsContent} value="draft"></Tabs.Content>
-      </Tabs.Root>
+      <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 w-full">
+        {initialProperties.map((p, i) => (
+          <PropertyCard key={i} property={p.property}></PropertyCard>
+        ))}
+      </div>
       <div className="w-full flex flex-row justify-center">
         <Button variant="outline">Xem thêm</Button>
       </div>

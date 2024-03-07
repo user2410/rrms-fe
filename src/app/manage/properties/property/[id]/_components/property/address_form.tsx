@@ -11,23 +11,16 @@ import { GoogleMap, MarkerF } from "@react-google-maps/api";
 import { useQuery } from "@tanstack/react-query";
 import axios from "axios";
 import { LocateFixed, Pencil } from "lucide-react";
-import { Fragment, useState } from "react";
+import { Fragment, useEffect, useState } from "react";
 import { UseFormReturn, useForm } from "react-hook-form";
 import toast from "react-hot-toast";
 import * as z from "zod";
 import DivisionSelector from "./division-selector";
-
-interface FormProps {
-  initialData: {
-    fullAddress: string;
-    city: string;
-    district: string;
-    lat: number;
-    lng: number;
-    ward?: string
-  };
-  propId: string;
-};
+import { usePropDataCtx } from "../../_context/property_data.context";
+import { Property } from "@/models/property";
+import _ from "lodash";
+import { useSession } from "next-auth/react";
+import { Unit } from "@/models/unit";
 
 const formSchema = z.object({
   fullAddress: z
@@ -49,24 +42,47 @@ const formSchema = z.object({
 
 export type FormValues = z.infer<typeof formSchema>;
 
-export default function AddressForm({
-  initialData,
-  propId,
-}: FormProps) {
-  const [isEditing, setIsEditing] = useState(false);
+export default function AddressFormWrapper() {
+  const {property, units} = usePropDataCtx();
 
+  return _.isEqual(property, {})
+  ? (<></>)
+  : (<AddressForm property={property} units={units}/>);
+}
+
+function AddressForm({
+  property,
+  units,
+} : {
+  property: Property;
+  units: Unit[];
+}) {
+  const session = useSession();
+  const [isEditing, setIsEditing] = useState(false);
+  const {setPropData} = usePropDataCtx();
   const toggleEdit = () => setIsEditing((current) => !current);
 
   const form = useForm<FormValues>({
     resolver: zodResolver(formSchema),
-    defaultValues: initialData,
+    defaultValues: property,
   });
 
   const { isSubmitting, isValid } = form.formState;
 
   async function onSubmit(d: FormValues) {
     try {
-      await backendAPI.patch(`/api/properties/property/${propId}`, d);
+      await backendAPI.patch(`/api/properties/property/${property.id}`, d, {
+        headers: {
+          Authorization: `Bearer ${session.data!.user.accessToken}`,
+        }
+      });
+      setPropData({
+        property: {
+          ...property,
+          ...d,
+        },
+        units,
+      });
       toast.success("Cập nhật thành công");
       toggleEdit();
     } catch (err) {
@@ -119,7 +135,7 @@ export default function AddressForm({
                 />
               ) : (
                 <p className="text-sm mt-2">
-                  {initialData.fullAddress}
+                  {property.fullAddress}
                 </p>
               )}
             </div>
@@ -127,7 +143,7 @@ export default function AddressForm({
               {isEditing ? (
                 <DivisionSelector />
               ) : (
-                <div>{GetLocationName(
+                <div className="text-sm font-light">{GetLocationName(
                   form.watch('city'),
                   form.watch('district'),
                   form.watch('ward') || ''
@@ -174,59 +190,65 @@ function LocationForm({
 }) {
   // on field placeUrl change -> send get request
   const [input, setInput] = useState<string>("");
+  const [loading, setLoading] = useState<boolean>(false);
+  const [error, setError] = useState<string>("");
   const [message, setMessage] = useState<string>("");
 
   const debouncedValue = useDebounce<string>(input, 1500);
 
-  const locationQuery = useQuery({
-    queryKey: ['nextapi', 'location', debouncedValue],
-    queryFn: async ({ queryKey }) => {
-      if (queryKey.at(2)!.length === 0) {
-        setMessage("");
-        return;
-      }
-      try {
-        const res = await axios.get('/api/location/url', {
-          params: { url: queryKey.at(2) }
-        });
+  useEffect(() => {
+    if (!debouncedValue) {
+      setMessage("");
+      setError("");
+      return;
+    }
+
+    setLoading(true);
+    // bypass cors
+    axios.get('/api/location/url', {
+      params: {url: debouncedValue}
+    })
+      .then((res) => {
         console.log(res.data);
         if (res.data.coord) {
-          const { lat, lng } = res.data.coord;
+          const {lat, lng} = res.data.coord;
           form.setValue('lat', lat);
           form.setValue('lng', lng);
           setMessage(`Toạ độ: ${lat}, ${lng}`);
         } else {
-          throw new Error('Không lấy được toạ độ');
+          setMessage('Không lấy được toạ độ');
         }
-      } catch (err: any) {
-        console.log(err);
+        setError("");
+      })
+      .catch((err) => {
         switch (err.response.status) {
           case 400: case 404:
-            throw new Error("Link không hợp lệ");
+            setError("Link không hợp lệ");
+            break;
           default:
-            throw new Error("Lỗi mạng");
+            setError("Lỗi mạng");
+            break;
         }
-      }
-    },
-    enabled: !!input && !!debouncedValue,
-    staleTime: 1000 * 60 * 60,
-    cacheTime: 1000 * 60 * 60,
-  });
+      })
+      .finally(() => {
+        setLoading(false);
+      });
+  }, [form, debouncedValue]);
 
   return (
     <Fragment>
       <Label>
         Link vị trí
         <span className="ml-1 text-red-600">*</span>
-      </Label>
+      </Label>  
         <Input
           placeholder="VD: https://maps.app.goo.gl/iKH3YbWLUVyFApp78"
-          // disabled={locationQuery.isLoading}
+          disabled={loading}
           onChange={(e) => setInput(e.target.value)}
         />
       <p className="text-sm text-muted-foreground">
         {message && (<span className="italic text-muted-foreground">{message}</span>)}
-        {locationQuery.isError && (<span className="text-red-600">{JSON.stringify(locationQuery.error)}</span>)}
+        {error && (<span className="text-red-600">{JSON.stringify(error)}</span>)}
         <br></br>
         Chọn vị trí nhà cho thuê trên <a target="_blank" rel="noopener noreferrer" className="underline hover:text-primary" href="https://www.google.com/maps">bản đồ</a> và gán link vào đây. <a target="_blank" rel="noopener noreferrer" className="underline hover:text-primary" href="#">Hướng dẫn chi tiết</a>
       </p>

@@ -1,7 +1,7 @@
 import { usePathname } from "next/navigation";
 import { useMemo } from "react";
 import { BsBuildingFillAdd, BsFillBuildingsFill, BsPersonFillGear } from "react-icons/bs";
-import { FaFileAlt, FaFileContract, FaFileInvoiceDollar, FaHandHolding, FaHome, FaMoneyBill, FaMoneyCheckAlt, FaTools, FaUser, FaUsers } from "react-icons/fa";
+import { FaFile, FaFileAlt, FaFileContract, FaFileInvoiceDollar, FaHandHolding, FaHome, FaMoneyBill, FaMoneyCheckAlt, FaRegFile, FaTools, FaUser, FaUsers } from "react-icons/fa";
 import { FiLifeBuoy, FiUser } from "react-icons/fi";
 
 interface Route {
@@ -31,25 +31,36 @@ const useRoutes = () => {
             label: 'Nhà cho thuê',
             href: '/manage/properties',
             icon: <BsFillBuildingsFill size={ICON_SIZE}/>,
+            active: pathname?.startsWith('/manage/properties'),
+          },
+          {
+            label: 'Tin đăng',
+            href: '/manage/listings',
+            icon: <BsBuildingFillAdd size={ICON_SIZE}/>,
+            active: pathname?.startsWith('/manage/listings'),
+          },
+          {
+            label: 'Đơn ứng tuyển',
+            href: '/manage/applications',
+            icon: <FaFile size={ICON_SIZE}/>,
             subroutes: [
               {
-                label: 'Tin đăng',
-                href: '/manage/listings',
-                icon: <BsBuildingFillAdd size={ICON_SIZE}/>,
-                active: pathname?.startsWith('/manage/properties'),
+                label: 'Của tôi',
+                href: '/manage/applications/my-applications',
+                icon: <FaFile size={ICON_SIZE}/>,
               },
-            ]
+              {
+                label: 'Đến tôi',
+                href: '/manage/applications/to-me',
+                icon: <FaRegFile size={ICON_SIZE}/>,
+              },
+            ],
           },
           {
             label: 'Quản lý thuê',
-            href: 'rental',
+            href: '/manage/rental',
             icon: <FaHandHolding size={ICON_SIZE}/>,
             subroutes: [
-              {
-                label: 'Đơn ứng tuyển',
-                href: '/manage/rental/applications',
-                icon: <FaUsers size={ICON_SIZE}/>,
-              },
               {
                 label: 'Dịch vụ',
                 href: '/manage/rental/services',

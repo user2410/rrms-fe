@@ -23,7 +23,7 @@ export default function ManagePropertiesPage() {
     queryFn: async () => {
       return (await backendAPI.get<ManagedProperty[]>("api/properties/my-properties", {
         params: {
-          fields: "name,full_address,area,orientation,lat,lng,media,created_at",
+          fields: "name,full_address,area,orientation,lat,lng,media,primary_image,created_at",
         },
         headers: {
           Authorization: `Bearer ${session.data?.user.accessToken}`,

@@ -1,42 +1,26 @@
-import { useForm } from "react-hook-form";
-import { Data } from "../../page";
-import * as z from "zod";
-import { zodResolver } from "@hookform/resolvers/zod";
-import { useState } from "react";
-import { IconBadge } from "@/components/ui/icon-badge";
-import { LayoutDashboard, Pencil } from "lucide-react";
 import { Button } from "@/components/ui/button";
-import { Form, FormControl, FormField, FormItem, FormMessage } from "@/components/ui/form";
-import { Input } from "@/components/ui/input";
 import Editor from "@/components/ui/editor";
+import { Form, FormControl, FormField, FormItem, FormMessage } from "@/components/ui/form";
+import { IconBadge } from "@/components/ui/icon-badge";
+import { Input } from "@/components/ui/input";
 import { backendAPI } from "@/libs/axios";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { LayoutDashboard, Pencil } from "lucide-react";
+import { useEffect, useState } from "react";
+import { useForm } from "react-hook-form";
 import toast from "react-hot-toast";
-
-interface FormProps {
-  initialData: {
-    name: string;
-    multiUnit: boolean;
-    description?: string;
-    area: number;
-    numberOfFloors?: number;
-    building?: string;
-    project?: string;
-    // city: string;
-    // district: string;
-    // ward?: string;
-    // placeUrl: string;
-    type: string;
-  };
-  propId: string;
-};
+import * as z from "zod";
+import { usePropDataCtx } from "../../_context/property_data.context";
+import { Property } from "@/models/property";
+import { Unit } from "@/models/unit";
+import _ from "lodash";
+import { useSession } from "next-auth/react";
 
 const formSchema = z.object({
   name: z
     .string()
     .min(3, "Tên nhà cho thuê phải có ít nhất 3 ký tự")
     .max(30, "Tên nhà cho thuê không được quá 30 ký tự"),
-  multiUnit: z
-    .boolean(),
   building: z
     .string()
     .optional(),
@@ -51,29 +35,55 @@ const formSchema = z.object({
     .min(1, "Diện tích không hợp lệ")
     .optional(),
   description: z
-    .string(),
+    .string()
+    .optional(),
 });
 
 type FormValues = z.infer<typeof formSchema>;
 
-export default function GeneralInfoForm({
-  initialData,
-  propId,
-}: FormProps) {
+export default function GeneralInfoFormWrapper() {
+  const {property, units} = usePropDataCtx();
+
+  return _.isEqual(property, {})
+  ? (<></>)
+  : (<GeneralInfoForm property={property} units={units}/>);
+}
+
+function GeneralInfoForm({
+  property,
+  units,
+} : {
+  property: Property;
+  units: Unit[];
+}) {
+  const session = useSession();
   const [isEditing, setIsEditing] = useState(false);
+  const {setPropData} = usePropDataCtx();
 
   const toggleEdit = () => setIsEditing((current) => !current);
 
   const form = useForm<FormValues>({
     resolver: zodResolver(formSchema),
-    defaultValues: initialData,
+    defaultValues: property,
   });
 
   const { isSubmitting, isValid } = form.formState;
 
   async function onSubmit(d: FormValues) {
+    console.log("submitting", d);
     try {
-      await backendAPI.patch(`/api/properties/property/${propId}`, d);
+      await backendAPI.patch(`/api/properties/property/${property.id}`, d, {
+        headers: {
+          Authorization: `Bearer ${session.data!.user.accessToken}`,
+        }
+      });
+      setPropData({
+        property: {
+          ...property,
+          ...d,
+        },
+        units,
+      });
       toast.success("Cập nhật thành công");
       toggleEdit();
     } catch (err) {
@@ -129,11 +139,11 @@ export default function GeneralInfoForm({
                 />
               ) : (
                 <p className="text-sm mt-2">
-                  {initialData.name}
+                  {property.name}
                 </p>
               )}
             </div>
-            {initialData.type === "APARTMENT" && (
+            {property.type === "APARTMENT" && (
               <div className="flex flex-row justify-between gap-2">
                 <div className="space-y-2">
                   <div className="font-medium">
@@ -148,12 +158,13 @@ export default function GeneralInfoForm({
                           <FormControl>
                             <Input {...field} placeholder="Dự án Thống Nhất Complex" />
                           </FormControl>
+                          <FormMessage />
                         </FormItem>
                       )}
                     />
                   ) : (
                     <p className="text-sm mt-2">
-                      {initialData.project || "N/A"}
+                      {property.project || "N/A"}
                     </p>
                   )}
                 </div>
@@ -170,19 +181,20 @@ export default function GeneralInfoForm({
                           <FormControl>
                             <Input {...field} placeholder="Tòa nhà Thống Nhất" />
                           </FormControl>
+                          <FormMessage />
                         </FormItem>
                       )}
                     />
                   ) : (
                     <p className="text-sm mt-2">
-                      {initialData.building || "N/A"}
+                      {property.building || "N/A"}
                     </p>
                   )}
                 </div>
               </div>
             )}
             <div className="flex justify-between gap-2">
-              {["PRIVATE", "MINIAPARTMENT"].includes(initialData.type) && (
+              {["PRIVATE", "MINIAPARTMENT"].includes(property.type) && (
                 <div className="space-y-2">
                   <div className="font-medium">
                     Số tầng
@@ -205,12 +217,12 @@ export default function GeneralInfoForm({
                     />
                   ) : (
                     <p className="text-sm mt-2">
-                      {initialData.numberOfFloors || "N/A"}
+                      {property.numberOfFloors || "N/A"}
                     </p>
                   )}
                 </div>
               )}
-              {!(["APARTMENT", "ROOM"].includes(initialData.type) && initialData.multiUnit) && (
+              {!(["APARTMENT", "ROOM"].includes(property.type) && units.length > 1) && (
                 <div className="space-y-2">
                   <div className="font-medium">
                     Diện tích
@@ -234,7 +246,7 @@ export default function GeneralInfoForm({
                     />
                   ) : (
                     <p className="text-sm mt-2">
-                      {initialData.area}m<sup>2</sup>
+                      {property.area}m<sup>2</sup>
                     </p>
                   )}
                 </div>
@@ -251,16 +263,15 @@ export default function GeneralInfoForm({
                   render={({ field }) => (
                     <FormItem>
                       <FormControl>
-                        <Editor
-                          {...field}
-                        />
+                        {/* @ts-ignore */}
+                        <Editor {...field}/>
                       </FormControl>
                       <FormMessage />
                     </FormItem>
                   )}
                 />
               ) : (
-                <div dangerouslySetInnerHTML={{__html: initialData.description || "N/A"}} />
+                <div dangerouslySetInnerHTML={{__html: property.description || "N/A"}} />
               )}
             </div>
             {isEditing && (

@@ -17,6 +17,7 @@ import Tags from "./tags";
 import UnitsList from "./units";
 import { GetCityById, GetDistrictById } from "@/utils/dghcvn";
 import Breadcrumb from "@/components/ui/breadcrumb";
+import Faq from "./faq";
 
 const TopBreadcrumb = ({
   cityCode,
@@ -148,14 +149,9 @@ export default function ListingContent({
         {/* Contact and relavant search */}
         <div className="col-span-2">
           <div className="space-y-4">
-
             <PostedBy listing={listing} />
-
-            <ContactForm listing={listing} />
-
-            {listing.policies && listing.policies.length > 0 && (
-              <Tags tags={property.tags} />
-            )}
+            <ContactForm listingDetail={{listing, property, units}}/>
+            <Faq/>
           </div>
         </div>
       </div>

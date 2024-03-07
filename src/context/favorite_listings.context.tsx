@@ -62,7 +62,7 @@ export function FavListingsProvider(props: PropsWithChildren<any>) {
 export const useFavListings = () => {
   const context = useContext(FavListingsContext);
   if (context === undefined) {
-    throw new Error(`useUI must be used within a UIProvider`);
+    throw new Error(`useFavListings must be used within a FavListingsProvider`);
   }
   return context;
 };

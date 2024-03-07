@@ -1,9 +1,9 @@
-import { Data } from "../page";
+import { PropDataState } from "../page";
 
 export default function Applications({
   data,
 } : {
-  data: Data;
+  data: PropDataState;
 }) {
   return (
     <div></div>

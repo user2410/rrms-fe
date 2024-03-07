@@ -19,7 +19,9 @@ export default function PropertyCard({ property }: { property: Property }) {
   const router = useRouter();
 
   const deleteDialogBtn = useRef<HTMLButtonElement>(null);
-
+  
+  // const primaryImage = property.media.find(m => m.id === property.primaryImage)!.url;
+  
   async function handleDeleteProperty() {
     try {
       await backendAPI.delete(`api/properties/${property.id}`);
@@ -52,13 +54,12 @@ export default function PropertyCard({ property }: { property: Property }) {
             </DialogFooter>
           </DialogContent>
         </Dialog>
-        <CardHeader className="w-full p-0 relative">
+        <CardHeader className="relative !block w-full p-0 aspect-video">
           <Image
             src={property.media.find(m => m.type === 'IMAGE')!.url}
             alt={property.name}
             fill
             objectFit="cover"
-            className="w-full aspect-video"
           />
         </CardHeader>
         <CardContent className="mt-3 space-y-2">

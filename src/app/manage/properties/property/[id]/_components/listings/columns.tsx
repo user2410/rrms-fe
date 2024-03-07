@@ -13,12 +13,12 @@ export const columns: ColumnDef<Listing>[] = [
     accessorKey: "title",
     header: "Tin đăng",
     cell: (({row}) => {
-      const priorityLabel = ListingPriorities.find(lp => lp.priority === row.original.priority.toString())?.label;
+      const priorityLabel = ListingPriorities.find(lp => lp.priority === row.original.priority)?.label;
 
       return (
-        <div className="flex flex-row gap-1">
+        <div className="flex flex-row items-center gap-1">
           {priorityLabel && (<Badge>{priorityLabel}</Badge>)}
-          <span className="max-w-[500px] truncate font-medium">
+          <span className="max-w-[500px] text-ellipsis overflow-hidden font-medium">
             {row.getValue("title")}
           </span>
         </div>
@@ -35,17 +35,17 @@ export const columns: ColumnDef<Listing>[] = [
     },
   },
   {
-    accessorKey: "postAt",
+    accessorKey: "createdAt",
     header: "Thời gian đăng",
     cell: ({row}) => (
-      <span>{format(row.getValue("postAt"), "hh:mm dd/MM/yyyy")}</span>
+      <span>{format(new Date(row.getValue("createdAt")), "hh:mm dd/MM/yyyy")}</span>
     )
   },
   {
     accessorKey: "expiredAt",
     header: "Hết hạn",
     cell: ({row}) => (
-      <span>{format(row.getValue("expiredAt"), "hh:mm dd/MM/yyyy")}</span>
+      <span>{format(new Date(row.getValue("expiredAt")), "hh:mm dd/MM/yyyy")}</span>
     )
   },
   {

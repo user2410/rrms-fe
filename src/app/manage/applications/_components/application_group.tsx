@@ -2,13 +2,11 @@ import { Button } from "@/components/ui/button";
 import { Label } from "@/components/ui/label";
 import { Separator } from "@/components/ui/separator";
 import { Switch } from "@/components/ui/switch";
-import { Property, getPrimaryImage } from "@/models/property";
+import { getPrimaryImage } from "@/models/property";
 import Image from "next/image";
-import { PreviewApplication } from "./application_list";
-import { intervalToDuration } from "date-fns";
-import ApplicationItem from "./application_item";
 import { useState } from "react";
-import clsx from "clsx";
+import ApplicationItem from "./application_item";
+import { PreviewApplication } from "./application_list";
 
 const statusOrder = ["PENDING", "CONDITIONALLY_APPROVED", "APPROVED", "REJECTED"];
 

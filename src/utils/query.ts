@@ -13,3 +13,13 @@ export const objectToQueryString = (params: Object): string => {
 
   return searchParams.toString() + `&_r=${new Date().getTime()}`;
 };
+
+// convert null fields of an object to undefined
+export function nullFieldsToUndefined<T>(obj: T): T {
+  return JSON.parse(JSON.stringify(obj), (key, value) => {
+    if (value === null) {
+      return undefined;
+    }
+    return value;
+  });
+};

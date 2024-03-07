@@ -1,4 +1,5 @@
 import { GetLocationName } from "@/utils/dghcvn";
+import { Unit } from "./unit";
 
 export type PropertyType = 
   'APARTMENT' |
@@ -7,6 +8,12 @@ export type PropertyType =
   'STORE' |
   'OFFICE' |
   'MINIAPARTMENT'
+
+export type PropertyManager = {
+  propertyId: string;
+  managerId: string;
+  role: string;
+};
 
 export type PropertyMedia = {
   id: number;
@@ -42,6 +49,8 @@ export type Property = {
   area: number;
   numberOfFloors?: number;
   yearBuilt?: number;
+  entranceWidth?: number;
+  facade?: number;
   orientation?: string;
   fullAddress: string;
   district: string;
@@ -55,16 +64,22 @@ export type Property = {
   media: PropertyMedia[];
   features: PropertyFeature[];
   tags: PropertyTag[];
+  managers: PropertyManager[];
+  units: Unit[],
   createdAt: Date;
   updatedAt: Date;
 };
+
+export function getPrimaryImage (property: Property) {
+  return property.media.find(m => m.id === property.primaryImage)!.url;
+}
 
 export function getPropertyFullAddress(property: Property) {
   return `${property.fullAddress}, ${GetLocationName(property.city!, property.district!, property.ward || '')}`;
 }
 
 export function getPropertyTypeText(p: Property & {multiUnit?: boolean}) {
-  return p.multiUnit ?
+  return (p.multiUnit || p.units.length > 1) ?
     (p.type === 'APARTMENT' ? `Quỹ căn hộ` : p.type === 'ROOM' ? 'Dãy phòng trọ' : '') :
     mapPropertyTypeToText[p.type as keyof typeof mapPropertyTypeToText];
 }
@@ -149,6 +164,7 @@ export const mockupProperties: Property[] = [
     placeUrl: "https://maps.app.goo.gl/Y5Rk429srd7a3rut8",
     type: 'APARTMENT',
     primaryImage: 0,
+    units: [],
     media: [
       {
         id: 1,
@@ -231,6 +247,7 @@ export const mockupProperties: Property[] = [
     ],
     createdAt: new Date('2021-01-02'),
     updatedAt: new Date('2021-01-02'),
+    managers: [],
   },
   {
     id: 'f6ca05c0-fad5-46fc-a237-a8e930e7cb02',
@@ -247,6 +264,7 @@ export const mockupProperties: Property[] = [
     placeUrl: "https://maps.app.goo.gl/Y5Rk429srd7a3rut8",
     type: 'ROOM',
     primaryImage: 0,
+    units: [],
     media: [
       {
         id: 1,
@@ -319,6 +337,7 @@ export const mockupProperties: Property[] = [
     ],
     createdAt: new Date('2021-02-12'),
     updatedAt: new Date('2021-02-12'),
+    managers: [],
   },
   {
     id: 'f6ca05c0-fad5-46fc-a237-a8e930e7cb03',
@@ -335,6 +354,7 @@ export const mockupProperties: Property[] = [
     placeUrl: "https://maps.app.goo.gl/Y5Rk429srd7a3rut8",
     type: 'ROOM',
     primaryImage: 0,
+    units: [],
     media: [
       {
         id: 1,
@@ -407,6 +427,7 @@ export const mockupProperties: Property[] = [
     ],
     createdAt: new Date('2021-03-22'),
     updatedAt: new Date('2021-03-22'),
+    managers: [],
   },
   {
     id: "f6ca05c0-fad5-46fc-a237-a8e930e7cb04",
@@ -423,6 +444,7 @@ export const mockupProperties: Property[] = [
     placeUrl: "https://maps.app.goo.gl/Y5Rk429srd7a3rut8",
     type: 'PRIVATE',
     primaryImage: 0,
+    units: [],
     media: [
       {
         id: 1,
@@ -495,6 +517,7 @@ export const mockupProperties: Property[] = [
     ],
     createdAt: new Date('2021-04-02'),
     updatedAt: new Date('2021-04-02'),
+    managers: [],
   },
   {
     id: "f6ca05c0-fad5-46fc-a237-a8e930e7cb05",
@@ -511,6 +534,7 @@ export const mockupProperties: Property[] = [
     placeUrl: "https://maps.app.goo.gl/Y5Rk429srd7a3rut8",
     type: 'APARTMENT',
     primaryImage: 0,
+    units: [],
     media: [
       {
         id: 1,
@@ -583,6 +607,7 @@ export const mockupProperties: Property[] = [
     ],
     createdAt: new Date('2021-05-12'), 
     updatedAt: new Date('2021-05-12'),
+    managers: [],
   },
   {
     id: "f6ca05c0-fad5-46fc-a237-a8e930e7cb06",
@@ -599,6 +624,7 @@ export const mockupProperties: Property[] = [
     placeUrl: "https://maps.app.goo.gl/Y5Rk429srd7a3rut8",
     type: 'APARTMENT',
     primaryImage: 0,
+    units: [],
     media: [
       {
         id: 1,
@@ -671,6 +697,7 @@ export const mockupProperties: Property[] = [
     ],
     createdAt: new Date('2021-06-22'),
     updatedAt: new Date('2021-06-22'),
+    managers: [],
   },
   {
     id: "f6ca05c0-fad5-46fc-a237-a8e930e7cb4907",
@@ -687,6 +714,7 @@ export const mockupProperties: Property[] = [
     placeUrl: "https://maps.app.goo.gl/Y5Rk429srd7a3rut8",
     type: 'ROOM',
     primaryImage: 0,
+    units: [],
     media: [
       {
         id: 1,
@@ -759,6 +787,7 @@ export const mockupProperties: Property[] = [
     ],
     createdAt: new Date('2021-07-02'),
     updatedAt: new Date('2021-07-02'),
+    managers: [],
   },
   {
     id: "f6ca05c0-fad5-46fc-a237-a8e930e7cb08",
@@ -775,6 +804,7 @@ export const mockupProperties: Property[] = [
     placeUrl: "https://maps.app.goo.gl/Y5Rk429srd7a3rut8",
     type: 'APARTMENT',
     primaryImage: 0,
+    units: [],
     media: [
       {
         id: 1,
@@ -847,6 +877,7 @@ export const mockupProperties: Property[] = [
     ],
     createdAt: new Date('2021-08-12'),
     updatedAt: new Date('2021-08-12'),
+    managers: [],
   },
   {
     id: "f6ca05c0-fad5-46fc-a237-a8e930e7cb09",
@@ -863,6 +894,7 @@ export const mockupProperties: Property[] = [
     placeUrl: "https://maps.app.goo.gl/Y5Rk429srd7a3rut8",
     type: 'APARTMENT',
     primaryImage: 0,
+    units: [],
     media: [
       {
         id: 1,
@@ -935,6 +967,7 @@ export const mockupProperties: Property[] = [
     ],
     createdAt: new Date('2021-09-22'),
     updatedAt: new Date('2021-09-22'),
+    managers: [],
   },
   {
     id: "f6ca05c0-fad5-46fc-a237-a8e930e7cb10",
@@ -951,6 +984,7 @@ export const mockupProperties: Property[] = [
     placeUrl: "https://maps.app.goo.gl/Y5Rk429srd7a3rut8",
     type: 'APARTMENT',
     primaryImage: 0,
+    units: [],
     media: [
       {
         id: 1,
@@ -1023,6 +1057,7 @@ export const mockupProperties: Property[] = [
     ],
     createdAt: new Date('2021-10-02'),
     updatedAt: new Date('2021-10-02'),
+    managers: [],
   },
   {
     id: "f6ca05c0-fad5-46fc-a237-a8e930e7cb11",
@@ -1039,6 +1074,7 @@ export const mockupProperties: Property[] = [
     placeUrl: "https://maps.app.goo.gl/Y5Rk429srd7a3rut8",
     type: 'APARTMENT',
     primaryImage: 0,
+    units: [],
     media: [
       {
         id: 1,
@@ -1111,6 +1147,7 @@ export const mockupProperties: Property[] = [
     ],
     createdAt: new Date('2021-11-12'),
     updatedAt: new Date('2021-11-12'),
+    managers: [],
   },
   {
     id: "f6ca05c0-fad5-46fc-a237-a8e930e7cb12",
@@ -1127,6 +1164,7 @@ export const mockupProperties: Property[] = [
     placeUrl: "https://maps.app.goo.gl/Y5Rk429srd7a3rut8",
     type: 'APARTMENT',
     primaryImage: 0,
+    units: [],
     media: [
       {
         id: 1,
@@ -1199,6 +1237,7 @@ export const mockupProperties: Property[] = [
     ],
     createdAt: new Date('2021-12-22'),
     updatedAt: new Date('2021-12-22'),
+    managers: [],
   },
   {
     id: "f6ca05c0-fad5-46fc-a237-a8e930e7cb13",
@@ -1215,6 +1254,7 @@ export const mockupProperties: Property[] = [
     placeUrl: "https://maps.app.goo.gl/Y5Rk429srd7a3rut8",
     type: 'APARTMENT',
     primaryImage: 0,
+    units: [],
     media: [
       {
         id: 1,
@@ -1287,5 +1327,6 @@ export const mockupProperties: Property[] = [
     ],
     createdAt: new Date('2021-01-02'),
     updatedAt: new Date('2021-01-02'),
+    managers: [],
   },
 ];

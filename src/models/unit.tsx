@@ -29,7 +29,6 @@ export type Unit = {
   name: string;
   area: number;
   floor: number;
-  price: number;
   numberOfLivingRooms: number;
   numberOfBedrooms: number;
   numberOfBathrooms: number;

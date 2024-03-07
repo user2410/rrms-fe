@@ -48,7 +48,7 @@ export type Application = {
   listingId: string;
   propertyId: string;
   unitIds: string[];
-  status: "PENDING" | "APPROVED" | "CONDITIONALLY_APPROVED" | "REJECTED";
+  status: "PENDING" | "APPROVED" | "CONDITIONALLY_APPROVED" | "REJECTED" | "WITHDRAWN";
   creatorId: string;
   createdAt: Date;
   updatedAt: Date;

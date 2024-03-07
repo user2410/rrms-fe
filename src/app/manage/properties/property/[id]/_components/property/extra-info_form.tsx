@@ -6,7 +6,7 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import { Textarea } from "@/components/ui/textarea";
 import { backendAPI } from "@/libs/axios";
-import { OrientationItems, PropertyFeature, pFeatures } from "@/models/property";
+import { OrientationItems, Property, PropertyFeature, pFeatures } from "@/models/property";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { LayoutDashboard, Pencil, Plus } from "lucide-react";
 import { useState } from "react";
@@ -14,17 +14,10 @@ import { DeepPartial, useFieldArray, useForm } from "react-hook-form";
 import toast from "react-hot-toast";
 import { IoClose } from "react-icons/io5";
 import * as z from "zod";
-
-interface FormProps {
-  initialData: {
-    features: PropertyFeature[];
-    orientation?: string;
-    entranceWidth?: number;
-    facade?: number;
-    yearBuilt?: number;
-  };
-  propId: string;
-};
+import { usePropDataCtx } from "../../_context/property_data.context";
+import _ from "lodash";
+import { useSession } from "next-auth/react";
+import { Unit } from "@/models/unit";
 
 const formSchema = z.object({
   orientation: z
@@ -42,7 +35,8 @@ const formSchema = z.object({
   features: z
     .array(
       z.object({
-        featureId: z.string(),
+        propertyId: z.string(),
+        featureId: z.number(),
         description: z.string().optional(),
       })
     ),
@@ -50,17 +44,30 @@ const formSchema = z.object({
 
 type FormValues = z.infer<typeof formSchema>;
 
-export default function ExtraInfoForm({
-  initialData,
-  propId,
-}: FormProps) {
+export default function ExtraInfoFormWrapper() {
+  const {property, units} = usePropDataCtx();
+
+  return _.isEqual(property, {})
+  ? (<></>)
+  : (<ExtraInfoForm property={property} units={units}/>);
+}
+
+function ExtraInfoForm({
+  property,
+  units,
+} : {
+  property: Property;
+  units: Unit[];
+}) {
+  const session = useSession();
   const [isEditing, setIsEditing] = useState(false);
+  const { setPropData } = usePropDataCtx();
 
   const toggleEdit = () => setIsEditing((current) => !current);
 
   const form = useForm<FormValues>({
     resolver: zodResolver(formSchema),
-    defaultValues: initialData as any,
+    defaultValues: property,
   });
 
   const { isSubmitting, isValid } = form.formState;
@@ -71,7 +78,18 @@ export default function ExtraInfoForm({
 
   async function onSubmit(d: FormValues) {
     try {
-      await backendAPI.patch(`/api/properties/property/${propId}`, d);
+      await backendAPI.patch(`/api/properties/property/${property.id}`, d, {
+        headers: {
+          Authorization: `Bearer ${session.data!.user.accessToken}`,
+        }
+      });
+      setPropData({
+        property: {
+          ...property,
+          ...d,
+        },
+        units,
+      });
       toast.success("Cập nhật thành công");
       toggleEdit();
     } catch (err) {
@@ -142,7 +160,7 @@ export default function ExtraInfoForm({
                   />
                 ) : (
                   <p className="text-sm mt-2">
-                    {OrientationItems.find(i => i.value === initialData.orientation)?.label || "N/A"}
+                    {OrientationItems.find(i => i.value === property.orientation)?.label || "N/A"}
                   </p>
                 )}
               </div>
@@ -172,13 +190,13 @@ export default function ExtraInfoForm({
                   />
                 ) : (
                   <p className="text-sm mt-2">
-                    {initialData.yearBuilt || "N/A"}
+                    {property.yearBuilt || "N/A"}
                   </p>
                 )}
               </div>
               <div className="space-y-2">
                 <div className="font-medium">
-                  Lỗi vào
+                  Lối vào (m)
                 </div>
                 {isEditing ? (
                   <FormField
@@ -202,7 +220,7 @@ export default function ExtraInfoForm({
                   />
                 ) : (
                   <p className="text-sm mt-2">
-                    {initialData.entranceWidth || "N/A"}
+                    {property.entranceWidth || "N/A"}
                   </p>
                 )}
               </div>
@@ -232,7 +250,7 @@ export default function ExtraInfoForm({
                   />
                 ) : (
                   <p className="text-sm mt-2">
-                    {initialData.entranceWidth || "N/A"}
+                    {property.facade || "N/A"}
                   </p>
                 )}
               </div>
@@ -251,66 +269,73 @@ export default function ExtraInfoForm({
                 <TableBody>
                   {isEditing ? (
                     fields.map((_f, index) => (
-                      <div key={index} className="flex items-start gap-1 my-2">
-                        <FormField
-                          control={form.control}
-                          name={`features.${index}.featureId`}
-                          render={({ field }) => (
-                            <FormItem className="w-[40%]">
-                              <FormControl>
-                                <Select onValueChange={field.onChange} defaultValue={field.value}>
-                                  <FormControl>
-                                    <SelectTrigger>
-                                      <SelectValue placeholder="Chọn tiện ích" />
-                                    </SelectTrigger>
-                                  </FormControl>
-                                  <SelectContent>
-                                    {pFeatures.map((item) => (
-                                      <SelectItem
-                                        key={item.id}
-                                        disabled={fields.map((f) => f.featureId).includes(item.id.toString())}
-                                        value={item.id.toString()}
-                                      >
-                                        {item.text}
-                                      </SelectItem>
-                                    ))}
-                                  </SelectContent>
-                                </Select>
-                              </FormControl>
-                              <FormMessage />
-                            </FormItem>
-                          )}
-                        />
-                        <FormField
-                          control={form.control}
-                          name={`features.${index}.description`}
-                          render={({ field }) => (
-                            <FormItem className="flex-grow">
-                              <FormControl>
-                                <Textarea
-                                  placeholder="Mô tả tiện ích"
-                                  rows={2}
-                                  {...field}
-                                  className="overflow-y-scroll"
-                                />
-                              </FormControl>
-                              <FormMessage />
-                            </FormItem>
-                          )}
-                        />
-                        <Button
-                          type="button"
-                          variant="ghost"
-                          size="sm"
-                          className=""
-                          onClick={() => remove(index)}
-                        >
-                          <IoClose size={24} />
-                        </Button>
-                      </div>
+                      <TableRow key={index}>
+                        <TableCell>
+                          <FormField
+                            control={form.control}
+                            name={`features.${index}.featureId`}
+                            render={({ field }) => (
+                              <FormItem className="flex-grow">
+                                <FormControl>
+                                  <Select 
+                                    onValueChange={(e) => field.onChange(parseInt(e))} 
+                                    defaultValue={field.value.toString()}
+                                  >
+                                    <FormControl>
+                                      <SelectTrigger>
+                                        <SelectValue placeholder="Chọn tiện ích" />
+                                      </SelectTrigger>
+                                    </FormControl>
+                                    <SelectContent>
+                                      {pFeatures.map((item) => (
+                                        <SelectItem
+                                          key={item.id}
+                                          disabled={fields.map((f) => f.featureId).includes(item.id)}
+                                          value={item.id.toString()}
+                                        >
+                                          {item.text}
+                                        </SelectItem>
+                                      ))}
+                                    </SelectContent>
+                                  </Select>
+                                </FormControl>
+                                <FormMessage />
+                              </FormItem>
+                            )}
+                          />
+                        </TableCell>
+                        <TableCell className="flex flex-row items-start gap-1 my-2">
+                          <FormField
+                            control={form.control}
+                            name={`features.${index}.description`}
+                            render={({ field }) => (
+                              <FormItem className="flex-grow">
+                                <FormControl>
+                                  <Textarea
+                                    placeholder="Mô tả tiện ích"
+                                    rows={2}
+                                    {...field}
+                                    className="overflow-y-scroll"
+                                  />
+                                </FormControl>
+                                <FormMessage />
+                              </FormItem>
+                            )}
+                          />
+                          <Button
+                            type="button"
+                            variant="ghost"
+                            size="sm"
+                            className=""
+                            onClick={() => remove(index)}
+                          >
+                            <IoClose size={24} />
+                          </Button>
+                        </TableCell>
+                      </TableRow>
                     ))
                   ) : (
-                    initialData.features.map((feature, index) => (
+                    property.features.map((feature, index) => (
                       <TableRow key={index}>
                         <TableCell>{pFeatures.find(f => f.id === feature.featureId)?.text}</TableCell>
                         <TableCell>{feature.description}</TableCell>
@@ -319,6 +344,9 @@ export default function ExtraInfoForm({
                   )}
                 </TableBody>
               </Table>
+              {isEditing && (
+                <Button type="button" variant="outline" onClick={() => append({ propertyId: property.id, featureId: NaN })}>Thêm tiện ích</Button>
+              )}
             </div>
             {isEditing && (
               <Button

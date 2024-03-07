@@ -42,6 +42,10 @@ export type Listing = {
   units: ListingUnit[];
 };
 
+export function isListingActive(l: Listing) {
+  return l.active && new Date(l.expiredAt) > new Date();
+}
+
 export type ReducedListing = {
   id: string;
   coverImg: string;

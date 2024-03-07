@@ -1,27 +1,14 @@
+"use client";
+
+import { Pagination, PaginationContent, PaginationEllipsis, PaginationItem, PaginationLink, PaginationNext, PaginationPrevious } from "@/components/ui/pagination";
 import Spinner from "@/components/ui/spinner";
 import { backendAPI } from "@/libs/axios";
 import { useQuery } from "@tanstack/react-query";
 import { useSession } from "next-auth/react";
-import ApplicationList from "./application_list";
-import { ApplicationUnit, TransformApplicationRESTResponse } from "@/models/application";
-import { Pagination, PaginationContent, PaginationEllipsis, PaginationItem, PaginationLink, PaginationNext, PaginationPrevious } from "@/components/ui/pagination";
+import ApplicationList from "../_components/application_list";
+import { FetchedApplication } from "../_models/fetched_application";
 
-export type FetchedApplication = {
-  id: number;
-  listingId: string;
-  propertyId: string;
-  units: ApplicationUnit[];
-  status: string;
-  fullName: string;
-  moveinDate: Date;
-  preferredTerm: number;
-  employmentStatus: string;
-  employmentPosition?: string;
-  employmentMonthlyIncome: number;
-  createdAt: Date;
-};
-
-export default function ApplicationToMe() {
+export default function ApplicationToMePage() {
   const session = useSession();
 
   const query = useQuery<FetchedApplication[]>({
@@ -57,12 +44,20 @@ export default function ApplicationToMe() {
     );
   }
 
+  const applications = query.data!;
+
   return (
     <div className="space-y-5">
-      <ApplicationList
-        applications={query.data!}
-        listName="to-me"
-      />
+      {applications.length === 0 ? (
+        <div className="w-full h-full flex justify-center items-center">
+          <p>Không có đơn ứng tuyển nào</p>
+        </div>
+      ) : (
+        <ApplicationList
+          applications={query.data!}
+          listName="to-me"
+        />
+      )}
       <Pagination>
         <PaginationContent>
           <PaginationItem>
