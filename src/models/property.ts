@@ -71,7 +71,7 @@ export type Property = {
 };
 
 export function getPrimaryImage (property: Property) {
-  return property.media.find(m => m.id === property.primaryImage)!.url;
+  return property.media.find(m => m.id === property.primaryImage)?.url || "/img/property_image_placeholder.webp";
 }
 
 export function getPropertyFullAddress(property: Property) {

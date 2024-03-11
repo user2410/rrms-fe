@@ -43,7 +43,9 @@ export default function UploadDialog({
         const unitsPrice = data.units.map(u => u.price);
         unitsPrice.sort();
         sendData.price = unitsPrice[unitsPrice.length >> 1];
-      }
+      } else if (data.units.length === 1) {
+        data.units[0].price = sendData.price;
+      } 
 
       // send POST request to backend
       const listing = (await backendAPI.post("/api/listings", sendData, {
@@ -52,7 +54,16 @@ export default function UploadDialog({
         }
       })).data;
       
-      setRes(listing);
+      const listingPayment = (await backendAPI.post(`/api/listings/listing/${listing.id}/payment`, {
+        priority: data.config.priority,
+        postDuration: data.config.postDuration,
+      }, {
+        headers: {
+          Authorization: `Bearer ${accessToken}`
+        }
+      }));
+
+      setRes({listing, listingPayment});
       setStage("DONE");
     } catch (err) {
       console.error(err);
@@ -73,7 +84,7 @@ export default function UploadDialog({
         {stage === "CONFIRMATION" && (
           <div className="w-full flex flex-col items-center justify-center gap-2">
             <p className="text-gray-500">Đồng ý tạo tin đăng <strong>{form.getValues("listing.title")}</strong></p>
-            <div className="flex flex-row mt-4">
+            <div className="flex flex-row items-center gap-2 mt-4">
               <Button onClick={changeOpen}>Quay lại</Button>
               <Button onClick={handleUpload}>Đồng ý</Button>
             </div>
@@ -89,8 +100,11 @@ export default function UploadDialog({
         {stage === "DONE" && (
           <div className="w-full flex flex-col items-center justify-center gap-2">
             <FaCheckCircle size={20} color="green" />
-            <h2>Thành công tạo tin đăng <strong>{form.watch("listing.title")}</strong> </h2>
-            <Button variant="link" type="button" onClick={() => router.push(`/manage/listings/listing/${res.property.id}`)}>Xem chi tiết</Button>
+            <h2>Tin đăng của bạn đã được ghi nhận</h2>
+            <p className="text-sm font-light">Thanh toán ngay để tin đăng được hiển thị</p>
+            <div className="flex flex-row items-center gap-2">
+              <Button variant="link" type="button" onClick={() => router.push(`/manage/payment/${res.listingPayment.id}`)}>Thanh toán tin đăng</Button>
+            </div>
           </div>
         )}
         {stage === "ERROR" && (

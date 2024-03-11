@@ -29,7 +29,7 @@ export default function ListingConfig() {
   }, [priority]);
   const discountedBasePrice = useMemo(() => {
     if (!postDuration || !listingPriority) return null;
-    const ld = ListingDiscount.find(item => item.duration === postDuration);
+    const ld = ListingDiscount.find(item => item.duration.toString() === postDuration.toString());
     return (100 - ld!.discount) / 100 * listingPriority!.basePrice;
   }, [postDuration, listingPriority]);
 
@@ -51,7 +51,7 @@ export default function ListingConfig() {
                 </FormDescription>
                 <FormMessage />
                 <RadioGroup
-                  onValueChange={field.onChange}
+                  onValueChange={(e) => field.onChange(parseInt(e))}
                   defaultValue={field.value.toString()}
                   className="w-full grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-8 pt-2"
                 >
@@ -83,7 +83,7 @@ export default function ListingConfig() {
                   <FormLabel>Thời gian đăng tin<span className="ml-1 text-red-600">*</span></FormLabel>
                   <FormMessage />
                   <RadioGroup
-                    onValueChange={field.onChange}
+                    onValueChange={(e) => field.onChange(parseInt(e))}
                     defaultValue={field.value.toString()}
                     className="grid w-full grid-cols-3 gap-8 pt-2"
                   >

@@ -95,7 +95,7 @@ const useRoutes = () => {
               },
               {
                 label: 'Lịch sử thanh toán',
-                href: '/manage/my-account/billing-history',
+                href: '/manage/my-account/billing',
                 icon: <FaMoneyBill size={ICON_SIZE} />,
               },
             ],

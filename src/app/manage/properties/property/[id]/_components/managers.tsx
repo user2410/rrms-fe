@@ -3,11 +3,12 @@ import { Badge } from "@/components/ui/badge";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { usePropDataCtx } from "../_context/property_data.context";
 import { Button } from "@/components/ui/button";
+import _ from "lodash";
 
 export default function Managers() {
   const { property } = usePropDataCtx();
 
-  return (
+  return !_.isEqual(property, {}) && (
     <div>
       <Card>
         <CardHeader>

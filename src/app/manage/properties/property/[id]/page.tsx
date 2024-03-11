@@ -103,7 +103,7 @@ function PropertyPageContext({
           </div>
         </div>
       </div>
-      <Tabs.Root defaultValue="managers" className={styles.TabsRoot}>
+      <Tabs.Root defaultValue="property" className={styles.TabsRoot}>
         <Tabs.List className={styles.TabsList}>
           <Tabs.Trigger value="property" className={styles.TabsTrigger}>
             {propTypeText}

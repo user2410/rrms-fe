@@ -36,7 +36,7 @@ export default function Step2() {
     queryFn: async () => {
       return (await backendAPI.get<ManagedProperty[]>("/api/properties/my-properties", {
         params: {
-          fields: "name,full_address,area,orientation,lat,lng,type,media,year_built,created_at,updated_at",
+          fields: "name,full_address,area,orientation,lat,lng,type,media,year_built,primary_image,created_at,updated_at",
         },
         headers: {
           Authorization: `Bearer ${session.data?.user.accessToken}`,

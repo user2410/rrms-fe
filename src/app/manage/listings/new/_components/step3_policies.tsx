@@ -61,7 +61,7 @@ export default function Step3Policies() {
               name="listing.leaseTerm"
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel>Thời hạn thuê (tháng)</FormLabel>
+                  <FormLabel>Thời hạn thuê tối thiểu (tháng)</FormLabel>
                   <FormControl>
                     <div className="flex flex-row gap-1">
                       <Input

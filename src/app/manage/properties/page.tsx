@@ -21,7 +21,7 @@ export default function ManagePropertiesPage() {
   const myPropertiesQuery = useQuery<ManagedProperty[]>({
     queryKey: ['manage', 'properties'],
     queryFn: async () => {
-      return (await backendAPI.get<ManagedProperty[]>("api/properties/my-properties", {
+      const res = (await backendAPI.get<ManagedProperty[]>("api/properties/my-properties", {
         params: {
           fields: "name,full_address,area,orientation,lat,lng,media,primary_image,created_at",
         },
@@ -29,6 +29,15 @@ export default function ManagePropertiesPage() {
           Authorization: `Bearer ${session.data?.user.accessToken}`,
         },
       })).data;
+
+      return res.map((p) => ({
+        ...p, 
+        property: {
+          ...p.property,
+          createdAt: new Date(p.property.createdAt),
+          updatedAt: new Date(p.property.updatedAt),
+        }
+      })).sort((a, b) => b.property.createdAt.getTime() - a.property.createdAt.getTime());
     },
     enabled: session.status === 'authenticated',
     staleTime: 1 * 60 * 1000,

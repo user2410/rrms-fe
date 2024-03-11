@@ -25,7 +25,7 @@ export default function ManageListingsPage() {
       const managedListings: ManagedListing[] = [];
         const listingsQuery = await backendAPI.get("api/listings/my-listings", {
           params: {
-            fields: "property_id,title,price,active,created_at,updated_at,post_at,expired_at",
+            fields: "property_id,title,price,active,created_at,updated_at,expired_at",
           },
           headers: {
             Authorization: `Bearer ${session.data?.user.accessToken}`,
