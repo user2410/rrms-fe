@@ -50,40 +50,6 @@ export default function Identity() {
               </FormItem>
             )}
           />
-          <FormField
-            name="yd.identityIssuedDate"
-            control={form.control}
-            render={({ field }) => (
-              <FormItem>
-                <FormLabel>Ngày cấp</FormLabel>
-                <FormControl>
-                  <Input
-                    type="date"
-                    value={field.value && format(field.value, "yyyy-MM-dd")}
-                    onChange={(e) => {
-                      if (!e.currentTarget.value) return;
-                      form.setValue("yd.identityIssuedDate", new Date(e.currentTarget.value));
-                    }}
-                    max={format(sub(new Date(), { years: 18 }), "yyyy-MM-dd")}
-                    className="w-full p-3"
-                  />
-                </FormControl>
-                <FormMessage />
-              </FormItem>
-            )}
-          />
-          <FormField
-            name="yd.identityIssuedBy"
-            control={form.control}
-            render={({ field }) => (
-              <FormItem>
-                <FormLabel>Nơi cấp</FormLabel>
-                <FormControl>
-                  <Input {...field} />
-                </FormControl>
-              </FormItem>
-            )}
-          />
         </div>
       </CardContent>
     </Card>

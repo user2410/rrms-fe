@@ -1,23 +1,16 @@
 
-import CreateApplication from "@/actions/application/create";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Checkbox } from "@/components/ui/checkbox";
-import { Dialog, DialogContent, DialogFooter, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { Separator } from "@/components/ui/separator";
-import Spinner from "@/components/ui/spinner";
-import { DialogClose } from "@radix-ui/react-dialog";
-import { useSession } from "next-auth/react";
-import { Fragment, useRef, useState } from "react";
+import { Fragment, useState } from "react";
 import { useFormContext } from "react-hook-form";
-import { FaCheckCircle, FaUserShield } from "react-icons/fa";
+import { FaUserShield } from "react-icons/fa";
 import { ApplicationForm } from "./main_form";
-import { useRouter } from "next/navigation";
 import UploadDialog from "./upload_dialog";
 
 const TermsAgreement = () => {
-  const session = useSession();
   const form = useFormContext<ApplicationForm>();
 
   const [openUploadDialog, setOpenUploadDialog] = useState<boolean>(false);

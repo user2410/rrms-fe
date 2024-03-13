@@ -41,9 +41,10 @@ export const authOptions: AuthOptions = {
   ],
   callbacks: {
     // In jwt object we are calling the async function that stores our response in token.
-    async jwt({ token, user}) {
+    async jwt({ token, trigger, user, session}) {
       console.log("jwt token log:", token); // full response from backend
       console.log("jwt user log:", user); // undefined
+      console.log("jwt session log:", session); //
 
       // if (account && user) {
       //   return {
@@ -52,6 +53,11 @@ export const authOptions: AuthOptions = {
       //     refreshToken: user.refreshToken,
       //   };
       // }
+      if (trigger === "update" && session?.accessToken && session?.accessExp) {
+        console.log("update session: ", session);
+        token.accessToken = session.accessToken;
+        token.accessExp = session.accessExp;
+      }
 
       return {...token, ...user};
     },

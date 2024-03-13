@@ -30,16 +30,17 @@ export default function UploadDialog({
   async function createApplication() {
     setStage("CREATING_APPLICATION");
     try {
-      const accessToken = session.data!.user.accessToken;
+      const accessToken = session.data?.user.accessToken;
       const data = form.getValues();
+      const pi = data.ao.profileImage;
 
       // Upload profile images
       const profileImage = await uploadFile({
-        name: data.ao.profileImage.name as string,
-        size: data.ao.profileImage.size as number,
-        type: data.ao.profileImage.type.toLowerCase(),
-        url: data.ao.profileImage.url,
-      }, accessToken);
+        name: pi.name as string,
+        size: pi.size as number,
+        type: pi.type.toLowerCase(),
+        url: pi.url,
+      });
       // Upload proofs of income
       // var employmentProofsOfIncome = [];
       // for(const image of data.yd.employmentProofsOfIncome) {
@@ -56,8 +57,9 @@ export default function UploadDialog({
         ...data.yd,
         listingId: data.listingId,
         propertyId: data.propertyId,
-        units: data.units,
+        units: data.units.filter(u => data.unitIds.includes(u.unitId)),
         profileImage,
+        k: data.k,
         // employmentProofsOfIncome,
       };
 

@@ -16,51 +16,24 @@ export default function Layout({
   const session = useSession();
   const router = useRouter();
 
-  if (session.status === "loading") {
-    return <p>Loading...</p>;
-  }
-
-  if (session.status === "unauthenticated") {
-    router.replace("/");
-    return <p>Access Denied</p>;
-  }
-
-  return (
-    <ManageLayout 
-      user={session.data?.user} 
-      updateSession={(accessToken: string, accessExp: string) => session.update({
-        ...session.data,
-        user: {
-          ...session.data!.user,
-          accessToken: accessToken,
-          accessExp: accessExp,
-        }
-      })}
-    >
-      {children}
-    </ManageLayout>
-  );
-}
-
-function ManageLayout ({
-  children,
-  user,
-  updateSession,
-} : {
-  children: React.ReactNode;
-  user: any;
-  updateSession: (accessToken: string, accessExp: string) => void;
-}) {
   const [ready, setReady] = useState(false);
 
   useEffect(() => {
-    if(new Date(user.accessExp as string) < new Date()) {
-      if(new Date(user.refreshExp as string) > new Date()) {
+    if (session.status !== "authenticated" || ready) return;
+    const user = session.data.user;
+    const now = new Date();
+    console.log(new Date(user.accessExp as string), new Date(user.accessExp as string) < now);
+    console.log(new Date(user.refreshExp as string), new Date(user.refreshExp as string) > now);
+    if(new Date(user.accessExp as string) < now) {
+      if(new Date(user.refreshExp as string) > now) {
         backendAPI.put("/api/auth/credential/refresh", {
           accessToken: user.accessToken,
           refreshToken: user.refreshToken
         }).then((res) => {
-          updateSession(res.data.accessToken, res.data.accessExp);
+          session.update(({
+            accessToken: res.data.accessToken,
+            accessExp: res.data.accessExp,
+          }));
           setReady(true);
         }).catch((err) => {
           console.error(err);
@@ -69,6 +42,7 @@ function ManageLayout ({
           });
         });
       } else {
+        console.error("Session expired");
         signOut({
           callbackUrl: '/',
         });
@@ -76,7 +50,16 @@ function ManageLayout ({
     } else {
       setReady(true);
     }
-  }, []);
+  }, [session.status]);
+
+  if (session.status === "loading") {
+    return <p>Loading...</p>;
+  }
+
+  if (session.status === "unauthenticated") {
+    router.replace("/");
+    return <p>Access Denied</p>;
+  }
 
   return ready && (
     <div className="w-full h-full grid grid-cols-12 bg-gray-100 dark:bg-background">

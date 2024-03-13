@@ -13,7 +13,7 @@ export async function CreateProperty({property, units} : PropertyForm, accessTok
       size: image.size as number,
       type: image.type.toLowerCase(),
       url: image.url,
-    }, accessToken);
+    });
     image.url = fileUrl;
     image.type = 'IMAGE';
   }
@@ -25,7 +25,7 @@ export async function CreateProperty({property, units} : PropertyForm, accessTok
         size: image.size as number,
         type: image.type.toLowerCase(),
         url: image.url,
-      }, accessToken); 
+      }); 
       image.url = fileUrl;
       image.type = 'IMAGE';
     }

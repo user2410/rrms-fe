@@ -11,7 +11,7 @@ export default async function UploadImages(
       size: image.size as number,
       type: image.type.toLowerCase(),
       url: image.url,
-    }, accessToken);
+    });
     image.url = fileUrl;
     image.type = 'IMAGE';
   }
@@ -23,7 +23,7 @@ export default async function UploadImages(
         size: image.size as number,
         type: image.type.toLowerCase(),
         url: image.url,
-      }, accessToken); 
+      }); 
       image.url = fileUrl;
       image.type = 'IMAGE';
     }

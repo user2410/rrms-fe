@@ -12,6 +12,8 @@ import { useQuery } from "@tanstack/react-query";
 import { ChevronRightCircle } from "lucide-react";
 import Link from "next/link";
 import { IoMdMail } from "react-icons/io";
+import ApplicationInvitation from "./application_invitation";
+import { useRouter } from "next/navigation";
 
 export default function Applications({
   listings,
@@ -22,6 +24,7 @@ export default function Applications({
   property: Property;
   accessToken: string;
 }) {
+  const router = useRouter();
   const query = useQuery<Application[]>({
     queryKey: ["manage", "properties", "property", property.id, "listings", "current", "appliacations"],
     queryFn: async () => {
@@ -37,6 +40,7 @@ export default function Applications({
         }
       })).data || ([]);
     },
+    enabled: listings.length > 0,
     staleTime: 1 * 60 * 1000, // 1 minute
     cacheTime: 1 * 60 * 1000, // 1 minute
   });
@@ -56,7 +60,13 @@ export default function Applications({
       </div>
       <div className="grid grid-cols-2 gap-2">
         {
-          (query.isLoading || query.isError) ? (
+          listings.length === 0 ? (
+            <div className="col-span-2 min-h-[190px] flex flex-col justify-center items-center gap-3">
+              <h2 className="font-bold">Không có đơn ứng tuyển nào</h2>
+              <p>Tạo tin đăng mới và nhận đơn ứng tuyển</p>
+              <Button onClick={() => router.push(`/manage/listings/new?propertyId=${property.id}`)}>Tạo tin đăng mới</Button>
+            </div>
+          ) : (query.isLoading || query.isError) ? (
             <>
               <ApplicationCardSkeleton />
               <ApplicationCardSkeleton />
@@ -67,55 +77,7 @@ export default function Applications({
             <div className="col-span-2 min-h-[190px] flex flex-col justify-center items-center gap-3">
               <h2 className="font-bold">Không có đơn ứng tuyển nào</h2>
               <p>Bạn có thể gửi link mời ứng tuyển nhà cho thuê này</p>
-              <Dialog>
-                <DialogTrigger asChild>
-                  <Button className="flex flex-row items-center gap-2">
-                    <IoMdMail size={24} />
-                    Gửi link mời ứng tuyển
-                  </Button>
-                </DialogTrigger>
-                <DialogContent>
-                  <DialogHeader>
-                    <DialogTitle>Gửi link mời ứng tuyển</DialogTitle>
-                    <DialogDescription>Gửi lịnk đến người bạn muốn thuê nhà trọ của mình</DialogDescription>
-                  </DialogHeader>
-                  <div className="space-y-3">
-                    <div className="grid grid-cols-4 items-center gap-4">
-                      <Label htmlFor="name" className="text-left">
-                        Họ và tên
-                      </Label>
-                      <Input
-                        id="name"
-                        type="text"
-                        className="col-span-3"
-                      />
-                    </div>
-                    <div className="grid grid-cols-4 items-center gap-4">
-                      <Label htmlFor="name" className="text-left">
-                        Email
-                      </Label>
-                      <Input
-                        id="email"
-                        type="email"
-                        className="col-span-3"
-                      />
-                    </div>
-                    <div className="grid grid-cols-4 items-center gap-4">
-                      <Label htmlFor="name" className="text-left">
-                        Số điện thoại
-                      </Label>
-                      <Input
-                        id="phone"
-                        type="text"
-                        className="col-span-3"
-                      />
-                    </div>
-                  </div>
-                  <div className="w-full">
-                    <Button type="submit" className="float-right">Gửi</Button>
-                  </div>
-                </DialogContent>
-              </Dialog>
+              <ApplicationInvitation listings={listings}/>
             </div>
           ) : query.data.length <= 4 ? (
             query.data.map((a, i) => (
@@ -127,10 +89,10 @@ export default function Applications({
                 <ApplicationCard key={i} application={a} />
               ))}
               <div className="p-4 border shadow-sm space-y-2">
-                <div className="font-semibold">+ 7 more applications...</div>
-                <h2>John Doe, Lorem Ipsum, ...</h2>
+                <div className="font-semibold">+ 7 đơn ứng tuyển...</div>
+                <h2>Từ {query.data.slice(4, 6).map((a) => a.fullName).join(", ")}...</h2>
                 <div className="flex flex-row gap-1">
-                  View
+                  Xem chi tiết
                   <ChevronRightCircle className="w-6 h-6" />
                 </div>
               </div>
@@ -148,7 +110,7 @@ function ApplicationCard({ application }: { application: Application }) {
       <Badge className="uppercase">{"WITHDRAWN"}</Badge>
       <h2>{application.fullName}</h2>
       <div className="flex flex-row gap-1">
-        View
+        Xem chi tiết
         <ChevronRightCircle className="w-6 h-6" />
       </div>
     </div>

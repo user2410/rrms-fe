@@ -96,7 +96,7 @@ function MediaForm({
       const imgs = d.media.filter(m => m.type.startsWith("IMAGE"));
       const newImgs = imgs.filter(m => newMedia.includes(m.url));
       for(const img of newImgs) {
-        const newUrl = await uploadFile(img, session.data!.user.accessToken);
+        const newUrl = await uploadFile(img);
         img.url = newUrl;
         img.type = "IMAGE";
       }

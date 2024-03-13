@@ -74,7 +74,7 @@ export default function Employment() {
             control={form.control}
             render={({ field }) => (
               <FormItem>
-                <FormLabel>Thu nhập hàng tháng (triệu)</FormLabel>
+                <FormLabel>Thu nhập hàng tháng</FormLabel>
                 <FormControl>
                   <Input type="number" {...field} onChange={(e) => field.onChange(e.currentTarget.valueAsNumber)} />
                 </FormControl>

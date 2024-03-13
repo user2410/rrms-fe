@@ -2,63 +2,96 @@
 
 import Loading from "@/components/ui/loading";
 import { backendAPI } from "@/libs/axios";
-import { Listing, ListingUnit } from "@/models/listing";
+import { Listing } from "@/models/listing";
 import { Property } from "@/models/property";
 import { Unit } from "@/models/unit";
 import { useQuery } from "@tanstack/react-query";
-import * as _ from "lodash";
 import { useSession } from "next-auth/react";
-import { useRouter, useSearchParams } from "next/navigation";
+import { useSearchParams } from "next/navigation";
 import { useEffect, useState } from "react";
 import MainForm from "./_components/main_form";
 
 export type ListingDetail = {
-  listing: Listing; 
-  property: Property; 
+  listing: Listing;
+  property: Property;
   units: Unit[];
 };
 
-export default function ApplicationPage({ params: {listingId} }: { params: { listingId: string } }) {
-  const session = useSession();
-  const router = useRouter();
+export type Query = {
+  fullName?: string;
+  email?: string;
+  phone?: string;
+  unitIds?: string[];
+  k?: string;
+}
 
-  const [unitIds, setUnitIds] = useState<string[]>([]);
-
+export default function ApplicationPageWrapper({ params: { listingId } }: { params: { listingId: string } }) {
   const searchParams = useSearchParams();
 
+  return searchParams && (
+    <ApplicationPage
+      listingId={listingId}
+      _q={{
+        fullName: searchParams.get('fullName') || '',
+        email: searchParams.get('email') || '',
+        phone: searchParams.get('phone') || '',
+        unitIds: searchParams.get('units')?.split(','),
+        k: searchParams.get('k') || '',
+      }}
+    />
+  );
+}
+
+function ApplicationPage({
+  listingId,
+  _q,
+}: {
+  listingId: string;
+  _q: Query;
+}) {
+  const session = useSession();
+  const [q, setQuery] = useState<Query>(_q);
+
   useEffect(() => {
-    if (!searchParams) {
-      throw new Error("No search params");
-    }
-    const unitsQuery = searchParams.get('units');
-    if (!unitsQuery) {
-      throw new Error("Missing units param");
-    }
-    const uIds = unitsQuery.split(',');
-    if (uIds.length === 0) {
-      throw new Error("No units selected");
-    }
-    setUnitIds(uIds);
-  }, [searchParams]);
+    (async () => {
+      if((_q.email || _q.fullName || _q.phone) && _q.k) {
+        try {
+          await backendAPI.get(`/api/listings/listing/${listingId}/application-link`, {
+            params: _q,
+          });
+        } catch(err) {
+          console.error(err);
+          throw new Error("Invalid application link");
+        }
+      }
+    })();
+  }, []);
+
+  useEffect(() => {
+    if (session.status !== "authenticated") return;
+    const user = session.data.user.user;
+    setQuery(v => ({
+      ...v,
+      fullName: user.firstName + ' ' + user.lastName,
+      email: user.email,
+      phone: user.phone,
+    }));
+  }, [session.status]);
 
   const query = useQuery<ListingDetail>({
-    queryKey: ['application', 'listing', session.data?.user.user.id, listingId, unitIds],
-    queryFn: async ({queryKey}) => {
+    queryKey: ['application', 'listing', session.data?.user.user.id, listingId],
+    queryFn: async ({ queryKey }) => {
       const userId = queryKey.at(2) as string;
       const listingId = queryKey.at(3) as string;
-      const unitIds = queryKey.at(4) as string[];
 
       const listing = (await backendAPI.get<Listing>(`/api/listings/listing/${listingId}`)).data;
-      if(_.intersection(listing.units.map((u) => u.unitId), unitIds).length < unitIds.length){
-        throw new Error("Invalid unit id");
-      }
       const property = (await backendAPI.get<Property>(`/api/properties/property/${listing.propertyId}`)).data;
-      if(property.managers.map(m => m.managerId).includes(userId)){
-        throw new Error("You are not authorized to apply for this listing");
-      }      
+      if (property.managers.map(m => m.managerId).includes(userId)) {
+        throw new Error("You cannot to apply to this property");
+      }
       const units = (await backendAPI.get<Unit[]>('/api/units/ids', {
         params: {
-          unitIds: unitIds,
+          unitIds: listing.units.map((u) => u.unitId),
           fields: "name,floor,area"
         }
       })).data;
@@ -68,7 +101,6 @@ export default function ApplicationPage({ params: {listingId} }: { params: { lis
         units: units,
       };
     },
-    enabled: session.status === "authenticated" && unitIds.length > 0,
     staleTime: 1000 * 60 * 5,
     cacheTime: 1000 * 60 * 5,
   });
@@ -77,10 +109,10 @@ export default function ApplicationPage({ params: {listingId} }: { params: { lis
     <Loading />
   ) : query.isError ? (
     <div>Error {JSON.stringify(query.error)}</div>
-  ) : (
-    <MainForm 
+  ) : q && (
+    <MainForm
       data={query.data!}
-      sessionData={session.data!}
+      query={q}
     />
   );
 }

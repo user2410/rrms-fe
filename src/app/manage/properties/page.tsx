@@ -28,7 +28,7 @@ export default function ManagePropertiesPage() {
         headers: {
           Authorization: `Bearer ${session.data?.user.accessToken}`,
         },
-      })).data;
+      })).data || ([]);
 
       return res.map((p) => ({
         ...p, 
