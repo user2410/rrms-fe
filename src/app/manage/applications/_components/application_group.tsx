@@ -62,7 +62,7 @@ export default function ApplicationGroup({
         className="flex flex-row items-center justify-center border p-2 hover:bg-slate-100 cursor-pointer"
         onClick={() => setShow(v => (v >= applications.length ? 3 : applications.length))}
       >
-        {show >= applications.length ? "Ẩn bớt" : "Hiện tất cả"}
+        {show > applications.length ? "Ẩn bớt" : "Hiện tất cả"}
      </div>
     </div>
   );

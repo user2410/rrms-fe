@@ -21,7 +21,7 @@ export default function ApplicationItem({
   console.log('application', ma);
 
   return (
-    <Link href={`/manage/rental/applications/application/${application.id}`} className="block p-4 space-y-3 bg-card border">
+    <Link href={`/manage/applications/application/${application.id}`} className="block p-4 space-y-3 bg-card border">
       <div className="flex flex-row justify-between">
         <span className="text-xl font-semibold">{application.fullName}</span>
         <span className="text-sm font-light">Submitted at {createdAt.toLocaleDateString("vi-VN")} @{createdAt.toLocaleTimeString()}</span>

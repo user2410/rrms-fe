@@ -18,7 +18,7 @@ export default async function handler(
     const r = await backendAPI.post("/api/payments/vnpay/create_payment_url/" + id, {
       bankCode,
       language,
-      returnUrl: `${process.env.NEXT_PUBLIC_BACKEND_URL}/api/payments/vnpay/vnpay_return`,
+      returnUrl: `${process.env.NEXT_PUBLIC_HTTP_BACKEND_URL}/api/payments/vnpay/vnpay_return`,
     }, {
       headers: {
         "Authorization": `Bearer ${accessToken}`

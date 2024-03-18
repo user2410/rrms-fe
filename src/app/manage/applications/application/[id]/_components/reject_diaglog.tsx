@@ -6,19 +6,26 @@ import { Fragment, useEffect, useRef, useState } from "react";
 import { ManagedApplication } from "@/models/application";
 import { backendAPI } from "@/libs/axios";
 import Spinner from "@/components/ui/spinner";
+import { Label } from "@/components/ui/label";
+import { Textarea } from "@/components/ui/textarea";
+import { DialogClose } from "@radix-ui/react-dialog";
 
 type STAGE = "CONFIRMATION" | "SUBMITTING" | "SUCCESS" | "ERROR";
 
 export default function RejectDiaglog({
   data,
   accessKey,
+  userId,
   refresh,
 }: {
   data: ManagedApplication;
   accessKey: string;
+  userId: string;
   refresh: () => void;
 }) {
   const triggerBtnRef = useRef<HTMLButtonElement>(null);
+  const messageRef = useRef<HTMLTextAreaElement>(null);
+
   const [stage, setStage] = useState<STAGE>("CONFIRMATION");
 
   useEffect(() => {
@@ -28,9 +35,16 @@ export default function RejectDiaglog({
   async function handleAccept() {
     setStage("SUBMITTING");
     try {
+      console.log("payload", { 
+        status: "REJECTED",
+        message: messageRef.current?.value,
+      },);
       await backendAPI.patch(
         `/api/applications/application/status/${data.application.id}`,
-        { status: "REJECTED" },
+        { 
+          status: "REJECTED",
+          message: messageRef.current?.value,
+        },
         { headers: { Authorization: `Bearer ${accessKey}` } }
       );
       setStage("SUCCESS");
@@ -47,6 +61,7 @@ export default function RejectDiaglog({
           ref={triggerBtnRef}
           variant="destructive"
           disabled={["APPROVED", "REJECTED"].includes(data.application.status)}
+          className={data.application.creatorId === userId ? "hidden" : ""}
         >
           Từ chối
         </Button>
@@ -59,9 +74,18 @@ export default function RejectDiaglog({
                 <DialogTitle>Từ chối đơn thuê nhà</DialogTitle>
                 <DialogDescription>Ứng viên sẽ được thông báo và bạn không còn xem được đơn ứng tuyển này. </DialogDescription>
               </DialogHeader>
+              <div className="space-y-2">
+                <Label htmlFor="message">Lý do từ chối</Label>
+                <Textarea id="message" ref={messageRef}/>
+              </div>
               <div className="flex flex-row justify-end gap-2">
-                <Button variant="ghost">Hủy</Button>
-                <Button variant="destructive">Từ chối</Button>
+                <Button type="button" variant="ghost">Hủy</Button>
+                <Button 
+                  type="submit" variant="destructive"
+                  onClick={handleAccept}
+                >
+                  Từ chối
+                </Button>
               </div>
             </>
           ) : stage === "SUBMITTING" ? (
@@ -85,7 +109,9 @@ export default function RejectDiaglog({
               </DialogHeader>
               <Separator className="my-6" />
               <div className="flex flex-row justify-center gap-2">
-                <Button variant="ghost">Hủy</Button>
+                <DialogClose asChild>
+                  <Button variant="ghost">Hủy</Button>
+                </DialogClose>
                 <Button onClick={handleAccept}>Thử lại</Button>
               </div>
             </>

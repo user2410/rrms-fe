@@ -6,16 +6,19 @@ import { Fragment, useEffect, useRef, useState } from "react";
 import { ManagedApplication } from "@/models/application";
 import { backendAPI } from "@/libs/axios";
 import Spinner from "@/components/ui/spinner";
+import clsx from "clsx";
 
 type STAGE = "CONFIRMATION" | "SUBMITTING" | "SUCCESS" | "ERROR";
 
 export default function AcceptDiaglog({
   data,
   accessKey,
+  userId,
   refresh,
 }: {
   data: ManagedApplication;
   accessKey: string;
+  userId: string;
   refresh: () => void;
 }) {
   const triggerBtnRef = useRef<HTMLButtonElement>(null);
@@ -47,7 +50,10 @@ export default function AcceptDiaglog({
           ref={triggerBtnRef}
           variant="default"
           disabled={["APPROVED", "REJECTED"].includes(data.application.status)}
-          className="bg-green-500 hover:bg-green-600"
+          className={clsx(
+            "bg-green-500 hover:bg-green-600",
+            data.application.creatorId === userId && "hidden",
+          )}
         >
           Chấp nhận
         </Button>

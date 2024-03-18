@@ -5,7 +5,7 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Skeleton } from "@/components/ui/skeleton";
 import { backendAPI } from "@/libs/axios";
-import { Application } from "@/models/application";
+import { Application, MapApplicationStatusToText } from "@/models/application";
 import { Listing } from "@/models/listing";
 import { Property } from "@/models/property";
 import { useQuery } from "@tanstack/react-query";
@@ -106,14 +106,16 @@ export default function Applications({
 
 function ApplicationCard({ application }: { application: Application }) {
   return (
-    <div className="p-4 border shadow-sm space-y-2">
-      <Badge className="uppercase">{"WITHDRAWN"}</Badge>
+    <Link href={`/manage/applications/application/${application.id}`} className="p-4 border shadow-sm space-y-2">
+      <Badge className="uppercase">
+        {MapApplicationStatusToText[application.status]}
+      </Badge>
       <h2>{application.fullName}</h2>
       <div className="flex flex-row gap-1">
         Xem chi tiết
         <ChevronRightCircle className="w-6 h-6" />
       </div>
-    </div>
+    </Link>
   );
 }
 

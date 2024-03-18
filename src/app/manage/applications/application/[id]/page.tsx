@@ -5,23 +5,20 @@ import * as Tabs from "@radix-ui/react-tabs";
 import { MoveLeft } from "lucide-react";
 import { useRouter } from "next/navigation";
 
-import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 import Loading from "@/components/ui/loading";
-import { Separator } from "@/components/ui/separator";
 import { backendAPI } from "@/libs/axios";
 import { Application, ApplicationUnit, ManagedApplication, MapRentalIntentionToText, TransformApplicationRESTResponse } from "@/models/application";
 import { Listing } from "@/models/listing";
 import { Property } from "@/models/property";
 import { Unit } from "@/models/unit";
 import { GetLocationName } from "@/utils/dghcvn";
-import { DialogTrigger } from "@radix-ui/react-dialog";
 import { useQuery } from "@tanstack/react-query";
 import { useSession } from "next-auth/react";
-import { FaCheckCircle } from "react-icons/fa";
 import StatusCard from "../../_components/status_card";
 import styles from "../../_styles/application_list.module.css";
-import BasicInfo from "./_components/basic";
 import AcceptDiaglog from "./_components/accept_diaglog";
+import BasicInfo from "./_components/basic";
+import ChatTab from "./_components/chat_tab";
 import RejectDiaglog from "./_components/reject_diaglog";
 
 export default function ApplicationPage({ params }: { params: { id: string } }) {
@@ -31,11 +28,11 @@ export default function ApplicationPage({ params }: { params: { id: string } }) 
   const { id } = params;
 
   const query = useQuery<ManagedApplication>({
-    queryKey: ["manage", "rental", "applications", "application", id, session.data?.user.accessToken],
+    queryKey: ["manage", "rental", "applications", "application", id],
     queryFn: async ({queryKey}) => {
       const application = (await backendAPI.get<Application>(`/api/applications/application/${queryKey.at(4)}`, {
         headers: {
-          Authorization: `Bearer ${queryKey.at(5)}`,
+          Authorization: `Bearer ${session.data?.user.accessToken}`,
         },
         transformResponse: TransformApplicationRESTResponse,
       })).data;
@@ -44,13 +41,21 @@ export default function ApplicationPage({ params }: { params: { id: string } }) 
           status: "CONDITIONALLY_APPROVED",
         }, {
           headers: {
-            Authorization: `Bearer ${queryKey.at(5)}`,
+            Authorization: `Bearer ${session.data?.user.accessToken}`,
           },
         });
         application.status = "CONDITIONALLY_APPROVED";
       }
-      const listing = (await backendAPI.get<Listing>("/api/listings/listing/" + application.listingId)).data;
-      const property = (await backendAPI.get<Property>("/api/properties/property/" + application.propertyId)).data;
+      const listing = (await backendAPI.get<Listing>("/api/listings/listing/" + application.listingId, {
+        headers: {
+          Authorization: `Bearer ${session.data?.user.accessToken}`,
+        },
+      })).data;
+      const property = (await backendAPI.get<Property>("/api/properties/property/" + application.propertyId, {
+        headers: {
+          Authorization: `Bearer ${session.data?.user.accessToken}`,
+        },
+      })).data;
       const units = (await backendAPI.get<Unit[]>("api/units/ids/", {
         params: {
           unitIds: application.units.map((u: ApplicationUnit) => u.unitId).join(","),
@@ -101,7 +106,7 @@ export default function ApplicationPage({ params }: { params: { id: string } }) 
         </div>
       </div>
 
-      <div className="px-4 py-6 border space-y-4 bg-card">
+      <div className="p-4 border space-y-4 bg-card">
         <div className="flex flex-row justify-between items-center w-full">
           <h1 className="text-2xl font-medium">{application.fullName}</h1>
           <div className="flex flex-row gap-2">
@@ -109,11 +114,13 @@ export default function ApplicationPage({ params }: { params: { id: string } }) 
             <AcceptDiaglog
               data={query.data}
               accessKey={session.data!.user.accessToken}
+              userId={session.data!.user.user.id}
               refresh={() => query.refetch()}
-            />
+              />
             <RejectDiaglog
               data={query.data}
               accessKey={session.data!.user.accessToken}
+              userId={session.data!.user.user.id}
               refresh={() => query.refetch()}
             />
           </div>
@@ -149,7 +156,7 @@ export default function ApplicationPage({ params }: { params: { id: string } }) 
         </div>
       </div>
 
-      <Tabs.Root defaultValue="basic" className={styles.TabsRoot}>
+      <Tabs.Root defaultValue="chat" className={styles.TabsRoot}>
         <Tabs.List className={styles.TabsList}>
           <Tabs.Trigger value="basic" className={styles.TabsTrigger}>
             Đơn ứng tuyển
@@ -162,7 +169,10 @@ export default function ApplicationPage({ params }: { params: { id: string } }) 
           <BasicInfo data={query.data}/>
         </Tabs.Content>
         <Tabs.Content className={styles.TabsContent} value="chat">
-          Cửa sổ chat
+          <ChatTab 
+            data={query.data}
+            sessionData={session.data!}
+          />
         </Tabs.Content>
       </Tabs.Root>
     </div>

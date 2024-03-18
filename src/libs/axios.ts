@@ -1,14 +1,14 @@
 import axios from "axios";
 
 export const backendAPI = axios.create({
-  baseURL: process.env.NEXT_PUBLIC_BACKEND_URL,
+  baseURL: process.env.NEXT_PUBLIC_HTTP_BACKEND_URL,
   headers: {
     "Content-Type": "application/json",
   },
 });
 
 // export const publicBackendAPI = axios.create({
-//   baseURL: process.env.NEXT_PUBLIC_BACKEND_URL,
+//   baseURL: process.env.NEXT_PUBLIC_HTTP_BACKEND_URL,
 //   headers: {
 //     "Content-Type": "application/json",
 //   },

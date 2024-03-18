@@ -55,8 +55,6 @@ export default function PropertyDetailPage({ params }: { params: { id: string } 
     );
   }
 
-  const { property, units } = query.data;
-
   return (
     <PropertyDataProvider>
       <PropertyPageContext data={query.data} />

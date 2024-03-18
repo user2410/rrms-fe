@@ -92,7 +92,10 @@ export default function ApplicationList({
       </div>
       <div className="flex flex-row justify-between w-full">
         <h2>
-          Hiển thị {applications.length} đơn ứng tuyển ({applications.filter(a => a.status === "PENDING").length} đơn mới cần xét duyệt)
+          Hiển thị {applications.length} đơn ứng tuyển {(() => {
+            const count = applications.filter(a => a.status === "PENDING").length;
+            return (count > 0 && "(đơn mới cần xét duyệt)");
+          })()} 
         </h2>
         {/* Sort applications */}
         <div className="flex flex-row items-center gap-2">

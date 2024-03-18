@@ -16,6 +16,7 @@ import { AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent, 
 import Image from "next/image";
 import { ToMillion } from "@/utils/currency";
 import { Session } from "next-auth";
+import { useRouter } from "next/navigation";
 
 const applicationFormSchema = z.object({
   ld: z.object({
@@ -111,112 +112,23 @@ export default function MainForm({
   data: ListingDetail;
   query: Query;
 }) {
+  const router = useRouter();
   const { listing, property, units } = data;
   const [tab, setTab] = useState<string>("1");
   const form = useForm<ApplicationForm>({
     resolver: zodResolver(applicationFormSchema),
-    // defaultValues: {
-    //   ld: data,
-    //   ao: {
-    //     fullName: query.fullName,
-    //     email: query.email,
-    //     phone: query.phone,
-    //     minors: [],
-    //     coaps: [],
-    //     pets: [],
-    //   },
-    //   yd: {
-    //     vehicles: [],
-    //   },
-    //   listingId: listing.id,
-    //   propertyId: property.id,
-    //   units: units.map((unit: Unit) => {
-    //     const lu = listing.units.find(_u => unit.id === _u.unitId)!;
-    //     return {
-    //       unitId: unit.id,
-    //       listingPrice: lu.price,
-    //       offeredPrice: lu.price,
-    //     };
-    //   }),
-    //   unitIds: query.unitIds || [],
-    //   k: query.k,
-    // },
     defaultValues: {
       ld: data,
       ao: {
         fullName: query.fullName,
         email: query.email,
         phone: query.phone,
-        moveinDate: new Date("2024-10-01"),
-        preferredTerm: 12,
-        rentalIntention: "RESIDENCE",
-        minors: [
-          {
-            fullName: "mdvskm qwe",
-            dob: new Date("2013-01-01"),
-            email: "abc@email.com",
-            phone: "012948759",
-            description: "asjnwemkg weqmo qerfm",
-          },
-          {
-            fullName: "qwklqr qwekwe",
-            dob: new Date("2014-01-01"),
-            email: "asq@email.com",
-            phone: "022948759",
-            description: "awgk qwom sjnwemkg weqmo qerfm",
-          },
-        ],
-        coaps: [
-          {
-            fullName: "fwoem qewqpk a",
-            job: "qwekqwe",
-            income: 50,
-            dob: new Date("1992-01-01"),
-            email: "rqkp@email.com",
-            phone: "012948759",
-            description: "asjnwemkg weqmo qerfm",
-          },
-          {
-            fullName: "qewmoekm admk",
-            job: "qwekqwe",
-            income: 4,
-            dob: new Date("2006-01-01"),
-            email: "afkow@email.com",
-            phone: "012948759",
-            description: "asjnwemkg weqmo qerfm",
-          },
-        ],
-        pets: [
-          {
-            type: "dog",
-            weight: 10,
-            description: "qwekqwe",
-          },
-          {
-            type: "cat",
-            weight: 5,
-            description: "qewkmfq",
-          }
-        ],
+        minors: [],
+        coaps: [],
+        pets: [],
       },
       yd: {
-        employmentStatus: "EMPLOYED",
-        employmentCompanyName: "Viettel",
-        employmentPosition: "Engineer",
-        employmentMonthlyIncome: 100,
-        employmentComment: "Tien tiet kiem 50 trieu moi thang",
-        vehicles: [
-          {
-            type: "car",
-            model: "qw,pf",
-            code: "gromg",
-          },
-          {
-            type: "motorbike",
-            model: "rtgf",
-            code: "rmeew",
-          }
-        ],
+        vehicles: [],
       },
       listingId: listing.id,
       propertyId: property.id,
@@ -270,7 +182,7 @@ export default function MainForm({
                 </AlertDialogHeader>
                 <AlertDialogFooter>
                   <AlertDialogCancel>No</AlertDialogCancel>
-                  <AlertDialogAction>OK</AlertDialogAction>
+                  <AlertDialogAction onClick={() => router.replace(`/listings/${listing.id}`)}>OK</AlertDialogAction>
                 </AlertDialogFooter>
               </AlertDialogContent>
             </AlertDialog>

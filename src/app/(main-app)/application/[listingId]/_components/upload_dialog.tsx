@@ -111,7 +111,8 @@ export default function UploadDialog({
             <h2>Thành công gửi đơn đăng kí </h2>
             <div className="flex flex-row gap-2">
               <Button variant="link" type="button" onClick={() => router.replace("/")}>Quay lại</Button>
-              <Button variant="link" type="button" onClick={() => router.push(`/manage/rental/applications/${res.id}`)}>Xem chi tiết</Button>
+              {/* TODO: update viewing application link */}
+              <Button variant="link" type="button" onClick={() => {}}>Xem chi tiết</Button>
             </div>
           </div>
         )}

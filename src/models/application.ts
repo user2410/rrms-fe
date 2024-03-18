@@ -130,6 +130,14 @@ export const MapIdentityTypeToText = {
   "DRIVERLICENSE" : "Bằng lái xe", 
 };
 
+export const MapApplicationStatusToText = {
+  "PENDING": "Chờ xử lý",
+  "APPROVED": "Đã duyệt",
+  "CONDITIONALLY_APPROVED": "Đang xét duyệt",
+  "REJECTED": "Từ chối",
+  "WITHDRAWN": "Đã rút",
+};
+
 function transformDateValues(application: Application) {
     if(application.dob) {application.dob = new Date(application.dob);}
     if(application.moveinDate) {application.moveinDate = new Date(application.moveinDate);}
