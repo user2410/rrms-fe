@@ -9,6 +9,8 @@ import Link from "next/link";
 import toast from "react-hot-toast";
 import MessageGroup from "./chat/msg_group";
 import { WSProvider } from "../_context/ws.context";
+import { MessagesProvider } from "../_context/messages.context";
+import { ReminderContext, RemindersProvider } from "../_context/reminders.context";
 
 export default function ChatTab({
   data,
@@ -76,7 +78,15 @@ export default function ChatTab({
     </div>
   ) : (
     <WSProvider>
-      <MessageGroup sessionData={sessionData} applicationData={data} msgGroup={query.data}/>
+      <MessagesProvider>
+        <RemindersProvider>
+          <MessageGroup 
+            sessionData={sessionData} 
+            applicationData={data} 
+            msgGroup={query.data}
+          />
+        </RemindersProvider>
+      </MessagesProvider>
     </WSProvider>
   );
 };

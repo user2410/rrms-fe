@@ -1,17 +1,17 @@
+import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
 import { ScrollArea } from "@/components/ui/scroll-area";
+import Spinner from "@/components/ui/spinner";
+import { backendAPI } from "@/libs/axios";
 import { ManagedApplication } from "@/models/application";
 import { Message, MsgGroup } from "@/models/message";
-import { Session } from "next-auth";
-import MessageItem from "./message_item";
-import { FormEvent, useEffect, useMemo, useRef, useState } from "react";
-import { Button } from "@/components/ui/button";
-import { Image as ImageIcon, RotateCcw, Send } from "lucide-react";
-import { Input } from "@/components/ui/input";
 import { useQuery } from "@tanstack/react-query";
-import { backendAPI } from "@/libs/axios";
-import Spinner from "@/components/ui/spinner";
+import { Image as ImageIcon, RotateCcw, Send } from "lucide-react";
+import { Session } from "next-auth";
+import { FormEvent, useEffect, useRef, useState } from "react";
+import { useMessageCtx } from "../../_context/messages.context";
 import { useWSCtx } from "../../_context/ws.context";
-import { MeasureMemoryMode } from "vm";
+import MessageItem from "./message_item";
 
 const defaultLimit = 10;
 const defaultOffset = 0;
@@ -27,18 +27,18 @@ export default function MessageList({
 }) {
   const [limit, setLimit] = useState<number>(defaultLimit);
   const [offset, setOffset] = useState<number>(defaultOffset);
-  const [oldMessages, setOldMessages] = useState<Message[]>([]);
 
-  const { conn, events } = useWSCtx();
+  const { conn } = useWSCtx();
+  const { messages, setMessages } = useMessageCtx();
 
-  const [showLoadMore, setShowLoadMore] = useState<boolean>(true);
+  const [showLoadMore, setShowLoadMore] = useState<boolean>(false);
 
   const scrollAreaRef = useRef<HTMLDivElement>(null);
   const fileInputRef = useRef<HTMLInputElement>(null);
   const textInputRef = useRef<HTMLInputElement>(null);
 
   const query = useQuery<Message[]>({
-    queryKey: ["manage", "applications", "application", applicationData.application.id.toString(), "msg-group", msgGroup.groupId.toString()] as string[],
+    queryKey: ["manage", "applications", "application", applicationData.application.id.toString(), "msg-group", msgGroup.groupId],
     queryFn: async ({ queryKey }) => {
       var ms = (await backendAPI.get<Message[]>(`/api/chat/group/${queryKey.at(5)}/messages`, {
         params: {
@@ -50,22 +50,25 @@ export default function MessageList({
         },
       })).data;
       ms = ms || ([] as Message[]);
-      setOldMessages(ms);
-      if (ms.length < limit) {
-        setShowLoadMore(false);
+      if (ms.length >= limit) {
+        setShowLoadMore(true);
       }
+      setMessages(ms);
       return ms;
     },
-    staleTime: 1000 * 60 * 60,
-    cacheeTime: 1000 * 60 * 60,
+    staleTime: 1000 * 60 * 5,
+    cacheTime: 1000 * 60 * 5,
   });
 
-  const messages = useMemo<Message[]>(() => {
-    return [
-      ...oldMessages,
-      ...events.filter(e => e.type === "CHAT_CREATE_MESSAGE").map(e => (e.payload as Message)),
-    ].sort((a, b) => new Date(a.createdAt).getTime() - new Date(b.createdAt).getTime());
-  }, [oldMessages, events]);
+  // const messages = useMemo<Message[]>(() => {
+  //   return filterEvents<Message>([
+  //     ...oldMessages,
+  //     ...events.filter(e => e.type === "CHAT_CREATE_MESSAGE").map(e => (e.payload as Message)),
+  //   ],
+  //     "id",
+  //     (a, b) => new Date(b.updatedAt).getTime() - new Date(a.updatedAt).getTime()).
+  //     sort((a, b) => new Date(a.createdAt).getTime() - new Date(b.createdAt).getTime());
+  // }, [oldMessages, events]);
 
   useEffect(() => {
     // scroll to bottom
@@ -122,10 +125,11 @@ export default function MessageList({
         headers: {
           Authorization: `Bearer ${sessionData.user.accessToken}`,
         },
-      })).data;
-      setOldMessages(v => [...v, ...ms]);
+      })).data || ([] as Message[]);
       if (ms.length < limit) {
         setShowLoadMore(false);
+      } else {
+        setShowLoadMore(true);
       }
       setOffset(offset + limit);
     } catch (err) {
@@ -161,6 +165,11 @@ export default function MessageList({
                 </Button>
               </div>
             )}
+            {messages.length === 0 && (
+              <div className="w-full h-full flex justify-center items-center">
+                <p className="text-xl font-thin">Không có tin nhắn nào</p>
+              </div>
+            )}
             {messages.map((message) => (
               <MessageItem
                 key={message.id}
@@ -177,10 +186,14 @@ export default function MessageList({
         action="POST"
         onSubmit={handleSubmit}
       >
-        <button type="button" className="border-none" onClick={() => {
-          console.log("open create image modal");
-          fileInputRef.current?.click();
-        }}>
+        <button 
+          type="button" className="border-none" 
+          disabled={query.isLoading || query.isError || !conn}
+          onClick={() => {
+            console.log("open create image modal");
+            fileInputRef.current?.click();
+          }}
+        >
           <ImageIcon className="w-6 h-6 text-blue-400" />
         </button>
         <input
@@ -193,9 +206,14 @@ export default function MessageList({
         />
         <Input
           ref={textInputRef}
+          disabled={query.isLoading || query.isError || !conn}
           className="flex-grow min-h-[32px]"
           placeholder="Tin nhắn ..." />
-        <button type="submit" className="border-none" onClick={() => console.log("submit message")}>
+        <button 
+          type="submit" className="border-none" 
+          disabled={query.isLoading || query.isError || !conn}
+          onClick={() => console.log("submit message")}
+        >
           <Send className="w-6 h-6 text-blue-400" />
         </button>
       </form>
