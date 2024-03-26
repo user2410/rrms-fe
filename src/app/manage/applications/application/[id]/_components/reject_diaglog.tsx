@@ -1,27 +1,24 @@
-import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
+import { AlertDialog, AlertDialogContent, AlertDialogDescription, AlertDialogHeader, AlertDialogTitle, AlertDialogTrigger } from "@/components/ui/alert-dialog";
 import { Button } from "@/components/ui/button";
 import { FaCheckCircle } from "react-icons/fa";
 import { Separator } from "@/components/ui/separator";
-import { Fragment, useEffect, useRef, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { ManagedApplication } from "@/models/application";
 import { backendAPI } from "@/libs/axios";
 import Spinner from "@/components/ui/spinner";
 import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
 import { DialogClose } from "@radix-ui/react-dialog";
+import { Session } from "next-auth";
 
 type STAGE = "CONFIRMATION" | "SUBMITTING" | "SUCCESS" | "ERROR";
 
 export default function RejectDiaglog({
   data,
-  accessKey,
-  userId,
-  refresh,
+  sessionData,
 }: {
   data: ManagedApplication;
-  accessKey: string;
-  userId: string;
-  refresh: () => void;
+  sessionData: Session;
 }) {
   const triggerBtnRef = useRef<HTMLButtonElement>(null);
   const messageRef = useRef<HTMLTextAreaElement>(null);
@@ -45,35 +42,33 @@ export default function RejectDiaglog({
           status: "REJECTED",
           message: messageRef.current?.value,
         },
-        { headers: { Authorization: `Bearer ${accessKey}` } }
+        { headers: { Authorization: `Bearer ${sessionData.user.accessToken}` } }
       );
       setStage("SUCCESS");
-      refresh();
     } catch (err) {
       console.error(err);
       setStage("ERROR");
     }
   }
   return (
-    <Dialog>
-      <DialogTrigger asChild>
+    <AlertDialog>
+      <AlertDialogTrigger asChild>
         <Button
           ref={triggerBtnRef}
           variant="destructive"
           disabled={["APPROVED", "REJECTED"].includes(data.application.status)}
-          className={data.application.creatorId === userId ? "hidden" : ""}
         >
           Từ chối
         </Button>
-      </DialogTrigger>
-      <DialogContent>
+      </AlertDialogTrigger>
+      <AlertDialogContent>
         {stage === "CONFIRMATION"
           ? (
             <>
-              <DialogHeader>
-                <DialogTitle>Từ chối đơn thuê nhà</DialogTitle>
-                <DialogDescription>Ứng viên sẽ được thông báo và bạn không còn xem được đơn ứng tuyển này. </DialogDescription>
-              </DialogHeader>
+              <AlertDialogHeader>
+                <AlertDialogTitle>Từ chối đơn thuê nhà</AlertDialogTitle>
+                <AlertDialogDescription>Ứng viên sẽ được thông báo và bạn không còn xem được đơn ứng tuyển này. </AlertDialogDescription>
+              </AlertDialogHeader>
               <div className="space-y-2">
                 <Label htmlFor="message">Lý do từ chối</Label>
                 <Textarea id="message" ref={messageRef}/>
@@ -89,24 +84,24 @@ export default function RejectDiaglog({
               </div>
             </>
           ) : stage === "SUBMITTING" ? (
-            <DialogHeader className="flex flex-col items-center">
+            <AlertDialogHeader className="flex flex-col items-center">
               <Spinner />
-              <DialogTitle>Đang xử lý</DialogTitle>
-            </DialogHeader>
+              <AlertDialogTitle>Đang xử lý</AlertDialogTitle>
+            </AlertDialogHeader>
           ) : stage === "SUCCESS" ? (
             <>
-              <DialogHeader className="flex flex-col items-center space-y-3">
+              <AlertDialogHeader className="flex flex-col items-center space-y-3">
                 <FaCheckCircle size={32} color="green" />
-                <DialogTitle>Đã từ chối đơn ứng tuyển</DialogTitle>
-                <DialogDescription>Thông báo sẽ được tới <strong>{data.application.fullName}</strong>.</DialogDescription>
-              </DialogHeader>
+                <AlertDialogTitle>Đã từ chối đơn ứng tuyển</AlertDialogTitle>
+                <AlertDialogDescription>Thông báo sẽ được tới <strong>{data.application.fullName}</strong>.</AlertDialogDescription>
+              </AlertDialogHeader>
               <Button variant="link" onClick={() => triggerBtnRef.current?.click()}>OK</Button>
             </>
           ) : (
             <>
-              <DialogHeader className="flex flex-col items-center">
-                <DialogTitle>Đã có lỗi xảy ra</DialogTitle>
-              </DialogHeader>
+              <AlertDialogHeader className="flex flex-col items-center">
+                <AlertDialogTitle>Đã có lỗi xảy ra</AlertDialogTitle>
+              </AlertDialogHeader>
               <Separator className="my-6" />
               <div className="flex flex-row justify-center gap-2">
                 <DialogClose asChild>
@@ -116,7 +111,7 @@ export default function RejectDiaglog({
               </div>
             </>
           )}
-      </DialogContent>
-    </Dialog>
+      </AlertDialogContent>
+    </AlertDialog>
   );
 };

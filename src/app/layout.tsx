@@ -20,6 +20,9 @@ import 'lightgallery/css/lightgallery.css';
 import 'lightgallery/css/lg-zoom.css';
 import 'lightgallery/css/lg-thumbnail.css';
 
+import "quill/dist/quill.core.css";
+import "quill/dist/quill.snow.css";
+
 const inter = Inter({ subsets: ['latin'] });
 
 export const metadata: Metadata = {

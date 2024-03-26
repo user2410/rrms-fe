@@ -20,6 +20,7 @@ import AcceptDiaglog from "./_components/accept_diaglog";
 import BasicInfo from "./_components/basic";
 import ChatTab from "./_components/chat_tab";
 import RejectDiaglog from "./_components/reject_diaglog";
+import PostApplication from "./_components/post_application";
 
 export default function ApplicationPage({ params }: { params: { id: string } }) {
   const router = useRouter();
@@ -110,19 +111,26 @@ export default function ApplicationPage({ params }: { params: { id: string } }) 
         <div className="flex flex-row justify-between items-center w-full">
           <h1 className="text-2xl font-medium">{application.fullName}</h1>
           <div className="flex flex-row gap-2">
-            {/* <Button variant="outline">Đồngy ý 1 phần</Button> // To get applicant's allowance to view his/her criminal report */}
-            <AcceptDiaglog
-              data={query.data}
-              accessKey={session.data!.user.accessToken}
-              userId={session.data!.user.user.id}
-              refresh={() => query.refetch()}
-              />
-            <RejectDiaglog
-              data={query.data}
-              accessKey={session.data!.user.accessToken}
-              userId={session.data!.user.user.id}
-              refresh={() => query.refetch()}
-            />
+            {application.creatorId === session.data!.user.user.id && ["PENDING","CONDITIONALLY_APPROVED"].includes(application.status) && (
+              <Button type="button">
+                Rút đơn
+              </Button>
+            )}
+            {application.creatorId !== session.data!.user.user.id && !["APPROVED","REJECTED"].includes(application.status) && (
+              <>
+                <AcceptDiaglog
+                  data={query.data}
+                  sessionData={session.data!}
+                  />
+                <RejectDiaglog
+                  data={query.data}
+                  sessionData={session.data!}
+                />
+              </>  
+            )}
+            {application.status === "APPROVED" && (
+              <PostApplication data={query.data} sessionData={session.data!}/>
+            )}
           </div>
         </div>
         <div className="w-3/4 grid grid-cols-3 gap-3">
@@ -156,7 +164,7 @@ export default function ApplicationPage({ params }: { params: { id: string } }) 
         </div>
       </div>
 
-      <Tabs.Root defaultValue="chat" className={styles.TabsRoot}>
+      <Tabs.Root defaultValue="basic" className={styles.TabsRoot}>
         <Tabs.List className={styles.TabsList}>
           <Tabs.Trigger value="basic" className={styles.TabsTrigger}>
             Đơn ứng tuyển

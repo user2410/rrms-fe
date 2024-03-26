@@ -1,25 +1,21 @@
-import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
+import { AlertDialog, AlertDialogContent, AlertDialogDescription, AlertDialogHeader, AlertDialogTitle, AlertDialogTrigger } from "@/components/ui/alert-dialog";
 import { Button } from "@/components/ui/button";
-import { FaCheckCircle } from "react-icons/fa";
 import { Separator } from "@/components/ui/separator";
-import { Fragment, useEffect, useRef, useState } from "react";
-import { ManagedApplication } from "@/models/application";
-import { backendAPI } from "@/libs/axios";
 import Spinner from "@/components/ui/spinner";
-import clsx from "clsx";
+import { backendAPI } from "@/libs/axios";
+import { ManagedApplication } from "@/models/application";
+import { Session } from "next-auth";
+import { useEffect, useRef, useState } from "react";
+import { FaCheckCircle } from "react-icons/fa";
 
 type STAGE = "CONFIRMATION" | "SUBMITTING" | "SUCCESS" | "ERROR";
 
 export default function AcceptDiaglog({
   data,
-  accessKey,
-  userId,
-  refresh,
-}: {
+  sessionData,
+} : {
   data: ManagedApplication;
-  accessKey: string;
-  userId: string;
-  refresh: () => void;
+  sessionData: Session;
 }) {
   const triggerBtnRef = useRef<HTMLButtonElement>(null);
   const [stage, setStage] = useState<STAGE>("CONFIRMATION");
@@ -34,39 +30,36 @@ export default function AcceptDiaglog({
       await backendAPI.patch(
         `/api/applications/application/status/${data.application.id}`,
         { status: "APPROVED" },
-        { headers: { Authorization: `Bearer ${accessKey}` } }
+        { headers: { Authorization: `Bearer ${sessionData.user.accessToken}` } }
       );
       setStage("SUCCESS");
-      refresh();
     } catch (err) {
       console.error(err);
       setStage("ERROR");
     }
   }
+
   return (
-    <Dialog>
-      <DialogTrigger asChild>
+    <AlertDialog>
+      <AlertDialogTrigger asChild>
         <Button
           ref={triggerBtnRef}
           variant="default"
           disabled={["APPROVED", "REJECTED"].includes(data.application.status)}
-          className={clsx(
-            "bg-green-500 hover:bg-green-600",
-            data.application.creatorId === userId && "hidden",
-          )}
+          className="bg-green-500 hover:bg-green-600"
         >
           Chấp nhận
         </Button>
-      </DialogTrigger>
-      <DialogContent>
+      </AlertDialogTrigger>
+      <AlertDialogContent>
         {stage === "CONFIRMATION"
           ? (
             <>
-              <DialogHeader>
+              <AlertDialogHeader>
                 <p className="font-normal">
                   Xác nhận thông qua đơn ứng tuyển vào nhà cho thuê <strong>{data.property.name}</strong> của <strong>{data.application.fullName}</strong>
                 </p>
-              </DialogHeader>
+              </AlertDialogHeader>
               <Separator className="my-6" />
               <div className="flex flex-row justify-center gap-2">
                 <Button variant="ghost">Hủy</Button>
@@ -74,36 +67,38 @@ export default function AcceptDiaglog({
               </div>
             </>
           ) : stage === "SUBMITTING" ? (
-            <DialogHeader className="flex flex-col items-center">
+            <AlertDialogHeader className="flex flex-col items-center">
               <Spinner/>
-              <DialogTitle>Đang xử lý</DialogTitle>
-            </DialogHeader>
+              <AlertDialogTitle>Đang xử lý</AlertDialogTitle>
+            </AlertDialogHeader>
           ) : stage === "SUCCESS" ? (
             <>
-              <DialogHeader className="flex flex-col items-center space-y-3">
+              <AlertDialogHeader className="flex flex-col items-center space-y-3">
                 <FaCheckCircle size={32} color="green" />
-                <DialogTitle>Đơn ứng tuyển đã được thông qua</DialogTitle>
-                <DialogDescription>Tin tốt sẽ được thông báo tới các ứng viên.</DialogDescription>
-              </DialogHeader>
+                <AlertDialogTitle>Đơn ứng tuyển đã được thông qua</AlertDialogTitle>
+                <AlertDialogDescription>Tin tốt sẽ được thông báo tới các ứng viên.</AlertDialogDescription>
+              </AlertDialogHeader>
               <Separator className="my-6" />
               <div className="flex flex-col items-center space-y-3">
                 <h2 className="text-center">Tiếp theo, cung cấp một số thông tin về nơi ở mới của bạn</h2>
-                <ul className="list-disc">
+                <ol>
                   <li>Tạo hợp đồng thuê nhà</li>
                   <li>Quản lý quá trình cho thuê</li>
-                </ul>
+                </ol>
                 <div className="space-y-2">
                   {/* TODO: route user to create contract screen */}
-                  <Button variant="default">Thiết đặt</Button>
+                  <Button 
+                    variant="default"
+                  >Thiết đặt</Button>
                   <Button variant="link" onClick={() => triggerBtnRef.current?.click()}>Tôi sẽ xem xét sau</Button>
                 </div>
               </div>
             </>
           ) : (
             <>
-              <DialogHeader className="flex flex-col items-center">
-                <DialogTitle>Đã có lỗi xảy ra</DialogTitle>
-              </DialogHeader>
+              <AlertDialogHeader className="flex flex-col items-center">
+                <AlertDialogTitle>Đã có lỗi xảy ra</AlertDialogTitle>
+              </AlertDialogHeader>
               <Separator className="my-6" />
               <div className="flex flex-row justify-center gap-2">
                 <Button variant="ghost">Hủy</Button>
@@ -111,7 +106,7 @@ export default function AcceptDiaglog({
               </div>
             </>
           )}
-      </DialogContent>
-    </Dialog>
+      </AlertDialogContent>
+    </AlertDialog>
   );
 };

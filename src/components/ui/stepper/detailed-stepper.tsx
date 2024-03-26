@@ -16,7 +16,7 @@ export default function DetailedStepper({
             key={index}
             className={clsx(
               "flex items-center space-x-2.5",
-              currentStep === index && "text-primary dark:text-primary/80" 
+              currentStep === index && "text-foreground dark:text-muted-foreground" 
             )}>
             <span className={clsx(
               "flex items-center justify-center w-8 h-8 border rounded-full shrink-0",
@@ -34,5 +34,5 @@ export default function DetailedStepper({
         ))}
       </ol>
     </div>
-  )
+  );
 }
