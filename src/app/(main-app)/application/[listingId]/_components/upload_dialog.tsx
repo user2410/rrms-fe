@@ -10,6 +10,7 @@ import { useEffect, useState } from "react";
 import { UseFormReturn } from "react-hook-form";
 import { FaCheckCircle } from "react-icons/fa";
 import { ApplicationForm } from "./main_form";
+import Link from "next/link";
 
 type UPLOADSTAGE = "CONFIRMATION" | "CREATING_APPLICATION" | "DONE" | "ERROR";
 
@@ -33,7 +34,7 @@ export default function UploadDialog({
       const accessToken = session.data?.user.accessToken;
       const data = form.getValues();
       const pi = data.ao.profileImage;
-
+      const selectedUnit = data.units.find((u) => u.unitId === data.unitId)!;
       // Upload profile images
       const profileImage = await uploadFile({
         name: pi.name as string,
@@ -57,7 +58,9 @@ export default function UploadDialog({
         ...data.yd,
         listingId: data.listingId,
         propertyId: data.propertyId,
-        units: data.units.filter(u => data.unitIds.includes(u.unitId)),
+        unitId: data.unitId,
+        listingPrice: selectedUnit.listingPrice,
+        offeredPrice: selectedUnit.offeredPrice,
         profileImage,
         k: data.k,
         // employmentProofsOfIncome,
@@ -110,9 +113,8 @@ export default function UploadDialog({
             <FaCheckCircle size={20} color="green" />
             <h2>Thành công gửi đơn đăng kí </h2>
             <div className="flex flex-row gap-2">
-              <Button variant="link" type="button" onClick={() => router.replace("/")}>Quay lại</Button>
-              {/* TODO: update viewing application link */}
-              <Button variant="link" type="button" onClick={() => {}}>Xem chi tiết</Button>
+              <Link href={`/listings/${res.listingId}`}>Quay lại</Link>
+              <Link href={`/manage/applications/application/${res.id}`}>Xem chi tiết</Link>
             </div>
           </div>
         )}

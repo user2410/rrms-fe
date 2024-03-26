@@ -1,7 +1,7 @@
 import { FormControl, FormField, FormItem, FormLabel } from "@/components/ui/form";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { useFormContext } from "react-hook-form";
-import { SearchFormValues } from "../search_box";
+import { SearchFormValues } from "../../search_box";
 import { Label } from "@/components/ui/label";
 
 const nRoomsItems = [

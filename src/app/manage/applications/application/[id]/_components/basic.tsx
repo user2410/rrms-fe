@@ -16,7 +16,7 @@ export default function BasicInfo({
     <div className="space-y-4">
       <BasicTenant data={data}/>
       <BasicUnits data={data}/>
-      <BasicIdentity data={data}/>
+      {/* <BasicIdentity data={data}/> */}
       <BasicCoaps data={data}/>
       <BasicMinors data={data}/>
       <BasicPets data={data}/>

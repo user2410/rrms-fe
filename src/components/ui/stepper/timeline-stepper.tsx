@@ -16,7 +16,7 @@ export default function TimelineStepper({
             currentStep === index && "text-primary dark:text-primary/80" 
           )}>
           <span className={clsx(
-              "absolute -left-4 flex items-center justify-center w-8 h-8 rounded-full ring-2 bg-background",
+              "absolute -left-4 flex items-center justify-center w-8 h-8 rounded-full ring-2",
               currentStep === index
                 ? "border-primary dark:border-primary/80"
                 : "border-muted-foreground dark:border-muted/80",
@@ -24,8 +24,12 @@ export default function TimelineStepper({
           >
             {index + 1}
           </span>
-          <h3 className="font-medium leading-tight">{step.title}</h3>
-          {step.description && <p className="text-sm">{step.description}</p>}
+          <h3 className={clsx(
+            "font-medium leading-tight",
+            currentStep === index && "text-blue-600"
+          )}>{step.title}</h3>
+          {step.description && 
+            <p className={clsx("text-sm", currentStep === index && "text-blue-600")}>{step.description}</p>}
         </li>
       ))}
     </ol>

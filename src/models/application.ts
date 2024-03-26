@@ -55,7 +55,7 @@ export type Application = {
   fullName: string;
   email: string;
   phone: string;
-  dob: Date;
+  dob?: Date;
   profileImage: string;
 
   moveinDate: Date;
@@ -77,10 +77,8 @@ export type Application = {
   employmentComment?: string;
   employmentProofsOfIncome?: string[];
 
-  identityType: string;
-  identityNumber: string;
-  identityIssueDate: Date;
-  identityIssuedBy: string;
+  // identityType: string;
+  // identityNumber: string;
 
   units: ApplicationUnit[];
   minors?: ApplicationMinor[];
@@ -141,7 +139,7 @@ export const MapApplicationStatusToText = {
 function transformDateValues(application: Application) {
     if(application.dob) {application.dob = new Date(application.dob);}
     if(application.moveinDate) {application.moveinDate = new Date(application.moveinDate);}
-    if(application.identityIssueDate) {application.identityIssueDate = new Date(application.identityIssueDate);}
+    // if(application.identityIssueDate) {application.identityIssueDate = new Date(application.identityIssueDate);}
     if(application.createdAt) {application.createdAt = new Date(application.createdAt);}
     if(application.updatedAt) {application.updatedAt = new Date(application.updatedAt);}
 
@@ -205,10 +203,10 @@ export const mockupApplications: Application[] = [
     employmentPosition: "Ky su",
     employmentMonthlyIncome: 90000000,
     employmentComment: "sadnfjnưe gưeigơi qdqưmdqion qưdin",
-    identityType: "ID",
-    identityNumber: "01292944238",
-    identityIssueDate: new Date("2020-01-01"),
-    identityIssuedBy: "Cục quản lý dân cư",
+    // identityType: "ID",
+    // identityNumber: "01292944238",
+    // identityIssueDate: new Date("2020-01-01"),
+    // identityIssuedBy: "Cục quản lý dân cư",
     units: [],
     minors: [
       {

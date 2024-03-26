@@ -1,11 +1,11 @@
-"use client";
-
 import useDebounce from '@/hooks/use-debounce';
 import { City, District, Ward } from '@/models/dghcvn';
 import { FuzzySearch } from '@/utils/dghcvn';
 import { Command, CommandEmpty, CommandGroup, CommandInput, CommandItem, CommandList, CommandSeparator } from '@components/ui/command';
 import { Input, InputProps } from '@components/ui/input';
 import { ChangeEvent, forwardRef, useEffect, useState } from 'react';
+import { useFormContext } from 'react-hook-form';
+import { SearchFormValues } from './search_box';
 
 type SearchSuggestionItem = {
   cities: City[];
@@ -15,6 +15,8 @@ type SearchSuggestionItem = {
 
 const SearchbarSuggestion = forwardRef<HTMLInputElement, InputProps>(
   function Render({ className, type, ...props }, ref) {
+    const form = useFormContext<SearchFormValues>();
+
     const [searchValue, setSearchValue] = useState<string>('');
     const debouncedValue = useDebounce(searchValue, 500);
     const [activeSearch, setActiveSearch] = useState<SearchSuggestionItem | null>(null);
@@ -40,14 +42,16 @@ const SearchbarSuggestion = forwardRef<HTMLInputElement, InputProps>(
 
     return (
       <div className='relative'>
-        <input
-          type={type}
-          ref={ref}
-          {...props}
-          value={searchValue}
-          onChange={(e: ChangeEvent<HTMLInputElement>) => setSearchValue(e.target.value)}
-          className="h-10 w-full px-3 py-2 text-sm rounded-md ring-0 focus-visible:ring-0"
-        />
+        <div className="relative">
+          <Input
+            type={type}
+            ref={ref}
+            {...props}
+            value={searchValue}
+            onChange={(e: ChangeEvent<HTMLInputElement>) => setSearchValue(e.target.value)}
+            className="ring-0 focus-visible:ring-0"
+          />
+        </div>
         {
           activeSearch && (
             <div className="absolute z-10 top-10 w-full overflow-hidden">
@@ -61,6 +65,9 @@ const SearchbarSuggestion = forwardRef<HTMLInputElement, InputProps>(
                         <CommandItem key={i} className="hover:cursor-pointer"
                           onSelect={(value) => {
                             console.log("select ward", value);
+                            form.setValue("pcity", w.cityId);
+                            form.setValue("pdistrict", w.districtId);
+                            form.setValue("pward", w.id);
                             setSearchValue(`${w.name}, ${w.districtName}, ${w.cityName}`);
                             setEnableSuggestion(false);
                           }}>
@@ -77,6 +84,8 @@ const SearchbarSuggestion = forwardRef<HTMLInputElement, InputProps>(
                           <CommandItem key={i} className="hover:cursor-pointer"
                             onSelect={(value) => {
                               console.log("select district", value);
+                              form.setValue("pcity", d.cityCode);
+                              form.setValue("pdistrict", d.id);
                               setSearchValue(`${d.name}, ${d.cityName}`);
                               setEnableSuggestion(false);
                             }}>
@@ -94,6 +103,7 @@ const SearchbarSuggestion = forwardRef<HTMLInputElement, InputProps>(
                           <CommandItem key={i} className="hover:cursor-pointer"
                             onSelect={(value) => {
                               console.log("select city", value);
+                              form.setValue("pcity", c.id);
                               setSearchValue(`${c.name}`);
                               setEnableSuggestion(false);
                             }}>

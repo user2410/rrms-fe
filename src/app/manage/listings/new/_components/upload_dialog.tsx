@@ -8,6 +8,9 @@ import { AlertDialog, AlertDialogContent, AlertDialogTrigger } from "@/component
 import Spinner from "@/components/ui/spinner";
 import { Button } from "@/components/ui/button";
 import { FaCheckCircle } from "react-icons/fa";
+import { Listing } from "@/models/listing";
+import { Payment } from "@/models/payment";
+import Link from "next/link";
 
 type UPLOADSTAGE = "CONFIRMATION" | "CREATING_LISTING" | "DONE" | "ERROR";
 
@@ -21,7 +24,10 @@ export default function UploadDialog({
   changeOpen: () => void;
 }) {
   const [stage, setStage] = useState<UPLOADSTAGE>("CONFIRMATION");
-  const [res, setRes] = useState<any>();
+  const [res, setRes] = useState<{
+    listing: Listing;
+    listingPayment: Payment;
+  }>();
   const router = useRouter();
   const { data: session } = useSession();
   const accessToken = session!.user.accessToken;
@@ -54,14 +60,14 @@ export default function UploadDialog({
         }
       })).data;
       
-      const listingPayment = (await backendAPI.post(`/api/listings/listing/${listing.id}/payment`, {
+      const listingPayment = (await backendAPI.post<Payment>(`/api/listings/listing/${listing.id}/payment`, {
         priority: data.config.priority,
         postDuration: data.config.postDuration,
       }, {
         headers: {
           Authorization: `Bearer ${accessToken}`
         }
-      }));
+      })).data;
 
       setRes({listing, listingPayment});
       setStage("DONE");
@@ -103,7 +109,7 @@ export default function UploadDialog({
             <h2>Tin đăng của bạn đã được ghi nhận</h2>
             <p className="text-sm font-light">Thanh toán ngay để tin đăng được hiển thị</p>
             <div className="flex flex-row items-center gap-2">
-              <Button variant="link" type="button" onClick={() => router.push(`/manage/payment/${res.listingPayment.id}`)}>Thanh toán tin đăng</Button>
+              <Link href={`/manage/payment/${res!.listingPayment.id}`}>Thanh toán tin đăng</Link>
             </div>
           </div>
         )}

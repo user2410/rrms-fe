@@ -8,7 +8,7 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@
 import { OrientationItems, pFeatures } from "@/models/property";
 import { useFormContext } from "react-hook-form";
 import FilterNRooms from "./filter_nrooms";
-import { SearchFormValues } from "../search_box";
+import { SearchFormValues } from "../../search_box";
 import { uAmenities } from "@/models/unit";
 
 export default function ExtraFilter() {

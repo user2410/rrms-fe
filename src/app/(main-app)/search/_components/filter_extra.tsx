@@ -10,7 +10,7 @@ import { uAmenities } from "@/models/unit";
 import { useFormContext } from "react-hook-form";
 import { BsListUl } from "react-icons/bs";
 import FilterNRooms from "../../_components/landing-page/filters/filter_nrooms";
-import { SearchFormValues } from "../../_components/landing-page/search_box";
+import { SearchFormValues } from "../../_components/search_box";
 import { useRouter } from "next/navigation";
 import { objectToQueryString } from "@/utils/query";
 import { beforeSubmitSearchForm } from "./top-searchbar";

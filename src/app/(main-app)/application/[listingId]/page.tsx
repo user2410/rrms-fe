@@ -18,11 +18,11 @@ export type ListingDetail = {
 };
 
 export type Query = {
-  fullName?: string;
-  email?: string;
-  phone?: string;
-  unitIds?: string[];
-  k?: string;
+  fullName: string;
+  email: string;
+  phone: string;
+  unitId: string;
+  k: string;
 }
 
 export default function ApplicationPageWrapper({ params: { listingId } }: { params: { listingId: string } }) {
@@ -35,7 +35,7 @@ export default function ApplicationPageWrapper({ params: { listingId } }: { para
         fullName: searchParams.get('fullName') || '',
         email: searchParams.get('email') || '',
         phone: searchParams.get('phone') || '',
-        unitIds: searchParams.get('units')?.split(','),
+        unitId: searchParams.get('unit') || '',
         k: searchParams.get('k') || '',
       }}
     />

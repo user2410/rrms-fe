@@ -32,14 +32,16 @@ const applicationFormSchema = z.object({
       offeredPrice: z.number(),
     })
   ),
-  unitIds: z.array(z.string()), // ids of selected units
+  unitId: z.string(), // ids of selected units
   k: z.string().optional(),
   listingId: z.string(),
   ao: z.object({
+    tenantType: z.enum(["INDIVIDUAL", "ORGANIZATION"]),
+    // individual applicant
     fullName: z.string(),
     email: z.string().email(),
     phone: z.string(),
-    dob: z.date(),
+    dob: z.date().optional(),
     profileImage: z.object({
       url: z.string(),
       name: z.string(),
@@ -70,7 +72,14 @@ const applicationFormSchema = z.object({
       weight: z.number().optional(),
       description: z.string().optional(),
     })),
-  }),
+    // organization
+    organizationName: z.string().optional(),
+    organizationHqAddress: z.string().optional(),
+    organizationScale: z.enum(["1-10", "11-50", "51-200", "201-500", "501-1000", "1000+"]).optional(),
+  }).refine(data => (
+    data.tenantType==="INDIVIDUAL" || 
+    (data.tenantType === "ORGANIZATION" && !! data.organizationName && !! data.organizationHqAddress && !! data.organizationScale)
+  ), {message: "Thiếu thông tin tổ chức"}),
   yd: z.object({
     rhAddress: z.string().optional(),
     rhCity: z.string().optional(),
@@ -80,20 +89,14 @@ const applicationFormSchema = z.object({
     rhMonthlyPayment: z.number().optional(),
     rhReasonForLeaving: z.string().optional(),
 
-    employmentStatus: z.enum(["EMPLOYED", "STUDENT", "SELF-EMPLOYED", "UNEMPLOYED", "RETIRED"]),
-    employmentCompanyName: z.string(),
-    employmentPosition: z.string(),
-    employmentMonthlyIncome: z.number(),
-    employmentComment: z.string().optional(),
-    // employmentProofsOfIncome: z.array(z.object({
-    //   url: z.string(),
-    //   name: z.string(),
-    //   size: z.number(),
-    //   type: z.string(),
-    // })),
+    employmentStatus: z.enum(["EMPLOYED", "STUDENT", "SELF-EMPLOYED", "UNEMPLOYED", "RETIRED"]).optional(),
+    employmentCompanyName: z.string().optional(),
+    employmentPosition: z.string().optional(),
+    employmentMonthlyIncome: z.number().optional(),
+    employmentComment: z.string().optional().optional(),
 
-    identityType: z.enum(["ID", "CITIZENIDENTIFICATION", "PASSPORT", "DRIVERLICENSE"]),
-    identityNumber: z.string(),
+    // identityType: z.enum(["ID", "CITIZENIDENTIFICATION", "PASSPORT", "DRIVERLICENSE"]),
+    // identityNumber: z.string(),
 
     vehicles: z.array(z.object({
       type: z.enum(["car", "motorbike", "bicycle", "other"]),
@@ -120,12 +123,15 @@ export default function MainForm({
     defaultValues: {
       ld: data,
       ao: {
+        tenantType: property.type === "OFFICE" ? "ORGANIZATION" : "INDIVIDUAL",
         fullName: query.fullName,
         email: query.email,
         phone: query.phone,
         minors: [],
         coaps: [],
         pets: [],
+        rentalIntention: property.type === "OFFICE" ? "OFFICE" : undefined,
+        preferredTerm: listing.leaseTerm,
       },
       yd: {
         vehicles: [],
@@ -140,7 +146,7 @@ export default function MainForm({
           offeredPrice: lu.price,
         };
       }),
-      unitIds: query.unitIds || [],
+      unitId: query.unitId,
       k: query.k,
     },
   });
@@ -194,7 +200,8 @@ export default function MainForm({
         <Tabs.Root defaultValue="1" value={tab} className={styles.TabsRoot}>
           <Tabs.List className={styles.TabsList}>
             <Tabs.Trigger disabled className={styles.TabsTrigger} value="1">Thông tin cơ bản</Tabs.Trigger>
-            <Tabs.Trigger disabled className={styles.TabsTrigger} value="2">Thông tin cá nhân</Tabs.Trigger>
+            <Tabs.Trigger disabled className={styles.TabsTrigger} value="2">Thông tin {form.watch("ao.tenantType") === "INDIVIDUAL" ? "cá nhân" : "tổ chức"}</Tabs.Trigger>
+            
             <Tabs.Trigger disabled className={styles.TabsTrigger} value="3">Tổng kết</Tabs.Trigger>
           </Tabs.List>
           <Tabs.Content className={styles.TabsContent} value="1">
@@ -213,8 +220,7 @@ export default function MainForm({
             </div>
           </Tabs.Content>
         </Tabs.Root>
-        <div className="container flex flex-row justify-between gap-4">
-          <div className="text-sm font-medium text-destructive">{form.formState.errors && JSON.stringify(form.formState.errors)}</div>
+        <div className="container flex flex-row justify-end gap-4">
           {(() => {
             const index = parseInt(tab);
             return (
@@ -229,19 +235,19 @@ export default function MainForm({
                   Trước
                 </Button>
                 <Button
-                  type={index < 3 ? "button" : "submit"}
+                  type={"button"}
                   className=""
-                  disabled={index === 3}
+                  disabled={index === 3 }
                   onClick={() => {
-                    console.log("current form: ", form.getValues());
                     const screen = tab === "1" ? "ao" : tab === "2" ? "yd" : "";
-                    console.log(screen);
                     form.trigger(screen as any)
                       .then((valid) => {
+                        console.log("valid", valid, form.formState.errors);
                         if (!valid) return;
                         setTab((index + 1).toString());
                       })
                       .catch((reason) => {
+                        console.log("reason", reason);
                         console.log(reason);
                       });
                   }}

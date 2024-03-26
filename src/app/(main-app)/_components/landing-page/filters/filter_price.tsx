@@ -5,7 +5,7 @@ import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover
 import { ChevronDown } from "lucide-react";
 import { useMemo, useState } from "react";
 import { useFormContext } from "react-hook-form";
-import { SearchFormValues } from "../search_box";
+import { SearchFormValues } from "../../search_box";
 
 export default function PriceFilter() {
   const form = useFormContext<SearchFormValues>();

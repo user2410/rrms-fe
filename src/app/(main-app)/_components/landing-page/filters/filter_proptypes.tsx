@@ -17,7 +17,7 @@ import {
 import { mapPropertyTypeToText } from "@/models/property";
 import clsx from "clsx";
 import { useFormContext } from "react-hook-form";
-import { SearchFormValues } from "../search_box";
+import { SearchFormValues } from "../../search_box";
 import { useState } from "react";
 
 export function PropTypesFilter() {

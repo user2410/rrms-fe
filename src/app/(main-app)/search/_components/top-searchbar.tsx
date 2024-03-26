@@ -8,7 +8,7 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { useRouter } from "next/navigation";
 import { useForm } from "react-hook-form";
 import { MdRestartAlt } from "react-icons/md";
-import { SearchFormSchema, SearchFormValues } from "../../_components/landing-page/search_box";
+import { SearchFormSchema, SearchFormValues } from "../../_components/search_box";
 import SearchbarSuggestion from "../../_components/landing-page/searchbar_suggestion";
 import ExtraFilter from "./filter_extra";
 import LocationFilter from "./filter_location";

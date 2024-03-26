@@ -51,12 +51,10 @@ const listingFormSchema = z.object({
     .object({
       title: z
         .string()
-        .min(30)
-        .max(99),
+        .min(30),
       description: z
         .string()
-        .min(30)
-        .max(3000),
+        .min(30),
       price: z
         .number(),
       priceNegotiable: z
@@ -64,8 +62,7 @@ const listingFormSchema = z.object({
       securityDeposit: z
         .number(),
       leaseTerm: z
-        .number()
-        .optional(),
+        .number(),
       petsAllowed: z
         .boolean()
         .optional(),

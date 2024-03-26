@@ -7,7 +7,7 @@ import { Check } from "lucide-react";
 import { useState } from "react";
 import { useFormContext } from "react-hook-form";
 import { BsChevronDown } from "react-icons/bs";
-import { SearchFormValues } from "../../_components/landing-page/search_box";
+import { SearchFormValues } from "../../_components/search_box";
 import { objectToQueryString } from "@/utils/query";
 import { useRouter } from "next/navigation";
 import { beforeSubmitSearchForm } from "./top-searchbar";

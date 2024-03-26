@@ -57,7 +57,7 @@ export default function UnitsList({
               <Button
                 type="button"
                 disabled={!selectedUnit || session.status !== "authenticated" || !!listingDetail.property.managers.map(m => m.managerId).find(m => m === session.data?.user.user.id)}
-                onClick={() => router.push(`/application/${listing.id}?units=${selectedUnit}`)}
+                onClick={() => router.push(`/application/${listing.id}?unit=${selectedUnit}`)}
               >
                 Ứng tuyển
               </Button>

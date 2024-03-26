@@ -1,9 +1,8 @@
 "use client";
 
-import styles from "../_styles/search_modal.module.css";
 import { Button } from '@/components/ui/button';
 import { IoSearch } from 'react-icons/io5';
-import SearchBox from './landing-page/search_box';
+import SearchBox from './search_box';
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
 
 export default function SearchModal() {
@@ -12,14 +11,12 @@ export default function SearchModal() {
       <DialogTrigger asChild>
         <Button variant="ghost"><IoSearch size={24} /></Button>
       </DialogTrigger>
-
-      <DialogContent className={styles.DialogContent}>
+      <DialogContent className="max-w-[80vw] lg:max-w-[960px] xl:max-w-[1024px] 2xl:max-w-[1200px]">
         <DialogHeader>
-          <DialogTitle className={styles.DialogTitle}>Tìm kiếm</DialogTitle>
+          <DialogTitle>Tìm kiếm</DialogTitle>
         </DialogHeader>
         <SearchBox />
       </DialogContent>
-
     </Dialog>
   );
 };

@@ -2,7 +2,7 @@ import { backendAPI } from "@/libs/axios";
 import { Listing } from "@/models/listing";
 import { Property } from "@/models/property";
 import { useQuery } from "@tanstack/react-query";
-import { SearchFormValues } from "../../_components/landing-page/search_box";
+import { SearchFormValues } from "../../_components/search_box";
 import ListingCard, { ListingCardSkeleton } from "./listing-card";
 import { Pagination, PaginationContent, PaginationEllipsis, PaginationItem, PaginationLink, PaginationNext, PaginationPrevious } from "@/components/ui/pagination";
 import { useState } from "react";

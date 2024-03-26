@@ -7,7 +7,7 @@ import { useRouter } from "next/navigation";
 import { useMemo } from "react";
 import { useFormContext } from "react-hook-form";
 import { BsChevronDown } from "react-icons/bs";
-import { SearchFormValues } from "../../_components/landing-page/search_box";
+import { SearchFormValues } from "../../_components/search_box";
 import { beforeSubmitSearchForm } from "./top-searchbar";
 
 export default function LocationFilter() {

@@ -3,12 +3,13 @@ import { Button } from "@/components/ui/button";
 import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
 import { GetLocationName } from "@/utils/dghcvn";
 import { ChevronDown } from "lucide-react";
-import { useMemo } from "react";
+import { useMemo, useRef } from "react";
 import { useFormContext } from "react-hook-form";
-import { SearchFormValues } from "../search_box";
+import { SearchFormValues } from "../../search_box";
 
 export default function LocationFilter() {
   const form = useFormContext<SearchFormValues>();
+  const triggerBtnRef = useRef<HTMLButtonElement>(null);
 
   const pcity = form.watch('pcity');
   const pdistrict = form.watch('pdistrict');
@@ -25,20 +26,25 @@ export default function LocationFilter() {
   return (
     <Popover>
       <PopoverTrigger asChild>
-        <Button type="button" role="combobox" variant="outline" className="justify-between text-ellipsis">
+        <Button ref={triggerBtnRef} type="button" role="combobox" variant="outline" className="justify-between text-ellipsis">
           {locationName ? locationName : "Toàn quốc"}
           <ChevronDown className="ml-2 h-4 w-4 shrink-0 opacity-50" />
         </Button>
       </PopoverTrigger>
-      <PopoverContent className="w-80">
+      <PopoverContent className="w-[360px] md:w-[480px]">
         <DivisionSelector
           cityFieldName="pcity"
           districtFieldName="pdistrict"
           wardFieldName="pward"
         />
-        <Button type="button" variant="outline" className="mt-3" onClick={handleResetFields}>
-          Đặt lại
-        </Button>
+        <div className="mt-3 flex flex-row justify-end gap-2">
+          <Button type="button" variant="outline" onClick={handleResetFields}>
+            Đặt lại
+          </Button>
+          <Button type="button" onClick={() => triggerBtnRef.current?.click()}>
+            Áp dụng
+          </Button>
+        </div>
       </PopoverContent>
     </Popover>
   );

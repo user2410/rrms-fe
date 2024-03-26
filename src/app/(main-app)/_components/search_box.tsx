@@ -10,11 +10,11 @@ import { useRouter } from "next/navigation";
 import { DeepPartial, useForm } from "react-hook-form";
 import { BsSliders } from "react-icons/bs";
 import * as z from "zod";
-import AreaFilter from "./filters/filter_area";
-import ExtraFilter from "./filters/filter_extra";
-import LocationFilter from "./filters/filter_location";
-import PriceFilter from "./filters/filter_price";
-import { PropTypesFilter } from "./filters/filter_proptypes";
+import AreaFilter from "./landing-page/filters/filter_area";
+import ExtraFilter from "./landing-page/filters/filter_extra";
+import LocationFilter from "./landing-page/filters/filter_location";
+import PriceFilter from "./landing-page/filters/filter_price";
+import { PropTypesFilter } from "./landing-page/filters/filter_proptypes";
 import SearchbarSuggestion from "./searchbar_suggestion";
 
 export const SearchFormSchema = z.object({
@@ -109,7 +109,7 @@ export default function SearchBox() {
     <Form {...form}>
       <form className="space-y-3" onSubmit={form.handleSubmit(onSubmit)}>
         <div className="w-full flex flex-row gap-2">
-          <div className="flex-1 px-2">
+          <div className="flex-1">
             <SearchbarSuggestion
               placeholder="Tìm kiếm theo khu vực"
               type="search"
@@ -151,7 +151,7 @@ export default function SearchBox() {
               </DialogContent>
             </Dialog>
             <DialogClose asChild>
-              <Button type="submit" variant="destructive">Search</Button>
+              <Button type="submit" variant="destructive">Tìm kiếm</Button>
             </DialogClose>
           </div>
         </div>

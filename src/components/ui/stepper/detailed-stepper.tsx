@@ -10,25 +10,26 @@ export default function DetailedStepper({
 }) {
   return (
     <div>
-      <ol className="items-center w-full space-y-2 xl:space-y-4 sm:flex sm:space-x-8 sm:space-y-0">
+      <ol className="w-full flex flex-row items-center gap-6">
         {steps.map((step, index) => (
           <li 
             key={index}
-            className={clsx(
-              "flex items-center space-x-2.5",
-              currentStep === index && "text-foreground dark:text-muted-foreground" 
-            )}>
+            className="flex flex-row items-center gap-2">
             <span className={clsx(
               "flex items-center justify-center w-8 h-8 border rounded-full shrink-0",
-              currentStep === index
-                ? "border-primary dark:border-primary/80"
-                : "border-muted-foreground dark:border-muted/80"
+              currentStep === index && "border-blue-600 text-blue-600"
               )}>
               {index + 1}
             </span>
             <span>
-              <h3 className="font-medium leading-tight">{step.title}</h3>
-              {step.description && (<p className="text-sm">{step.description}</p>)}
+              <h3 className={clsx(
+                "font-medium leading-tight",
+                currentStep === index && "text-blue-600",
+              )}>{step.title}</h3>
+              {step.description && (<p className={clsx(
+                "text-sm",
+                currentStep === index && "text-blue-600" 
+              )}>{step.description}</p>)}
             </span>
           </li>
         ))}

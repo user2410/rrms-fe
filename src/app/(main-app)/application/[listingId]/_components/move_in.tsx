@@ -72,10 +72,14 @@ export default function MoveIn() {
                     </SelectTrigger>
                   </FormControl>
                   <SelectContent>
-                    <SelectItem value="RESIDENCE">Để ở</SelectItem>
+                    {form.getValues("ld.property").type !== "OFFICE" && (
+                      <>
+                        <SelectItem value="RESIDENCE">Để ở</SelectItem>
+                        <SelectItem value="TENANCY">Nhà trọ</SelectItem>
+                      </>
+                    )}
                     <SelectItem value="BUSINESS">Kinh doanh</SelectItem>
                     <SelectItem value="OFFICE">Văn phòng</SelectItem>
-                    <SelectItem value="TENANCY">Nhà trọ</SelectItem>
                     {/* <SelectItem value="[OTHER]">Khác</SelectItem> */}
                   </SelectContent>
                 </Select>

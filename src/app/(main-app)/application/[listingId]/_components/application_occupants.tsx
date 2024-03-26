@@ -7,12 +7,16 @@ import Minors from "./minors";
 import MoveIn from "./move_in";
 import Pets from "./pets";
 import SelectedUnits from "./selected_units";
+import { useFormContext } from "react-hook-form";
+import { ApplicationForm } from "./main_form";
 
 export default function ApplicationOccupants({
   data
 } : {
   data: ListingDetail;
 }) {
+  const form = useFormContext<ApplicationForm>();
+
   return (
     <div className="space-y-4">
       <BasicInfo/>
@@ -20,14 +24,18 @@ export default function ApplicationOccupants({
         <MoveIn/>
         <Separator />
         <SelectedUnits data={data}/>
-        <Separator />
-        <CoApplicants listing={data.listing}/>
-        <Separator />
-        <Minors/>
-        <Separator />
+        {form.watch("ao.tenantType") === "INDIVIDUAL" && (
+          <>
+            <Separator />
+            <CoApplicants listing={data.listing}/>
+            <Separator />
+            <Minors/>
+            <Separator />
+            <Pets listing={data.listing}/>
+          </>
+        )}
         {/* <Guarantors/>
         <Separator /> */}
-        <Pets listing={data.listing}/>
       </Card>
     </div>
   );

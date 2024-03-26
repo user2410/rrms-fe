@@ -4,7 +4,7 @@ import Breadcrumb from "@/components/ui/breadcrumb";
 import { GetCityById, GetDistrictById, GetLocationName, GetWardById } from "@/utils/dghcvn";
 import { useSearchParams } from "next/navigation";
 import { useMemo } from "react";
-import { SearchFormValues } from "../_components/landing-page/search_box";
+import { SearchFormValues } from "../_components/search_box";
 import ListingsList from "./_components/listings_list";
 import Sidebar from "./_components/sidebard";
 import TopSearchBar from "./_components/top-searchbar";

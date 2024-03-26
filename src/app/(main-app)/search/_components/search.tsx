@@ -1,6 +1,6 @@
 import { useQuery } from "@tanstack/react-query";
 import { SearchResult } from "../page";
-import { SearchFormValues } from "../../_components/landing-page/search_box";
+import { SearchFormValues } from "../../_components/search_box";
 import { backendAPI } from "@/libs/axios";
 import { ListingCardSkeleton } from "./listing-card";
 import { useState } from "react";

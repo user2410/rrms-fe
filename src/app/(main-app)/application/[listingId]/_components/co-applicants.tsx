@@ -237,7 +237,7 @@ export default function CoApplicants({
                 </div>
                 <div className="text-md font-normal flex flex-row items-center gap-2">
                   <FaBusinessTime size={16} />
-                  <span>{field.job} - {field.income}đ/tháng</span>
+                  <span>{field.job} - {field.income?.toLocaleString('vi-VN', { style: 'currency', currency: 'VND'})}/tháng</span>
                 </div>
                 <div className="text-sm font-light truncate">{field.description}</div>
               </div>
