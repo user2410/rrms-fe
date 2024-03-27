@@ -1,16 +1,7 @@
-import { ColumnDef, Row } from "@tanstack/react-table";
-import { format } from "date-fns";
+import { ColumnDef } from "@tanstack/react-table";
 
-import { Button } from "@/components/ui/button";
 import { Checkbox } from "@/components/ui/checkbox";
-import {
-  DropdownMenu,
-  DropdownMenuContent,
-  DropdownMenuItem,
-  DropdownMenuTrigger
-} from "@/components/ui/dropdown-menu";
 import { Unit, mapUnitTypeToText } from "@/models/unit";
-import { IoIosMore } from "react-icons/io";
 
 export const unitTColumns: ColumnDef<Unit>[] = [
   {
@@ -56,10 +47,10 @@ export const unitTColumns: ColumnDef<Unit>[] = [
       const unit = row.original;
       return (
         <ul className="flex flex-col flex-wrap gap-2 list-disc list-inside">
-          {unit.numberOfBedrooms && (<li>{unit.numberOfBedrooms} Phòng ngủ</li>)}
-          {unit.numberOfBathrooms && (<li>{unit.numberOfBathrooms} Phòng tắm</li>)}
-          {unit.numberOfToilets && (<li>{unit.numberOfToilets} Nhà vệ sinh</li>)}
-          {unit.numberOfBalconies && (<li>{unit.numberOfBalconies} Ban công</li>)}
+          {unit.numberOfBedrooms > 0 && (<li>{unit.numberOfBedrooms} Phòng ngủ</li>)}
+          {unit.numberOfBathrooms > 0 && (<li>{unit.numberOfBathrooms} Phòng tắm</li>)}
+          {unit.numberOfToilets > 0 && (<li>{unit.numberOfToilets} Nhà vệ sinh</li>)}
+          {unit.numberOfBalconies > 0 && (<li>{unit.numberOfBalconies} Ban công</li>)}
         </ul>
       );
     },

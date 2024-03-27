@@ -1,6 +1,6 @@
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
-import { FormControl, FormField, FormItem, FormLabel, FormMessage } from "@/components/ui/form";
+import { FormControl, FormField, FormItem, FormLabel, FormLabelRequired, FormMessage } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Switch } from "@/components/ui/switch";
@@ -61,7 +61,7 @@ export default function Step3Policies() {
               name="listing.leaseTerm"
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel>Thời hạn thuê tối thiểu (tháng)</FormLabel>
+                  <FormLabelRequired>Thời hạn thuê tối thiểu (tháng)</FormLabelRequired>
                   <FormControl>
                     <div className="flex flex-row gap-1">
                       <Input

@@ -18,7 +18,7 @@ export default function SelectedUnits({
   const form = useFormContext<ApplicationForm>();
   const unitId = form.watch("unitId");
 
-  const { property } = data;
+  const { listing, property } = data;
   const unitTypeText =
     ['APARTMENT', 'PRIVATE'].includes(property.type)
       ? "Căn hộ"
@@ -36,7 +36,7 @@ export default function SelectedUnits({
   return (
     <Fragment>
       <CardHeader>
-        <CardTitle>{form.getValues("ld.property.type") === "OFFICE" ? "Văn phòng" :  "Phòng / căn hộ" }</CardTitle>
+        <CardTitle>{form.getValues("ld.property.type") === "OFFICE" ? "Văn phòng" : "Phòng / căn hộ"}</CardTitle>
       </CardHeader>
       <CardContent>
         <Table>
@@ -45,7 +45,9 @@ export default function SelectedUnits({
               <TableHead />
               <TableHead className="text-left max-w-[50%]">{unitTypeText}</TableHead>
               <TableHead className="text-left">Diện tích (m<sup>2</sup>)</TableHead>
-              <TableHead className="text-left">Giá thuê (tháng)</TableHead>
+              {!listing.priceNegotiable && (
+                <TableHead className="text-left">Giá thuê (tháng)</TableHead>
+              )}
               <TableHead className="text-left">Giá thuê đề nghị (tháng)</TableHead>
             </TableRow>
           </TableHeader>
@@ -60,7 +62,9 @@ export default function SelectedUnits({
                 </TableCell>
                 <TableCell className="text-left">{unit.name}</TableCell>
                 <TableCell className="text-left">{unit.area}</TableCell>
-                <TableCell className="text-left">{unit.listingPrice.toLocaleString('vi-VN', { style: 'currency', currency: 'VND' })}</TableCell>
+                {!listing.priceNegotiable && (
+                  <TableCell className="text-left">{unit.listingPrice.toLocaleString('vi-VN', { style: 'currency', currency: 'VND' })}</TableCell>
+                )}
                 <TableCell className="text-left">
                   <FormField
                     control={form.control}
@@ -85,10 +89,12 @@ export default function SelectedUnits({
           <TableFooter>
             <TableRow>
               <TableCell colSpan={3}>Tổng giá thuê</TableCell>
-              <TableCell className="text-left">{units.reduce((acc, u) => {
-                if (!unitId.includes(u.id)) return acc;
-                return acc + u.listingPrice;
-              }, 0).toLocaleString('vi-VN', { style: 'currency', currency: 'VND' })}</TableCell>
+              {!listing.priceNegotiable && (
+                <TableCell className="text-left">{units.reduce((acc, u) => {
+                  if (!unitId.includes(u.id)) return acc;
+                  return acc + u.listingPrice;
+                }, 0).toLocaleString('vi-VN', { style: 'currency', currency: 'VND' })}</TableCell>
+              )}
               <TableCell className="text-left">{units.reduce((acc, u) => {
                 if (!unitId.includes(u.id)) return acc;
                 return acc + u.offeredPrice;

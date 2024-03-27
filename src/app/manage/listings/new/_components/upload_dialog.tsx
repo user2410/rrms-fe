@@ -1,16 +1,15 @@
-import { UseFormReturn } from "react-hook-form";
-import { ListingFormValues } from "../page";
-import { useEffect, useState } from "react";
-import { useRouter } from "next/navigation";
-import { useSession } from "next-auth/react";
-import { backendAPI } from "@/libs/axios";
 import { AlertDialog, AlertDialogContent, AlertDialogTrigger } from "@/components/ui/alert-dialog";
-import Spinner from "@/components/ui/spinner";
 import { Button } from "@/components/ui/button";
-import { FaCheckCircle } from "react-icons/fa";
+import Spinner from "@/components/ui/spinner";
+import { backendAPI } from "@/libs/axios";
 import { Listing } from "@/models/listing";
 import { Payment } from "@/models/payment";
+import { useSession } from "next-auth/react";
 import Link from "next/link";
+import { useEffect, useState } from "react";
+import { UseFormReturn } from "react-hook-form";
+import { FaCheckCircle } from "react-icons/fa";
+import { ListingFormValues } from "../page";
 
 type UPLOADSTAGE = "CONFIRMATION" | "CREATING_LISTING" | "DONE" | "ERROR";
 
@@ -28,7 +27,6 @@ export default function UploadDialog({
     listing: Listing;
     listingPayment: Payment;
   }>();
-  const router = useRouter();
   const { data: session } = useSession();
   const accessToken = session!.user.accessToken;
 
@@ -41,6 +39,7 @@ export default function UploadDialog({
         ...data.listing,
         propertyID: data.propertyId,
         units: data.units,
+        tags: data.listing.tags.map(t => t.tag),
         ...data.contact,
         ...data.config,
       };
@@ -52,7 +51,7 @@ export default function UploadDialog({
       } else if (data.units.length === 1) {
         data.units[0].price = sendData.price;
       } 
-
+      
       // send POST request to backend
       const listing = (await backendAPI.post("/api/listings", sendData, {
         headers: {

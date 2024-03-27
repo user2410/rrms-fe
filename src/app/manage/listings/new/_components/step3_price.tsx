@@ -13,6 +13,7 @@ export default function Step3Price() {
 
   const form = useFormContext<ListingFormValues>();
   const selectedUnitIds = form.getValues("units");
+  const property = form.getValues("propertyData.property");
   const units = form.getValues("propertyData.units");
   const selectedUnits = units.filter(u => selectedUnitIds.find(_u => _u.unitId === u.id));
 
@@ -41,9 +42,14 @@ export default function Step3Price() {
                           <Input
                             type="number"
                             {...field2}
-                            onChange={(e) => field2.onChange(e.target.valueAsNumber)}
+                            onChange={(e) => {
+                              const v = e.target.valueAsNumber;
+                              field2.onChange(v);
+                              form.setValue("units.0.price", v);
+                            }}
                           />
                         </FormControl>
+                        <FormLabel>Giá thuê {field2.value.toLocaleString('vi-VN', { style: 'currency', currency: 'VND' })} ({(field2.value/property.area).toLocaleString('vi-VN', { style: 'currency', currency: 'VND' })}/m<sup>2</sup>/tháng)</FormLabel>
                         <FormMessage />
                       </FormItem>
                     )}
@@ -113,7 +119,7 @@ export default function Step3Price() {
           <TableHeader>
             <TableRow>
               <TableHead>Phòng / căn hộ</TableHead>
-              <TableHead>Giá thuê một tháng (đ)</TableHead>
+              <TableHead>Giá thuê một tháng (đ) <span className="ml-1 text-red-600">*</span></TableHead>
             </TableRow>
           </TableHeader>
           <TableBody>
@@ -134,6 +140,7 @@ export default function Step3Price() {
                             onChange={(e) => field.onChange(e.target.valueAsNumber)}
                           />
                         </FormControl>
+                        <FormLabel>Giá thuê {field.value.toLocaleString('vi-VN', { style: 'currency', currency: 'VND' })} ({(field.value/unit.area).toLocaleString('vi-VN', { style: 'currency', currency: 'VND' })}/m<sup>2</sup>/tháng)</FormLabel>
                       </FormItem>
                     )}
                   />

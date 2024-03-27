@@ -2,23 +2,21 @@
 
 import * as z from 'zod';
 
-import CreateListing from '@/actions/listings/create';
 import { Button } from "@/components/ui/button";
 import { Form } from '@/components/ui/form';
 import Modal from '@/components/ui/modal';
 import TimelineStepper from "@/components/ui/stepper/timeline-stepper";
 import { zodResolver } from '@hookform/resolvers/zod';
-import { format } from 'date-fns';
 import { useSession } from 'next-auth/react';
 import { useSearchParams } from 'next/navigation';
 import { Fragment, useState } from "react";
 import { useForm } from 'react-hook-form';
 import PreviewModal from './_components/preview-modal';
+import UploadDialog from './_components/upload_dialog';
 import ListingConfig from './config';
 import Step1 from './step1';
 import Step2 from './step2';
 import Step3 from './step3';
-import UploadDialog from './_components/upload_dialog';
 
 const listingFormSchema = z.object({
   contact: z.object({
@@ -38,7 +36,7 @@ const listingFormSchema = z.object({
     .array(
       z.object({
         unitId: z.string().uuid(),
-        price: z.number(),
+        price: z.number().gt(0),
       }),
     )
     .nonempty(),
@@ -55,6 +53,12 @@ const listingFormSchema = z.object({
       description: z
         .string()
         .min(30),
+      tags: z.
+        array(
+          z.object({
+            tag: z.string(),
+          })
+        ),
       price: z
         .number(),
       priceNegotiable: z
@@ -215,23 +219,28 @@ export default function NewListingPage() {
                         case 0:
                           form.trigger('contact')
                             .then(res => {
-                              setStep(res ? step + 1 : step);
+                              if (res) {
+                                setStep(step + 1);
+                              }
                             });
                           break;
                         case 1:
-                          Promise.all([
-                            form.trigger('propertyId'),
-                            form.trigger('units'),
-                          ])
-                            .then(res => {
-                              setStep(res[0]&&res[1] ? step + 1 : step);
+                          form.trigger('propertyId').
+                            then(res => {
+                              if (res) {
+                                setStep(step + 1);
+                              }
                             });
                           break;
                         case 2:
-                          form.trigger('listing')
-                            .then(res => {
-                              console.log('res', res);
-                              setStep(res ? step + 1 : step);
+                          Promise.all([
+                            form.trigger('listing'),
+                            form.trigger('units'),
+                          ]).
+                            then(res => {
+                              if(res.every(r => r)) {
+                                setStep(step+1);
+                              }
                             });
                           break;
                         default:

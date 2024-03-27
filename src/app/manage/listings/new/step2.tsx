@@ -7,7 +7,7 @@ import { Unit } from "@/models/unit";
 import { useQuery } from "@tanstack/react-query";
 import { useSession } from "next-auth/react";
 import { useEffect, useState } from "react";
-import { useFormContext } from "react-hook-form";
+import { useFormContext, UseFormReturn } from "react-hook-form";
 import PropertyTable from "./_components/property-table";
 import { propertyTColumns } from "./_components/property-table_columns";
 import { unitTColumns } from "./_components/unit-table_columns";
@@ -122,13 +122,29 @@ function SelectedProperty({
     );
   }
 
-  const { property, units } = selectedPropQuery.data;
-  console.log("Selected property: ", property, units);
+  return (
+    <Step2Units data={selectedPropQuery.data} form={form} />
+  );
+}
+
+function Step2Units({
+  data,
+  form,
+} : {
+  data: PropertyData,
+  form: UseFormReturn<ListingFormValues>;
+}) {
+  const { property, units } = data;
   const multiUnits = (units.length > 1);
-  form.setValue("propertyData", selectedPropQuery.data);
-  if(!multiUnits){
-    form.setValue('units', [{unitId: units[0].id, price: 0}]);
-  }
+
+  useEffect(() => {
+    console.log("Selected property: ", property, units);
+    form.setValue("propertyData", data);
+    if(!multiUnits){
+      form.setValue('units', [{unitId: units[0].id, price: 0}]);
+    }
+  }, []);
+
   return (
     <div className="space-y-2">
       <div className="w-full flex flex-row gap-4">
@@ -151,26 +167,14 @@ function SelectedProperty({
         </div>
       </div>
       {multiUnits && (
-        <Step2Units units={units} />
+        <FormItem>
+        <FormLabel>Chọn căn hộ / phòng trọ</FormLabel>
+        <div className="space-y-4">
+          <UnitTable columns={unitTColumns} data={units} />
+          <FormMessage />
+        </div>
+      </FormItem>
       )}
     </div>
   );
 }
-
-const Step2Units = ({
-  units,
-}: {
-  units: Unit[];
-}) => {
-  return (
-    <FormItem>
-      <FormLabel>Chọn căn hộ / phòng trọ</FormLabel>
-      <div className="space-y-4">
-        <UnitTable columns={unitTColumns} data={units} />
-        <FormMessage />
-      </div>
-    </FormItem>
-  );
-
-  ;
-};

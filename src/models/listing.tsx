@@ -28,6 +28,7 @@ export type Listing = {
   phone: string;
   contactType: string;
   price: number;
+  priceNegotiable: boolean;
   securityDeposit: number;
   leaseTerm?: number;
   petsAllowed?: boolean;
@@ -97,6 +98,7 @@ export const mockupListings : Listing[] = [
     phone: '01233456789',
     contactType: 'OWNER',
     price: 10000000,
+    priceNegotiable: false,
     securityDeposit: 10000000,
     leaseTerm: 36,
     petsAllowed: true,
@@ -138,6 +140,7 @@ export const mockupListings : Listing[] = [
     phone: '01233456789',
     contactType: 'OWNER',
     price: 10000000,
+    priceNegotiable: false,
     securityDeposit: 10000000,
     leaseTerm: 36,
     petsAllowed: true,
@@ -179,6 +182,7 @@ export const mockupListings : Listing[] = [
     phone: '01233456789',
     contactType: 'OWNER',
     price: 10000000,
+    priceNegotiable: false,
     securityDeposit: 10000000,
     leaseTerm: 36,
     petsAllowed: true,
