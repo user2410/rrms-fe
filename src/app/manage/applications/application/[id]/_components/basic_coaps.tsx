@@ -36,33 +36,25 @@ export default function BasicCoaps({
                 </div>
                 <div className="text-sm font-light truncate">{field.description}</div>
               </div>
-              <div className="flex flex-row items-center">
-                <Button
-                  type="button" variant="link"
-                  onClick={() => {}}
-                >
-                  Xem đơn ứng tuyển
-                </Button>
-                <DropdownMenu>
-                  <DropdownMenuTrigger asChild>
-                    <Button variant="ghost">Liên hệ ...</Button>
-                  </DropdownMenuTrigger>
-                  <DropdownMenuContent>
-                    <DropdownMenuItem className="space-x-1" onClick={() => router.push(`tel:${field.phone}`)}>
-                      <FaPhone size={12} color="green" />
-                      <span>{field.phone}</span>
-                    </DropdownMenuItem>
-                    <DropdownMenuItem className="space-x-1" onClick={() => router.push(`https://zalo.me/${field.phone}`)}>
-                      <ZaloIcon className="w-3 h-3"/>
-                      <span>{field.phone}</span>
-                    </DropdownMenuItem>
-                    <DropdownMenuItem className="space-x-1" onClick={() => router.push(`mailto:${field.email}`)}>
-                      <IoMdMail size={12} color="red" />
-                      <span>{field.email}</span>
-                    </DropdownMenuItem>
-                  </DropdownMenuContent>
-                </DropdownMenu>
-              </div>
+              <DropdownMenu>
+                <DropdownMenuTrigger asChild>
+                  <Button variant="ghost">Liên hệ ...</Button>
+                </DropdownMenuTrigger>
+                <DropdownMenuContent>
+                  <DropdownMenuItem className="space-x-1" onClick={() => router.push(`tel:${field.phone}`)}>
+                    <FaPhone size={12} color="green" />
+                    <span>{field.phone}</span>
+                  </DropdownMenuItem>
+                  <DropdownMenuItem className="space-x-1" onClick={() => router.push(`https://zalo.me/${field.phone}`)}>
+                    <ZaloIcon className="w-3 h-3"/>
+                    <span>{field.phone}</span>
+                  </DropdownMenuItem>
+                  <DropdownMenuItem className="space-x-1" onClick={() => router.push(`mailto:${field.email}`)}>
+                    <IoMdMail size={12} color="red" />
+                    <span>{field.email}</span>
+                  </DropdownMenuItem>
+                </DropdownMenuContent>
+              </DropdownMenu>
             </div>
           ))}
         </div>

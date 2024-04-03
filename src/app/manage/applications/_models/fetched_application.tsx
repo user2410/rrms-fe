@@ -1,10 +1,11 @@
-import { ApplicationUnit } from "@/models/application";
 
 export type FetchedApplication = {
   id: number;
   listingId: string;
   propertyId: string;
-  units: ApplicationUnit[];
+  unitId: string;
+  listingPrice: number;
+  offeredPrice: number;
   status: string;
   fullName: string;
   moveinDate: Date;

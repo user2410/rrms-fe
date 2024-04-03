@@ -2,12 +2,6 @@ import { Listing } from "./listing";
 import { Property } from "./property";
 import { Unit } from "./unit";
 
-export type ApplicationUnit = {
-  unitId: string;
-  listingPrice: number;
-  offeredPrice: number;
-}
-
 export type ApplicationMinor = {
   applicationId?: number;
   fullName: string;
@@ -47,11 +41,14 @@ export type Application = {
   id: number;
   listingId: string;
   propertyId: string;
-  unitIds: string[];
+  unitId: string;
+  listingPrice: number;
+  offeredPrice: number;
   status: "PENDING" | "APPROVED" | "CONDITIONALLY_APPROVED" | "REJECTED" | "WITHDRAWN";
   creatorId: string;
   createdAt: Date;
   updatedAt: Date;
+  tenantType: 'INDIVIDUAL' | 'ORGANIZATION';
   fullName: string;
   email: string;
   phone: string;
@@ -61,6 +58,9 @@ export type Application = {
   moveinDate: Date;
   preferredTerm: number;
   rentalIntention: "RESIDENCE" | "BUSINESS" | "OFFICE" | "TENANCY";
+  organizationName?: string;
+  organizationHqAddress?: string;
+  organizationScale?: "1-10" | "11-50" | "51-200" | "201-500" | "501-1000" | "1000+";
 
   rhAddress?: string;
   rhCity?: string;
@@ -80,7 +80,6 @@ export type Application = {
   // identityType: string;
   // identityNumber: string;
 
-  units: ApplicationUnit[];
   minors?: ApplicationMinor[];
   coaps?: ApplicationCoap[];
   pets?: ApplicationPet[];
@@ -91,7 +90,7 @@ export type ManagedApplication = {
   application: Application;
   listing: Listing;
   property: Property;
-  units: Unit[];
+  unit: Unit;
 };
 
 export const MapRentalIntentionToText = {
@@ -178,11 +177,14 @@ export const mockupApplications: Application[] = [
     id: 1,
     listingId: "f6ca05c0-fad5-46fc-a237-a8e930e7cb01",
     propertyId: "f6ca05c0-fad5-46fc-a237-a8e930e7cb01",
-    unitIds: ["f6ca05c0-fad5-46fc-a237-a8e930e7cb01"],
+    unitId: "f6ca05c0-fad5-46fc-a237-a8e930e7cb01",
+    listingPrice: 1000,
+    offeredPrice: 900,
     status: "PENDING",
     creatorId: "1",
     createdAt: new Date(),
     updatedAt: new Date(),
+    tenantType: "INDIVIDUAL",
     fullName: "Nguyen Van A",
     email: "abc@email.com",
     phone: "091235126",
@@ -207,7 +209,6 @@ export const mockupApplications: Application[] = [
     // identityNumber: "01292944238",
     // identityIssueDate: new Date("2020-01-01"),
     // identityIssuedBy: "Cục quản lý dân cư",
-    units: [],
     minors: [
       {
         applicationId: 1,

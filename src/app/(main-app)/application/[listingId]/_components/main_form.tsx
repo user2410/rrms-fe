@@ -201,7 +201,6 @@ export default function MainForm({
           <Tabs.List className={styles.TabsList}>
             <Tabs.Trigger disabled className={styles.TabsTrigger} value="1">Thông tin cơ bản</Tabs.Trigger>
             <Tabs.Trigger disabled className={styles.TabsTrigger} value="2">Thông tin {form.watch("ao.tenantType") === "INDIVIDUAL" ? "cá nhân" : "tổ chức"}</Tabs.Trigger>
-            
             <Tabs.Trigger disabled className={styles.TabsTrigger} value="3">Tổng kết</Tabs.Trigger>
           </Tabs.List>
           <Tabs.Content className={styles.TabsContent} value="1">

@@ -1,39 +1,39 @@
 import { Button } from "@/components/ui/button";
 import { FormControl, FormField, FormItem } from "@/components/ui/form";
 import { backendAPI } from "@/libs/axios";
-import { PreRental, PreRentalContract } from "@/models/rental";
+import { Rental, RentalContract } from "@/models/rental";
 import { useQuery } from "@tanstack/react-query";
 import { useFormContext } from "react-hook-form";
 import toast from "react-hot-toast";
 import { FormValues } from "../page";
 import ContractEditor from "./contract_editor";
 import { Session } from "next-auth";
+import { useDataCtx } from "../_context/data.context";
 
 export default function CreateContract({
   sessionData,
-  preRental,
 }: {
   sessionData: Session;
-  preRental: PreRental;
 }) {
+  const {rental} = useDataCtx();
   const form = useFormContext<FormValues>();
   const contractType = form.watch("contractType");
 
   async function handlePrepareContract(type: string) {
-    try {
-      const res = await backendAPI.post(`/api/prerentals/prerental/${preRental.id}/contract`, {
-        contractType: type,
-      }, {
-        headers: {
-          Authorization: `Bearer ${sessionData.user.accessToken}`,
-        },
-      });
-      form.setValue("contractType", res.data.contractType);
-      form.setValue("contractContent", res.data.contractContent);
-    } catch (err) {
-      console.error(err);
-      toast.error("Có lỗi xảy ra");
-    }
+    // try {
+    //   const res = await backendAPI.post(`/api/rentals/rental/${rental.id}/contract`, {
+    //     contractType: type,
+    //   }, {
+    //     headers: {
+    //       Authorization: `Bearer ${sessionData.user.accessToken}`,
+    //     },
+    //   });
+    //   form.setValue("contractType", res.data.contractType);
+    //   form.setValue("contractContent", res.data.contractContent);
+    // } catch (err) {
+    //   console.error(err);
+    //   toast.error("Có lỗi xảy ra");
+    // }
   }
 
   return (

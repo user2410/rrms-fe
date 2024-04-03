@@ -1,24 +1,23 @@
-import { Unit, uAmenities } from "@/models/unit";
-import { ListingDetail } from "../page";
-import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
-import { Collapsible, CollapsibleContent, CollapsibleTrigger } from "@/components/ui/collapsible";
-import { ChevronDown } from "lucide-react";
-import { FaCouch, FaToilet } from "react-icons/fa";
-import { MdBalcony, MdBathtub, MdBed, MdKitchen } from "react-icons/md";
 import { Button } from "@/components/ui/button";
-import { useRouter } from "next/navigation";
 import { Checkbox } from "@/components/ui/checkbox";
-import { useState } from "react";
+import { Collapsible, CollapsibleContent, CollapsibleTrigger } from "@/components/ui/collapsible";
+import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
+import { uAmenities } from "@/models/unit";
 import LightGallery from 'lightgallery/react';
+import { ChevronDown } from "lucide-react";
+import { useRouter } from "next/navigation";
+import { useState } from "react";
+import { MdBalcony, MdBathtub, MdBed } from "react-icons/md";
+import { ListingDetail } from "../page";
 
-import 'lightgallery/css/lightgallery.css';
-import 'lightgallery/css/lg-zoom.css';
+import { Tooltip, TooltipContent, TooltipProvider } from "@/components/ui/tooltip";
+import { TooltipTrigger } from "@radix-ui/react-tooltip";
 import 'lightgallery/css/lg-thumbnail.css';
+import 'lightgallery/css/lg-zoom.css';
+import 'lightgallery/css/lightgallery.css';
 import lgThumbnail from 'lightgallery/plugins/thumbnail';
 import lgZoom from 'lightgallery/plugins/zoom';
 import { useSession } from "next-auth/react";
-import { Tooltip, TooltipContent, TooltipProvider } from "@/components/ui/tooltip";
-import { TooltipTrigger } from "@radix-ui/react-tooltip";
 
 export default function UnitsList({
   listingDetail,

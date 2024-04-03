@@ -5,7 +5,6 @@ import { Input } from "@/components/ui/input";
 import { Select, SelectContent, SelectGroup, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import Spinner from "@/components/ui/spinner";
 import { backendAPI } from "@/libs/axios";
-import { ApplicationUnit } from "@/models/application";
 import { Listing } from "@/models/listing";
 import { Property } from "@/models/property";
 import { Unit } from "@/models/unit";
@@ -19,7 +18,7 @@ export type PreviewApplication = {
   application: FetchedApplication;
   listing: Listing;
   property: Property;
-  units: Unit[];
+  unit: Unit;
 };
 
 export default function ApplicationList({
@@ -36,7 +35,7 @@ export default function ApplicationList({
       const applications = JSON.parse(queryKey.at(4) as string);
       const listingIds = applications.map((item: FetchedApplication) => item.listingId);
       const propIds = applications.map((item: FetchedApplication) => item.propertyId);
-      const unitIds = _.uniq(applications.map((item: FetchedApplication) => item.units.map((u: ApplicationUnit) => u.unitId)).flat());
+      const unitIds = _.uniq(applications.map((item: FetchedApplication) => item.unitId).flat());
 
       const listings = (await backendAPI.get<Listing[]>(`api/listings/ids`, {
         params: {
@@ -63,7 +62,7 @@ export default function ApplicationList({
         application: item,
         listing: listings.find((listing) => listing.id === item.listingId)!,
         property: properties.find((property) => property.id === item.propertyId)!,
-        units: units.filter((unit) => item.units.map((u: ApplicationUnit) => u.unitId).includes(unit.id)),
+        unit: units.find((unit) => unit.id === item.unitId)!,
       } as PreviewApplication));
     },
   });

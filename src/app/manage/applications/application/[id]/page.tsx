@@ -7,7 +7,7 @@ import { useRouter } from "next/navigation";
 
 import Loading from "@/components/ui/loading";
 import { backendAPI } from "@/libs/axios";
-import { Application, ApplicationUnit, ManagedApplication, MapRentalIntentionToText, TransformApplicationRESTResponse } from "@/models/application";
+import { Application, ManagedApplication, MapRentalIntentionToText, TransformApplicationRESTResponse } from "@/models/application";
 import { Listing } from "@/models/listing";
 import { Property } from "@/models/property";
 import { Unit } from "@/models/unit";
@@ -19,8 +19,8 @@ import styles from "../../_styles/application_list.module.css";
 import AcceptDiaglog from "./_components/accept_diaglog";
 import BasicInfo from "./_components/basic";
 import ChatTab from "./_components/chat_tab";
-import RejectDiaglog from "./_components/reject_diaglog";
 import PostApplication from "./_components/post_application";
+import RejectDiaglog from "./_components/reject_diaglog";
 
 export default function ApplicationPage({ params }: { params: { id: string } }) {
   const router = useRouter();
@@ -57,17 +57,12 @@ export default function ApplicationPage({ params }: { params: { id: string } }) 
           Authorization: `Bearer ${session.data?.user.accessToken}`,
         },
       })).data;
-      const units = (await backendAPI.get<Unit[]>("api/units/ids/", {
-        params: {
-          unitIds: application.units.map((u: ApplicationUnit) => u.unitId).join(","),
-          fields: "name,number_of_bedrooms,area",
-        }
-      })).data;
+      const unit = (await backendAPI.get<Unit>(`api/units/unit/${application.unitId}`)).data;
       return {
         application,
         listing,
         property,
-        units,
+        unit,
       };
     },
     enabled: session.status === "authenticated",

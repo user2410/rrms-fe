@@ -1,11 +1,13 @@
 import { Button } from "@/components/ui/button";
 import { backendAPI } from "@/libs/axios";
 import { ManagedApplication } from "@/models/application";
-import { PreRental } from "@/models/rental";
+import { Rental } from "@/models/rental";
 import { useQuery } from "@tanstack/react-query";
 import { Session } from "next-auth";
 import { useRouter } from "next/navigation";
 import toast from "react-hot-toast";
+import { createRental } from "../_action/create_rental";
+import { useState } from "react";
 
 export default function PostApplication({
   data,
@@ -14,13 +16,13 @@ export default function PostApplication({
   data: ManagedApplication;
   sessionData: Session;
 }) {
-  const {application, property, units} = data;
+  const {application, property, unit} = data;
   const router = useRouter();
 
-  const query = useQuery<PreRental | null>({
-    queryKey: ["manage", "rental", "applications", "application", data.application.id, "prerental"],
+  const query = useQuery<Rental | null>({
+    queryKey: ["manage", "rental", "applications", "application", data.application.id, "rental"],
     queryFn: async ({queryKey}) => {
-      const res = await backendAPI.get<PreRental>(`/api/prerentals/prerental/${queryKey.at(4)}`, {
+      const res = await backendAPI.get<Rental>(`/api/applications/application/${queryKey.at(4)}/rental`, {
         headers: {
           Authorization: `Bearer ${sessionData.user.accessToken}`,
         },
@@ -31,42 +33,11 @@ export default function PostApplication({
       }
       return res.data;
     },
+    staleTime: 1000 * 5,
   });
 
-  async function handleCreatePreRental() {
-    try {
-      const unit = application.units[0];
-      const res = await backendAPI.post("/api/prerentals", {
-        applicationId: application.id,
-        tenantId: application.creatorId,
-        profileImage: application.profileImage,
-        propertyId: application.propertyId,
-        unitId: unit.unitId,
-        tenantType: "INDIVIDUAL",
-        tenantName: application.fullName,
-        tenantDob: new Date(application.dob),
-        tenantIdentity: application.identityNumber,
-        tenantPhone: application.phone,
-        tenantEmail: application.email,
-        landArea: property.area,
-        unitArea: units.find(u => u.id === unit.unitId)!.area,
-        moveinDate: new Date(application.moveinDate),
-        rentalPeriod: application.preferredTerm,
-        rentalPrice: unit.offeredPrice,
-        coaps: application.coaps,
-      }, {
-        headers: {
-          Authorization: `Bearer ${sessionData.user.accessToken}`,
-        },
-      });
-      toast.success("Hồ sơ quản lý thuê nhà đã được tạo");
-      setTimeout(() => {
-        router.push(`/manage/rentals/new/?id=${res.data.id}`);
-      }, 1000);
-    } catch (err) {
-      console.error(err);
-      toast.error("Có lỗi xảy ra khi tạo hồ sơ quản lý thuê nhà");
-    }
+  function handleCreateRental() {
+    router.push(`/manage/rentals/new/?applicationId=${application.id}&propertyId=${property.id}&unitId=${unit.id}`);
   }
   return query.isSuccess && (
     query.data ? (
@@ -76,7 +47,7 @@ export default function PostApplication({
         <Button type="button" onClick={() => router.push(`/manage/rentals/new/?applicationId=${application.id}`)}>Quản lý thuê nhà</Button>
       ) : null
     ) : (
-      <Button type="button" onClick={handleCreatePreRental}>Tạo hồ sơ quản lý thuê nhà</Button>
+      <Button type="button" onClick={handleCreateRental}>Tạo hồ sơ quản lý thuê nhà</Button>
     )
   );
 };

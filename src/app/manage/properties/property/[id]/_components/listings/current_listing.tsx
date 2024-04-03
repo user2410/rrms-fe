@@ -50,7 +50,7 @@ export default function CurrentListing({
     <div className="w-full grid grid-cols-3 gap-4">
       <Card>
         <CardHeader>
-          <CardTitle className="text-xl">Tin đăng hiện tại</CardTitle>
+          Tin đăng hiện tại
         </CardHeader>
         <CardContent>
           {query.isLoading ? (
@@ -133,7 +133,7 @@ export default function CurrentListing({
       </Card>
       <Card className="col-span-2">
         <CardHeader>
-          <CardTitle className="text-xl">Khách thuê quan tâm</CardTitle>
+          Khách thuê quan tâm
         </CardHeader>
         <CardContent className="grid grid-cols-3 gap-3">
           <Enquiries

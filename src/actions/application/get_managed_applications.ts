@@ -17,7 +17,7 @@ export default async function GetManagedApplications(accessToken: string) : Prom
     const listingQuery = await backendAPI.get(
       `api/listings/listing/${application.listingId}`,
     );
-    const unitsQuery = await backendAPI.get(`api/units/ids`, {
+    const unitQuery = await backendAPI.get(`api/units/unit/${application.id}`, {
       params: {
         unitIds: application.unitIds.join(","),
         fields: "floor,number_of_bedrooms,area,amenities",
@@ -27,7 +27,7 @@ export default async function GetManagedApplications(accessToken: string) : Prom
       application,
       property: propertyQuery.data,
       listing: listingQuery.data,
-      units: unitsQuery.data,
+      unit: unitQuery.data,
     });
   }
 

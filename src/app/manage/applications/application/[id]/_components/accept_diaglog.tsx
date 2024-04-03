@@ -5,8 +5,12 @@ import Spinner from "@/components/ui/spinner";
 import { backendAPI } from "@/libs/axios";
 import { ManagedApplication } from "@/models/application";
 import { Session } from "next-auth";
+import { useRouter } from "next/navigation";
 import { useEffect, useRef, useState } from "react";
 import { FaCheckCircle } from "react-icons/fa";
+import { createRental } from "../_action/create_rental";
+import toast from "react-hot-toast";
+import { Rental } from "@/models/rental";
 
 type STAGE = "CONFIRMATION" | "SUBMITTING" | "SUCCESS" | "ERROR";
 
@@ -17,8 +21,10 @@ export default function AcceptDiaglog({
   data: ManagedApplication;
   sessionData: Session;
 }) {
+  const router = useRouter();
   const triggerBtnRef = useRef<HTMLButtonElement>(null);
   const [stage, setStage] = useState<STAGE>("CONFIRMATION");
+  const [res, setRes] = useState<Rental>();
 
   useEffect(() => {
     setStage("CONFIRMATION");
@@ -36,6 +42,20 @@ export default function AcceptDiaglog({
     } catch (err) {
       console.error(err);
       setStage("ERROR");
+    }
+  }
+
+  async function handleCreateRental() {
+    try {
+      const res = await createRental(data, sessionData);
+      setRes(res);
+      toast.success("Hồ sơ quản lý thuê nhà đã được tạo");
+      setTimeout(() => {
+        router.push(`/manage/rentals/new/?id=${res.id}`);
+      }, 1000);
+    } catch (err) {
+      console.error(err);
+      toast.error("Có lỗi xảy ra khi tạo hồ sơ quản lý thuê nhà");
     }
   }
 
@@ -86,10 +106,12 @@ export default function AcceptDiaglog({
                   <li>Quản lý quá trình cho thuê</li>
                 </ol>
                 <div className="space-y-2">
-                  {/* TODO: route user to create contract screen */}
                   <Button 
                     variant="default"
-                  >Thiết đặt</Button>
+                    onClick={handleCreateRental}
+                  >
+                    Thiết đặt
+                  </Button>
                   <Button variant="link" onClick={() => triggerBtnRef.current?.click()}>Tôi sẽ xem xét sau</Button>
                 </div>
               </div>

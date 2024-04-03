@@ -1,0 +1,105 @@
+{
+  "electricity": {
+    "norm": [
+      {
+        "text": "Bậc 1: Cho kWh từ 0 - 50",
+        "price": 1728,
+        "unit": "đồng/kWh",
+        "min": 0,
+        "max": 50
+      },
+      {
+        "text": "Bậc 2: Cho kWh từ 51 - 100",
+        "price": 1786,
+        "unit": "đồng/kWh",
+        "min": 51,
+        "max": 100
+      },
+      {
+        "text": "Bậc 3: Cho kWh từ 101 - 200",
+        "price": 2074,
+        "unit": "đồng/kWh",
+        "min": 101,
+        "max": 200
+      },
+      {
+        "text": "Bậc 4: Cho kWh từ 201 - 300",
+        "price": 2612,
+        "unit": "đồng/kWh",
+        "min": 201,
+        "max": 300
+      },
+      {
+        "text": "Bậc 5: Cho kWh từ 301 - 400",
+        "price": 2420,
+        "unit": "đồng/kWh",
+        "min": 301,
+        "max": 400
+      },
+      {
+        "text": "Bậc 6: Cho kWh từ 401 trở lên",
+        "price": 3015,
+        "unit": "đồng/kWh",
+        "min": 401,
+        "max": null
+      }
+    ]    
+  },
+  "water": {
+    "norm": {
+      "HN": [
+        {
+          "text": "10 m3 đầu tiên",
+          "price": 5973,
+          "unit": "đồng/m3",
+          "min": 0,
+          "max": 10
+        },
+        {
+          "text": "Từ trên 10 m3 đến 20 m3",
+          "price": 7052,
+          "unit": "đồng/m3",
+          "min": 10,
+          "max": 20
+        },
+        {
+          "text": "Từ trên 20 m3 đến 30 m3",
+          "price": 8669,
+          "unit": "đồng/m3",
+          "min": 20,
+          "max": 30
+        },
+        {
+          "text": "Trên 30 m3",
+          "price": 15929,
+          "unit": "đồng/m3",
+          "min": 30,
+          "max": null
+        }
+      ],
+      "SG": [
+        {
+          "text": "Đến 4m3/người/tháng",
+          "price": 6700,
+          "unit": "đồng/m3",
+          "min": 0,
+          "max": 4
+        },
+        {
+          "text": "Trên 4m3 đến 6m3/người/tháng",
+          "price": 12900,
+          "unit": "đồng/m3",
+          "min": 4,
+          "max": 6
+        },
+        {
+          "text": "Trên 6m3/người/tháng",
+          "price": 14400,
+          "unit": "đồng/m3",
+          "min": 6,
+          "max": null
+        }
+      ]
+    }
+  }
+}

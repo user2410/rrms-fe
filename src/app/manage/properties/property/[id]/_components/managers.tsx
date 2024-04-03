@@ -12,7 +12,7 @@ export default function Managers() {
     <div>
       <Card>
         <CardHeader>
-          <CardTitle>Chủ nhà</CardTitle>
+          Chủ nhà
         </CardHeader>
         <CardContent className="space-y-3">
           {property.managers.filter(m => m.role === "OWNER").map((m, i) => (
@@ -30,7 +30,7 @@ export default function Managers() {
       </Card>
       <Card>
         <CardHeader className="flex-row justify-between items-center">
-          <CardTitle>Người quản lý</CardTitle>
+          <>Người quản lý</>
           <Button variant="outline">Thêm quản lý</Button>
         </CardHeader>
         <CardContent className="space-y-3">

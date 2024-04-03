@@ -15,13 +15,11 @@ export default function BasicUnits({
         ? "Phòng trọ"
         : null;
 
-  const units = data.application.units.map(u => {
-    const lu = data.units.find(_u => _u.id === u.unitId)!;
-    return {
-      ...u,
-      ...lu,
-    };
-  });
+  const unit = {
+    ...data.unit,
+    listingPrice: data.application.listingPrice,
+    offeredPrice: data.application.offeredPrice,
+  };
 
   return (
     <Card>
@@ -34,22 +32,18 @@ export default function BasicUnits({
           <TableHeader>
             <TableRow>
               <TableHead className="text-left max-w-[50%]">{unitTypeText}</TableHead>
-              <TableHead className="text-left">Tầng</TableHead>
               <TableHead className="text-left">Diện tích (m<sup>2</sup>)</TableHead>
               <TableHead className="text-right">Giá thuê (tháng)</TableHead>
               <TableHead className="text-right">Giá thuê thoả thuận (tháng)</TableHead>
             </TableRow>
           </TableHeader>
           <TableBody>
-            {units.map((unit, index) => (
-              <TableRow key={index}>
-                <TableCell className="text-left">{unit.name}</TableCell>
-                <TableCell className="text-left">{unit.floor && "-"}</TableCell>
-                <TableCell className="text-left">{unit.area}</TableCell>
-                <TableCell className="text-right">{unit.listingPrice}</TableCell>
-                <TableCell className="text-right">{unit.offeredPrice}</TableCell>
-              </TableRow>
-            ))}
+            <TableRow>
+              <TableCell className="text-left">{unit.name}</TableCell>
+              <TableCell className="text-left">{unit.area}</TableCell>
+              <TableCell className="text-right">{unit.listingPrice}</TableCell>
+              <TableCell className="text-right">{unit.offeredPrice}</TableCell>
+            </TableRow>
           </TableBody>
         </Table>
       </CardContent>

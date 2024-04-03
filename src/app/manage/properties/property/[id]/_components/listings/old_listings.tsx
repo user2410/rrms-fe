@@ -4,10 +4,9 @@ import { Listing } from "@/models/listing";
 import { Property } from "@/models/property";
 import { useQuery } from "@tanstack/react-query";
 import { useSession } from "next-auth/react";
-import { useRouter } from "next/navigation";
-import TableSkeleton from "./skeleton";
-import { DataTable } from "./datatable";
 import { columns } from "./columns";
+import { DataTable } from "./datatable";
+import TableSkeleton from "./skeleton";
 
 export default function OldListings({
   property,
@@ -15,7 +14,6 @@ export default function OldListings({
   property: Property;
 }) {
   const session = useSession();
-  const router = useRouter();
   
   const query = useQuery<Listing[]>({
     queryKey: ["manage", "properties", "property", property.id, "listings", "old"],
@@ -43,7 +41,7 @@ export default function OldListings({
   return (
     <Card className="col-span-2">
         <CardHeader>
-          <CardTitle className="text-xl">Tin đăng cũ</CardTitle>
+          Tin đăng cũ
         </CardHeader>
         <CardContent>
           {(query.isLoading || query.isError) ? (
