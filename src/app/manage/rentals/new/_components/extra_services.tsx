@@ -73,7 +73,7 @@ type MinorFormState = {
   name: string;
   setupBy: "TENANT" | "LANDLORD";
   provider: string;
-  price: number;
+  price?: number;
 };
 
 type MinorFormAction =
@@ -87,7 +87,6 @@ const minorFormInitialState: MinorFormState = {
   name: 'internet',
   setupBy: 'LANDLORD',
   provider: '',
-  price: 0,
 };
 
 function minorFormReducer(state: MinorFormState, action: MinorFormAction) {

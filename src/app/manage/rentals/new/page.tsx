@@ -7,7 +7,6 @@ import DetailedStepper from "@/components/ui/stepper/detailed-stepper";
 import { backendAPI } from "@/libs/axios";
 import { Application } from "@/models/application";
 import { Property } from "@/models/property";
-import { Rental } from "@/models/rental";
 import { Unit } from "@/models/unit";
 import { User } from "@/models/user";
 import { zodResolver } from "@hookform/resolvers/zod";
@@ -21,23 +20,26 @@ import * as z from "zod";
 import Baseprice from "./_components/baseprice";
 import BasicServices from "./_components/basic_services";
 import ExtraServices from "./_components/extra_services";
-import OwnerDetails from "./_components/owner_details";
 import TenantDetails from "./_components/tenant_details";
 import { DataProvider, RentalData, useDataCtx } from "./_context/data.context";
 import UploadDialog from "./_components/upload-dialog";
 
 const formSchema = z.object({
-  applicationId: z.string().optional(),
+  applicationId: z.number().optional(),
   tenantId: z.string().optional(),
-  // profileImage: z.string(), // TODO: allow uploading new image
   propertyId: z.string(),
   unitId: z.string(),
-
+  
   organizationName: z.string().optional(),
   organizationHqAddress: z.string().optional(),
-  organizationScale: z.enum(["1-10", "11-50", "51-200", "201-500", "501-1000", "1000+"]).optional(),
-
+  
   tenantType: z.enum(['INDIVIDUAL', 'ORGANIZATION']),
+  profileImage: z.object({
+    url: z.string(),
+    name: z.string().optional(),
+    size: z.number().optional(),
+    type: z.string().optional(),
+  }),
   tenantName: z.string(),
   tenantDob: z.date(),
   tenantPhone: z.string(),
@@ -64,14 +66,14 @@ const formSchema = z.object({
     description: z.string().optional(),
   })),
 
-  landArea: z.number(),
-  unitArea: z.number(),
-
   startDate: z.date(),
   moveinDate: z.date(),
 
   rentalPeriod: z.number(),
   rentalPrice: z.number(),
+  rentalIntention: z.string(),
+  deposit: z.number(),
+  depositPaid: z.boolean(),
 
   electricityPaymentType: z.enum(["RETAIL", "FIXED"]),
   electricityPrice: z.number().optional(),
@@ -91,47 +93,36 @@ export type FormValues = z.infer<typeof formSchema>;
 
 export default function NewRentalPage() {
   const searchParams = useSearchParams();
+  const applicationId = searchParams?.get("applicationId");
+  const propertyId = searchParams?.get("propertyId");
+  const unitId = searchParams?.get("unitId");
   const session = useSession();
 
   const query = useQuery<RentalData>({
-    queryKey: ["manage", "rentals", "new", "rental", searchParams?.get("id"), searchParams?.get("applicationId"), searchParams?.get("propertyId"), searchParams?.get("unitId")],
+    queryKey: ["manage", "rentals", "new", "rental", applicationId, propertyId, unitId],
     queryFn: async ({ queryKey }) => {
-      var rental: Rental | null = null;
-      if (queryKey.at(4)) {
-        rental = (await backendAPI.get<Rental | null>(`/api/rentals/rental/${queryKey.at(4)}`, {
-          headers: {
-            Authorization: `Bearer ${session.data!.user.accessToken}`,
-          },
-          validateStatus: (status) => status === 200 || status === 404,
-        })).data;
-      }
-
       var application: Application | undefined;
-      const aid = rental?.applicationId ? rental.applicationId : queryKey.at(5);
-      if (aid) {
-        application = (await backendAPI.get<Application>(`/api/applications/application/${aid}`, {
+      if (queryKey.at(4)) {
+        application = (await backendAPI.get<Application>(`/api/applications/application/${queryKey.at(4)}`, {
           headers: {
             Authorization: `Bearer ${session.data!.user.accessToken}`,
           },
         })).data;
       }
 
-      const property = (await backendAPI.get<Property>(`/api/properties/property/${rental ? rental.propertyId : queryKey.at(6)}`, {
+      const property = (await backendAPI.get<Property>(`/api/properties/property/${queryKey.at(5)}`, {
         headers: {
           Authorization: `Bearer ${session.data!.user.accessToken}`,
         },
       })).data;
 
-      const unit = (await backendAPI.get<Unit>(`/api/units/unit/${rental ? rental.unitId : queryKey.at(7)}`, {
+      const unit = (await backendAPI.get<Unit>(`/api/units/unit/${queryKey.at(6)}`, {
         headers: {
           Authorization: `Bearer ${session.data!.user.accessToken}`,
         },
       })).data;
 
       const userIds: string[] = [...property.managers.map(pm => pm.managerId)];
-      if (rental?.tenantId) {
-        userIds.push(rental.tenantId);
-      }
       if (application && application?.creatorId !== '00000000-0000-0000-0000-000000000000') {
         userIds.push(application.creatorId);
       }
@@ -145,18 +136,17 @@ export default function NewRentalPage() {
       })).data;
 
       return {
-        rental,
         application,
         property,
         unit,
-        tenant: users.find(u => (u.id === rental?.tenantId || u.id === application?.creatorId)),
+        tenant: users.find(u => (u.id === application?.creatorId)),
         owners: users.filter(u => property.managers.find(m => m.managerId === u.id && m.role === "OWNER")),
         managers: users.filter(u => property.managers.find(m => m.role === "MANAGER" && m.managerId === u.id)),
       } as RentalData;
     },
     enabled: session.status === "authenticated",
-    staleTime: 1000 * 60 * 5,
-    cacheTime: 1000 * 60 * 5,
+    staleTime: 1000 * 60 * 60,
+    cacheTime: 1000 * 60 * 60,
   });
 
   return (
@@ -186,25 +176,29 @@ function RentalForm({
   data: RentalData;
   sessionData: Session;
 }) {
-  const { rental, application, property, unit, owners: owner, tenant } = data;
+  const { application, property, unit, tenant } = data;
   const [step, setStep] = useState<number>(0);
   const [openUploadDialog, setOpenUploadDialog] = useState<boolean>(false);
   const dataCtx = useDataCtx();
+
   const form = useForm<FormValues>({
     resolver: zodResolver(formSchema),
     defaultValues: {
-      ...rental,
       propertyId: property.id,
       unitId: unit.id,
+      applicationId: application?.id,
 
+      profileImage: {
+        url: application?.profileImage,
+      },
+      tenantId: application?.creatorId ? application.creatorId : undefined,
       tenantType: application?.tenantType ? application.tenantType : "INDIVIDUAL",
-      tenantName: application ? application?.fullName : `${tenant?.firstName} ${tenant?.lastName}`,
+      tenantName: application ? application?.fullName : tenant ? `${tenant.firstName} ${tenant.lastName}` : "",
       tenantDob: application?.dob && new Date(application.dob),
       tenantPhone: application ? application?.phone : tenant?.phone,
       tenantEmail: application ? application?.email : tenant?.email,
       organizationName: application?.organizationName ? application.organizationName : undefined,
       organizationHqAddress: application?.organizationHqAddress ? application.organizationHqAddress : undefined,
-      organizationScale: application?.organizationScale ? application.organizationScale : undefined,
       coaps: application?.coaps && application.coaps.map(m => ({
         ...m,
         dob: new Date(m.dob),
@@ -219,11 +213,8 @@ function RentalForm({
       pets: application?.pets,
 
       rentalPrice: application?.offeredPrice,
-
-      landArea: property.area,
-      unitArea: unit.area,
-
-      moveinDate: application?.moveinDate && new Date(application.moveinDate),
+      rentalIntention: application?.rentalIntention,
+      depositPaid: false,
       
       services: [],
     },
@@ -234,7 +225,7 @@ function RentalForm({
   }, []);
 
   function onSubmit(data: FormValues) {
-    console.log("submitting:", data);
+    console.log("submitting data:", data);
     setOpenUploadDialog(true);
   }
 
@@ -250,16 +241,12 @@ function RentalForm({
         <DetailedStepper
           steps={[
             {
-              title: "Bên cho thuê",
-              description: "Đại diện bên cho thuê",
-            },
-            {
               title: "Bên thuê",
               description: "Đại diện bên thuê",
             },
             {
               title: "Chi phí",
-              description: "Chi phí khách thuê nhà chi trả hàng tháng",
+              description: "Chi phí khách thuê nhà chi trả ",
             },
           ]}
           currentStep={step}
@@ -267,40 +254,37 @@ function RentalForm({
         <Form {...form}>
           <form onSubmit={form.handleSubmit(onSubmit)}>
             {step === 0 ? (
-              <OwnerDetails />
-            ) : step === 1 ? (
               <TenantDetails />
-            ) : step === 2 ? (
+            ) : step === 1 ? (
               <div className="space-y-4">
                 <Baseprice />
                 <BasicServices />
                 <ExtraServices />
               </div>
             ) : null}
+          <div className="flex justify-between w-full mt-4">
+            <Button
+              type="button"
+              onClick={() => setStep(step - 1)}
+              disabled={step <= 0}
+            >
+              Quay lại
+            </Button>
+            {step < 1 && (
+              <Button
+                type="button"
+                onClick={(e) => setStep(step + 1)}
+              >
+                Tiếp tục
+              </Button>
+            )}
+            {/* {JSON.stringify(form.formState.errors)} */}
+            {step === 1 && (
+              <Button type="submit">Hoàn tất</Button>
+            )}
+          </div>
           </form>
         </Form>
-      </div>
-      <div className="flex justify-between w-full mt-4">
-        <Button
-          type="button"
-          onClick={() => setStep(step - 1)}
-          disabled={step <= 0}
-        >
-          Quay lại
-        </Button>
-        {JSON.stringify(form.formState.errors)}
-        <Button
-          type={step === 2 ? "submit" : "button"}
-          onClick={(e) => {
-            if(step < 2) {
-              setStep(step + 1);
-            } else {
-              form.handleSubmit(onSubmit)(e);
-            }
-          }}
-        >
-          {step < 2 ? "Tiếp tục" : "Hoàn tất"}
-        </Button>
       </div>
     </>
   );

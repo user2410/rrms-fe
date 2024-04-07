@@ -22,7 +22,7 @@ declare module "next-auth" {
         ward: string;
         phone: string;
         avatar: string;
-        // role: string;
+        role: string;
       }
     }
   }

@@ -27,13 +27,13 @@ const defaultToolbarOptions = [
   [{ 'header': [1, 2, 3, 4, 5, 6, false] }],
 
   [{ 'color': [] }, { 'background': [] }],          // dropdown with defaults from theme
-  [{ 'font': [] }],
+  [{ 'font': ["times new roman","times", "serif"] }],
   [{ 'align': [] }],
 
   ['table']                                         // remove formatting button
 ];
 
-export default function ContractEditor(props : EditorProps) {
+export default function Editor(props : EditorProps) {
   const reactQuillRef = useRef<ReactQuill>(null);
 
   useEffect(() => {

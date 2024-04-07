@@ -1,14 +1,15 @@
+import { uploadFile } from "@/actions/upload-file";
 import { AlertDialog, AlertDialogContent, AlertDialogTrigger } from "@/components/ui/alert-dialog";
 import { Button } from "@/components/ui/button";
+import { backendAPI } from "@/libs/axios";
 import { Session } from "next-auth";
-import { useSession } from "next-auth/react";
 import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
+import { UseFormReturn } from "react-hook-form";
 import { FaCheckCircle } from "react-icons/fa";
 import { MdCancel } from "react-icons/md";
 import { FormValues } from "../page";
-import { UseFormReturn } from "react-hook-form";
-import { backendAPI } from "@/libs/axios";
+import Link from "next/link";
 
 type UPLOADSTAGE = "CONFIRMATION" | "PENDING" | "DONE" | "ERROR";
 
@@ -31,8 +32,21 @@ export default function UploadDialog({
     try {
       setStage("PENDING");
       const data = form.getValues();
+      const pi = data.profileImage;
       // console.log("done uploading property and units");
-      const rental = (await backendAPI.post("/api/rentals/", data, {
+      const profileImage = pi.name ? await uploadFile({
+        name: pi.name as string,
+        size: pi.size as number,
+        type: pi.type!.toLowerCase(),
+        url: pi.url,
+      }) : pi.url;
+      const rental = (await backendAPI.post("/api/rentals/", {
+        ...data,
+        coaps: data.tenantType === "INDIVIDUAL" ? data.coaps : [],
+        minors: data.tenantType === "INDIVIDUAL" ? data.minors : [],
+        pets: data.tenantType === "INDIVIDUAL" ? data.pets : [],
+        profileImage,
+      }, {
         headers: {
           Authorization: `Bearer ${sessionData.user.accessToken}`,
         },
@@ -67,7 +81,7 @@ export default function UploadDialog({
           <div className="w-full flex flex-col items-center justify-center gap-2">
             <FaCheckCircle size={20} color="green" />
             <h2>Thêm khách thuê <strong>{form.getValues("tenantName")}</strong> thành công</h2>
-            <Button variant="link" type="button" onClick={() => router.push(`/manage/rentals/rental/${res.id}`)}>Xem chi tiết</Button>
+            <Link href={`/manage/rentals/rental/${res.id}`}>Xem chi tiết</Link>
           </div>
         ) : stage === "ERROR" ? (
           <div className="w-full flex flex-col items-center justify-center gap-2">

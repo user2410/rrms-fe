@@ -2,21 +2,19 @@
 
 import { Badge } from "@/components/ui/badge";
 import { backendAPI } from "@/libs/axios";
-import { Property, getPrimaryImage, getPropertyTypeText } from "@/models/property";
-import { Unit } from "@/models/unit";
+import { getPrimaryImage, getPropertyTypeText } from "@/models/property";
 import * as Tabs from "@radix-ui/react-tabs";
 import { useQuery } from "@tanstack/react-query";
 import { useSession } from "next-auth/react";
 import Image from "next/image";
 import Link from "next/link";
+import { useEffect } from "react";
 import { FaArrowLeft } from "react-icons/fa";
 import ListingsTab from "./_components/listings";
 import ManagersTab from "./_components/managers";
 import PropertyTab from "./_components/property";
 import TenantsTab from "./_components/tenants";
-import styles from "./_styles/page.module.css";
-import { PropDataState, PropertyDataContext, PropertyDataProvider, usePropDataCtx } from "./_context/property_data.context";
-import { useEffect } from "react";
+import { PropDataState, PropertyDataProvider, usePropDataCtx } from "./_context/property_data.context";
 
 export default function PropertyDetailPage({ params }: { params: { id: string } }) {
   const session = useSession();
@@ -101,31 +99,31 @@ function PropertyPageContext({
           </div>
         </div>
       </div>
-      <Tabs.Root defaultValue="property" className={styles.TabsRoot}>
-        <Tabs.List className={styles.TabsList}>
-          <Tabs.Trigger value="property" className={styles.TabsTrigger}>
+      <Tabs.Root defaultValue="property" className="TabsRoot">
+        <Tabs.List className="TabsList">
+          <Tabs.Trigger value="property" className="TabsTrigger">
             {propTypeText}
           </Tabs.Trigger>
-          <Tabs.Trigger value="managers" className={styles.TabsTrigger}>
+          <Tabs.Trigger value="managers" className="TabsTrigger">
             Quản lý nhà trọ
           </Tabs.Trigger>
-          <Tabs.Trigger value="listings" className={styles.TabsTrigger}>
+          <Tabs.Trigger value="listings" className="TabsTrigger">
             Tin đăng
           </Tabs.Trigger>
-          <Tabs.Trigger value="tenants" className={styles.TabsTrigger}>
+          <Tabs.Trigger value="tenants" className="TabsTrigger">
             Quản lý thuê trọ
           </Tabs.Trigger>
         </Tabs.List>
-        <Tabs.Content className={styles.TabsContent} value="property">
+        <Tabs.Content className="TabsContent" value="property">
           <PropertyTab/>
         </Tabs.Content>
-        <Tabs.Content className={styles.TabsContent} value="managers">
+        <Tabs.Content className="TabsContent" value="managers">
           <ManagersTab/>
         </Tabs.Content>
-        <Tabs.Content className={styles.TabsContent} value="listings">
+        <Tabs.Content className="TabsContent" value="listings">
           <ListingsTab/>
         </Tabs.Content>
-        <Tabs.Content className={styles.TabsContent} value="tenants">
+        <Tabs.Content className="TabsContent" value="tenants">
           <TenantsTab/>
         </Tabs.Content>
       </Tabs.Root>

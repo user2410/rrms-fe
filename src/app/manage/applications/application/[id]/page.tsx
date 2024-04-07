@@ -14,13 +14,13 @@ import { Unit } from "@/models/unit";
 import { GetLocationName } from "@/utils/dghcvn";
 import { useQuery } from "@tanstack/react-query";
 import { useSession } from "next-auth/react";
+import toast from "react-hot-toast";
 import StatusCard from "../../_components/status_card";
-import styles from "../../_styles/application_list.module.css";
 import AcceptDiaglog from "./_components/accept_diaglog";
 import BasicInfo from "./_components/basic";
 import ChatTab from "./_components/chat_tab";
-import PostApplication from "./_components/post_application";
 import RejectDiaglog from "./_components/reject_diaglog";
+import PostProcess from "./_components/post_process";
 
 export default function ApplicationPage({ params }: { params: { id: string } }) {
   const router = useRouter();
@@ -30,14 +30,14 @@ export default function ApplicationPage({ params }: { params: { id: string } }) 
 
   const query = useQuery<ManagedApplication>({
     queryKey: ["manage", "rental", "applications", "application", id],
-    queryFn: async ({queryKey}) => {
+    queryFn: async ({ queryKey }) => {
       const application = (await backendAPI.get<Application>(`/api/applications/application/${queryKey.at(4)}`, {
         headers: {
           Authorization: `Bearer ${session.data?.user.accessToken}`,
         },
         transformResponse: TransformApplicationRESTResponse,
       })).data;
-      if(application.status === "PENDING") {
+      if (application.status === "PENDING") {
         await backendAPI.patch(`/api/applications/application/status/${application.id}`, {
           status: "CONDITIONALLY_APPROVED",
         }, {
@@ -70,11 +70,11 @@ export default function ApplicationPage({ params }: { params: { id: string } }) 
     cacheTime: 1000 * 60 * 30,
   });
 
-  if(query.isLoading) {
-    return (<Loading/>);
+  if (query.isLoading) {
+    return (<Loading />);
   }
 
-  if(query.isError) {
+  if (query.isError) {
     return (
       <div className="w-full h-full flex justify-center items-center">
         <p className="text-red-500">Error: {JSON.stringify(query.error)}</p>
@@ -82,7 +82,23 @@ export default function ApplicationPage({ params }: { params: { id: string } }) 
     );
   }
 
-  const {application, listing, property} = query.data;
+  const { application, property, unit } = query.data;
+
+  async function handleWithdrawApplication() {
+    try {
+      await backendAPI.patch(`/api/applications/application/status/${application.id}`, {
+        status: "WITHDRAWN",
+      }, {
+        headers: {
+          Authorization: `Bearer ${session.data?.user.accessToken}`,
+        },
+      });
+      toast.success("Đã rút đơn ứng tuyển");
+    } catch (err) {
+      console.error(err);
+      toast.error("Có lỗi xảy ra khi rút đơn ứng tuyển");
+    }
+  }
 
   return (
     <div className="container h-full py-10 space-y-4">
@@ -106,25 +122,28 @@ export default function ApplicationPage({ params }: { params: { id: string } }) 
         <div className="flex flex-row justify-between items-center w-full">
           <h1 className="text-2xl font-medium">{application.fullName}</h1>
           <div className="flex flex-row gap-2">
-            {application.creatorId === session.data!.user.user.id && ["PENDING","CONDITIONALLY_APPROVED"].includes(application.status) && (
-              <Button type="button">
+            {application.creatorId === session.data!.user.user.id && ["PENDING", "CONDITIONALLY_APPROVED"].includes(application.status) && (
+              <Button type="button" onClick={handleWithdrawApplication}>
                 Rút đơn
               </Button>
             )}
-            {application.creatorId !== session.data!.user.user.id && !["APPROVED","REJECTED"].includes(application.status) && (
+            {application.creatorId !== session.data!.user.user.id && !["APPROVED", "REJECTED"].includes(application.status) && (
               <>
                 <AcceptDiaglog
                   data={query.data}
                   sessionData={session.data!}
-                  />
+                />
                 <RejectDiaglog
                   data={query.data}
                   sessionData={session.data!}
                 />
-              </>  
+              </>
             )}
             {application.status === "APPROVED" && (
-              <PostApplication data={query.data} sessionData={session.data!}/>
+              <PostProcess
+                data={query.data}
+                sessionData={session.data!}
+              />
             )}
           </div>
         </div>
@@ -159,20 +178,20 @@ export default function ApplicationPage({ params }: { params: { id: string } }) 
         </div>
       </div>
 
-      <Tabs.Root defaultValue="basic" className={styles.TabsRoot}>
-        <Tabs.List className={styles.TabsList}>
-          <Tabs.Trigger value="basic" className={styles.TabsTrigger}>
+      <Tabs.Root defaultValue="basic" className="TabsRoot">
+        <Tabs.List className="TabsList">
+          <Tabs.Trigger value="basic" className="TabsTrigger">
             Đơn ứng tuyển
           </Tabs.Trigger>
-          <Tabs.Trigger value="chat" className={styles.TabsTrigger}>
+          <Tabs.Trigger value="chat" className="TabsTrigger">
             Trao đổi
           </Tabs.Trigger>
         </Tabs.List>
-        <Tabs.Content className={styles.TabsContent} value="basic">
-          <BasicInfo data={query.data}/>
+        <Tabs.Content className="TabsContent" value="basic">
+          <BasicInfo data={query.data} />
         </Tabs.Content>
-        <Tabs.Content className={styles.TabsContent} value="chat">
-          <ChatTab 
+        <Tabs.Content className="TabsContent" value="chat">
+          <ChatTab
             data={query.data}
             sessionData={session.data!}
           />

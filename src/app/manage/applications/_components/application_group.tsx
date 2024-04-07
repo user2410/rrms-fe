@@ -45,14 +45,6 @@ export default function ApplicationGroup({
             <p className="text-sm font-light">{property.fullAddress}</p>
           </div>
         </div>
-        <div className="flex flex-row gap-2">
-          <Button variant="link">Mời ứng tuyển</Button>
-          <Separator orientation="vertical" />
-          <div className="flex flex-row items-center gap-1">
-            <Label htmlFor="turnon_notification">Nhận đơn ứng tuyển</Label>
-            <Switch defaultChecked id="turnon_notification" />
-          </div>
-        </div>
       </div>
       {/* Applications list*/}
       {applications.slice(0, show).map((a, i) => (

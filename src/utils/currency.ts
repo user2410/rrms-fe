@@ -49,7 +49,7 @@ function docSo3ChuSo(baso: number): string {
   return KetQua;
 }
 
-export function readMoneyVi(SoTien: number): string {
+export function readNumberVi(So: number): string {
   let lan = 0;
   let i = 0;
   let so = 0;
@@ -58,15 +58,15 @@ export function readMoneyVi(SoTien: number): string {
   let soAm = false;
   let ViTri: number[] = new Array(6).fill(0);
 
-  if (SoTien < 0) soAm = true;
-  if (SoTien === 0) return "Không đồng";
-  if (SoTien > 0) {
-    so = SoTien;
+  if (So < 0) soAm = true;
+  if (So === 0) return "Không đồng";
+  if (So > 0) {
+    so = So;
   }
   else {
-    so = -SoTien;
+    so = -So;
   }
-  if (SoTien > 8999999999999999) {
+  if (So > 8999999999999999) {
     return "";
   }
   ViTri[5] = Math.floor(so / 1000000000000000);
@@ -109,9 +109,13 @@ export function readMoneyVi(SoTien: number): string {
   }
   KetQua = KetQua.substring(1, 2).toUpperCase() + KetQua.substring(2);
   if (soAm) {
-    return "Âm " + KetQua + " đồng";
+    return "Âm " + KetQua;
   }
   else {
-    return KetQua + " đồng";
+    return KetQua;
   }
+}
+
+export function readMoneyVi(SoTien: number): string {
+  return readNumberVi(SoTien) + " đồng";
 }

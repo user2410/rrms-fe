@@ -1,4 +1,4 @@
-export interface Step {
+export type Step = {
   title: string;
   description?: string;
 }

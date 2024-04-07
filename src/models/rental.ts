@@ -4,13 +4,40 @@ export const MapTenantTypeToText = {
   ORGANIZATION: 'Tổ chức',
 };
 
-export type RentalContract = {
-  id: number;
-  contractType: 'DIGITAL'| 'FILE'| 'IMAGE';
-  contractContent: string;
-  contractLastUpdate: Date;
-  contractLastUpdateBy: string;
+export type RentalMinor = {
+  rentalId?: number;
+  fullName: string;
+  email?: string;
+  phone?: string;
+  dob: Date;
+  description?: string;
 };
+
+export type RentalCoap = {
+  rentalId?: number;
+  fullName: string;
+  dob: Date;
+  email?: string;
+  phone?: string;
+  job: string;
+  income: number;
+  description?: string;
+};
+
+export type RentalPet = {
+  rentalId?: number;
+  type: string;
+  weight: number;
+  description?: string;
+};
+
+export type RentalService = {
+  rentalId: number;
+  name: string;
+  setupBy: string;
+  provider: string;
+  price: string;
+}
 
 export type Rental = {
   id: number;
@@ -18,30 +45,37 @@ export type Rental = {
   propertyId: string;
   unitId: string;
   applicationId?: string;
+  
   tenantId?: string;
   profileImage: string;
-
   tenantType: 'INDIVIDUAL' | 'ORGANIZATION';
   tenantName: string;
-  tenantIdentity: string;
-  tenantDob: Date;
   tenantPhone: string;
   tenantEmail: string;
-  tenantAddress: string;
-
-  contractType: 'DIGITAL'| 'FILE'| 'IMAGE';
-  contractContent: string;
-  contractLastUpdate: Date;
-  contractLastUpdateBy: string;
-
-  landArea: number;
-  unitArea: number;
+  organizationName?: string;
+  organizationHqAddress?: string;
 
   startDate: Date;
   moveinDate: Date;
   rentalPeriod: number;
   rentalPrice: number;
+  rentalIntention: string;
+  deposit: number;
+  depositPaid: boolean;
+  
+  electricityPaymentType: "RETAIL" | "FIXED";
+  electricityPrice?: number;
+  waterPaymentType: "RETAIL" | "FIXED";
+  waterPrice?: number;
   note: string;
+
+  createdAt: Date;
+  updatedAt: Date;
+
+  coaps: RentalCoap[];
+  minors: RentalMinor[];
+  pets: RentalPet[];
+  services: RentalService[];
 };
 
 export const rentalServices = {
@@ -50,3 +84,9 @@ export const rentalServices = {
   "parking": "Bãi đậu xe",
   "other": "Khác",
 };
+
+export function getRentalExpiryDate(rental: Rental): Date {
+  const expiryDate = new Date(rental.startDate);
+  expiryDate.setMonth(expiryDate.getMonth() + rental.rentalPeriod);
+  return expiryDate;
+}

@@ -214,8 +214,8 @@ export default function BasicServices() {
                                 <FormControl>
                                   <Input
                                     {...field2}
-                                    onChange={(e) => field2.onChange(e.currentTarget.valueAsNumber)}
                                     type="number"
+                                    onChange={(e) => field2.onChange(e.currentTarget.valueAsNumber)}
                                     disabled={wType !== "FIXED"}
                                   />
                                 </FormControl>

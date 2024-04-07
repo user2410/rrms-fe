@@ -197,23 +197,23 @@ export default function MainForm({
       </div>
       {/* Main form */}
       <form onSubmit={form.handleSubmit(onSubmit)}>
-        <Tabs.Root defaultValue="1" value={tab} className={styles.TabsRoot}>
-          <Tabs.List className={styles.TabsList}>
-            <Tabs.Trigger disabled className={styles.TabsTrigger} value="1">Thông tin cơ bản</Tabs.Trigger>
-            <Tabs.Trigger disabled className={styles.TabsTrigger} value="2">Thông tin {form.watch("ao.tenantType") === "INDIVIDUAL" ? "cá nhân" : "tổ chức"}</Tabs.Trigger>
-            <Tabs.Trigger disabled className={styles.TabsTrigger} value="3">Tổng kết</Tabs.Trigger>
+        <Tabs.Root defaultValue="1" value={tab} className="TabsRoot">
+          <Tabs.List className="TabsList">
+            <Tabs.Trigger disabled className="TabsTrigger" value="1">Thông tin cơ bản</Tabs.Trigger>
+            <Tabs.Trigger disabled className="TabsTrigger" value="2">Thông tin {form.watch("ao.tenantType") === "INDIVIDUAL" ? "cá nhân" : "tổ chức"}</Tabs.Trigger>
+            <Tabs.Trigger disabled className="TabsTrigger" value="3">Tổng kết</Tabs.Trigger>
           </Tabs.List>
-          <Tabs.Content className={styles.TabsContent} value="1">
+          <Tabs.Content className="TabsContent" value="1">
             <div className="container">
               <ApplicationOccupants data={data} />
             </div>
           </Tabs.Content>
-          <Tabs.Content className={styles.TabsContent} value="2">
+          <Tabs.Content className="TabsContent" value="2">
             <div className="container">
               <YourDetails data={data} />
             </div>
           </Tabs.Content>
-          <Tabs.Content className={styles.TabsContent} value="3">
+          <Tabs.Content className="TabsContent" value="3">
             <div className="container">
               <Finish />
             </div>

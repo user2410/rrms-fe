@@ -17,3 +17,12 @@ export const toISOStringWithTimezone = (date: Date) => {
     ':' + pad(date.getSeconds()) +
     getTimezoneOffset(date);
 };
+
+export function nMonthsToYears(n: number) : string{
+  if (n < 12) {
+    return `${n} tháng`;
+  }
+  const years = Math.floor(n / 12);
+  const months = n % 12;
+  return `${years} năm${months > 0 ? ` ${months} tháng` : ""}`;
+}
