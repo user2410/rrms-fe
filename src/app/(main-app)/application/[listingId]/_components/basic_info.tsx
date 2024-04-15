@@ -1,5 +1,5 @@
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { FormControl, FormField, FormItem, FormLabel, FormMessage } from "@/components/ui/form";
+import { FormControl, FormField, FormItem, FormLabel, FormLabelRequired, FormMessage } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
 import { format } from "date-fns";
 import { useRef } from "react";
@@ -13,8 +13,8 @@ export default function BasicInfo() {
 
   const inputFileRef = useRef<HTMLInputElement>(null);
 
-  const currentImage = form.watch('ao.profileImage');
-
+  const tenantType = form.watch("ao.tenantType");
+  
   return (
     <Card>
       <CardHeader>
@@ -28,7 +28,7 @@ export default function BasicInfo() {
             name="ao.tenantType"
             render={({ field }) => (
               <FormItem className="col-span-2">
-                <FormLabel>Đối tượng thuê</FormLabel>
+                <FormLabelRequired>Đối tượng thuê</FormLabelRequired>
                 <Select onValueChange={v => {
                   if (v === "ORGANIZATION") {
                     form.setValue("ao.rentalIntention", "OFFICE");
@@ -45,22 +45,29 @@ export default function BasicInfo() {
                     </SelectTrigger>
                   </FormControl>
                   <SelectContent>
-                    <SelectItem value="INDIVIDUAL">Cá nhân</SelectItem>
-                    <SelectItem value="ORGANIZATION">Tổ chức</SelectItem>
+                    {form.getValues("ld.property.type") !== "OFFICE" && (
+                      <>
+                        <SelectItem value="INDIVIDUAL">Cá nhân</SelectItem>
+                        <SelectItem value="FAMILY">Hộ gia đình</SelectItem>
+                      </>
+                    )}
+                    {form.getValues("ld.property.type") === "OFFICE" && (
+                      <SelectItem value="ORGANIZATION">Tổ chức</SelectItem>
+                    )}
                   </SelectContent>
                 </Select>
                 <FormMessage/>
               </FormItem>
             )}
           />
-          {form.watch("ao.tenantType") === "ORGANIZATION" && (
+          {tenantType === "ORGANIZATION" && (
             <>
               <FormField
                 control={form.control}
                 name="ao.organizationName"
                 render={({ field }) => (
                   <FormItem>
-                    <FormLabel>Tên công ty / tổ chức</FormLabel>
+                    <FormLabelRequired>Tên công ty / tổ chức</FormLabelRequired>
                     <FormControl>
                       <Input {...field} />
                     </FormControl>
@@ -73,7 +80,7 @@ export default function BasicInfo() {
                 name="ao.organizationScale"
                 render={({ field }) => (
                   <FormItem>
-                    <FormLabel>Quy mô</FormLabel>
+                    <FormLabelRequired>Quy mô</FormLabelRequired>
                     <Select onValueChange={field.onChange} defaultValue={field.value}>
                       <FormControl>
                         <SelectTrigger className="">
@@ -98,7 +105,7 @@ export default function BasicInfo() {
                 name="ao.organizationHqAddress"
                 render={({ field }) => (
                   <FormItem className="col-span-2">
-                    <FormLabel>Địa chỉ trụ sở</FormLabel>
+                    <FormLabelRequired>Địa chỉ trụ sở</FormLabelRequired>
                     <FormControl>
                       <Input {...field} />
                     </FormControl>
@@ -113,20 +120,20 @@ export default function BasicInfo() {
             control={form.control}
             render={({ field }) => (
               <FormItem className="col-span-2">
-                <FormLabel>Họ và tên {form.watch("ao.tenantType") === "ORGANIZATION" && "người đại diện"}</FormLabel>
+                <FormLabelRequired>Họ và tên {tenantType === "ORGANIZATION" && "người đại diện"}</FormLabelRequired>
                 <FormControl>
                   <Input {...field} />
                 </FormControl>
               </FormItem>
             )}
           />
-          {form.watch("ao.tenantType") === "INDIVIDUAL" && (
+          {tenantType === "INDIVIDUAL" && (
             <FormField
               name="ao.dob"
               control={form.control}
               render={({ field }) => (
                 <FormItem className="col-span-2">
-                  <FormLabel>Ngày tháng năm sinh</FormLabel><br />
+                  <FormLabelRequired>Ngày tháng năm sinh</FormLabelRequired><br />
                   <FormControl>
                     <Input
                       type="date"
@@ -148,7 +155,7 @@ export default function BasicInfo() {
             control={form.control}
             render={({ field }) => (
               <FormItem>
-                <FormLabel>Email</FormLabel>
+                <FormLabelRequired>Email</FormLabelRequired>
                 <FormControl>
                   <Input {...field} />
                 </FormControl>
@@ -160,7 +167,7 @@ export default function BasicInfo() {
             control={form.control}
             render={({ field }) => (
               <FormItem>
-                <FormLabel>Số điện thoại</FormLabel>
+                <FormLabelRequired>Số điện thoại</FormLabelRequired>
                 <FormControl>
                   <Input {...field} />
                 </FormControl>
@@ -174,16 +181,16 @@ export default function BasicInfo() {
           render={({ field }) => (
             <FormItem>
               <div className="space-y-2">
-                <FormLabel className="block text-center">Ảnh đại diện</FormLabel>
+                <FormLabelRequired className="block text-center">Ảnh đại diện</FormLabelRequired>
                 <input
                   ref={inputFileRef} type="file" accept="image/*" hidden
                   onChange={(e: React.ChangeEvent<HTMLInputElement>) => {
                     const file = e.target.files?.[0];
                     if (file) {
-                      if (currentImage) URL.revokeObjectURL(currentImage.url);
+                      if (field.value) URL.revokeObjectURL(field.value.url);
                       const { name, size, type } = file;
                       console.log('new file', { name, size, type });
-                      form.setValue('ao.profileImage', {
+                      field.onChange({
                         name, size, type,
                         url: URL.createObjectURL(file),
                       });
@@ -192,16 +199,16 @@ export default function BasicInfo() {
                 <button
                   type="button"
                   className={
-                    currentImage
+                    field.value
                       ? "w-56 aspect-[3/4] relative"
                       : "rounded-full bg-slate-100 w-56 h-56 flex flex-row justify-center items-center"
                   }
                   onClick={() => { inputFileRef.current?.click(); }}
                 >
-                  {currentImage ? (
+                  {field.value ? (
                     <img
                       className="absolute inset-0 object-cover w-full h-full hover:opacity-25"
-                      src={currentImage.url}
+                      src={field.value.url}
                       alt="profile"
                     />
                   ) : (

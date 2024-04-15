@@ -1,5 +1,5 @@
 import { CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { FormControl, FormField, FormItem, FormLabel } from "@/components/ui/form";
+import { FormControl, FormField, FormItem, FormLabel, FormLabelRequired } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
 import { format } from "date-fns";
 import { Fragment } from "react";
@@ -26,7 +26,7 @@ export default function MoveIn() {
           name="ao.moveinDate"
           render={({ field }) => (
             <FormItem>
-              <FormLabel>Ngày dự kiến chuyển tới thuê</FormLabel>
+              <FormLabelRequired>Ngày dự kiến chuyển tới thuê</FormLabelRequired>
               <FormControl>
                 <Input
                   type="date"
@@ -47,7 +47,7 @@ export default function MoveIn() {
           name="ao.preferredTerm"
           render={({ field }) => (
             <FormItem>
-              <FormLabel>Thời gian thuê dự kiến (tháng)</FormLabel>
+              <FormLabelRequired>Thời gian thuê dự kiến (tháng)</FormLabelRequired>
               <FormControl>
                 <Input type="number" {...field} onChange={(e) => field.onChange(e.currentTarget.valueAsNumber)} />
               </FormControl>
@@ -60,7 +60,7 @@ export default function MoveIn() {
             name="ao.rentalIntention"
             render={({ field }) => (
               <FormItem className="flex-none">
-                <FormLabel>Mục đích thuê</FormLabel>
+                <FormLabelRequired>Mục đích thuê</FormLabelRequired>
                 <Select 
                   defaultValue={field.value}
                   // value={field.value.startsWith("[OTHER]") ? "[OTHER]" : field.value}
@@ -94,7 +94,7 @@ export default function MoveIn() {
                 "flex-auto",
                 field.value.startsWith("[OTHER]") ? "block" : "hidden",
               )}>
-                <FormLabel/>
+                <FormLabelRequired/>
                 <FormControl>
                   <Input 
                     {...field}

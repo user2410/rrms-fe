@@ -12,14 +12,17 @@ import Minors from "./minors";
 import Pets from "./pets";
 import { useRef } from "react";
 import { useDataCtx } from "../_context/data.context";
+import { mapTenantType2Text } from "@/models/application";
+import { FormValues } from "../page";
 
 export default function TenantDetails() {
-  const form = useFormContext();
+  const form = useFormContext<FormValues>();
   const {property} = useDataCtx();
   const inputFileRef = useRef<HTMLInputElement>(null);
-  const currentImage = form.watch('profileImage');
 
-  const startDate = form.watch("startDate");
+  const currentImage = form.watch('tenant.profileImage');
+  const tenantType = form.watch('tenant.tenantType');
+  const startDate = form.watch("tenant.startDate");
 
   return (
     <div className="space-y-2">
@@ -28,18 +31,18 @@ export default function TenantDetails() {
         <CardHeader>
           <CardTitle className="text-lg">Đối tượng thuê</CardTitle>
         </CardHeader>
-        <CardContent className="grid grid-cols-2 gap-3 gap-2">
+        <CardContent className="grid grid-cols-2 gap-3">
           <FormField
             control={form.control}
-            name="tenantType"
+            name="tenant.tenantType"
             render={({ field }) => (
               <FormItem>
                 <FormLabelRequired>Đối tượng thuê</FormLabelRequired>
                 <Select onValueChange={v => {
                   if (v === "ORGANIZATION") {
-                    form.resetField("organizationName");
-                    form.resetField("organizationHqAddress");
-                    form.setValue("rentalIntention", "OFFICE");
+                    form.resetField("tenant.organizationName");
+                    form.resetField("tenant.organizationHqAddress");
+                    form.setValue("tenant.rentalIntention", "OFFICE");
                   }
                   field.onChange(v);
                 }} defaultValue={field.value}>
@@ -49,8 +52,9 @@ export default function TenantDetails() {
                     </SelectTrigger>
                   </FormControl>
                   <SelectContent>
-                    <SelectItem value="INDIVIDUAL">Cá nhân</SelectItem>
-                    <SelectItem value="ORGANIZATION">Tổ chức</SelectItem>
+                    {Object.entries(mapTenantType2Text).map(([key, value]) => (
+                      <SelectItem key={key} value={key}>{value}</SelectItem>
+                    ))}
                   </SelectContent>
                 </Select>
                 <FormMessage />
@@ -59,7 +63,7 @@ export default function TenantDetails() {
           />
           <FormField
             control={form.control}
-            name="rentalIntention"
+            name="tenant.rentalIntention"
             render={({ field }) => (
               <FormItem>
                 <FormLabelRequired>Mục đích thuê</FormLabelRequired>
@@ -83,14 +87,15 @@ export default function TenantDetails() {
                     <SelectItem value="OFFICE">Văn phòng</SelectItem>
                   </SelectContent>
                 </Select>
+                <FormMessage />
               </FormItem>
             )}
           />
-          {form.watch("tenantType") === "ORGANIZATION" && (
+          {tenantType === "ORGANIZATION" && (
             <>
               <FormField
                 control={form.control}
-                name="organizationName"
+                name="tenant.organizationName"
                 render={({ field }) => (
                   <FormItem>
                     <FormLabelRequired>Tên công ty / tổ chức</FormLabelRequired>
@@ -103,7 +108,7 @@ export default function TenantDetails() {
               />
               <FormField
                 control={form.control}
-                name="organizationHqAddress"
+                name="tenant.organizationHqAddress"
                 render={({ field }) => (
                   <FormItem>
                     <FormLabelRequired>Địa chỉ trụ sở</FormLabelRequired>
@@ -133,13 +138,13 @@ export default function TenantDetails() {
       </Card>
       <Card>
         <CardHeader>
-          <CardTitle className="text-lg">{form.watch("tenantType") === "INDIVIDUAL" ? "Người thuê" : "Người đại diện"}</CardTitle>
+          <CardTitle className="text-lg">{mapTenantType2Text[tenantType]}</CardTitle>
         </CardHeader>
         <CardContent className="flex flex-row gap-3">
           <div className="flex-1 grid grid-cols-2 gap-3">
             <FormField
               control={form.control}
-              name="tenantName"
+              name="tenant.tenantName"
               render={({ field }) => (
                 <FormItem className="col-span-2">
                   <FormLabelRequired>Họ và tên</FormLabelRequired>
@@ -152,7 +157,7 @@ export default function TenantDetails() {
             />
             <FormField
               control={form.control}
-              name="tenantEmail"
+              name="tenant.tenantEmail"
               render={({ field }) => (
                 <FormItem>
                   <FormLabelRequired>Email</FormLabelRequired>
@@ -165,7 +170,7 @@ export default function TenantDetails() {
             />
             <FormField
               control={form.control}
-              name="tenantPhone"
+              name="tenant.tenantPhone"
               render={({ field }) => (
                 <FormItem>
                   <FormLabelRequired>Số điện thoại</FormLabelRequired>
@@ -178,7 +183,7 @@ export default function TenantDetails() {
             />
           </div>
           <FormField
-            name="profileImage"
+            name="tenant.profileImage"
             control={form.control}
             render={({ field }) => (
               <FormItem>
@@ -192,7 +197,7 @@ export default function TenantDetails() {
                         if (currentImage) URL.revokeObjectURL(currentImage.url);
                         const { name, size, type } = file;
                         console.log('new file', { name, size, type });
-                        form.setValue('profileImage', {
+                        field.onChange({
                           name, size, type,
                           url: URL.createObjectURL(file),
                         });
@@ -201,16 +206,16 @@ export default function TenantDetails() {
                   <button
                     type="button"
                     className={
-                      currentImage
+                      field.value
                         ? "w-56 aspect-[3/4] relative"
                         : "rounded-full bg-slate-100 w-56 h-56 flex flex-row justify-center items-center"
                     }
                     onClick={() => { inputFileRef.current?.click(); }}
                   >
-                    {currentImage ? (
+                    {field.value ? (
                       <img
                         className="absolute inset-0 object-cover w-full h-full hover:opacity-25"
-                        src={currentImage.url}
+                        src={field.value.url}
                         alt="profile"
                       />
                     ) : (
@@ -223,14 +228,18 @@ export default function TenantDetails() {
             )}
           />
         </CardContent>
-        {form.watch("tenantType") === "INDIVIDUAL" && (
+        {tenantType === "FAMILY" && (
           <>
             <Separator />
-            <CoApplicants />
+            <CoApplicants/>
             <Separator />
-            <Minors />
+            <Minors/>
+          </>
+        )}
+        {(tenantType === "INDIVIDUAL" || tenantType === "FAMILY") && (
+          <>
             <Separator />
-            <Pets />
+            <Pets/>
           </>
         )}
       </Card>
@@ -241,7 +250,7 @@ export default function TenantDetails() {
         <CardContent className="grid grid-cols-2 gap-2">
           <FormField
             control={form.control}
-            name="moveinDate"
+            name="tenant.moveinDate"
             render={({ field }) => (
               <FormItem>
                 <FormLabelRequired>Ngày chuyển tới thuê</FormLabelRequired>
@@ -263,7 +272,7 @@ export default function TenantDetails() {
           />
           <FormField
             control={form.control}
-            name="startDate"
+            name="tenant.startDate"
             render={({ field }) => (
               <FormItem>
                 <FormLabelRequired>Ngày bắt đầu thuê</FormLabelRequired>
@@ -285,7 +294,7 @@ export default function TenantDetails() {
           />
           <FormField
             control={form.control}
-            name="rentalPeriod"
+            name="tenant.rentalPeriod"
             render={({ field }) => (
               <FormItem>
                 <FormLabelRequired>Thời gian thuê (tháng)</FormLabelRequired>

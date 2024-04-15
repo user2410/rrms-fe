@@ -32,7 +32,7 @@ export default function UploadDialog({
     try {
       setStage("PENDING");
       const data = form.getValues();
-      const pi = data.profileImage;
+      const pi = data.tenant.profileImage;
       // console.log("done uploading property and units");
       const profileImage = pi.name ? await uploadFile({
         name: pi.name as string,
@@ -42,9 +42,18 @@ export default function UploadDialog({
       }) : pi.url;
       const rental = (await backendAPI.post("/api/rentals/", {
         ...data,
-        coaps: data.tenantType === "INDIVIDUAL" ? data.coaps : [],
-        minors: data.tenantType === "INDIVIDUAL" ? data.minors : [],
-        pets: data.tenantType === "INDIVIDUAL" ? data.pets : [],
+
+        ...data.tenant,
+        coaps: data.tenant.tenantType === "FAMILY" ? data.tenant.coaps : [],
+        minors: data.tenant.tenantType === "FAMILY" ? data.tenant.minors : [],
+        pets: (data.tenant.tenantType === "INDIVIDUAL" || data.tenant.tenantType === "FAMILY") ? data.tenant.pets : [],
+
+        ...data.services,
+        services: data.services.services,
+        
+        ...data.policies,
+        policies: data.policies.policies,
+
         profileImage,
       }, {
         headers: {
@@ -71,7 +80,7 @@ export default function UploadDialog({
       <AlertDialogContent>
         {stage === "CONFIRMATION" ? (
           <div className="w-full flex flex-col items-center justify-center gap-2">
-            <h2>Xác nhận thêm khách thuê <strong>{form.getValues("tenantName") as string}</strong> ? </h2>
+            <h2>Xác nhận thêm khách thuê <strong>{form.getValues("tenant.tenantName") as string}</strong> ? </h2>
             <div className="flex flex-row gap-2">
               <Button variant="outline" onClick={changeOpen}>Quay lại</Button>
               <Button onClick={handleUpload}>Đồng ý</Button>
@@ -80,7 +89,7 @@ export default function UploadDialog({
         ) : stage === "DONE" && res ? (
           <div className="w-full flex flex-col items-center justify-center gap-2">
             <FaCheckCircle size={20} color="green" />
-            <h2>Thêm khách thuê <strong>{form.getValues("tenantName")}</strong> thành công</h2>
+            <h2>Thêm khách thuê <strong>{form.getValues("tenant.tenantName")}</strong> thành công</h2>
             <Link href={`/manage/rentals/rental/${res.id}`}>Xem chi tiết</Link>
           </div>
         ) : stage === "ERROR" ? (

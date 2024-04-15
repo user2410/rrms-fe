@@ -39,6 +39,12 @@ export type RentalService = {
   price: string;
 }
 
+export type RentalPolicy = {
+  rentalId: number;
+  title: string;
+  content: string;
+}
+
 export type Rental = {
   id: number;
   creatorId: string;

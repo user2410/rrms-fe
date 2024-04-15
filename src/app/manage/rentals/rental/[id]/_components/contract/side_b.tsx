@@ -7,6 +7,7 @@ import { ContractBFormValues } from "./create_contract_b";
 import { useDataCtx } from "../../_context/data.context";
 import { Separator } from "@radix-ui/react-separator";
 import clsx from "clsx";
+import { mapTenantType2Text } from "@/models/application";
 
 export default function SideB() {
   const { rental } = useDataCtx();
@@ -16,7 +17,7 @@ export default function SideB() {
     <div className="space-y-4">
       <Card>
         <CardHeader>
-          <CardTitle className="text-lg">Bên thuê (Bên B) - {rental.tenantType === "ORGANIZATION" ? "Tổ chức" : "Cá nhân"}</CardTitle>
+          <CardTitle className="text-lg">Bên thuê (Bên B) - {mapTenantType2Text[rental.tenantType]}</CardTitle>
         </CardHeader>
         <CardContent className="grid grid-cols-6 gap-3">
           {rental.tenantType === "ORGANIZATION" && (

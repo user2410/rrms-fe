@@ -2,7 +2,7 @@
 
 import { PropertyForm } from "@/app/manage/properties/new/page";
 import Editor from "@/components/ui/editor";
-import { FormControl, FormDescription, FormField, FormItem, FormLabel, FormMessage } from "@/components/ui/form";
+import { FormControl, FormDescription, FormField, FormItem, FormLabel, FormLabelRequired, FormMessage } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Switch } from "@/components/ui/switch";
@@ -35,7 +35,7 @@ export default function Step1BasicInfo() {
           name="property.type"
           render={({ field }) => (
             <FormItem className="flex-1">
-              <FormLabel>Loại nhà cho thuê <span className="ml-1 text-red-600">*</span></FormLabel>
+              <FormLabelRequired>Loại nhà cho thuê </FormLabelRequired>
               <Select
                 defaultValue={field.value}
                 onValueChange={field.onChange}
@@ -127,7 +127,7 @@ export default function Step1BasicInfo() {
         name="property.name"
         render={({ field }) => (
           <FormItem>
-            <FormLabel>Tên nhà cho thuê <span className="ml-1 text-red-600">*</span></FormLabel>
+            <FormLabelRequired>Tên nhà cho thuê </FormLabelRequired>
             <FormControl>
               <Input placeholder={propertyNamePlaceholders[form.watch('property.type') as keyof typeof propertyNamePlaceholders]} {...field} />
             </FormControl>
@@ -163,9 +163,7 @@ export default function Step1BasicInfo() {
             name="property.area"
             render={({ field }) => (
               <FormItem className="grow">
-                <FormLabel>
-                  Diện tích (m<sup>2</sup>)<span className="ml-1 text-red-600">*</span>
-                </FormLabel>
+                <FormLabelRequired>Diện tích (m<sup>2</sup>)</FormLabelRequired>
                 <FormControl>
                   <Input
                     type="number"

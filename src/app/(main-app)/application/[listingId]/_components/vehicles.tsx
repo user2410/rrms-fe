@@ -1,7 +1,7 @@
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
-import { Form, FormControl, FormField, FormItem, FormLabel } from "@/components/ui/form";
+import { Form, FormControl, FormField, FormItem, FormLabel, FormLabelRequired } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { zodResolver } from "@hookform/resolvers/zod";
@@ -16,7 +16,7 @@ import { ApplicationForm } from "./main_form";
 import { Listing } from "@/models/listing";
 
 const inputFormSchema = z.object({
-  type: z.enum(["car", "motorbike", "bicycle", "other"]),
+  type: z.enum(["car", "motorbike", "bicycle"]),
   model: z.string().optional(),
   code: z.string(),
 });
@@ -67,7 +67,7 @@ const InputForm = forwardRef<HTMLButtonElement, InputFormProps>(function Render(
                 control={minorForm.control}
                 render={({ field }) => (
                   <FormItem>
-                    <FormLabel>Loại</FormLabel>
+                    <FormLabelRequired>Loại</FormLabelRequired>
                     <Select onValueChange={field.onChange} value={field.value}>
                       <FormControl>
                         <SelectTrigger><SelectValue /></SelectTrigger>
@@ -76,7 +76,6 @@ const InputForm = forwardRef<HTMLButtonElement, InputFormProps>(function Render(
                         <SelectItem value="car">Ô tô</SelectItem>
                         <SelectItem value="motorbike">Xe máy</SelectItem>
                         <SelectItem value="bicycle">Xe đạp</SelectItem>
-                        <SelectItem value="other">Khác</SelectItem>
                       </SelectContent>
                     </Select>
                   </FormItem>
@@ -87,7 +86,7 @@ const InputForm = forwardRef<HTMLButtonElement, InputFormProps>(function Render(
                 control={minorForm.control}
                 render={({ field }) => (
                   <FormItem>
-                    <FormLabel>Tên xe</FormLabel>
+                    <FormLabelRequired>Tên xe</FormLabelRequired>
                     <FormControl>
                       <Input {...field} />
                     </FormControl>
@@ -99,7 +98,7 @@ const InputForm = forwardRef<HTMLButtonElement, InputFormProps>(function Render(
                 control={minorForm.control}
                 render={({ field }) => (
                   <FormItem className="col-span-2">
-                    <FormLabel>Biển số xe</FormLabel>
+                    <FormLabelRequired>Biển số xe</FormLabelRequired>
                     <FormControl>
                       <Input {...field} />
                     </FormControl>

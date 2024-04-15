@@ -3,7 +3,7 @@
 import { Button } from "@/components/ui/button";
 import { CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
-import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from "@/components/ui/form";
+import { Form, FormControl, FormDescription, FormField, FormItem, FormLabel, FormLabelRequired, FormMessage } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { zodResolver } from "@hookform/resolvers/zod";
@@ -15,6 +15,8 @@ import { FaBirthdayCake, FaBusinessTime } from "react-icons/fa";
 import * as z from "zod";
 import { ApplicationForm } from "./main_form";
 import { Listing } from "@/models/listing";
+import { readMoneyVi } from "@/utils/currency";
+import FieldMoneyDescription from "@/components/complex/field-money_desc";
 
 const inputFormSchema = z.object({
   fullName: z.string(),
@@ -75,7 +77,7 @@ const InputForm = forwardRef<HTMLButtonElement, InputFormProps>(function Render(
                 control={minorForm.control}
                 render={({ field }) => (
                   <FormItem>
-                    <FormLabel>Họ và tên</FormLabel>
+                    <FormLabelRequired>Họ và tên</FormLabelRequired>
                     <FormControl>
                       <Input {...field} />
                     </FormControl>
@@ -88,7 +90,7 @@ const InputForm = forwardRef<HTMLButtonElement, InputFormProps>(function Render(
                 control={minorForm.control}
                 render={({ field }) => (
                   <FormItem>
-                    <FormLabel>Ngày tháng năm sinh</FormLabel>
+                    <FormLabelRequired>Ngày tháng năm sinh</FormLabelRequired>
                     <FormControl>
                       <Input
                         type="date"
@@ -139,7 +141,7 @@ const InputForm = forwardRef<HTMLButtonElement, InputFormProps>(function Render(
                   control={minorForm.control}
                   render={({ field }) => (
                     <FormItem>
-                      <FormLabel>Nghề nghiệp</FormLabel>
+                      <FormLabelRequired>Nghề nghiệp</FormLabelRequired>
                       <FormControl>
                         <Input {...field} placeholder="Ví dụ: Nhân viên văn phòng, bác sỹ" />
                       </FormControl>
@@ -156,6 +158,7 @@ const InputForm = forwardRef<HTMLButtonElement, InputFormProps>(function Render(
                       <FormControl>
                         <Input {...field} type="number" onChange={(e) => field.onChange(e.target.valueAsNumber)} />
                       </FormControl>
+                      <FieldMoneyDescription value={field.value}/>
                       <FormMessage />
                     </FormItem>
                   )}

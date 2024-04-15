@@ -281,3 +281,9 @@ export const mockupApplications: Application[] = [
     ],
   },
 ];
+
+export const mapTenantType2Text = {
+  "INDIVIDUAL": "Cá nhân",
+  "FAMILY": "Hộ gia đình",
+  "ORGANIZATION": "Tổ chức",
+};

@@ -134,7 +134,7 @@ export default function Pets() {
   const parentForm = useFormContext<FormValues>();
   const { fields, append, remove } = useFieldArray({
     control: parentForm.control,
-    name: "pets",
+    name: "tenant.pets",
   });
 
   return (
@@ -145,7 +145,7 @@ export default function Pets() {
       </CardHeader>
       <CardContent>
         <div className="flex flex-col gap-2">
-          {parentForm.watch("pets").map((field, index) => (
+          {parentForm.watch("tenant.pets").map((field, index) => (
             <div key={index} className="border flex flex-row justify-between py-2">
               <div className="space-y-2 px-4">
                 <div className="text-lg font-semibold">{field.type}</div>
@@ -187,7 +187,7 @@ export default function Pets() {
           defaultValues={editing > -1 ? fields[editing] : undefined}
           onSubmit={(value) => {
             console.log("edit value", value, "at index", editing);
-            parentForm.setValue(`pets.${editing}`, value);
+            parentForm.setValue(`tenant.pets.${editing}`, value);
           }}
         />
       </CardContent>

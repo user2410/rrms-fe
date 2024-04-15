@@ -158,7 +158,6 @@ const defaultValues: DeepPartial<PropertyForm> = {
     "description": "",
     "media": [],
     "features": [],
-    "type": "ROOM",
   },
   "units": [],
 };
@@ -178,6 +177,32 @@ export default function CreatePropertyPage() {
       return;
     }
     setOpenUploadDialog(true);
+  }
+
+  function handleNext() {
+    switch (step) {
+      case 0:
+        form.trigger('property')
+          .then(res => {
+            if (res) {
+              setStep(step + 1);
+            } else {
+              console.log(form.formState.errors);
+            }
+          });
+        break;
+      case 1:
+        form.trigger('units')
+          .then(res => {
+            if (res) {
+              setStep(step + 1);
+            } else {
+              console.log(form.formState.errors);
+            }
+          });
+        break;
+      default:
+    }
   }
 
   return (
@@ -210,7 +235,7 @@ export default function CreatePropertyPage() {
         />
         <Separator />
         <Form {...form}>
-          <form>
+          <form onSubmit={form.handleSubmit(onSubmit)}>
             {
               step === 0 ? (
                 <Step1 />
@@ -227,41 +252,14 @@ export default function CreatePropertyPage() {
                 variant="outline"
                 onClick={() => setStep(step - 1)}
               >
-                Previous
+                Quay lại
               </Button>
-              <Button
-                type="button"
-                variant="default"
-                onClick={(e) => {
-                  switch (step) {
-                    case 0:
-                      form.trigger('property')
-                        .then(res => {
-                          if (res) {
-                            setStep(step + 1);
-                          } else {
-                            console.log(form.formState.errors);
-                          }
-                        });
-                      break;
-                    case 1:
-                      form.trigger('units')
-                        .then(res => {
-                          if (res) {
-                            setStep(step + 1);
-                          } else {
-                            console.log(form.formState.errors);
-                          }
-                        });
-                      break;
-                    default:
-                      onSubmit(form.getValues());
-                      break;
-                  }
-                }}
-              >
-                {step === 2 ? 'Submit' : 'Next'}
-              </Button>
+              {step < 2 && (
+                <Button type="button" onClick={handleNext}>Tiếp tục</Button>
+              )}
+              {step === 2 && (
+                <Button type="submit">Hoàn tất</Button>
+              )}
             </div>
           </form>
         </Form>

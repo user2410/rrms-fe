@@ -135,7 +135,7 @@ export default function Minors() {
   const parentForm = useFormContext<FormValues>();
   const { fields, append, remove } = useFieldArray({
     control: parentForm.control,
-    name: "minors",
+    name: "tenant.minors",
   });
 
   return (
@@ -146,7 +146,7 @@ export default function Minors() {
       </CardHeader>
       <CardContent>
         <div className="flex flex-col gap-2">
-          {parentForm.watch("minors").map((field, index) => {
+          {parentForm.watch("tenant.minors").map((field, index) => {
             const dob = new Date(field.dob);
             return (
               <div key={index} className="border flex flex-row justify-between py-2">
@@ -192,7 +192,7 @@ export default function Minors() {
           defaultValues={editing > -1 ? fields[editing] : undefined}
           onSubmit={(value) => {
             console.log("edit value", value, "at index", editing);
-            parentForm.setValue(`minors.${editing}`, value);
+            parentForm.setValue(`tenant.minors.${editing}`, value);
           }}
         />
       </CardContent>

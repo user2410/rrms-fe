@@ -11,10 +11,11 @@ export default function YourDetails({
   data: ListingDetail;
 }) {
   const form = useFormContext<ApplicationForm>();
+  const tenantType = form.watch("ao.tenantType");
 
   return (
     <div className="space-y-4">
-      {form.watch("ao.tenantType") === "INDIVIDUAL" && (
+      {(tenantType === "INDIVIDUAL" || tenantType === "FAMILY") && (
         <>
           <RentalHistory/>
           <Employment/>

@@ -1,6 +1,6 @@
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
-import { FormControl, FormDescription, FormField, FormItem, FormLabel } from "@/components/ui/form";
+import { FormControl, FormDescription, FormField, FormItem, FormLabel, FormLabelRequired } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Separator } from "@/components/ui/separator";
@@ -26,7 +26,7 @@ export default function Employment() {
           control={form.control}
           render={({ field }) => (
             <FormItem>
-              <FormLabel>Trạng thái công việc</FormLabel>
+              <FormLabelRequired>Trạng thái công việc</FormLabelRequired>
               <Select onValueChange={field.onChange} defaultValue={field.value}>
                 <FormControl>
                   <SelectTrigger>
@@ -49,7 +49,7 @@ export default function Employment() {
           control={form.control}
           render={({ field }) => (
             <FormItem>
-              <FormLabel>Tên công ty / trường học / nơi công tác</FormLabel>
+              <FormLabelRequired>Tên công ty / trường học / nơi công tác</FormLabelRequired>
               <FormControl>
                 <Input {...field} />
               </FormControl>
@@ -62,7 +62,7 @@ export default function Employment() {
             control={form.control}
             render={({ field }) => (
               <FormItem>
-                <FormLabel>Vị trí công việc</FormLabel>
+                <FormLabelRequired>Vị trí công việc</FormLabelRequired>
                 <FormControl>
                   <Input {...field} />
                 </FormControl>
@@ -74,7 +74,7 @@ export default function Employment() {
             control={form.control}
             render={({ field }) => (
               <FormItem>
-                <FormLabel>Thu nhập hàng tháng</FormLabel>
+                <FormLabelRequired>Thu nhập hàng tháng</FormLabelRequired>
                 <FormControl>
                   <Input type="number" {...field} onChange={(e) => field.onChange(e.currentTarget.valueAsNumber)} />
                 </FormControl>
@@ -85,7 +85,7 @@ export default function Employment() {
         {/* <FormItem className="col-span-2">
           <div className="flex flex-row justify-between">
             <div>
-              <FormLabel>Thống kê thu nhập (tùy chọn)</FormLabel>
+              <FormLabelRequired>Thống kê thu nhập (tùy chọn)</FormLabelRequired>
               <FormDescription>Tải lên phiếu lương, sao kê ngân hàng</FormDescription>
             </div>
             <Button type="button" onClick={() => filesInputRef.current && filesInputRef.current.click()}>Upload ảnh</Button>

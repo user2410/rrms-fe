@@ -9,6 +9,7 @@ import ContractEditor from "./contract/contract_editor";
 import CreateContractA from "./contract/create_contract_a";
 import CreateContractB from "./contract/create_contract_b";
 import ViewContract from "./contract/view_contract";
+import { Separator } from "@/components/ui/separator";
 
 type ContractPingData = {
   id: number;
@@ -44,7 +45,8 @@ export default function ContractCard() {
       <Card>
         <CardHeader>
           <CardTitle className="text-lg">Hợp đồng</CardTitle>
-          <CardContent>
+          <CardContent className="space-y-4">
+            <h2>Hợp đồng thuê nhà</h2>
             {query.isLoading ? (
               <div className="flex flex-row justify-center">
                 <Spinner size={16} />
@@ -66,6 +68,58 @@ export default function ContractCard() {
               </div>
             )}
           </CardContent>
+          <Separator />
+          <CardContent className="space-y-4">
+            <h2>Hợp đồng mua bán điện</h2>
+            {query.isLoading ? (
+              <div className="flex flex-row justify-center">
+                <Spinner size={16} />
+              </div>
+            ) : query.isError ? (
+              <div className="flex flex-row justify-center">
+                <span className="text-red-500">Lỗi khi tải hợp đồng</span>
+              </div>
+            ) : query.data ? (
+              <ContractItem
+                item={query.data!}
+              />
+            ) : (
+              <div className="flex flex-col items-center gap-3">
+                <p className="text-center text-sm font-light">Chưa có hợp đồng</p>
+                {sessionData.user.user.id !== rental.tenantId && (
+                  <Button>Tạo hợp đồng</Button>
+                )}
+              </div>
+            )}
+          </CardContent>
+          <Separator />
+          <CardContent className="space-y-4">
+            <h2>Hợp đồng mua bán nước</h2>
+            {query.isLoading ? (
+              <div className="flex flex-row justify-center">
+                <Spinner size={16} />
+              </div>
+            ) : query.isError ? (
+              <div className="flex flex-row justify-center">
+                <span className="text-red-500">Lỗi khi tải hợp đồng</span>
+              </div>
+            ) : query.data ? (
+              <ContractItem
+                item={query.data!}
+              />
+            ) : (
+              <div className="flex flex-col items-center gap-3">
+                <p className="text-center text-sm font-light">Chưa có hợp đồng</p>
+                {sessionData.user.user.id !== rental.tenantId && (
+                  <Button>Tạo hợp đồng</Button>
+                )}
+              </div>
+            )}
+          </CardContent>
+          <Separator />
+          <CardContent>
+
+          </CardContent>
         </CardHeader>
       </Card>
     </div>
@@ -85,7 +139,7 @@ function ContractItem({
 
   return item.status === 'SIGNED' ? (
     <div className="flex flex-row justify-center">
-      <ViewContract/>
+      <ViewContract />
     </div>
   ) : item.status === 'PENDING_A' ? (
     isSideA(sessionData.user.user.id) ? (

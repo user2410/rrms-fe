@@ -16,6 +16,7 @@ export default function ApplicationOccupants({
   data: ListingDetail;
 }) {
   const form = useFormContext<ApplicationForm>();
+  const tenantType = form.watch("ao.tenantType");
 
   return (
     <div className="space-y-4">
@@ -24,18 +25,24 @@ export default function ApplicationOccupants({
         <MoveIn/>
         <Separator />
         <SelectedUnits data={data}/>
-        {form.watch("ao.tenantType") === "INDIVIDUAL" && (
+        {/* <Guarantors/>
+        <Separator /> */}
+      </Card>
+      <Card>
+        {tenantType === "FAMILY" && (
           <>
             <Separator />
             <CoApplicants listing={data.listing}/>
             <Separator />
             <Minors/>
+          </>
+        )}
+        {(tenantType === "INDIVIDUAL" || tenantType === "FAMILY") && (
+          <>
             <Separator />
             <Pets listing={data.listing}/>
           </>
         )}
-        {/* <Guarantors/>
-        <Separator /> */}
       </Card>
     </div>
   );

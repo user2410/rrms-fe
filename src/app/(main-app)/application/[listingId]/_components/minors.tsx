@@ -1,7 +1,7 @@
 import { Button } from "@/components/ui/button";
 import { CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
-import { Form, FormControl, FormField, FormItem, FormLabel } from "@/components/ui/form";
+import { Form, FormControl, FormField, FormItem, FormLabel, FormLabelRequired } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { zodResolver } from "@hookform/resolvers/zod";
@@ -67,7 +67,7 @@ const InputForm = forwardRef<HTMLButtonElement, InputFormProps>(function Render(
                 control={minorForm.control}
                 render={({ field }) => (
                   <FormItem className="grid grid-cols-4 items-center gap-2">
-                    <FormLabel>Họ và tên</FormLabel>
+                    <FormLabelRequired>Họ và tên</FormLabelRequired>
                     <FormControl className="col-span-3">
                       <Input {...field} placeholder="Nguyen Van A" />
                     </FormControl>
@@ -79,7 +79,7 @@ const InputForm = forwardRef<HTMLButtonElement, InputFormProps>(function Render(
                 control={minorForm.control}
                 render={({ field }) => (
                   <FormItem className="grid grid-cols-4 items-center gap-2">
-                    <FormLabel>Sinh nhật</FormLabel>
+                    <FormLabelRequired>Sinh nhật</FormLabelRequired>
                     <FormControl>
                       <Input
                         type="date"

@@ -22,6 +22,7 @@ const ListingCard = ({
   const { listing: l, property } = listing;
   const favListingCtx = useContext(FavListingsContext);
   const listingPriority = ListingPriorities.find(item => item.priority === listing.listing.priority);
+  const images = property.media.filter((item) => item.type === "IMAGE");
 
   return (
     <Card className="relative hover:shadow-md cursor-pointer">
@@ -41,27 +42,27 @@ const ListingCard = ({
       <CardHeader>
         <div className="grid grid-cols-2 gap-2 lg:gap-4">
           <div className="relative aspect-video">
-            <Image className="max-w-full rounded-md object-cover" fill src={listing.property.media![0].url} alt="" />
+            <Image className="max-w-full rounded-md object-cover" fill src={images[0].url} alt="" />
           </div>
           <div className="grid grid-cols-2 gap-2 lg:gap-4">
             <div className="relative">
-              {listing.property.media![1] && (
-                <Image className="max-w-full rounded-md object-cover" fill src={listing.property.media![1].url} alt="" />
+              {images[1] && (
+                <Image className="max-w-full rounded-md object-cover" fill src={images[1].url} alt="" />
               )}
             </div>
             <div className="relative">
-              {listing.property.media![2] && (
-                <Image className="max-w-full rounded-md object-cover" fill src={listing.property.media![2].url} alt="" />
+              {images[2] && (
+                <Image className="max-w-full rounded-md object-cover" fill src={images[2].url} alt="" />
               )}
             </div>
             <div className="relative">
-            {listing.property.media![3] && (
-                <Image className="max-w-full rounded-md object-cover" fill src={listing.property.media![3].url} alt="" />
+              {images[3] && (
+                <Image className="max-w-full rounded-md object-cover" fill src={images[3].url} alt="" />
               )}
             </div>
             <div className="relative">
-            {listing.property.media![4] && (
-                <Image className="max-w-full rounded-md object-cover" fill src={listing.property.media![4].url} alt="" />
+              {images[4] && (
+                <Image className="max-w-full rounded-md object-cover" fill src={images[4].url} alt="" />
               )}
             </div>
           </div>
@@ -70,11 +71,11 @@ const ListingCard = ({
       <CardContent className="space-y-2">
         <Link href={`/listings/${listing.listing.id}`}><h2 className="font-semibold uppercase">{listing.listing.title}</h2></Link>
         <div className="flex flex-row gap-2">
-          <h3 className="text-red-600 font-semibold">{listing.listing.price} / tháng - {listing.property.area} m<sup>2</sup> -{" "}</h3>
+          <h3 className="text-red-600 font-semibold">{listing.listing.price.toLocaleString('vi-VN', { style: 'currency', currency: 'VND' })} / tháng - {listing.property.area} m<sup>2</sup> -{" "}</h3>
           <h3>{listing.property.city}</h3>
         </div>
         <div className={styles.pcontainer}>
-          <p className="font-light">{listing.listing.description}</p>
+          <p className="font-light">{listing.listing.description.replace(/<[^>]*>?/gm, '')}</p>
         </div>
       </CardContent>
       <CardFooter className="justify-end">

@@ -18,8 +18,8 @@ type SearchResult = {
 };
 
 export type SearchListingItem = {
-  listing: Partial<Listing>;
-  property: Partial<Property>;
+  listing: Listing;
+  property: Property;
 };
 
 export default function ListingsList({
@@ -33,13 +33,13 @@ export default function ListingsList({
     queryKey: ["search", "listing-list", JSON.stringify(query), listingIds.join(",")],
     queryFn: async ({ queryKey }) => {
       const lids = (queryKey.at(3) as string).split(",");
-      const ls = (await backendAPI.get<Partial<Listing>[]>('/api/listings/ids', {
+      const ls = (await backendAPI.get<Listing[]>('/api/listings/ids', {
         params: {
           listingIds: lids,
           fields: "priority,price,title,description,created_at,updated_at,creator_id,property_id",
         }
       })).data;
-      const ps = (await backendAPI.get<Partial<Property>[]>('/api/properties/ids', {
+      const ps = (await backendAPI.get<Property[]>('/api/properties/ids', {
         params: {
           propIds: ls.map(l => l.propertyId),
           fields: "area,city,district,ward,project,media",

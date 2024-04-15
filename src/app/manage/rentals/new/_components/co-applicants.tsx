@@ -200,7 +200,7 @@ export default function CoApplicants() {
   const parentForm = useFormContext<FormValues>();
   const { fields, append, remove } = useFieldArray({
     control: parentForm.control,
-    name: "coaps",
+    name: "tenant.coaps",
   });
 
   return (
@@ -211,7 +211,7 @@ export default function CoApplicants() {
       </CardHeader>
       <CardContent>
         <div className="flex flex-col gap-2">
-          {parentForm.watch("coaps").map((field, index) => (
+          {parentForm.watch("tenant.coaps").map((field, index) => (
             <div key={index} className="border flex flex-row justify-between py-2">
               <div className="space-y-2 px-4">
                 <div className="text-lg font-semibold">{field.fullName}</div>
@@ -258,7 +258,7 @@ export default function CoApplicants() {
           defaultValues={editing > -1 ? fields[editing] : undefined}
           onSubmit={(value) => {
             console.log("edit value", value, "at index", editing);
-            parentForm.setValue(`coaps.${editing}`, value);
+            parentForm.setValue(`tenant.coaps.${editing}`, value);
           }}
         />
       </CardContent>
