@@ -63,14 +63,19 @@ export type Rental = {
 
   startDate: Date;
   moveinDate: Date;
+
+  paymentType: "PREPAID" | "POSTPAID";
+
   rentalPeriod: number;
   rentalPrice: number;
   rentalIntention: string;
   deposit: number;
   depositPaid: boolean;
   
+  electricitySetupBy: 'LANDLORD' | 'TENANT';
   electricityPaymentType: "RETAIL" | "FIXED";
   electricityPrice?: number;
+  waterSetupBy: 'LANDLORD' | 'TENANT';
   waterPaymentType: "RETAIL" | "FIXED";
   waterPrice?: number;
   note: string;
@@ -95,4 +100,55 @@ export function getRentalExpiryDate(rental: Rental): Date {
   const expiryDate = new Date(rental.startDate);
   expiryDate.setMonth(expiryDate.getMonth() + rental.rentalPeriod);
   return expiryDate;
+}
+
+export type RENTALPAYMENTSTATUS = 'PLAN' | 'PENDING' | 'ISSUED' | 'REQUEST2PAY' | 'PAID' | 'CANCELLED';
+
+export type RentalPayment = {
+  id: number;
+  code: string;
+  rentalId: number;
+  createdAt: Date;
+  updatedAt: Date;
+  startDate: Date;
+  endDate: Date;
+  expiryDate: Date;
+  paymentDate: Date;
+  updatedBy?: string;
+  note?: string;
+  status: RENTALPAYMENTSTATUS;
+  amount: number;
+  discount?: number;
+  overdue?: boolean;
+}
+
+export const rentalPaymentStatus = {
+  PLAN: 'Dự toán',
+  ISSUED: 'Đang chờ bên thuê',
+  PENDING: 'Đang chờ',
+  REQUEST2PAY: 'Đang chờ xác nhận',
+  PAID: 'Đã thanh toán',
+  CANCELLED: 'Đã hủy',
+};
+
+const rentalPaymentReasons = {
+  "RENTAL": "Thuê nhà",
+  "DEPOSIT": "Đặt cọc",
+  "ELECTRICITY": "Tiền điện",
+  "WATER": "Tiền nước",
+  "SERVICE": "Dịch vụ",
+};
+
+export function getRentalPaymentReason(payment: RentalPayment) {
+  // payment code is in format [rentalId]_[reason]_[rest_of_the_code]
+  const parts = payment.code.split('_');
+  return rentalPaymentReasons[parts[1] as keyof typeof rentalPaymentReasons];
+}
+
+export function getTotalAmount(payment: RentalPayment): number {
+  return payment.amount - (payment.discount || 0);
+}
+
+export function isOverdue(payment: RentalPayment): boolean {
+  return ['PENDING', 'ISSUED'].includes(payment.status) && (new Date(payment.expiryDate) < new Date());
 }

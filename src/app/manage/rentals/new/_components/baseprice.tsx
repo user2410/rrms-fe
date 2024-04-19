@@ -1,17 +1,14 @@
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
+import { Checkbox } from "@/components/ui/checkbox";
 import { FormControl, FormDescription, FormField, FormItem, FormLabel, FormLabelRequired } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
+import { readMoneyVi } from "@/utils/currency";
 import { useFormContext } from "react-hook-form";
 import { FormValues } from "../page";
-import { readMoneyVi } from "@/utils/currency";
-import { Checkbox } from "@/components/ui/checkbox";
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
-import { useDataCtx } from "../_context/data.context";
 
 export default function Baseprice() {
-  const {application} = useDataCtx();
   const form = useFormContext<FormValues>();
-  const moveinDate = form.watch('tenant.moveinDate');
 
   return (
     <Card>
@@ -25,34 +22,72 @@ export default function Baseprice() {
           name="services.rentalPaymentBasis"
           render={({ field }) => (
             <FormItem>
-              <FormLabelRequired>Chu kỳ thu tiền thuê</FormLabelRequired>
-              <Select onValueChange={(v) => {
-                const currentRentalPrice = form.getValues('services.rentalPrice');
-                const currentBasis = form.getValues('services.rentalPaymentBasis');
-                if (currentRentalPrice) {
-                  if (v === "YEARLY" && currentBasis === "MONTHLY") {
-                    form.setValue('services.rentalPrice', currentRentalPrice * 12);
-                  } else if (v === "MONTHLY" && currentBasis === "YEARLY") {
-                    form.setValue('services.rentalPrice', currentRentalPrice / 12);
-                  }
-                }
-                field.onChange(v);
-              }} defaultValue={field.value}>
+              <FormLabelRequired>Chu kỳ trả tiền thuê</FormLabelRequired>
+              <div className="grid grid-cols-3 gap-2">
+                <Select
+                  onValueChange={(v) => {
+                    var basis : number;
+                    switch(v) {
+                      case "MONTHLY":
+                        basis = 1;
+                        break;
+                      case "QUARTERLY":
+                        basis = 3;
+                        break;
+                      case "YEARLY":
+                        basis = 12;
+                        break;
+                      default:
+                        basis = 2;
+                    }
+                    field.onChange(basis);
+                  }}
+                  defaultValue="MONTHLY"
+                >
+                  <SelectTrigger className={field.value === 1 ? "col-span-3" : "col-span-2"}>
+                    <SelectValue />
+                  </SelectTrigger>
+                  <SelectContent>
+                    <SelectItem value="MONTHLY">Hàng tháng</SelectItem>
+                    <SelectItem value="QUARTERLY">3 tháng / 1 lần</SelectItem>
+                    <SelectItem value="YEARLY">1 năm / 1 lần</SelectItem>
+                    <SelectItem value="UPFRONT"></SelectItem>
+                  </SelectContent>
+                </Select>
+                {field.value !== 1 && (
+                  <div className="flex flex-row items-center gap-1">
+                    <FormControl>
+                      <Input {...field} type="number" min={2} max={form.watch('tenant.rentalPeriod')} className="flex-grow"/>
+                    </FormControl>
+                    <span>tháng</span>
+                  </div>
+                )}
+              </div>
+            </FormItem>
+          )}
+        />
+        <FormField
+          control={form.control}
+          name="services.paymentType"
+          render={({ field }) => (
+            <FormItem>
+              <FormLabelRequired>Trả tiền</FormLabelRequired>
+              <Select onValueChange={field.onChange} defaultValue={field.value}>
                 <FormControl>
                   <SelectTrigger>
                     <SelectValue/>
                   </SelectTrigger>
                 </FormControl>
                 <SelectContent>
-                  <SelectItem value="MONTHLY">Hàng tháng</SelectItem>
-                  <SelectItem value="YEARLY">Hàng năm</SelectItem>
+                  <SelectItem value="PREPAID">Trả trước</SelectItem>
+                  <SelectItem value="POSTPAID">Trả sau</SelectItem>
                 </SelectContent>
               </Select>
-              {field.value === 'MONTHLY' ? (
-                <FormDescription>Tiền thuê nhà sẽ được tổng hợp vào ngày 1 hàng tháng</FormDescription>
-              ) : field.value === 'YEARLY' ? (
-                <FormDescription>Tiền thuê nhà sẽ được tổng hợp vào ngày {moveinDate.getDate()}/{moveinDate.getMonth()} mỗi 12 tháng</FormDescription>
-              ) : null}
+              <FormDescription>
+                {field.value === "PREPAID" 
+                ? "Tiền thuê được tính vào đầu mỗi kỳ thuê nhà" 
+                : "Tiền thuê được tính vào đầu mỗi kỳ thuê nhà"}
+              </FormDescription>
             </FormItem>
           )}
         />

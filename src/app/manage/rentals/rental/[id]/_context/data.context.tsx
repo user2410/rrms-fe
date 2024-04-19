@@ -1,6 +1,6 @@
 import { Application } from "@/models/application";
 import { Property } from "@/models/property";
-import { Rental } from "@/models/rental";
+import { Rental, RentalPayment } from "@/models/rental";
 import { Unit } from "@/models/unit";
 import { User } from "@/models/user";
 import { Session } from "next-auth";
@@ -14,6 +14,7 @@ export type RentalData = {
   tenant?: User;
   managers: User[];
   owners: User[];
+  payments: RentalPayment[];
 };
 
 type State = RentalData & {
@@ -27,6 +28,7 @@ const initialState : State = {
   unit: {} as Unit,
   managers: [],
   owners: [],
+  payments: [],
   tenant: {} as User,
 };
 
@@ -60,6 +62,14 @@ type Action =
       payload: User[],
     }
   | {
+      type: 'SET_PAYMENTS',
+      payload: RentalPayment[],
+    }
+  | {
+      type: 'CHANGE_PAYMENT',
+      payload: RentalPayment,
+    }
+  | {
       type: 'SET_OWNERS',
       payload: User[],
     };
@@ -71,7 +81,12 @@ type DataCtx = State & {
   setApplication: (data: Application) => void;
   setProperty: (data: Property) => void;
   setUnit: (data: Unit) => void;
+  setManagers: (data: User[]) => void;
+  setOwners: (data: User[]) => void;
+  setPayments: (data: RentalPayment[]) => void;
+  changePayment:(data: RentalPayment) => void;
   isSet: () => boolean;
+  isSideA: (id: string) => boolean;
 };
 
 export const DataContext = createContext<DataCtx>({
@@ -82,7 +97,12 @@ export const DataContext = createContext<DataCtx>({
   setApplication: () => {},
   setProperty: () => {},
   setUnit: () => {},
+  setManagers: () => {},
+  setOwners: () => {},
+  setPayments: () => {},
+  changePayment: () => {},
   isSet: () => false,
+  isSideA: () => false,
 });
 
 function dataReducer(state: State, action: Action) {
@@ -127,6 +147,16 @@ function dataReducer(state: State, action: Action) {
         ...state,
         owners: action.payload,
       };
+    case 'SET_PAYMENTS':
+      return {
+        ...state,
+        payments: action.payload,
+      };
+    case 'CHANGE_PAYMENT':
+      return {
+        ...state,
+        payments: state.payments.map(p => p.id === action.payload.id ? action.payload : p),
+      };
     default:
       return state;
   }
@@ -143,12 +173,15 @@ export function DataProvider(props: PropsWithChildren<any>) {
   const setUnit = (unit: Unit) => dispatch({ type: 'SET_UNIT', payload: unit });
   const setManagers = (managers: User[]) => dispatch({ type: 'SET_MANAGERS', payload: managers });
   const setOwners = (owners: User[]) => dispatch({ type: 'SET_OWNERS', payload: owners });
+  const setPayments = (payments: RentalPayment[]) => dispatch({ type: 'SET_PAYMENTS', payload: payments });
+  const changePayment = (payment: RentalPayment) => dispatch({ type: 'CHANGE_PAYMENT', payload: payment });
   const isSet = () => (
     state.rental.id !== undefined
     && state.property.id !== undefined
     && state.unit.id !== undefined
     && state.sessionData.user !== undefined
   );
+  const isSideA = (id: string) => state.property.managers.filter(m => m.managerId === id).length > 0;
 
   const value = useMemo<DataCtx>(() => ({
     ...state,
@@ -160,7 +193,10 @@ export function DataProvider(props: PropsWithChildren<any>) {
     setUnit,
     setManagers,
     setOwners,
+    setPayments,
+    changePayment,
     isSet,
+    isSideA,
   }), [state]);
 
   return <DataContext.Provider value={value} {...props} />;

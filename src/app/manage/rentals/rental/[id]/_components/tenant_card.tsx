@@ -38,7 +38,7 @@ export default function TenantCard() {
   const {rental} = useDataCtx();
 
   return (
-    <Card className="col-span-3">
+    <Card>
       <CardHeader>
         <CardTitle className="text-lg">Thông tin bên thuê</CardTitle>
       </CardHeader>

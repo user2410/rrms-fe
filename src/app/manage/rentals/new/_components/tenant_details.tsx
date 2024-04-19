@@ -262,7 +262,6 @@ export default function TenantDetails() {
                       if (!e.currentTarget.value) return;
                       field.onChange(new Date(e.currentTarget.value));
                     }}
-                    min={format(new Date(), "yyyy-MM-dd")}
                     className="w-full p-3"
                   />
                 </FormControl>
@@ -284,7 +283,6 @@ export default function TenantDetails() {
                       if (!e.currentTarget.value) return;
                       field.onChange(new Date(e.currentTarget.value));
                     }}
-                    min={format(new Date(), "yyyy-MM-dd")}
                     className="w-full p-3"
                   />
                 </FormControl>

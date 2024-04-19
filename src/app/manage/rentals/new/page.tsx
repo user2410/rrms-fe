@@ -77,8 +77,9 @@ const formSchema = z.object({
   }),
 
   services: z.object({
+    paymentType: z.enum(['PREPAID', 'POSTPAID']),
     rentalPrice: z.number(),
-    rentalPaymentBasis: z.enum(["MONTHLY", "YEARLY"]),
+    rentalPaymentBasis: z.number(),
     deposit: z.number(),
     depositPaid: z.boolean(),
   
@@ -98,8 +99,8 @@ const formSchema = z.object({
 
   policies: z.object({
     // rentalPaymentDueDate: z.number().min(1).max(28),
-    rentalPaymentGracePeriod: z.number(),
-    rentalPaymentLateFeePercentage: z.number().min(0).max(100),
+    // rentalPaymentGracePeriod: z.number(),
+    // rentalPaymentLateFeePercentage: z.number().min(0).max(100),
     // rentalPaymentLateFeeBasis: z.enum(["DATE", "MONTH"]),
 
     policies: z.array(z.object({
@@ -240,7 +241,8 @@ function RentalForm({
       },
 
       services: {
-        rentalPaymentBasis: "MONTHLY",
+        paymentType: 'POSTPAID',
+        rentalPaymentBasis: 1,
         rentalPrice: application?.offeredPrice,
         depositPaid: false,
         services: [],
@@ -321,7 +323,7 @@ function RentalForm({
               </div>
             ) : step === 2 ? (
               <div className="space-y-4">
-                <RentalPayment/>
+                {/* <RentalPayment/> */}
                 <OtherPolicies/>
               </div>
             ) : null}

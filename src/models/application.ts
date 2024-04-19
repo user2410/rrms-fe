@@ -80,10 +80,10 @@ export type Application = {
   // identityType: string;
   // identityNumber: string;
 
-  minors?: ApplicationMinor[];
-  coaps?: ApplicationCoap[];
-  pets?: ApplicationPet[];
-  vehicles?: ApplicationVehicle[];
+  minors: ApplicationMinor[];
+  coaps: ApplicationCoap[];
+  pets: ApplicationPet[];
+  vehicles: ApplicationVehicle[];
 };
 
 export type ManagedApplication = {

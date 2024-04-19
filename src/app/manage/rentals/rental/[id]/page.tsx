@@ -8,13 +8,14 @@ import { Unit } from "@/models/unit";
 import { User } from "@/models/user";
 import * as Tabs from '@radix-ui/react-tabs';
 import { useQuery } from "@tanstack/react-query";
+import { Session } from "next-auth";
 import { useSession } from "next-auth/react";
+import { useEffect } from "react";
 import ContractCard from "./_components/contract_card";
 import GeneralCard from "./_components/general";
+import Payments from "./_components/payments";
 import TenantCard from "./_components/tenant_card";
 import { DataProvider, RentalData, useDataCtx } from "./_context/data.context";
-import { useEffect } from "react";
-import { Session } from "next-auth";
 
 export default function RentalPageWrapper({ params: { id } }: { params: { id: string } }) {
   const session = useSession();
@@ -107,22 +108,22 @@ function RentalPage({
   return isSet() && (
     <>
       <GeneralCard rental={data.rental} />
-      <Tabs.Root defaultValue="detail" className="TabsRoot">
+      <Tabs.Root defaultValue="payment" className="TabsRoot">
         <Tabs.List className="TabsList">
           <Tabs.Trigger className="TabsTrigger" value="detail">Khách thuê</Tabs.Trigger>
-          <Tabs.Trigger className="TabsTrigger" value="payment">
-            {sessionData.user.user.role === "TENANT" ? "Chi phí" : "Khoản thu"}
-          </Tabs.Trigger>
+          <Tabs.Trigger className="TabsTrigger" value="payment">Thu chi</Tabs.Trigger>
           <Tabs.Trigger className="TabsTrigger" value="maintenance">Bảo trì</Tabs.Trigger>
         </Tabs.List>
         <Tabs.Content className="TabsContent" value="detail">
           <div className="grid grid-cols-4 gap-4">
             <ContractCard/>
-            <TenantCard/>
+            <div className="col-span-3">
+              <TenantCard/>
+            </div>
           </div>
         </Tabs.Content>
         <Tabs.Content className="TabsContent" value="payment">
-          Khoản thu
+          <Payments/>
         </Tabs.Content>
         <Tabs.Content className="TabsContent" value="maintenance">
           Bảo trì
