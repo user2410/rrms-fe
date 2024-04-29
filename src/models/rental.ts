@@ -32,6 +32,7 @@ export type RentalPet = {
 };
 
 export type RentalService = {
+  id: number;
   rentalId: number;
   name: string;
   setupBy: string;
@@ -74,9 +75,13 @@ export type Rental = {
   
   electricitySetupBy: 'LANDLORD' | 'TENANT';
   electricityPaymentType: "RETAIL" | "FIXED";
+  electricityProvider?: string;
+  electricityCustomerCode?: string;
   electricityPrice?: number;
   waterSetupBy: 'LANDLORD' | 'TENANT';
   waterPaymentType: "RETAIL" | "FIXED";
+  waterProvider?: string;
+  waterCustomerCode?: string;
   waterPrice?: number;
   note: string;
 
@@ -139,10 +144,21 @@ const rentalPaymentReasons = {
   "SERVICE": "Dịch vụ",
 };
 
-export function getRentalPaymentReason(payment: RentalPayment) {
+export function getRentalPaymentReason(payment: RentalPayment): keyof typeof rentalPaymentReasons {
   // payment code is in format [rentalId]_[reason]_[rest_of_the_code]
   const parts = payment.code.split('_');
-  return rentalPaymentReasons[parts[1] as keyof typeof rentalPaymentReasons];
+  return parts[1] as keyof typeof rentalPaymentReasons;
+}
+
+export function getRentalPaymentReasonText(payment: RentalPayment, rentalServices: RentalService[]) {
+  // payment code is in format [rentalId]_[reason]_[rest_of_the_code]
+  const parts = payment.code.split('_');
+  if(parts[1] === "SERVICE") {
+    // console.log(rentalServices, parts[2]);
+    return `Dịch vụ ${rentalServices?.find(s => s.id.toString() === parts[2])?.name || parts[2]}`;
+  } else {
+    return rentalPaymentReasons[parts[1] as keyof typeof rentalPaymentReasons];
+  }
 }
 
 export function getTotalAmount(payment: RentalPayment): number {

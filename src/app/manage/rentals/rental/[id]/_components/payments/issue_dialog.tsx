@@ -1,4 +1,4 @@
-import { getRentalPaymentReason, RentalPayment, RENTALPAYMENTSTATUS } from "@/models/rental";
+import { getRentalPaymentReasonText, RentalPayment, RENTALPAYMENTSTATUS } from "@/models/rental";
 import { useDataCtx } from "../../_context/data.context";
 import {
   Dialog,
@@ -23,7 +23,7 @@ export default function IssueDialog({
 }: {
   payment: RentalPayment;
 }) {
-  const { sessionData, changePayment } = useDataCtx();
+  const { sessionData, changePayment, rental } = useDataCtx();
   const closeBtnRef = useRef<HTMLButtonElement>(null);
   const total = payment.amount - (payment.discount || 0);
   const [note, setNote] = useState<string>("");
@@ -88,7 +88,7 @@ export default function IssueDialog({
           </div>
           <div className="col-span-3 space-y-2">
             <Label>Dịch vụ</Label>
-            <p className="text-sm">{getRentalPaymentReason(payment)}</p>
+            <p className="text-sm">{getRentalPaymentReasonText(payment, rental.services)}</p>
           </div>
           <div className="col-span-3 space-y-2">
             <Label>Từ ngày</Label>

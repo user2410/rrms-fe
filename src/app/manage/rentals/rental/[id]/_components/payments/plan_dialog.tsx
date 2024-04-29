@@ -15,7 +15,7 @@ import { Form, FormControl, FormField, FormItem, FormLabel, FormLabelRequired } 
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { backendAPI } from "@/libs/axios";
-import { getRentalPaymentReason, RentalPayment, RENTALPAYMENTSTATUS } from "@/models/rental";
+import { getRentalPaymentReason, getRentalPaymentReasonText, RentalPayment, RENTALPAYMENTSTATUS } from "@/models/rental";
 import { readMoneyVi } from "@/utils/currency";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { AlertDialog } from "@radix-ui/react-alert-dialog";
@@ -25,11 +25,18 @@ import { useForm } from "react-hook-form";
 import toast from "react-hot-toast";
 import * as z from "zod";
 import { useDataCtx } from "../../_context/data.context";
+import ServiceBill from "./service_bill";
+import { getRegion } from "@/utils/dghcvn";
+import clsx from "clsx";
 
 const formSchema = z.object({
   amount: z.number(),
   discount: z.number().optional(),
   expiryDate: z.date(),
+  waterMeterBefore: z.number().optional(),
+  waterMeterAfter: z.number().optional(),
+  startDate: z.date(),
+  endDate: z.date(),
 });
 
 type FormValues = z.infer<typeof formSchema>;
@@ -39,7 +46,7 @@ export default function PlanDialog({
 }: {
   payment: RentalPayment;
 }) {
-  const { sessionData, changePayment } = useDataCtx();
+  const { sessionData, changePayment, rental, property } = useDataCtx();
   const closeBtnRef = useRef<HTMLButtonElement>(null);
   const form = useForm<FormValues>({
     resolver: zodResolver(formSchema),
@@ -47,18 +54,21 @@ export default function PlanDialog({
       amount: payment.amount,
       discount: payment.discount || undefined,
       expiryDate: payment.expiryDate || undefined,
+      startDate: payment.startDate,
+      endDate: payment.endDate,
     },
   });
   const amount = form.watch("amount");
   const discount = form.watch("discount");
   const total = useMemo(() => amount - (discount || 0), [amount, discount]);
+  const paymentReason = getRentalPaymentReason(payment);
 
   async function handleSubmit() {
     try {
       const isValid = await form.trigger();
       if (!isValid) {
         console.error(form.formState.errors);
-        throw {message: "Kiểm tra lại các trường thông tin"};
+        throw { message: "Kiểm tra lại các trường thông tin" };
       }
       const data = {
         ...form.getValues(),
@@ -129,35 +139,36 @@ export default function PlanDialog({
 
   return (
     <Dialog onOpenChange={() => form.reset()}>
-      <DialogTrigger>
-        <Button>Chi tiết</Button>
-      </DialogTrigger>
+      <DialogTrigger>Chi tiết</DialogTrigger>
       <DialogContent className="max-w-[750px]">
         <DialogHeader>
           <DialogTitle>Cập nhật và xét duyệt khoản thu</DialogTitle>
           <DialogDescription>
-            {(payment.note && payment.note.length > 0) ? `Kiến nghị của bên thuê: ${payment.note}` : "Cần thực hiện sớm để thông báo đến bên thuê và bên thuê chuẩn bị."}
+            {(payment.note && payment.note.length > 0) ? `Kiến nghị của bên thuê: ${payment.note}` : "Cần thực hiện sớm, thông báo đến bên thuê để bên thuê chuẩn bị."}
           </DialogDescription>
         </DialogHeader>
         <Form {...form}>
-          <form onSubmit={(e) => e.preventDefault()} className="grid grid-cols-2 gap-3">
-            <div className="space-y-2">
+          <form onSubmit={(e) => e.preventDefault()} className="grid grid-cols-6 gap-3">
+            <div className="space-y-2 col-span-3">
               <Label>Mã hóa đơn</Label>
               <p className="text-sm">{payment.code}</p>
             </div>
-            <div className="space-y-2">
+            <div className="space-y-2 col-span-3">
               <Label>Dịch vụ</Label>
-              <p className="text-sm">{getRentalPaymentReason(payment)}</p>
+              <p className="text-sm">{getRentalPaymentReasonText(payment, rental.services)}</p>
             </div>
-            <div className="space-y-2">
+            <div className="space-y-2 col-span-3">
               <Label>Từ ngày</Label>
               <p className="text-sm">{payment.startDate.toLocaleDateString("vi-VN")}</p>
             </div>
-            <div className="space-y-2">
+            <div className="space-y-2 col-span-3">
               <Label>Đến ngày</Label>
               <p className="text-sm">{payment.endDate.toLocaleDateString("vi-VN")}</p>
             </div>
-            <div className="space-y-2">
+            <div className={clsx(
+              "space-y-2",
+              paymentReason === "SERVICE" ? "col-span-6" : "col-span-3",
+            )}>
               <FormField
                 control={form.control}
                 name="amount"
@@ -172,31 +183,81 @@ export default function PlanDialog({
                 )}
               />
             </div>
-            <div className="space-y-2">
-              <FormField
-                control={form.control}
-                name="discount"
-                render={({ field }) => (
-                  <FormItem>
-                    <FormLabel>Khấu trừ</FormLabel>
-                    <FormControl>
-                      <Input 
-                        {...field} 
-                        onChange={(e) => {
-                          const v = e.currentTarget.valueAsNumber;
-                          if (v < amount) {
-                            field.onChange(v);
+            {paymentReason === "ELECTRICITY" ? (
+              <div className="space-y-2 col-span-3">
+                <Label>Tra cứu hóa đơn</Label>
+                <div>
+                  <ServiceBill
+                    productId="17"
+                    groupTitle="Tập đoàn"
+                    defaultValues={{
+                      provider: rental.electricityProvider,
+                      customer_code: rental.electricityCustomerCode,
+                      group: 3,
+                    }}
+                  />
+                </div>
+              </div>
+            ) : paymentReason === "WATER" ? (
+              <div className="space-y-2 col-span-3">
+                <Label>Tra cứu hóa đơn</Label>
+                <div>
+                  <ServiceBill
+                    productId="17"
+                    groupTitle="Khu vực"
+                    defaultValues={{
+                      provider: rental.waterProvider,
+                      customer_code: rental.waterCustomerCode,
+                      group: (() => {
+                        if (property.city === "SG") {
+                          return 11;
+                        } else if (property.city === "HN") {
+                          return 12;
+                        } else if (property.city === "DDN") {
+                          return 16;
+                        } else {
+                          const region = getRegion(property.city);
+                          switch (region) {
+                            case "north":
+                              return 14;
+                            case "south":
+                              return 13;
+                            default:
+                              return 15;
                           }
-                        }}
-                        type="number" 
-                      />
-                    </FormControl>
-                    <FieldMoneyDescription value={field.value} />
-                  </FormItem>
-                )}
-              />
-            </div>
-            <p className="col-span-2 text-sm font-light">Số tiền phải trả: {total.toLocaleString("vi-VN", { style: 'currency', currency: 'VND' })} ({readMoneyVi(total)})</p>
+                        }
+                      })(),
+                    }}
+                  />
+                </div>
+              </div>
+            ) : paymentReason === "RENTAL" ? (
+              <div className="space-y-2 col-span-3">
+                <FormField
+                  control={form.control}
+                  name="discount"
+                  render={({ field }) => (
+                    <FormItem>
+                      <FormLabel>Khấu trừ</FormLabel>
+                      <FormControl>
+                        <Input
+                          {...field}
+                          onChange={(e) => {
+                            const v = e.currentTarget.valueAsNumber;
+                            if (v < amount) {
+                              field.onChange(v);
+                            }
+                          }}
+                          type="number"
+                        />
+                      </FormControl>
+                      <FieldMoneyDescription value={field.value} />
+                    </FormItem>
+                  )}
+                />
+              </div>
+            ) : null}
+            <p className="col-span-6 text-sm font-light">Số tiền phải trả: {total.toLocaleString("vi-VN", { style: 'currency', currency: 'VND' })} ({readMoneyVi(total)})</p>
             <div className="space-y-2 col-span-2">
               <FormField
                 control={form.control}
@@ -223,7 +284,7 @@ export default function PlanDialog({
           </form>
         </Form>
         <DialogFooter>
-          <DialogClose asChild><button type="button" ref={closeBtnRef} hidden/></DialogClose>
+          <DialogClose asChild><button type="button" ref={closeBtnRef} hidden /></DialogClose>
           <AlertDialog>
             <AlertDialogTrigger asChild>
               <Button type="button" variant="destructive">Hủy hóa đon</Button>

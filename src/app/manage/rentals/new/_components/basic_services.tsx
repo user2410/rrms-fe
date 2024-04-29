@@ -1,5 +1,5 @@
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
-import { FormControl, FormDescription, FormField, FormItem, FormLabelRequired, FormMessage } from "@/components/ui/form";
+import { FormControl, FormDescription, FormField, FormItem, FormLabel, FormLabelRequired, FormMessage } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
@@ -12,8 +12,12 @@ import { FormValues } from "../page";
 import FieldMoneyDescription from "@/components/complex/field-money_desc";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import basicServicesInfo from "./basic_services.config.json";
+import { BasicServiceSelect } from "./basic_service_select";
+import { useDataCtx } from "../_context/data.context";
+import { getRegion } from "@/utils/dghcvn";
 
 export default function BasicServices() {
+  const {property} = useDataCtx();
   const form = useFormContext<FormValues>();
   const eType = form.watch("services.electricityPaymentType");
   const wType = form.watch("services.waterPaymentType");
@@ -64,20 +68,31 @@ export default function BasicServices() {
                         className="space-y-1">
                         <div className="flex items-center space-x-2">
                           <RadioGroupItem value="RETAIL" id="er" />
-                          <div className="flex flex-row items-center gap-2">
-                            <Label htmlFor="er">Giá bán lẻ điện sinh hoạt</Label>
-                            <TooltipProvider>
-                              <Tooltip>
-                                <TooltipTrigger asChild>
-                                  <Info className="h-4 w-4" />
-                                </TooltipTrigger>
-                                <TooltipContent className="w-[400px]">
-                                  <ScrollArea className="w-full h-72">
-                                    <div dangerouslySetInnerHTML={{ __html: basicServicesInfo.electricity }} />
-                                  </ScrollArea>
-                                </TooltipContent>
-                              </Tooltip>
-                            </TooltipProvider>
+                          <div className="space-y-1">
+                            <div className="flex flex-row items-center gap-2">
+                              <Label htmlFor="er">Giá bán lẻ điện sinh hoạt</Label>
+                              <TooltipProvider>
+                                <Tooltip>
+                                  <TooltipTrigger asChild>
+                                    <Info className="h-4 w-4" />
+                                  </TooltipTrigger>
+                                  <TooltipContent className="w-[400px]">
+                                    <ScrollArea className="w-full h-72">
+                                      <div dangerouslySetInnerHTML={{ __html: basicServicesInfo.electricity }} />
+                                    </ScrollArea>
+                                  </TooltipContent>
+                                </Tooltip>
+                              </TooltipProvider>
+                            </div>
+                            {field.value === "RETAIL" && (
+                              <BasicServiceSelect 
+                                productId="17"
+                                defaultGroup={3}
+                                groupTitle="Tập đoàn"
+                                customerFieldName="services.electricityCustomerCode"
+                                providerFieldName="services.electricityProvider"
+                              />
+                            )}
                           </div>
                         </div>
                         <div className="flex items-center space-x-2">
@@ -150,20 +165,49 @@ export default function BasicServices() {
                         className="space-y-1">
                         <div className="flex items-center space-x-2">
                           <RadioGroupItem value="RETAIL" id="wr" />
-                          <div className="flex flex-row items-center gap-2">
-                            <Label htmlFor="wr">Giá bán lẻ nước sinh hoạt</Label>
-                            <TooltipProvider>
-                              <Tooltip>
-                                <TooltipTrigger asChild>
-                                  <Info className="h-4 w-4" />
-                                </TooltipTrigger>
-                                <TooltipContent className="w-[400px]">
-                                  <ScrollArea className="w-full h-72">
-                                    <div dangerouslySetInnerHTML={{ __html: basicServicesInfo.water }} />
-                                  </ScrollArea>
-                                </TooltipContent>
-                              </Tooltip>
-                            </TooltipProvider>
+                          <div className="space-y-1">
+                            <div className="flex flex-row items-center gap-2">
+                              <Label htmlFor="wr">Giá bán lẻ nước sinh hoạt</Label>
+                              <TooltipProvider>
+                                <Tooltip>
+                                  <TooltipTrigger asChild>
+                                    <Info className="h-4 w-4" />
+                                  </TooltipTrigger>
+                                  <TooltipContent className="w-[400px]">
+                                    <ScrollArea className="w-full h-72">
+                                      <div dangerouslySetInnerHTML={{ __html: basicServicesInfo.water }} />
+                                    </ScrollArea>
+                                  </TooltipContent>
+                                </Tooltip>
+                              </TooltipProvider>
+                            </div>
+                            {field.value === "RETAIL" && (
+                              <BasicServiceSelect 
+                                productId="18"
+                                groupTitle="Khu vực"
+                                defaultGroup={(() => {
+                                  if (property.city === "SG") {
+                                    return 11;
+                                  } else if (property.city === "HN") {
+                                    return 12;
+                                  } else if (property.city === "DDN") {
+                                    return 16;
+                                  } else {
+                                    const region = getRegion(property.city);
+                                    switch (region) {
+                                      case "north":
+                                        return 14;
+                                      case "south":
+                                        return 13;
+                                      default:
+                                        return 15;
+                                    }
+                                  }
+                                })()}
+                                customerFieldName="services.waterCustomerCode"
+                                providerFieldName="services.waterProvider"
+                              />
+                            )}
                           </div>
                         </div>
                         <div className="flex items-center space-x-2">

@@ -144,3 +144,19 @@ export function FuzzySearch(input: string, limit: number = 10) {
 
   return r;
 }
+
+const northernProvinces: string[] = ["HN", "HP", "BD", "HT", "TB", "NB", "QT", "VL", "LS", "CB", "BK", "TQ", "LCH", "YB", "SL", "QB"];
+const centralProvinces: string[] = ["DDN", "LA", "QNA", "BTH", "QNI", "TH", "NA", "HD", "BP", "HNA", "PY", "NT", "DDT", "KT", "QT", "TN", "PY", "DDT", "QT"];
+const southernProvinces: string[] = ["SG", "DNA", "CT", "BDD", "TG", "AG", "CM", "ST", "TV", "TNI", "DNO", "BL", "TV", "DDT", "HG", "HGI", "CM", "ST", "BTR"];
+
+export function getRegion(provinceId: string): string | null {
+  if (northernProvinces.includes(provinceId)) {
+      return "north";
+  } else if (centralProvinces.includes(provinceId)) {
+      return "middle";
+  } else if (southernProvinces.includes(provinceId)) {
+      return "south";
+  } else {
+      return null;
+  }
+}

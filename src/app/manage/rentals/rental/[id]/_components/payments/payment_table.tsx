@@ -1,6 +1,6 @@
 import { Card, CardContent, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
-import { getRentalPaymentReason, getTotalAmount, RentalPayment, rentalPaymentStatus } from "@/models/rental";
+import { getRentalPaymentReasonText, getTotalAmount, RentalPayment, rentalPaymentStatus } from "@/models/rental";
 import { useDataCtx } from "../../_context/data.context";
 import IssueDialog from "./issue_dialog";
 import PaymentDialog from "./payment_dialog";
@@ -20,9 +20,8 @@ export default function PaymentTable({
   payments: RentalPayment[];
   status: 'PLAN' | "ISSUED" | 'PENDING' | 'PAID';
 }) {
-  const { isSideA, sessionData } = useDataCtx();
+  const { isSideA, rental, sessionData } = useDataCtx();
   const _isSideA = isSideA(sessionData.user.user.id);
-
   return (
     <>
       <CardHeader className="px-6 py-3">
@@ -53,9 +52,9 @@ export default function PaymentTable({
             ) : payments.map((p, i) => (
               <TableRow key={i} className={p.overdue ? "bg-red-300" : ""}>
                 <TableCell className="font-medium">{p.code}</TableCell>
-                <TableCell>{getRentalPaymentReason(p)}</TableCell>
+                <TableCell>{getRentalPaymentReasonText(p, rental.services)}</TableCell>
                 <TableCell>{p.startDate.toLocaleDateString('vi-VN')} - {p.endDate.toLocaleDateString('vi-VN')}</TableCell>
-                <TableCell>{p.amount.toLocaleString('vi-VN', { style: 'currency', currency: 'VND' })}</TableCell>
+                <TableCell>{p.amount > 0 ? p.amount.toLocaleString('vi-VN', { style: 'currency', currency: 'VND' }) : "-"}</TableCell>
                 {p.status !== 'PLAN' && (
                   <TableCell>{p.discount?.toLocaleString('vi-VN', { style: 'currency', currency: 'VND' })}</TableCell>
                 )}

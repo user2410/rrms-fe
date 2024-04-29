@@ -85,9 +85,13 @@ const formSchema = z.object({
   
     electricitySetupBy: z.enum(["LANDLORD", "TENANT"]),
     electricityPaymentType: z.enum(["RETAIL", "FIXED"]).optional(),
+    electricityCustomerCode: z.string().optional(),
+    electricityProvider: z.string().optional(),
     electricityPrice: z.number().optional(),
     waterSetupBy: z.enum(["LANDLORD", "TENANT"]),
     waterPaymentType: z.enum(["RETAIL", "FIXED"]).optional(),
+    waterCustomerCode: z.string().optional(),
+    waterProvider: z.string().optional(),
     waterPrice: z.number().optional(),
     services: z.array(z.object({
       name: z.string(),
