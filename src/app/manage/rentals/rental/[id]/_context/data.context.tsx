@@ -14,6 +14,7 @@ export type RentalData = {
   tenant?: User;
   managers: User[];
   owners: User[];
+  users: User[];
   payments: RentalPayment[];
 };
 
@@ -30,6 +31,7 @@ const initialState : State = {
   owners: [],
   payments: [],
   tenant: {} as User,
+  users: [],
 };
 
 type Action =
@@ -62,6 +64,10 @@ type Action =
       payload: User[],
     }
   | {
+      type: 'SET_USERS',
+      payload: User[],
+    }
+  | {
       type: 'SET_PAYMENTS',
       payload: RentalPayment[],
     }
@@ -83,10 +89,12 @@ type DataCtx = State & {
   setUnit: (data: Unit) => void;
   setManagers: (data: User[]) => void;
   setOwners: (data: User[]) => void;
+  setUsers: (data: User[]) => void;
   setPayments: (data: RentalPayment[]) => void;
   changePayment:(data: RentalPayment) => void;
   isSet: () => boolean;
   isSideA: (id: string) => boolean;
+  isOnTheSameSide: (id: string) => boolean;
 };
 
 export const DataContext = createContext<DataCtx>({
@@ -99,10 +107,12 @@ export const DataContext = createContext<DataCtx>({
   setUnit: () => {},
   setManagers: () => {},
   setOwners: () => {},
+  setUsers: () => {},
   setPayments: () => {},
   changePayment: () => {},
   isSet: () => false,
   isSideA: () => false,
+  isOnTheSameSide: () => false,
 });
 
 function dataReducer(state: State, action: Action) {
@@ -147,6 +157,11 @@ function dataReducer(state: State, action: Action) {
         ...state,
         owners: action.payload,
       };
+    case 'SET_USERS':
+      return {
+        ...state,
+        users: action.payload,
+      };
     case 'SET_PAYMENTS':
       return {
         ...state,
@@ -173,6 +188,7 @@ export function DataProvider(props: PropsWithChildren<any>) {
   const setUnit = (unit: Unit) => dispatch({ type: 'SET_UNIT', payload: unit });
   const setManagers = (managers: User[]) => dispatch({ type: 'SET_MANAGERS', payload: managers });
   const setOwners = (owners: User[]) => dispatch({ type: 'SET_OWNERS', payload: owners });
+  const setUsers = (users: User[]) => dispatch({ type: 'SET_USERS', payload: users });
   const setPayments = (payments: RentalPayment[]) => dispatch({ type: 'SET_PAYMENTS', payload: payments });
   const changePayment = (payment: RentalPayment) => dispatch({ type: 'CHANGE_PAYMENT', payload: payment });
   const isSet = () => (
@@ -181,7 +197,16 @@ export function DataProvider(props: PropsWithChildren<any>) {
     && state.unit.id !== undefined
     && state.sessionData.user !== undefined
   );
-  const isSideA = (id: string) => state.property.managers.filter(m => m.managerId === id).length > 0;
+  const isSideA = (id: string) => (
+    state.managers.filter(m => m.id === id).length > 0 ||
+    state.owners.filter(m => m.id === id).length > 0
+  );
+  // check whether current user (saved as sessionData.user.user) and given user are on the same side
+  const isOnTheSameSide = (id: string) => {
+    const _isSideA = isSideA(id);
+    const __isSideA = isSideA(state.sessionData.user.user.id);
+    return (_isSideA && __isSideA) || (!_isSideA && !__isSideA);
+  };
 
   const value = useMemo<DataCtx>(() => ({
     ...state,
@@ -193,10 +218,12 @@ export function DataProvider(props: PropsWithChildren<any>) {
     setUnit,
     setManagers,
     setOwners,
+    setUsers,
     setPayments,
     changePayment,
     isSet,
     isSideA,
+    isOnTheSameSide,
   }), [state]);
 
   return <DataContext.Provider value={value} {...props} />;

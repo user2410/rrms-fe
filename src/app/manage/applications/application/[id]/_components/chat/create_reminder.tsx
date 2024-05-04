@@ -3,19 +3,13 @@ import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle, Di
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
-import { backendAPI } from "@/libs/axios";
-import { ManagedApplication } from "@/models/application";
-import { Reminder } from "@/models/reminder";
 import { toISOStringWithTimezone } from "@/utils/time";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { DialogClose } from "@radix-ui/react-dialog";
 import { addHours } from "date-fns";
-import { Session } from "next-auth";
-import { forwardRef } from "react";
+import { forwardRef, useRef } from "react";
 import { useForm } from "react-hook-form";
-import toast from "react-hot-toast";
 import * as z from "zod";
-import { useWSCtx } from "../../_context/ws.context";
 
 const formSchema = z.object({
   title: z.string().nonempty(),
@@ -25,16 +19,15 @@ const formSchema = z.object({
   endAt: z.date(),
 });
 
-type FormValues = z.infer<typeof formSchema>;
+export type FormValues = z.infer<typeof formSchema>;
+
 type CreateReminderDialogProps = {
-  applicationData: ManagedApplication;
-  sessionData: Session;
+  triggerBtn: React.ReactNode;
+  handleCreateReminder: (data: FormValues) => Promise<void> | void;
 };
 
-const CreateReminderDialog = forwardRef<HTMLButtonElement, CreateReminderDialogProps>(function Render(props, ref) {
-  const { applicationData, sessionData } = props;
-  const { conn } = useWSCtx();
-
+export default function CreateReminderDialog(props: CreateReminderDialogProps){
+  const closeBtnRef = useRef<HTMLButtonElement>(null);
   const form = useForm<FormValues>({
     resolver: zodResolver(formSchema),
     defaultValues: {
@@ -46,29 +39,10 @@ const CreateReminderDialog = forwardRef<HTMLButtonElement, CreateReminderDialogP
     },
   });
 
-  async function submitHandler(data: FormValues) {
-    console.log("submit:", data);
-    try {
-      const res = (await backendAPI.post<Reminder>(`/api/applications/application/${applicationData.application.id}/reminders`, data, {
-        headers: {
-          Authorization: `Bearer ${sessionData.user.accessToken}`,
-        },
-      })).data;
-      conn?.send(JSON.stringify({
-        type: "REMINDER_CREATE",
-        payload: res,
-      }));
-      toast.success("Tạo lịch hẹn thành công");
-    } catch (err) {
-      console.error(err);
-      toast.error("Có lỗi xảy ra khi tạo lịch hẹn");
-    }
-  }
-
   return (
     <Dialog onOpenChange={() => form.reset()}>
       <DialogTrigger>
-        <Button ref={ref} variant="outline" className="w-full font-light uppercase">+ Tạo lịch hẹn</Button>
+        {props.triggerBtn}
       </DialogTrigger>
       <DialogContent>
         <DialogHeader>
@@ -76,7 +50,10 @@ const CreateReminderDialog = forwardRef<HTMLButtonElement, CreateReminderDialogP
           <DialogDescription />
         </DialogHeader>
         <Form {...form}>
-          <form onSubmit={form.handleSubmit(submitHandler)}>
+          <form onSubmit={(e) => {
+            form.handleSubmit(props.handleCreateReminder)(e);
+            closeBtnRef.current?.click();
+          }}>
             <FormField
               control={form.control}
               name="title"
@@ -165,7 +142,7 @@ const CreateReminderDialog = forwardRef<HTMLButtonElement, CreateReminderDialogP
             />
             <div className="w-full flex flex-row items-center justify-end mt-4">
               <DialogClose asChild>
-                <Button variant="outline" className="mr-2">Hủy</Button>
+                <Button ref={closeBtnRef} variant="outline" className="mr-2">Hủy</Button>
               </DialogClose>
               <Button type="submit">Tạo</Button>
             </div>
@@ -174,6 +151,4 @@ const CreateReminderDialog = forwardRef<HTMLButtonElement, CreateReminderDialogP
       </DialogContent>
     </Dialog>
   );
-});
-
-export default CreateReminderDialog;
+};

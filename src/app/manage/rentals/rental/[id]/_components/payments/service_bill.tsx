@@ -78,10 +78,20 @@ export default function ServiceBill({
       });
       setBill(res.data);
       setStage("result");
-    } catch (err) {
-      console.error(err);
-      toast.error("Có lỗi xảy ra khi tra cứu hóa đơn");
+    } catch (err: any) {
+      console.log("err", err);
+      switch (err.response.status) {
+        case 401:
+          toast.error("Mã Captcha sai hoặc hết hiệu lực");
+          break;
+        case 404:
+          toast.error("Không tìm thấy hóa đơn");
+          break;
+        default:
+          toast.error("Lỗi máy chủ");
+      }
     }
+    captchaQuery.refetch();
   }
 
   return (

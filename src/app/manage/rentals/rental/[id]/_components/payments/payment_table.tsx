@@ -37,7 +37,7 @@ export default function PaymentTable({
               <TableHead>Dịch vụ</TableHead>
               <TableHead>Từ ngày - đến ngày</TableHead>
               <TableHead>Số tiền</TableHead>
-              {['PAID', 'PENDING'].includes(status) && (<TableHead>Khấu trừ</TableHead>)}
+              {['PAID', 'PENDING', 'ISSUED'].includes(status) && (<TableHead>Khấu trừ</TableHead>)}
               <TableHead>Trạng thái</TableHead>
               {!['PAID', 'CANCELLED'].includes(status) && (
                 <TableHead>Thao tác</TableHead>

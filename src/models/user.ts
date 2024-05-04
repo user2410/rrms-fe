@@ -38,3 +38,8 @@ export function getFullAddress(user: User) : string {
   const dghc = GetLocationName(user.city || "", user.district || "", user.ward || "");
   return `${user.address}, ${dghc}`;
 }
+
+// get first character of first name and last name
+export function getAvatarFallback(user: {firstName: string, lastName: string}) : string {
+  return `${user?.firstName[0]}${user?.lastName[0]}`;
+}

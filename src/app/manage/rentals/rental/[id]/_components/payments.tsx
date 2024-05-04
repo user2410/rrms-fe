@@ -9,6 +9,15 @@ import { Card, CardHeader, CardTitle } from "@/components/ui/card";
 import { Separator } from "@/components/ui/separator";
 import { Button } from "@/components/ui/button";
 import { RefreshCcw } from "lucide-react";
+import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogHeader,
+  DialogTitle,
+  DialogTrigger,
+} from "@/components/ui/dialog";
+import CreatePaymentDialog from "./payments/create_payment_dialog";
 
 export default function PaymentsWrapper() {
   const { rental, sessionData } = useDataCtx();
@@ -40,7 +49,7 @@ export default function PaymentsWrapper() {
     return (
       <div className="flex justify-center items-center h-32">
         Loading ...
-        <Spinner/>
+        <Spinner />
       </div>
     );
   }
@@ -52,18 +61,18 @@ export default function PaymentsWrapper() {
   }
 
   return (
-    <Payments _payments={query.data} refetch={query.refetch}/>
+    <Payments _payments={query.data} refetch={query.refetch} />
   );
 };
 
 function Payments({
   _payments,
   refetch,
-} : {
+}: {
   _payments: RentalPayment[];
   refetch: () => void;
 }) {
-  const {payments, setPayments, isSideA, sessionData} = useDataCtx();
+  const { payments, setPayments, isSideA, sessionData } = useDataCtx();
 
   useEffect(() => {
     setPayments(_payments);
@@ -74,12 +83,25 @@ function Payments({
       <Card className="space-y-3">
         <CardHeader className="pt-6 pb-3 px-6 flex flex-row items-center justify-between">
           <CardTitle className="text-xl">Khoản thu</CardTitle>
-          <Button variant="outline" onClick={refetch}><RefreshCcw className="w-6 h-6"/></Button>
+          <div className="flex flex-row items-center gap-2">
+            <Dialog>
+              <DialogTrigger asChild>
+                <Button type="button" onClick={refetch}>Tạo</Button>
+              </DialogTrigger>
+              <DialogContent>
+                <DialogHeader>
+                  <DialogTitle>Tạo khoản thu</DialogTitle>
+                </DialogHeader>
+                <CreatePaymentDialog/>
+              </DialogContent>
+            </Dialog>
+            <Button variant="outline" onClick={refetch}><RefreshCcw className="w-6 h-6" /></Button>
+          </div>
         </CardHeader>
-        <PaymentsTable 
+        <PaymentsTable
           payments={payments.
             filter(p => p.status === 'PENDING').
-            map(p => ({...p, overdue: isOverdue(p)})).
+            map(p => ({ ...p, overdue: isOverdue(p) })).
             // sort by overdue first, then by start date
             sort((a, b) => {
               if (a.overdue && !b.overdue) return -1;
@@ -89,22 +111,22 @@ function Payments({
           }
           status="PENDING"
         />
-        <Separator/>
+        <Separator />
         {isSideA(sessionData.user.user.id) && (
           <>
-            <PaymentsTable 
+            <PaymentsTable
               payments={payments.filter(p => p.status === 'PLAN')}
               status="PLAN"
             />
-            <Separator/>
+            <Separator />
           </>
         )}
-        <PaymentsTable 
+        <PaymentsTable
           payments={payments.filter(p => ['ISSUED', 'REQUEST2PAY'].includes(p.status))}
           status="ISSUED"
         />
-        <Separator/>
-        <PaymentsTable 
+        <Separator />
+        <PaymentsTable
           payments={payments.filter(p => ['PAID', 'CANCELLED'].includes(p.status))}
           status="PAID"
         />

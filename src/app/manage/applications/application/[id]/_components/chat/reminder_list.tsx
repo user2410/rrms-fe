@@ -5,10 +5,12 @@ import { Reminder } from "@/models/reminder";
 import { useQuery } from "@tanstack/react-query";
 import { Session } from "next-auth";
 import { useReminderCtx } from "../../_context/reminders.context";
-import CreateReminderDialog from "./create_reminder";
+import CreateReminderDialog, { FormValues } from "./create_reminder";
 import ReminderCard from "./reminder_card";
 import { useEffect, useRef } from "react";
 import { useWSCtx } from "../../_context/ws.context";
+import toast from "react-hot-toast";
+import { Button } from "@/components/ui/button";
 
 export default function ReminderList({
   applicationData,
@@ -18,45 +20,39 @@ export default function ReminderList({
   sessionData: Session;
 }) {
   const {reminders, setReminders} = useReminderCtx();
-  const createBtnRef = useRef<HTMLButtonElement>(null);
-  
+  const { conn } = useWSCtx();
+
   const { application } = applicationData;
 
-  const query = useQuery<Reminder[]>({
-    queryKey: ["manage", "applications", "application", application.id, "reminders"],
-    queryFn: async ({ queryKey }) => {
-      const rs = (await backendAPI.get(`/api/applications/application/${queryKey.at(3)}/reminders`, {
+  useEffect(() => {
+    (async () => {
+      const rs = (await backendAPI.get(`/api/applications/application/${application.id}/reminders`, {
         headers: {
           Authorization: `Bearer ${sessionData.user.accessToken}`,
         },
       })).data || [];
       setReminders(rs);
-      return rs;
-    },
-    staleTime: 1000 * 60 * 60,
-    cacheTime: 1000 * 60 * 60,
-  });
+    }) ();
+  }, []);
 
-  // const reminders = useMemo<Reminder[]>(() => {
-  //   return filterEvents<Reminder>([
-  //     ...oldReminders,
-  //     ...events.filter(e => e.type === "REMINDER_CREATE").map(e => (e.payload as Reminder)),
-  //   ],
-  //     "id",
-  //     (a, b) => new Date(b.updatedAt).getTime() - new Date(a.updatedAt).getTime()).
-  //     sort((a, b) => new Date(a.createdAt).getTime() - new Date(b.createdAt).getTime());
-  // }, [oldReminders, events]);
-
-  useEffect(() => {
-    if (!createBtnRef.current) return;
-    if (query.status === "success" && !reminders.find(r => r.status === "PENDING")) {
-      console.log("enable create button");
-      createBtnRef.current.disabled = false;
-    } else {
-      console.log("disable create button");
-      createBtnRef.current.disabled = true;
+  async function handleCreateReminder(data: FormValues) {
+    console.log("submit:", data);
+    try {
+      const res = (await backendAPI.post<Reminder>(`/api/applications/application/${applicationData.application.id}/reminders`, data, {
+        headers: {
+          Authorization: `Bearer ${sessionData.user.accessToken}`,
+        },
+      })).data;
+      conn?.send(JSON.stringify({
+        type: "REMINDER_CREATE",
+        payload: res,
+      }));
+      toast.success("Tạo lịch hẹn thành công");
+    } catch (err) {
+      console.error(err);
+      toast.error("Có lỗi xảy ra khi tạo lịch hẹn");
     }
-  }, [query.status, reminders]);
+  }
 
   return (
     <div className="col-span-2 flex flex-col gap-2">
@@ -76,9 +72,8 @@ export default function ReminderList({
         ))}
       </ScrollArea>
       <CreateReminderDialog
-        ref={createBtnRef}
-        applicationData={applicationData}
-        sessionData={sessionData}
+        triggerBtn={(<Button variant="outline" className="w-full font-light uppercase">Tạo lịch hẹn</Button>)}
+        handleCreateReminder={handleCreateReminder}
       />
     </div>
   );

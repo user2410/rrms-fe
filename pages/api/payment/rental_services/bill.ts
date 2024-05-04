@@ -21,12 +21,15 @@ export default async function handler(
         "Aggregator-Captcha-Answer": captcha_answer,
       },
     });
-    if (r.status === 404) {
-      return res.status(404).json({ message: "Bill not found" });
-    }
     return res.status(200).json(await r.data);
-  } catch(err) {
-    console.error(err);
-    return res.status(500).json({ message: "Internal server error" });  
+  } catch(err: any) {
+    switch (err.response.status) {
+      case 401:
+        return res.status(401).json({ message: "Mã Captcha sai hoặc hết hiệu lực" });
+      case 404:
+        return res.status(404).json({ message: "Không tìm thấy hóa đơn" });
+      default:
+        return res.status(500).json({ message: "Lỗi máy chủ" });
+    }
   }
 }

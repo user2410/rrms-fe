@@ -16,6 +16,7 @@ import GeneralCard from "./_components/general";
 import Payments from "./_components/payments";
 import TenantCard from "./_components/tenant_card";
 import { DataProvider, RentalData, useDataCtx } from "./_context/data.context";
+import Maintenance from "./_components/maintenance";
 
 export default function RentalPageWrapper({ params: { id } }: { params: { id: string } }) {
   const session = useSession();
@@ -45,13 +46,16 @@ export default function RentalPageWrapper({ params: { id } }: { params: { id: st
           },
         })).data;
       }
-      const userIds: string[] = [...property.managers.map(pm => pm.managerId)];
+      const userIds = new Set([...property.managers.map(pm => pm.managerId)]);
       if (rental.creatorId !== '00000000-0000-0000-0000-000000000000') {
-        userIds.push(rental.creatorId);
+        userIds.add(rental.creatorId);
+      }
+      if(rental.tenantId && rental.tenantId !== '00000000-0000-0000-0000-000000000000') {
+        userIds.add(rental.tenantId);
       }
       const users = (await backendAPI.get<User[]>("/api/auth/credential/ids", {
         params: {
-          ids: userIds,
+          ids: [...userIds],
         },
         headers: {
           Authorization: `Bearer ${session.data!.user.accessToken}`,
@@ -66,6 +70,7 @@ export default function RentalPageWrapper({ params: { id } }: { params: { id: st
         tenant: users.find(u => (u.id === application?.creatorId)),
         owners: users.filter(u => property.managers.find(m => m.managerId === u.id && m.role === "OWNER")),
         managers: users.filter(u => property.managers.find(m => m.role === "MANAGER" && m.managerId === u.id)),
+        users,
       } as RentalData;
     },
     enabled: session.status === "authenticated",
@@ -112,7 +117,7 @@ function RentalPage({
         <Tabs.List className="TabsList">
           <Tabs.Trigger className="TabsTrigger" value="detail">Khách thuê</Tabs.Trigger>
           <Tabs.Trigger className="TabsTrigger" value="payment">Thu chi</Tabs.Trigger>
-          <Tabs.Trigger className="TabsTrigger" value="maintenance">Bảo trì</Tabs.Trigger>
+          <Tabs.Trigger className="TabsTrigger" value="maintenance">Bảo trì / Đề xuất</Tabs.Trigger>
         </Tabs.List>
         <Tabs.Content className="TabsContent" value="detail">
           <div className="grid grid-cols-4 gap-4">
@@ -126,7 +131,7 @@ function RentalPage({
           <Payments/>
         </Tabs.Content>
         <Tabs.Content className="TabsContent" value="maintenance">
-          Bảo trì
+          <Maintenance/>
         </Tabs.Content>
       </Tabs.Root>
     </>

@@ -139,7 +139,9 @@ export default function PlanDialog({
 
   return (
     <Dialog onOpenChange={() => form.reset()}>
-      <DialogTrigger>Chi tiết</DialogTrigger>
+      <DialogTrigger asChild>
+        <Button type="button">Chi tiết</Button>
+      </DialogTrigger>
       <DialogContent className="max-w-[750px]">
         <DialogHeader>
           <DialogTitle>Cập nhật và xét duyệt khoản thu</DialogTitle>

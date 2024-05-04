@@ -23,7 +23,7 @@ export default function Gallery({ items }: { items: PropertyMedia[] }) {
       <div className="flex flex-row gap-4">
         <LightGallery
           // ref={lg}
-          onInit={(datail) => console.log('init detail:', datail)}
+          onInit={(detail) => console.log('init detail:', detail)}
           speed={500}
           mode="lg-fade"
           plugins={[lgThumbnail, lgZoom]}

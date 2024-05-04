@@ -1,7 +1,6 @@
-
 export const MapTenantTypeToText = {
-  INDIVIDUAL: 'Cá nhân',
-  ORGANIZATION: 'Tổ chức',
+  INDIVIDUAL: "Cá nhân",
+  ORGANIZATION: "Tổ chức",
 };
 
 export type RentalMinor = {
@@ -38,13 +37,13 @@ export type RentalService = {
   setupBy: string;
   provider: string;
   price: string;
-}
+};
 
 export type RentalPolicy = {
   rentalId: number;
   title: string;
   content: string;
-}
+};
 
 export type Rental = {
   id: number;
@@ -52,10 +51,10 @@ export type Rental = {
   propertyId: string;
   unitId: string;
   applicationId?: string;
-  
+
   tenantId?: string;
   profileImage: string;
-  tenantType: 'INDIVIDUAL' | 'ORGANIZATION';
+  tenantType: "INDIVIDUAL" | "ORGANIZATION";
   tenantName: string;
   tenantPhone: string;
   tenantEmail: string;
@@ -72,13 +71,13 @@ export type Rental = {
   rentalIntention: string;
   deposit: number;
   depositPaid: boolean;
-  
-  electricitySetupBy: 'LANDLORD' | 'TENANT';
+
+  electricitySetupBy: "LANDLORD" | "TENANT";
   electricityPaymentType: "RETAIL" | "FIXED";
   electricityProvider?: string;
   electricityCustomerCode?: string;
   electricityPrice?: number;
-  waterSetupBy: 'LANDLORD' | 'TENANT';
+  waterSetupBy: "LANDLORD" | "TENANT";
   waterPaymentType: "RETAIL" | "FIXED";
   waterProvider?: string;
   waterCustomerCode?: string;
@@ -95,10 +94,10 @@ export type Rental = {
 };
 
 export const rentalServices = {
-  "internet": "Internet",
-  "hygiene": "Vệ sinh",
-  "parking": "Bãi đậu xe",
-  "other": "Khác",
+  internet: "Internet",
+  hygiene: "Vệ sinh",
+  parking: "Bãi đậu xe",
+  other: "Khác",
 };
 
 export function getRentalExpiryDate(rental: Rental): Date {
@@ -107,7 +106,13 @@ export function getRentalExpiryDate(rental: Rental): Date {
   return expiryDate;
 }
 
-export type RENTALPAYMENTSTATUS = 'PLAN' | 'PENDING' | 'ISSUED' | 'REQUEST2PAY' | 'PAID' | 'CANCELLED';
+export type RENTALPAYMENTSTATUS =
+  | "PLAN"
+  | "PENDING"
+  | "ISSUED"
+  | "REQUEST2PAY"
+  | "PAID"
+  | "CANCELLED";
 
 export type RentalPayment = {
   id: number;
@@ -125,37 +130,46 @@ export type RentalPayment = {
   amount: number;
   discount?: number;
   overdue?: boolean;
-}
+};
 
 export const rentalPaymentStatus = {
-  PLAN: 'Dự toán',
-  ISSUED: 'Đang chờ bên thuê',
-  PENDING: 'Đang chờ',
-  REQUEST2PAY: 'Đang chờ xác nhận',
-  PAID: 'Đã thanh toán',
-  CANCELLED: 'Đã hủy',
+  PLAN: "Dự toán",
+  ISSUED: "Đang chờ bên thuê",
+  PENDING: "Đang chờ",
+  REQUEST2PAY: "Đang chờ xác nhận",
+  PAID: "Đã thanh toán",
+  CANCELLED: "Đã hủy",
 };
 
 const rentalPaymentReasons = {
-  "RENTAL": "Thuê nhà",
-  "DEPOSIT": "Đặt cọc",
-  "ELECTRICITY": "Tiền điện",
-  "WATER": "Tiền nước",
-  "SERVICE": "Dịch vụ",
+  RENTAL: "Thuê nhà",
+  DEPOSIT: "Đặt cọc",
+  ELECTRICITY: "Tiền điện",
+  WATER: "Tiền nước",
+  SERVICE: "Dịch vụ",
+  MAINTENANCE: "Bảo trì",
 };
 
-export function getRentalPaymentReason(payment: RentalPayment): keyof typeof rentalPaymentReasons {
+export function getRentalPaymentReason(
+  payment: RentalPayment,
+): keyof typeof rentalPaymentReasons {
   // payment code is in format [rentalId]_[reason]_[rest_of_the_code]
-  const parts = payment.code.split('_');
+  const parts = payment.code.split("_");
   return parts[1] as keyof typeof rentalPaymentReasons;
 }
 
-export function getRentalPaymentReasonText(payment: RentalPayment, rentalServices: RentalService[]) {
+export function getRentalPaymentReasonText(
+  payment: RentalPayment,
+  rentalServices: RentalService[],
+) {
   // payment code is in format [rentalId]_[reason]_[rest_of_the_code]
-  const parts = payment.code.split('_');
-  if(parts[1] === "SERVICE") {
+  const parts = payment.code.split("_");
+  if (parts[1] === "SERVICE") {
     // console.log(rentalServices, parts[2]);
-    return `Dịch vụ ${rentalServices?.find(s => s.id.toString() === parts[2])?.name || parts[2]}`;
+    return `Dịch vụ ${
+      rentalServices?.find((s) => s.id.toString() === parts[2])?.name ||
+      parts[2]
+    }`;
   } else {
     return rentalPaymentReasons[parts[1] as keyof typeof rentalPaymentReasons];
   }
@@ -166,5 +180,33 @@ export function getTotalAmount(payment: RentalPayment): number {
 }
 
 export function isOverdue(payment: RentalPayment): boolean {
-  return ['PENDING', 'ISSUED'].includes(payment.status) && (new Date(payment.expiryDate) < new Date());
+  return (
+    ["PENDING", "ISSUED"].includes(payment.status) &&
+    new Date(payment.expiryDate) < new Date()
+  );
 }
+
+export type RentalComplaint = {
+  id: number;
+  rentalId: number;
+  creatorId: string;
+  title: string;
+  content: string;
+  suggestion?: string;
+  media: string[];
+  occurredAt: Date;
+  type: "REPORT" | "SUGGESTION";
+  status: "PENDING" | "RESOLVED" | "CLOSED";
+  replies: RentalComplaintReply[];
+  createdAt: Date;
+  updatedAt: Date;
+  updatedBy: string;
+};
+
+export type RentalComplaintReply = {
+  complaintId: number;
+  replierId: string;
+  reply: string;
+  media: string[];
+  createdAt: Date;
+};
