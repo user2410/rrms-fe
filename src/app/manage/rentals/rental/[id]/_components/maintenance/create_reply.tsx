@@ -1,4 +1,4 @@
-import CreateReminderDialog, { FormValues as ReminderFormValues } from "@/app/manage/applications/application/[id]/_components/chat/create_reminder";
+import CreateReminderDialog, { FormValues as ReminderFormValues } from "@/components/complex/create_reminder";
 import { Form, FormControl, FormField, FormItem } from "@/components/ui/form";
 import { Textarea } from "@/components/ui/textarea";
 import { FileUpload } from "@/models/file";

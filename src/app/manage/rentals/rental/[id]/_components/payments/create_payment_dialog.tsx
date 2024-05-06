@@ -16,9 +16,10 @@ import toast from "react-hot-toast";
 import * as z from "zod";
 import { useDataCtx } from "../../_context/data.context";
 import { useRef } from "react";
+import { paymentTypes } from "@/models/payment";
 
 const formSchema = z.object({
-  type: z.enum(['RENTAL', 'ELECTRICITY', 'WATER', 'SERVICE', 'MAINTENANCE']),
+  type: z.enum(["RENTAL", "ELECTRICITY", "WATER", "SERVICE", "MAINTENANCE", "PENALTY"]),
   startDate: z.date(),
   endDate: z.date(),
   amount: z.number(),

@@ -24,10 +24,7 @@ export default function ReminderCard({
 
   async function handleUpdateReminder(status: "INPROGRESS" | "CANCELLED") {
     try {
-      await backendAPI.patch(`/api/applications/application/${applicationData.application.id}/reminders`, {
-        id: reminder.id,
-        status,
-      }, {
+      await backendAPI.patch(`/api/reminders/reminder/${reminder.id}?status=${status}`, undefined, {
         headers: {
           Authorization: `Bearer ${sessionData.user.accessToken}`,
         }

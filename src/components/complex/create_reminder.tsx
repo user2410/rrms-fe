@@ -17,6 +17,8 @@ const formSchema = z.object({
   startAt: z.date(),
   location: z.string().nonempty(),
   endAt: z.date(),
+  priority: z.number().int().min(0).max(2),
+  recurrenceMode: z.enum(["NONE", "DAILY", "WEEKLY", "MONTHLY"])
 });
 
 export type FormValues = z.infer<typeof formSchema>;
@@ -36,6 +38,8 @@ export default function CreateReminderDialog(props: CreateReminderDialogProps){
       startAt: addHours(new Date(), 1),
       location: "",
       endAt: addHours(new Date(), 1),
+      recurrenceMode: "NONE",
+      priority: 0,
     },
   });
 

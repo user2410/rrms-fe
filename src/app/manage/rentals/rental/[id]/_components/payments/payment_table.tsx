@@ -5,6 +5,7 @@ import { useDataCtx } from "../../_context/data.context";
 import IssueDialog from "./issue_dialog";
 import PaymentDialog from "./payment_dialog";
 import PlanDialog from "./plan_dialog";
+import { dateDifference } from "@/utils/time";
 
 const statusTitle = {
   'PLAN': 'Khoản thu chưa xác nhận',
@@ -36,8 +37,12 @@ export default function PaymentTable({
               <TableHead>Mã hóa đơn</TableHead>
               <TableHead>Dịch vụ</TableHead>
               <TableHead>Từ ngày - đến ngày</TableHead>
+              <TableHead>Ngày thanh toán</TableHead>
               <TableHead>Số tiền</TableHead>
-              {['PAID', 'PENDING', 'ISSUED'].includes(status) && (<TableHead>Khấu trừ</TableHead>)}
+              {['PENDING', 'ISSUED'].includes(status) && (<TableHead>Khấu trừ</TableHead>)}
+              {status ==="PAID" && (
+                <TableHead>Tiền Phạt</TableHead>
+              )}
               <TableHead>Trạng thái</TableHead>
               {!['PAID', 'CANCELLED'].includes(status) && (
                 <TableHead>Thao tác</TableHead>
@@ -54,9 +59,13 @@ export default function PaymentTable({
                 <TableCell className="font-medium">{p.code}</TableCell>
                 <TableCell>{getRentalPaymentReasonText(p, rental.services)}</TableCell>
                 <TableCell>{p.startDate.toLocaleDateString('vi-VN')} - {p.endDate.toLocaleDateString('vi-VN')}</TableCell>
+                <TableCell>{p.paymentDate.toLocaleDateString('vi-VN')} {p.paymentDate > p.expiryDate && `(Muộn ${dateDifference(p.paymentDate, p.expiryDate)})`}</TableCell>
                 <TableCell>{p.amount > 0 ? p.amount.toLocaleString('vi-VN', { style: 'currency', currency: 'VND' }) : "-"}</TableCell>
-                {p.status !== 'PLAN' && (
+                {!['PLAN', 'PAID'].includes(p.status) && (
                   <TableCell>{p.discount?.toLocaleString('vi-VN', { style: 'currency', currency: 'VND' })}</TableCell>
+                )}
+                {(p.status ==="PAID" && p.paymentDate > p.expiryDate) && (
+                  <TableCell>{p.penalty ? p.penalty.toLocaleString('vi-VN', { style: 'currency', currency: 'VND' }) : "-"}</TableCell>
                 )}
                 <TableCell>{rentalPaymentStatus[p.status]}</TableCell>
                 {!['PAID', 'CANCELLED'].includes(status) && (

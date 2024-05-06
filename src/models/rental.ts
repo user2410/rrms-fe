@@ -129,6 +129,7 @@ export type RentalPayment = {
   status: RENTALPAYMENTSTATUS;
   amount: number;
   discount?: number;
+  penalty?: number;
   overdue?: boolean;
 };
 

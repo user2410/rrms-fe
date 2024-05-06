@@ -31,7 +31,7 @@ export default function AcceptDiaglog({
     setStage("SUBMITTING");
     try {
       await backendAPI.patch(
-        `/api/applications/application/status/${data.application.id}`,
+        `/api/applications/application/${data.application.id}/status`,
         { status: "APPROVED" },
         { headers: { Authorization: `Bearer ${sessionData.user.accessToken}` } }
       );

@@ -37,7 +37,7 @@ export default function RejectDiaglog({
         message: messageRef.current?.value,
       },);
       await backendAPI.patch(
-        `/api/applications/application/status/${data.application.id}`,
+        `/api/applications/application/${data.application.id}/status`,
         { 
           status: "REJECTED",
           message: messageRef.current?.value,

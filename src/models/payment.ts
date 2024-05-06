@@ -17,3 +17,12 @@ export type Payment = {
   updatedAt: Date;
   items: PaymentItem[];
 };
+
+export const paymentTypes = {
+  RENTAL: "Tiền thuê", 
+  ELECTRICITY: "Tiền điện", 
+  WATER: "Tiền nước",
+  SERVICE: "Dịch vụ",
+  MAINTENANCE: "Bảo trì",
+  PENALTY: "Phạt",
+};

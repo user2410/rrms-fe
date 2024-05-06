@@ -8,9 +8,14 @@ export type Reminder = {
   recurrenceDay: number;
   recurrenceMonth: number;
   recurrenceMode: 'NONE' | 'WEEKLY' | 'MONTHLY';
+  resourceTag: string;
   priority: number;
   location: string;
   createdAt: Date;
   updatedAt: Date;
   status: 'PENDING' | 'INPROGRESS' | 'COMPLETED' | 'CANCELLED';
 };
+
+export function genReminderResourceTag(resource: string, id: string | number) {
+  return `[${resource}_${id}]`;
+}

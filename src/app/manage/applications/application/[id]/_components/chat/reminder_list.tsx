@@ -1,11 +1,10 @@
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { backendAPI } from "@/libs/axios";
 import { ManagedApplication } from "@/models/application";
-import { Reminder } from "@/models/reminder";
-import { useQuery } from "@tanstack/react-query";
+import { genReminderResourceTag, Reminder } from "@/models/reminder";
 import { Session } from "next-auth";
 import { useReminderCtx } from "../../_context/reminders.context";
-import CreateReminderDialog, { FormValues } from "./create_reminder";
+import CreateReminderDialog, { FormValues } from "@components/complex/create_reminder";
 import ReminderCard from "./reminder_card";
 import { useEffect, useRef } from "react";
 import { useWSCtx } from "../../_context/ws.context";
@@ -26,12 +25,16 @@ export default function ReminderList({
 
   useEffect(() => {
     (async () => {
-      const rs = (await backendAPI.get(`/api/applications/application/${application.id}/reminders`, {
-        headers: {
-          Authorization: `Bearer ${sessionData.user.accessToken}`,
-        },
-      })).data || [];
-      setReminders(rs);
+      try {
+        const rs = (await backendAPI.get(`/api/reminders?tag=${genReminderResourceTag("APPLICATION", application.id)}`, {
+          headers: {
+            Authorization: `Bearer ${sessionData.user.accessToken}`,
+          },
+        })).data || [];
+        setReminders(rs);
+      } catch(err) {
+        console.error(err);
+      }
     }) ();
   }, []);
 

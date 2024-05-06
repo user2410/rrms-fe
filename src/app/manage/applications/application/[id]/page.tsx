@@ -38,7 +38,7 @@ export default function ApplicationPage({ params }: { params: { id: string } }) 
         transformResponse: TransformApplicationRESTResponse,
       })).data;
       if (application.status === "PENDING") {
-        await backendAPI.patch(`/api/applications/application/status/${application.id}`, {
+        await backendAPI.patch(`/api/applications/application/${application.id}/status`, {
           status: "CONDITIONALLY_APPROVED",
         }, {
           headers: {
@@ -86,7 +86,7 @@ export default function ApplicationPage({ params }: { params: { id: string } }) 
 
   async function handleWithdrawApplication() {
     try {
-      await backendAPI.patch(`/api/applications/application/status/${application.id}`, {
+      await backendAPI.patch(`/api/applications/application/${application.id}/status`, {
         status: "WITHDRAWN",
       }, {
         headers: {
