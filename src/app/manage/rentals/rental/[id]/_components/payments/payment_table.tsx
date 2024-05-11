@@ -37,7 +37,9 @@ export default function PaymentTable({
               <TableHead>Mã hóa đơn</TableHead>
               <TableHead>Dịch vụ</TableHead>
               <TableHead>Từ ngày - đến ngày</TableHead>
-              <TableHead>Ngày thanh toán</TableHead>
+              {['PAID', 'CANCELLED'].includes(status) && (
+                <TableHead>Ngày thanh toán</TableHead>
+              )}
               <TableHead>Số tiền</TableHead>
               {['PENDING', 'ISSUED'].includes(status) && (<TableHead>Khấu trừ</TableHead>)}
               {status ==="PAID" && (
@@ -59,14 +61,17 @@ export default function PaymentTable({
                 <TableCell className="font-medium">{p.code}</TableCell>
                 <TableCell>{getRentalPaymentReasonText(p, rental.services)}</TableCell>
                 <TableCell>{p.startDate.toLocaleDateString('vi-VN')} - {p.endDate.toLocaleDateString('vi-VN')}</TableCell>
-                <TableCell>{p.paymentDate.toLocaleDateString('vi-VN')} {p.paymentDate > p.expiryDate && `(Muộn ${dateDifference(p.paymentDate, p.expiryDate)})`}</TableCell>
+                {['PAID', 'CANCELLED'].includes(status) && (
+                  <TableCell>{p.paymentDate?.toLocaleDateString('vi-VN')} {(p.paymentDate && p.expiryDate && 
+                    p.paymentDate > p.expiryDate) ? `(Muộn ${dateDifference(p.paymentDate, p.expiryDate)})` : ''}</TableCell>
+                )}
                 <TableCell>{p.amount > 0 ? p.amount.toLocaleString('vi-VN', { style: 'currency', currency: 'VND' }) : "-"}</TableCell>
                 {!['PLAN', 'PAID'].includes(p.status) && (
                   <TableCell>{p.discount?.toLocaleString('vi-VN', { style: 'currency', currency: 'VND' })}</TableCell>
                 )}
-                {(p.status ==="PAID" && p.paymentDate > p.expiryDate) && (
+                {(p.status ==="PAID" && p.paymentDate && p.expiryDate && p.paymentDate > p.expiryDate) && (
                   <TableCell>{p.penalty ? p.penalty.toLocaleString('vi-VN', { style: 'currency', currency: 'VND' }) : "-"}</TableCell>
-                )}
+                )}p.paymentDate && p.expiryDate
                 <TableCell>{rentalPaymentStatus[p.status]}</TableCell>
                 {!['PAID', 'CANCELLED'].includes(status) && (
                   <TableCell>

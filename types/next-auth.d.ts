@@ -10,10 +10,10 @@ declare module "next-auth" {
       user: {
         id: string;
         email: string;
-        created_at: string;
-        created_by: string;
-        updated_at: string;
-        deleted_f: boolean;
+        createdAt: string;
+        createdBy: string;
+        updatedAt: string;
+        deletedF: boolean;
         firstName: string;
         lastName: string;
         address: string;

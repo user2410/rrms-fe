@@ -13,7 +13,7 @@ export default function StatCard({
   title: string;
   icon: React.ReactNode;
   data: string;
-  statArrow: "up" | "down" | "none";
+  statArrow?: "up" | "down" | "none";
   change?: string;
   since?: string;
 }) {

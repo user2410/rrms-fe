@@ -3,7 +3,7 @@ import { Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, D
 import { Form } from "@/components/ui/form";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import DetailedStepper from "@/components/ui/stepper/detailed-stepper";
-import { getFullAddress, getFullName } from "@/models/user";
+import { getUserFullAddress, getUserFullName } from "@/models/user";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useState } from "react";
 import { useForm } from "react-hook-form";
@@ -53,8 +53,8 @@ export default function CreateContractA() {
     resolver: zodResolver(formSchema),
     defaultValues: {
       sides: {
-        aFullName: getFullName(owners[0]),
-        aAddress: getFullAddress(owners[0]),
+        aFullName: getUserFullName(owners[0]),
+        aAddress: getUserFullAddress(owners[0]),
         aPhone: owners[0].phone,
         bFullName: rental.tenantName,
         bPhone: rental.tenantPhone,

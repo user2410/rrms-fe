@@ -1,11 +1,8 @@
 import Link from "next/link";
-import { BsBuildingFillAdd, BsFillBuildingsFill, BsPersonFillGear } from "react-icons/bs";
-import { FaFile, FaFileAlt, FaFileContract, FaHandHolding, FaHome, FaMoneyBill, FaRegFile, FaTools, FaUser } from "react-icons/fa";
-import { FiLifeBuoy, FiUser } from "react-icons/fi";
+import { FaHome } from "react-icons/fa";
 
 import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from "@/components/ui/accordion";
 import { ScrollArea } from "@/components/ui/scroll-area";
-import { usePathname } from "next/navigation";
 
 const ICON_SIZE = 16;
 

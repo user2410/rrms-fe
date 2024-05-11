@@ -9,9 +9,9 @@ import { User, userRoleName } from "@/models/user";
 import { signOut, useSession } from "next-auth/react";
 import Image from "next/image";
 import toast from "react-hot-toast";
-import { BsBuildingFillAdd, BsFillBuildingsFill, BsPersonFillGear } from "react-icons/bs";
-import { FaFile, FaFileAlt, FaFileContract, FaHandHolding, FaMoneyBill, FaTools, FaUser } from "react-icons/fa";
-import { FiLifeBuoy, FiUser } from "react-icons/fi";
+import { BsBuildingFillAdd, BsFillBuildingsFill } from "react-icons/bs";
+import { FaFile, FaFileAlt, FaFileContract, FaHandHolding, FaUser } from "react-icons/fa";
+import { FiLifeBuoy } from "react-icons/fi";
 import NotificationDropdown from "./dropdowns/notification";
 import SidebarNavigation from "./sidebar_navigation";
 
@@ -126,18 +126,6 @@ export default function Sidebar() {
                     label: 'Tài khoản',
                     href: '/manage/my-account',
                     icon: <FaUser size={ICON_SIZE} />,
-                    subroutes: [
-                      {
-                        label: 'Tài khoản của tôi',
-                        href: '/manage/my-account',
-                        icon: <FiUser size={ICON_SIZE} />,
-                      },
-                      {
-                        label: 'Lịch sử thanh toán',
-                        href: '/manage/my-account/billing',
-                        icon: <FaMoneyBill size={ICON_SIZE} />,
-                      },
-                    ],
                   },
                   {
                     label: 'Feedback',
@@ -173,18 +161,6 @@ export default function Sidebar() {
                     label: 'Tài khoản',
                     href: '/manage/my-account',
                     icon: <FaUser size={ICON_SIZE} />,
-                    subroutes: [
-                      {
-                        label: 'Tài khoản của tôi',
-                        href: '/manage/my-account',
-                        icon: <FiUser size={ICON_SIZE} />,
-                      },
-                      {
-                        label: 'Lịch sử thanh toán',
-                        href: '/manage/my-account/billing',
-                        icon: <FaMoneyBill size={ICON_SIZE} />,
-                      },
-                    ],
                   },
                   {
                     label: 'Feedback',

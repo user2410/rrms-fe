@@ -94,17 +94,23 @@ export default function PaymentDialog({
           <Label>Ngày thanh toán {isSideA && "thực tế"} <span className="text-red-600">*</span></Label>
           <Input
             type="date"
-            value={format(state.paymentDate, "yyyy-MM-dd")}
-            onChange={(e) => setState(v => ({
-              ...v,
-              paymentDate: new Date(e.target.value),
-            }))}
+            value={state.paymentDate.toISOString().split("T")[0]}
+            onChange={(e) => {
+              const newPaymentDate = new Date(e.target.value);
+              if (isNaN(newPaymentDate.getTime())) {
+                return;
+              }
+              setState(v => ({
+                ...v,
+                paymentDate: newPaymentDate,
+              }));
+            }}
           />
           {state.paymentDate > payment.expiryDate && (
             <p className="text-xs font-light text-red-600">Muộn {dateDifference(state.paymentDate, payment.expiryDate)}</p>
           )}
         </div>
-        {state.paymentDate > payment.expiryDate && (
+        {(isSideA && state.paymentDate > payment.expiryDate) && (
           <div className="space-y-2">
             <div className="flex items-center space-x-2">
               <Checkbox 

@@ -8,7 +8,7 @@ import {
 } from "@/components/ui/collapsible";
 import { Separator } from "@/components/ui/separator";
 import { RentalComplaint, RentalComplaintReply } from "@/models/rental";
-import { getAvatarFallback, getFullName } from "@/models/user";
+import { getUserAvatarFallback, getUserFullName } from "@/models/user";
 import clsx from "clsx";
 import { Check, Clock, PauseCircle } from "lucide-react";
 import { useDataCtx } from "../../_context/data.context";
@@ -92,14 +92,14 @@ export default function ComplaintItem({
         <Button variant="ghost" className="w-full min-h-[64px] flex items-center justify-between border">
           <div className="flex flex-row items-center p-2 gap-2">
             <Avatar>
-              <AvatarFallback>{getAvatarFallback(users.find(u => u.id === item.creatorId)!)}</AvatarFallback>
+              <AvatarFallback>{getUserAvatarFallback(users.find(u => u.id === item.creatorId)!)}</AvatarFallback>
             </Avatar>
             <div className="space-y-2 text-left">
               <h4 className="text-base font-semibold">
                 {item.title}
               </h4>
               <p className="text-sm font-normal">
-                {item.type === "REPORT" ? "Báo cáo" : "Đề nghị"}&nbsp; | &nbsp; Ngày tạo {item.createdAt.toLocaleDateString("vi-VN")}, bởi {getFullName(users.find(u => u.id === item.creatorId)!)}
+                {item.type === "REPORT" ? "Báo cáo" : "Đề nghị"}&nbsp; | &nbsp; Ngày tạo {item.createdAt.toLocaleDateString("vi-VN")}, bởi {getUserFullName(users.find(u => u.id === item.creatorId)!)}
               </p>
             </div>
           </div>
@@ -220,11 +220,11 @@ export default function ComplaintItem({
             query.data.map((reply, index) => (
               <div className="flex flex-row items-center justify-start gap-3 px-4 py-3" key={index}>
                 <Avatar>
-                  <AvatarFallback>{getAvatarFallback(users.find(u => u.id === item.creatorId)!)}</AvatarFallback>
+                  <AvatarFallback>{getUserAvatarFallback(users.find(u => u.id === item.creatorId)!)}</AvatarFallback>
                 </Avatar>
                 <div className="space-y-2">
                   <h4 className="text-sm font-semibold">
-                    {getFullName(users.find(u => u.id === reply.replierId)!)}&nbsp;
+                    {getUserFullName(users.find(u => u.id === reply.replierId)!)}&nbsp;
                     <span className="text-xs font-light">
                       {reply.createdAt.toLocaleDateString("vi-VN")}, {reply.createdAt.toLocaleTimeString("vi-VN")}
                     </span>

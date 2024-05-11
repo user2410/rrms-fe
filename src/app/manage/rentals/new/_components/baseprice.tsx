@@ -49,8 +49,8 @@ export default function Baseprice() {
                   </SelectTrigger>
                   <SelectContent>
                     <SelectItem value="MONTHLY">Hàng tháng</SelectItem>
-                    <SelectItem value="QUARTERLY">3 tháng / 1 lần</SelectItem>
-                    <SelectItem value="YEARLY">1 năm / 1 lần</SelectItem>
+                    <SelectItem value="QUARTERLY">Hàng quý</SelectItem>
+                    <SelectItem value="YEARLY">Hàng năm</SelectItem>
                     <SelectItem value="UPFRONT"></SelectItem>
                   </SelectContent>
                 </Select>

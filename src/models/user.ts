@@ -30,16 +30,16 @@ export function userRoleName(role?: string) : string {
   }
 }
 
-export function getFullName(user: User) : string {
+export function getUserFullName(user: User) : string {
   return `${user.firstName} ${user.lastName}`;
 }
 
-export function getFullAddress(user: User) : string {
+export function getUserFullAddress(user: User) : string {
   const dghc = GetLocationName(user.city || "", user.district || "", user.ward || "");
   return `${user.address}, ${dghc}`;
 }
 
 // get first character of first name and last name
-export function getAvatarFallback(user: {firstName: string, lastName: string}) : string {
+export function getUserAvatarFallback(user: {firstName: string, lastName: string}) : string {
   return `${user?.firstName[0]}${user?.lastName[0]}`;
 }

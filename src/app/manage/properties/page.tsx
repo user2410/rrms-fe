@@ -8,36 +8,49 @@ import { useQuery } from "@tanstack/react-query";
 import { useSession } from "next-auth/react";
 import { useRouter } from "next/navigation";
 import PropertiesGrid from "./_components/properties_grid";
+import { Unit } from "@/models/unit";
+import { useState } from "react";
 
 export type ManagedProperty = {
   role: string;
-  property: Property;
+  property: Property & {units: Unit[]};
 };
 
 export default function ManagePropertiesPage() {
-  const session = useSession();
   const router = useRouter();
+  const session = useSession();
 
   const myPropertiesQuery = useQuery<ManagedProperty[]>({
     queryKey: ['manage', 'properties'],
     queryFn: async () => {
-      const res = (await backendAPI.get<ManagedProperty[]>("api/properties/my-properties", {
+      const properties = (await backendAPI.get("api/properties/my-properties", {
         params: {
-          fields: "name,full_address,area,orientation,lat,lng,media,primary_image,created_at",
+          fields: "name,full_address,city,district,ward,area,orientation,lat,lng,media,type,primary_image,created_at",
         },
         headers: {
           Authorization: `Bearer ${session.data?.user.accessToken}`,
         },
       })).data || ([]);
 
-      return res.map((p) => ({
+      for(const property of properties) {
+        const units = (await backendAPI.get(`/api/properties/property/${property.property.id}/units`, {
+          headers: {
+            Authorization: `Bearer ${session.data?.user.accessToken}`,
+          },
+        })).data || ([]);
+        property.property.units = units;
+      }
+
+      const res = properties.map((p : any) => ({
         ...p, 
         property: {
           ...p.property,
           createdAt: new Date(p.property.createdAt),
           updatedAt: new Date(p.property.updatedAt),
         }
-      })).sort((a, b) => b.property.createdAt.getTime() - a.property.createdAt.getTime());
+      })) as ManagedProperty[];
+      console.log(res);
+      return res;
     },
     enabled: session.status === 'authenticated',
     staleTime: 1 * 60 * 1000,
@@ -58,7 +71,9 @@ export default function ManagePropertiesPage() {
             </div>
           ) : myPropertiesQuery.isError ? (
             <div className="w-full h-full flex justify-center items-center">
-              <p className="text-red-500">Error: {JSON.stringify(myPropertiesQuery.error)}</p>
+              <p className="text-red-500">
+                Đã xảy ra lỗi khi tải dữ liệu. Vui lòng thử lại sau.
+              </p>
             </div>
           ) : myPropertiesQuery.isSuccess ?(
             <PropertiesGrid initialProperties={myPropertiesQuery.data} />

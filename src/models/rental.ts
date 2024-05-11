@@ -122,8 +122,8 @@ export type RentalPayment = {
   updatedAt: Date;
   startDate: Date;
   endDate: Date;
-  expiryDate: Date;
-  paymentDate: Date;
+  expiryDate?: Date;
+  paymentDate?: Date;
   updatedBy?: string;
   note?: string;
   status: RENTALPAYMENTSTATUS;
@@ -168,8 +168,7 @@ export function getRentalPaymentReasonText(
   if (parts[1] === "SERVICE") {
     // console.log(rentalServices, parts[2]);
     return `Dịch vụ ${
-      rentalServices?.find((s) => s.id.toString() === parts[2])?.name ||
-      parts[2]
+      rentalServices?.find((s) => s.id.toString() === parts[2])?.name || parts[2]
     }`;
   } else {
     return rentalPaymentReasons[parts[1] as keyof typeof rentalPaymentReasons];
@@ -181,9 +180,9 @@ export function getTotalAmount(payment: RentalPayment): number {
 }
 
 export function isOverdue(payment: RentalPayment): boolean {
-  return (
+  return !!payment.expiryDate || (
     ["PENDING", "ISSUED"].includes(payment.status) &&
-    new Date(payment.expiryDate) < new Date()
+    new Date(payment.expiryDate!) < new Date()
   );
 }
 
