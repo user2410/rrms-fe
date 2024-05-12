@@ -1,12 +1,11 @@
 import { ManagedApplication } from "@/models/application";
 import { MsgGroup } from "@/models/message";
 import { Session } from "next-auth";
-import { useEffect, useState } from "react";
-import { Event, useWSCtx } from "../../_context/ws.context";
-import MessageList from "./message_list";
-import ReminderList from "./reminder_list";
+import { useEffect } from "react";
 import { useMessageCtx } from "../../_context/messages.context";
 import { useReminderCtx } from "../../_context/reminders.context";
+import { Event, useWSCtx } from "../../_context/ws.context";
+import MessageList from "./message_list";
 
 const maxRetries = 5;
 
@@ -23,7 +22,7 @@ export default function MessageGroup({
 
   const { setConn, reset: resetConn, addEvent } = useWSCtx();
   const { addMessage, resetMessages } = useMessageCtx();
-  const { addReminder, updateReminderStatus, resetReminders } = useReminderCtx();
+  const { addReminder, resetReminders } = useReminderCtx();
 
   function connect(): WebSocket | null {
     const _ws = new WebSocket(wsEndpoint);
@@ -48,11 +47,6 @@ export default function MessageGroup({
         case "REMINDER_CREATE":
           addReminder(event.payload);
           break;
-        case "REMINDER_UPDATE_STATUS":
-          updateReminderStatus(event.payload);
-          break;
-        // case "CHAT_TYPING":
-        // case "CHAT_DELETE_MESSAGE":
         default:
       }
     };
@@ -70,7 +64,7 @@ export default function MessageGroup({
         }
       }
       setConn(newWs);
-      if(!newWs) {
+      if (!newWs) {
         console.error("ws connection failed after max retries");
       }
       // resetMessages();
@@ -96,16 +90,10 @@ export default function MessageGroup({
   }, []);
 
   return (
-    <div className="grid grid-cols-9 gap-2">
-      <ReminderList
-        sessionData={sessionData}
-        applicationData={applicationData}
-      />
-      <MessageList
-        sessionData={sessionData}
-        applicationData={applicationData}
-        msgGroup={msgGroup}
-      />
-    </div>
+    <MessageList
+      sessionData={sessionData}
+      applicationData={applicationData}
+      msgGroup={msgGroup}
+    />
   );
 };

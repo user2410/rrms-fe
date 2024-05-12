@@ -11,11 +11,6 @@ const initialState: ReminderState = {
   reminders: []
 };
 
-type UpdateReminderStatus = {
-  id: number;
-  status: Reminder['status'];
-};
-
 type Action = 
   | {
     type: 'SET_REMINDERS';
@@ -30,10 +25,6 @@ type Action =
     payload: Reminder[];
   }
   | {
-    type: 'REMINDER_UPDATE_STATUS';
-    payload: UpdateReminderStatus;
-  }
-  | {
     type: 'DELETE_REMINDER';
     payload: Reminder["id"]; // reminder id type
   }
@@ -45,7 +36,6 @@ type ReminderCtx = ReminderState & {
   setReminders: (data: Reminder[]) => void;
   addReminder: (data: Reminder) => void;
   updateReminders: (data: Reminder[]) => void;
-  updateReminderStatus: (data: UpdateReminderStatus) => void;
   resetReminders: () => void;
 };
 
@@ -54,7 +44,6 @@ export const ReminderContext = createContext<ReminderCtx>({
   setReminders: () => { },
   addReminder: () => { },
   updateReminders: () => { },
-  updateReminderStatus: () => { },
   resetReminders: () => { },
 });
 
@@ -75,28 +64,6 @@ function reminderReducer(state: ReminderState, action: Action) {
         ...state,
         reminders: action.payload,
       };
-    case 'REMINDER_UPDATE_STATUS':
-      for(let i=0; i<state.reminders.length; i++) {
-        if(state.reminders[i].id === action.payload.id) {
-          const newReminder = {
-            ...state.reminders[i],
-            status: action.payload.status,
-          };
-          console.log("update reminder status", [
-            ...state.reminders.slice(0, i),
-            newReminder,
-            ...state.reminders.slice(i+1),
-          ]);
-          return {
-            ...state,
-            reminders: [
-              ...state.reminders.slice(0, i),
-              newReminder,
-              ...state.reminders.slice(i+1),
-            ],
-          };
-        }
-      }
     case 'DELETE_REMINDER':
       return {
         ...state,
@@ -121,9 +88,6 @@ export function RemindersProvider(props: PropsWithChildren<any>) {
   const updateReminder = (data: Reminder[]) => {
     dispatch({ type: 'UPDATE_REMINDERS', payload: data });
   };
-  const updateReminderStatus = (data: UpdateReminderStatus) => {
-    dispatch({ type: 'REMINDER_UPDATE_STATUS', payload: data });
-  };
   const resetReminders = () => {
     dispatch({ type: 'RESET' });
   };
@@ -133,7 +97,6 @@ export function RemindersProvider(props: PropsWithChildren<any>) {
     setReminders,
     addReminder,
     updateReminder,
-    updateReminderStatus,
     resetReminders,
   }), [state]);
 

@@ -13,7 +13,6 @@ export type Reminder = {
   location: string;
   createdAt: Date;
   updatedAt: Date;
-  status: 'PENDING' | 'INPROGRESS' | 'COMPLETED' | 'CANCELLED';
 };
 
 export function genReminderResourceTag(resource: string, id: string | number) {
