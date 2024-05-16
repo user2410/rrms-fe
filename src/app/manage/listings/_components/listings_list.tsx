@@ -33,7 +33,7 @@ export default function ListingsList({
       </div>
       <div className="space-y-4">
         {initialListings.map((l, i) => (
-          <ListingItem key={i} listing={l.listing} property={l.property} />
+          <ListingItem key={i} listing={l.listing} property={l.property} units={l.units}/>
         ))}
       </div>
       <div className="w-full flex flex-row justify-center">

@@ -1,21 +1,12 @@
 "use client";
 
+import { PropertyTypeBadge } from "@/components/complex/property";
 import { Badge } from "@/components/ui/badge";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
-import { Separator } from "@/components/ui/separator";
-import { getPropertyFullAddress, getPropertyTypeText, Property } from "@/models/property";
+import { getPropertyFullAddress, getPropertyTypeText, Property, propertyTypesToBgColor } from "@/models/property";
 import Image from "next/image";
 import Link from "next/link";
 import { Fragment } from "react";
-
-const propertyTypesToBgColor = {
-  APARTMENT: "bg-red-600",
-  PRIVATE: "bg-blue-600",
-  ROOM: "bg-green-600",
-  STORE: "bg-yellow-600",
-  OFFICE: "bg-purple-600",
-  MINIAPARTMENT: "bg-pink-600",
-};
 
 export default function PropertyCard({
   property
@@ -42,9 +33,7 @@ export default function PropertyCard({
               {property.name}&nbsp;({property.area}m<sup>2</sup>)
             </Link>
           </CardTitle>
-          <Badge className={`text-white ${propertyTypesToBgColor[property.type as keyof typeof propertyTypesToBgColor]}`}>
-            {getPropertyTypeText(property)}
-          </Badge>
+          <PropertyTypeBadge property={property} />
           <CardDescription className="text-sm text-muted-foreground">
             {getPropertyFullAddress(property)}
           </CardDescription>

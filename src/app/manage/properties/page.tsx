@@ -4,12 +4,11 @@ import { Button } from "@/components/ui/button";
 import Spinner from "@/components/ui/spinner";
 import { backendAPI } from "@/libs/axios";
 import { Property } from "@/models/property";
+import { Unit } from "@/models/unit";
 import { useQuery } from "@tanstack/react-query";
 import { useSession } from "next-auth/react";
 import { useRouter } from "next/navigation";
 import PropertiesGrid from "./_components/properties_grid";
-import { Unit } from "@/models/unit";
-import { useState } from "react";
 
 export type ManagedProperty = {
   role: string;

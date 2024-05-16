@@ -7,7 +7,6 @@ import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
 import { Separator } from "@/components/ui/separator";
 import Spinner from "@/components/ui/spinner";
 import { Table, TableBody, TableCell, TableFooter, TableHead, TableHeader, TableRow } from "@/components/ui/table";
-import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/components/ui/tooltip";
 import { backendAPI } from "@/libs/axios";
 import { Payment } from "@/models/payment";
 import { zodResolver } from "@hookform/resolvers/zod";
@@ -118,7 +117,7 @@ export default function PaymentPage({ params: { id } }: { params: { id: string }
               <Separator />
               <CardFooter>
                 <Form {...form}>
-                  <form onSubmit={form.handleSubmit(handlePayment)}>
+                  <form onSubmit={form.handleSubmit(handlePayment)} className="space-y-2">
                     <FormField
                       control={form.control}
                       name="bankCode"

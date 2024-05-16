@@ -94,12 +94,13 @@ export function GetLocationName(
 }
 
 const searchData = [...citiesArr, ...districtsArr, ...wardsArr];
-const fuseInstance = new Fuse(searchData, {
-  keys: ["name"],
-  threshold: 0.3,
-});
 
 export function FuzzySearch(input: string, limit: number = 10) {
+  const fuseInstance = new Fuse(searchData, {
+    keys: ["name"],
+    threshold: 0.3,
+  });
+  
   var r: { cities: any[]; districts: any[]; wards: any[] } = {
     cities: [],
     districts: [],

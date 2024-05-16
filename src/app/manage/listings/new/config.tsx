@@ -1,11 +1,11 @@
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { FormControl, FormDescription, FormField, FormItem, FormLabel, FormMessage } from "@/components/ui/form";
+import { FormControl, FormDescription, FormField, FormItem, FormLabel, FormLabelRequired, FormMessage } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
 import { Separator } from "@/components/ui/separator";
 import { Switch } from "@/components/ui/switch";
-import { ListingDiscount, ListingPriorities } from "@/models/listing";
+import { listingDiscount, listingPriorities } from "@/models/listing";
 import { add, format } from "date-fns";
 import Link from "next/link";
 import { useMemo } from "react";
@@ -25,11 +25,11 @@ export default function ListingConfig() {
   }, [postDuration]);
   const listingPriority = useMemo(() => {
     if (!priority) return null;
-    return ListingPriorities.find(item => item.priority.toString() === priority.toString());
+    return listingPriorities.find(item => item.priority.toString() === priority.toString());
   }, [priority]);
   const discountedBasePrice = useMemo(() => {
     if (!postDuration || !listingPriority) return null;
-    const ld = ListingDiscount.find(item => item.duration.toString() === postDuration.toString());
+    const ld = listingDiscount.find(item => item.duration.toString() === postDuration.toString());
     return (100 - ld!.discount) / 100 * listingPriority!.basePrice;
   }, [postDuration, listingPriority]);
 
@@ -45,7 +45,7 @@ export default function ListingConfig() {
             name="config.priority"
             render={({ field }) => (
               <FormItem>
-                <FormLabel>Chọn loại tin đăng <span className="ml-1 text-red-600">*</span></FormLabel>
+                <FormLabelRequired>Chọn loại tin đăng</FormLabelRequired>
                 <FormDescription>
                   <Link href="#">So sánh các loại tin</Link>
                 </FormDescription>
@@ -55,7 +55,7 @@ export default function ListingConfig() {
                   defaultValue={field.value.toString()}
                   className="w-full grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-8 pt-2"
                 >
-                  {ListingPriorities.map((item, index) => (
+                  {listingPriorities.map((item, index) => (
                     <FormItem key={index}>
                       <FormLabel className="[&:has([data-state=checked])>div]:border-primary">
                         <FormControl>
@@ -87,7 +87,7 @@ export default function ListingConfig() {
                     defaultValue={field.value.toString()}
                     className="grid w-full grid-cols-3 gap-8 pt-2"
                   >
-                    {ListingDiscount.map((item, index) => (
+                    {listingDiscount.map((item, index) => (
                       <FormItem key={index}>
                         <FormLabel className="[&:has([data-state=checked])>div]:border-primary">
                           <FormControl>

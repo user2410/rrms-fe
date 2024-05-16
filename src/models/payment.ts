@@ -8,8 +8,8 @@ export type PaymentItem = {
 
 export type Payment = {
   id: number;
-  userID: string;
-  orderID: string;
+  userId: string;
+  orderId: string;
   orderInfo: string;
   amount: number;
   status: "PENDING" | "SUCCESS" | "FAILED";
@@ -18,11 +18,17 @@ export type Payment = {
   items: PaymentItem[];
 };
 
-export const paymentTypes = {
+export const rentalPaymentTypes = {
   RENTAL: "Tiền thuê", 
   ELECTRICITY: "Tiền điện", 
   WATER: "Tiền nước",
   SERVICE: "Dịch vụ",
   MAINTENANCE: "Bảo trì",
   PENALTY: "Phạt",
+};
+
+export const listingPaymentTypes = {
+  CREATELISTING: "Tạo tin đăng",
+  EXTENDLISTING: "Gia hạn tin đăng",
+  UPGRADELISTING: "Nâng cấp tin đăng",
 };

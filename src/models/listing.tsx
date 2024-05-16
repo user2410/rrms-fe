@@ -1,3 +1,4 @@
+import { Property } from "./property";
 import { Unit } from "./unit";
 
 export type RentalPolicy = {
@@ -16,6 +17,12 @@ export type ListingUnit = {
   unitId: string;
   price: number;
 };
+
+export type ListingTag = {
+  listingId: string;
+  id: number;
+  tag: string;
+}
 
 export type Listing = {
   id: string;
@@ -41,10 +48,25 @@ export type Listing = {
   // postAt: Date;
   policies: ListingPolicy[];
   units: ListingUnit[];
+  tags: ListingTag[];
 };
 
-export function isListingActive(l: Listing) {
-  return l.active && new Date(l.expiredAt) > new Date();
+type ListingState = 'active' | 'inactive' | 'expired';
+export function getListingState(l: Listing) : ListingState {
+  const isExpired = new Date(l.expiredAt) < new Date();
+  if (!isExpired) {
+    if(l.active) {
+      return 'active';
+    } else {
+      return 'inactive';
+    }
+  } 
+  return 'expired';
+}
+export type ManagedListing = {
+  listing: Listing;
+  property: Property;
+  units: Unit[];
 }
 
 export type ReducedListing = {
@@ -73,14 +95,14 @@ export const rentalPolicies = [
   { id: 12, policy: "rental_policy-other", text: "Khác", icon: 'fas' },
 ];
 
-export const ListingPriorities = [
-  {priority: 1, basePrice: 2000 ,label: "Tin thường", desc: "Từ 2,000 đ/ngày"},
-  {priority: 2, basePrice: 5000 ,label: "Tin bạc", desc: "Từ 5,000 đ/ngày"},
-  {priority: 3, basePrice: 7000 ,label: "Tin vàng", desc: "Từ 7,000 đ/ngày"},
-  {priority: 4, basePrice: 9000 ,label: "Tin kim cương", desc: "Từ 9,000 đ/ngày"},
+export const listingPriorities = [
+  {priority: 1, basePrice: 2000 ,label: "Tin thường", desc: "2,000 đ/ngày"},
+  {priority: 2, basePrice: 5000 ,label: "Tin bạc", desc: "5,000 đ/ngày"},
+  {priority: 3, basePrice: 7000 ,label: "Tin vàng", desc: "7,000 đ/ngày"},
+  {priority: 4, basePrice: 9000 ,label: "Tin kim cương", desc: "9,000 đ/ngày"},
 ];
 
-export const ListingDiscount = [
+export const listingDiscount = [
   {duration: 7, discount: 0},
   {duration: 15, discount: 10},
   {duration: 30, discount: 20},
@@ -124,6 +146,7 @@ export const mockupListings : Listing[] = [
       },
 
     ],
+    tags: [],
     createdAt: new Date(2023, 12, 5),
     updatedAt: new Date(2023, 12, 5),
     expiredAt: new Date(2024, 1, 25),
@@ -164,8 +187,8 @@ export const mockupListings : Listing[] = [
         policyId: 4,
         note: "Không được tạo tiếng ồn sau 10h",
       },
-
     ],
+    tags: [],
     createdAt: new Date(2023, 12, 5),
     updatedAt: new Date(2023, 12, 5),
     expiredAt: new Date(2024, 1, 25),
@@ -207,6 +230,7 @@ export const mockupListings : Listing[] = [
         note: "Không được tạo tiếng ồn sau 10h",
       },
     ],
+    tags: [],
     createdAt: new Date(2023, 12, 5),
     updatedAt: new Date(2023, 12, 5),
     expiredAt: new Date(2024, 1, 25),

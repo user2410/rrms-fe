@@ -79,7 +79,7 @@ export function getPropertyFullAddress(property: Property) {
 }
 
 export function getPropertyTypeText(p: Property & {multiUnit?: boolean}) {
-  return (p.multiUnit || p.units.length > 1) ?
+  return (p.multiUnit || (!!p.units && p.units.length > 1)) ?
     (p.type === 'APARTMENT' ? `Quỹ căn hộ` : p.type === 'ROOM' ? 'Dãy phòng trọ' : '') :
     mapPropertyTypeToText[p.type as keyof typeof mapPropertyTypeToText];
 }
@@ -147,6 +147,15 @@ export const OrientationItems = [
     label: "Tất cả",
   },
 ] as const;
+
+export const propertyTypesToBgColor = {
+  APARTMENT: "bg-red-600",
+  PRIVATE: "bg-blue-600",
+  ROOM: "bg-green-600",
+  STORE: "bg-yellow-600",
+  OFFICE: "bg-purple-600",
+  MINIAPARTMENT: "bg-pink-600",
+};
 
 export const mockupProperties: Property[] = [
   {

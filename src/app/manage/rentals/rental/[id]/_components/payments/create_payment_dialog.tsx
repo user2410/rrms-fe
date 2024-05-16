@@ -11,12 +11,11 @@ import { RentalComplaint } from "@/models/rental";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useQuery } from "@tanstack/react-query";
 import { RotateCcw } from "lucide-react";
+import { useRef } from "react";
 import { useForm } from "react-hook-form";
 import toast from "react-hot-toast";
 import * as z from "zod";
 import { useDataCtx } from "../../_context/data.context";
-import { useRef } from "react";
-import { paymentTypes } from "@/models/payment";
 
 const formSchema = z.object({
   type: z.enum(["RENTAL", "ELECTRICITY", "WATER", "SERVICE", "MAINTENANCE", "PENALTY"]),

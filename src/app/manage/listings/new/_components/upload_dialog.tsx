@@ -25,7 +25,7 @@ export default function UploadDialog({
   const [stage, setStage] = useState<UPLOADSTAGE>("CONFIRMATION");
   const [res, setRes] = useState<{
     listing: Listing;
-    listingPayment: Payment;
+    payment: Payment;
   }>();
   const { data: session } = useSession();
   const accessToken = session!.user.accessToken;
@@ -53,22 +53,13 @@ export default function UploadDialog({
       } 
       
       // send POST request to backend
-      const listing = (await backendAPI.post("/api/listings", sendData, {
-        headers: {
-          Authorization: `Bearer ${accessToken}`
-        }
-      })).data;
-      
-      const listingPayment = (await backendAPI.post<Payment>(`/api/listings/listing/${listing.id}/payment`, {
-        priority: data.config.priority,
-        postDuration: data.config.postDuration,
-      }, {
+      const res = (await backendAPI.post("/api/listings", sendData, {
         headers: {
           Authorization: `Bearer ${accessToken}`
         }
       })).data;
 
-      setRes({listing, listingPayment});
+      setRes(res);
       setStage("DONE");
     } catch (err) {
       console.error(err);
@@ -108,7 +99,8 @@ export default function UploadDialog({
             <h2>Tin đăng của bạn đã được ghi nhận</h2>
             <p className="text-sm font-light">Thanh toán ngay để tin đăng được hiển thị</p>
             <div className="flex flex-row items-center gap-2">
-              <Link href={`/manage/payment/${res!.listingPayment.id}`}>Thanh toán tin đăng</Link>
+              <Link href={`/manage/listings/listing/${res!.listing.id}`}>Tin đăng</Link>
+              <Link target="_blank" href={`/manage/payment/${res!.payment.id}`}>Thanh toán tin đăng</Link>
             </div>
           </div>
         )}
