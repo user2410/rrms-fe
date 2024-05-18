@@ -32,7 +32,7 @@ export default function Step2() {
   const propertyId = form.watch("propertyId");
 
   const allPropsQuery = useQuery<ManagedProperty[]>({
-    queryKey: ["manage", "properties"],
+    queryKey: ["manage", "listings", "new", "properties"],
     queryFn: async () => {
       return (await backendAPI.get<ManagedProperty[]>("/api/properties/my-properties", {
         params: {
@@ -86,14 +86,14 @@ function SelectedProperty({
 }) {
   const form = useFormContext<ListingFormValues>();
   const selectedPropQuery = useQuery<PropertyData>({
-    queryKey: ['manage', 'properties', 'property', propertyId],
+    queryKey: ['manage', "listings", "new", 'properties', 'property', propertyId],
     queryFn: async ({ queryKey }) => {
-      const propertyQuery = await backendAPI.get(`/api/properties/property/${queryKey.at(3)}`, {
+      const propertyQuery = await backendAPI.get(`/api/properties/property/${queryKey.at(5)}`, {
         headers: {
           Authorization: `Bearer ${accessToken}`,
         },
       });
-      const unitsQuery = await backendAPI.get(`/api/properties/property/${queryKey.at(3)}/units`, {
+      const unitsQuery = await backendAPI.get(`/api/properties/property/${queryKey.at(5)}/units`, {
         headers: {
           Authorization: `Bearer ${accessToken}`,
         },

@@ -6,6 +6,7 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@
 import { readMoneyVi } from "@/utils/currency";
 import { useFormContext } from "react-hook-form";
 import { FormValues } from "../page";
+import FieldMoneyDescription from "@/components/complex/field-money_desc";
 
 export default function Baseprice() {
   const form = useFormContext<FormValues>();
@@ -104,7 +105,7 @@ export default function Baseprice() {
                   onChange={(e) => field.onChange(e.currentTarget.valueAsNumber)}
                 />
               </FormControl>
-              <FormDescription>{field.value.toLocaleString('vi-VN', { style: 'currency', currency: 'VND' })} ({readMoneyVi(field.value)})</FormDescription>
+              <FieldMoneyDescription value={field.value}/>
             </FormItem>
           )}
         />

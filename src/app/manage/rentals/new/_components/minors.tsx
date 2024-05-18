@@ -146,7 +146,7 @@ export default function Minors() {
       </CardHeader>
       <CardContent>
         <div className="flex flex-col gap-2">
-          {parentForm.watch("tenant.minors").map((field, index) => {
+          {parentForm.watch("tenant.minors")?.map((field, index) => {
             const dob = new Date(field.dob);
             return (
               <div key={index} className="border flex flex-row justify-between py-2">

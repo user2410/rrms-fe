@@ -21,19 +21,24 @@ import Baseprice from "./_components/baseprice";
 import BasicServices from "./_components/basic_services";
 import ExtraServices from "./_components/extra_services";
 import TenantDetails from "./_components/tenant_details";
-import { DataProvider, RentalData, useDataCtx } from "./_context/data.context";
+import { DataProvider, useDataCtx } from "./_context/data.context";
 import UploadDialog from "./_components/upload-dialog";
-import RentalPayment from "./_components/rental_payment";
 import OtherPolicies from "./_components/other_policies";
 import toast from "react-hot-toast";
 import { getMessages } from "@/utils/error";
+import PropertySelection from "./_components/property";
+import ExtendLease from "./_components/extend_lease";
 
 const formSchema = z.object({
   applicationId: z.number().optional(),
+  application: z.any().optional(),
   tenantId: z.string().optional(),
   propertyId: z.string(),
+  property: z.any(),
   unitId: z.string(),
-  
+  unit: z.any(),
+  users: z.array(z.any()).optional(),
+
   tenant: z.object({
     organizationName: z.string().optional(),
     organizationHqAddress: z.string().optional(),
@@ -45,7 +50,7 @@ const formSchema = z.object({
       type: z.string().optional(),
     }),
     tenantName: z.string(),
-    tenantDob: z.date(),
+    // tenantDob: z.date(),
     tenantPhone: z.string(),
     tenantEmail: z.string(),
     coaps: z.array(z.object({
@@ -56,20 +61,20 @@ const formSchema = z.object({
       email: z.string().email().optional(),
       phone: z.string().optional(),
       description: z.string().optional(),
-    })),
+    })).optional(),
     minors: z.array(z.object({
       fullName: z.string(),
       dob: z.date(),
       email: z.string().email().optional(),
       phone: z.string().optional(),
       description: z.string().optional(),
-    })),
+    })).optional(),
     pets: z.array(z.object({
       type: z.string(),
       weight: z.number().optional(),
       description: z.string().optional(),
-    })),
-    
+    })).optional(),
+
     startDate: z.date(),
     moveinDate: z.date(),
     rentalPeriod: z.number(),
@@ -82,7 +87,7 @@ const formSchema = z.object({
     rentalPaymentBasis: z.number(),
     deposit: z.number(),
     depositPaid: z.boolean(),
-  
+
     electricitySetupBy: z.enum(["LANDLORD", "TENANT"]),
     electricityPaymentType: z.enum(["RETAIL", "FIXED"]).optional(),
     electricityCustomerCode: z.string().optional(),
@@ -101,12 +106,8 @@ const formSchema = z.object({
     })),
   }),
 
+  noticePeriod: z.number().min(0).optional(),
   policies: z.object({
-    // rentalPaymentDueDate: z.number().min(1).max(28),
-    // rentalPaymentGracePeriod: z.number(),
-    // rentalPaymentLateFeePercentage: z.number().min(0).max(100),
-    // rentalPaymentLateFeeBasis: z.enum(["DATE", "MONTH"]),
-
     policies: z.array(z.object({
       title: z.string(),
       content: z.string(),
@@ -118,6 +119,16 @@ const formSchema = z.object({
 
 export type FormValues = z.infer<typeof formSchema>;
 
+type Data = {
+  application?: Application;
+  property?: Property;
+  unit?: Unit;
+  tenant?: User;
+  users: User[];
+  owners: User[];
+  managers: User[];
+};
+
 export default function NewRentalPage() {
   const searchParams = useSearchParams();
   const applicationId = searchParams?.get("applicationId");
@@ -125,7 +136,7 @@ export default function NewRentalPage() {
   const unitId = searchParams?.get("unitId");
   const session = useSession();
 
-  const query = useQuery<RentalData>({
+  const query = useQuery<Data>({
     queryKey: ["manage", "rentals", "new", "rental", applicationId, propertyId, unitId],
     queryFn: async ({ queryKey }) => {
       var application: Application | undefined;
@@ -137,39 +148,50 @@ export default function NewRentalPage() {
         })).data;
       }
 
-      const property = (await backendAPI.get<Property>(`/api/properties/property/${queryKey.at(5)}`, {
+      const property = queryKey.at(5) ? (await backendAPI.get<Property>(`/api/properties/property/${queryKey.at(5)}`, {
         headers: {
           Authorization: `Bearer ${session.data!.user.accessToken}`,
         },
-      })).data;
+      })).data : undefined;
 
-      const unit = (await backendAPI.get<Unit>(`/api/units/unit/${queryKey.at(6)}`, {
+      const unit = queryKey.at(6) ? (await backendAPI.get<Unit>(`/api/units/unit/${queryKey.at(6)}`, {
         headers: {
           Authorization: `Bearer ${session.data!.user.accessToken}`,
         },
-      })).data;
+      })).data : undefined;
 
-      const userIds: string[] = [...property.managers.map(pm => pm.managerId)];
-      if (application && application?.creatorId !== '00000000-0000-0000-0000-000000000000') {
-        userIds.push(application.creatorId);
+      let users: User[] = [];
+      let owners: User[] = [], managers: User[] = [];
+      let tenant: User | undefined;
+      if (property) {
+        const userIds: string[] = [...property.managers.map(pm => pm.managerId)];
+        if (application && application?.creatorId !== '00000000-0000-0000-0000-000000000000') {
+          userIds.push(application.creatorId);
+        }
+        users = (await backendAPI.get<User[]>("/api/auth/credential/ids", {
+          params: {
+            ids: userIds,
+          },
+          headers: {
+            Authorization: `Bearer ${session.data!.user.accessToken}`,
+          },
+        })).data;
+        tenant = users.find(u => (u.id === application?.creatorId));
+        owners = users.filter(u => property.managers.find(m => m.managerId === u.id && m.role === "OWNER"));
+        managers = users.filter(u => property.managers.find(m => m.role === "MANAGER" && m.managerId === u.id));
+      } else {
+        users = [];
       }
-      const users = (await backendAPI.get<User[]>("/api/auth/credential/ids", {
-        params: {
-          ids: userIds,
-        },
-        headers: {
-          Authorization: `Bearer ${session.data!.user.accessToken}`,
-        },
-      })).data;
 
       return {
         application,
         property,
         unit,
-        tenant: users.find(u => (u.id === application?.creatorId)),
-        owners: users.filter(u => property.managers.find(m => m.managerId === u.id && m.role === "OWNER")),
-        managers: users.filter(u => property.managers.find(m => m.role === "MANAGER" && m.managerId === u.id)),
-      } as RentalData;
+        tenant,
+        users,
+        owners,
+        managers,
+      } as Data;
     },
     enabled: session.status === "authenticated",
     staleTime: 1000 * 60 * 60,
@@ -200,29 +222,33 @@ function RentalForm({
   data,
   sessionData,
 }: {
-  data: RentalData;
+  data: Data;
   sessionData: Session;
 }) {
-  const { application, property, unit, tenant } = data;
-  const [step, setStep] = useState<number>(0);
+  const { application, property, unit, tenant, users } = data;
+  // const [step, setStep] = useState<number>(3);
+  const [step, setStep] = useState<number>((property && unit) ? 1 : 0);
   const [openUploadDialog, setOpenUploadDialog] = useState<boolean>(false);
   const dataCtx = useDataCtx();
 
   const form = useForm<FormValues>({
     resolver: zodResolver(formSchema),
     defaultValues: {
-      propertyId: property.id,
-      unitId: unit.id,
+      propertyId: property?.id ?? "",
+      property,
+      unitId: unit?.id ?? "",
+      unit,
       applicationId: application?.id,
-      tenantId: application?.creatorId ? application.creatorId : undefined,
-      
+      tenantId: application?.creatorId,
+      users,
+
       tenant: {
         profileImage: {
           url: application?.profileImage,
         },
         tenantType: application?.tenantType ? application.tenantType : "INDIVIDUAL",
         tenantName: application ? application?.fullName : tenant ? `${tenant.firstName} ${tenant.lastName}` : "",
-        tenantDob: application?.dob && new Date(application.dob),
+        // tenantDob: application?.dob && new Date(application.dob),
         tenantPhone: application ? application?.phone : tenant?.phone,
         tenantEmail: application ? application?.email : tenant?.email,
         organizationName: application?.organizationName ? application.organizationName : undefined,
@@ -252,11 +278,164 @@ function RentalForm({
         services: [],
       }
     },
-    
+    // defaultValues: {
+    //   "propertyId": "6bdca7ac-a3d9-4fc8-87b2-4435665fd423",
+    //   "property": {
+    //     "id": "6bdca7ac-a3d9-4fc8-87b2-4435665fd423",
+    //     "creatorId": "00000000-0000-0000-0000-000000000000",
+    //     "name": "Phòng trọ Bình Minh",
+    //     "building": null,
+    //     "project": null,
+    //     "area": 20,
+    //     "numberOfFloors": null,
+    //     "yearBuilt": 2019,
+    //     "orientation": "s",
+    //     "entranceWidth": null,
+    //     "facade": null,
+    //     "fullAddress": "82 Nguyễn Tuân",
+    //     "district": "",
+    //     "city": "",
+    //     "ward": null,
+    //     "lat": 20.9972238,
+    //     "lng": 105.8021945,
+    //     "primaryImage": 27319,
+    //     "description": null,
+    //     "type": "ROOM",
+    //     "isPublic": false,
+    //     "createdAt": "2024-02-05T17:28:41.805551+07:00",
+    //     "updatedAt": "2024-03-26T23:27:39.178409+07:00",
+    //     "managers": [],
+    //     "features": [],
+    //     "media": [
+    //       {
+    //         "id": 27317,
+    //         "propertyId": "6bdca7ac-a3d9-4fc8-87b2-4435665fd423",
+    //         "url": "https://youtu.be/Bxdt0VI3iEg?si=XeO-h4zqDnW1Zbk3",
+    //         "type": "VIDEO",
+    //         "description": ""
+    //       },
+    //       {
+    //         "id": 27318,
+    //         "propertyId": "6bdca7ac-a3d9-4fc8-87b2-4435665fd423",
+    //         "url": "http://localhost:4566/rrms-image/e0a8d123-c55b-4230-91e8-bd1b7b762366/20231215143502-f59f_wm-1707128921422",
+    //         "type": "IMAGE",
+    //         "description": "Phòng ngủ"
+    //       },
+    //       {
+    //         "id": 27319,
+    //         "propertyId": "6bdca7ac-a3d9-4fc8-87b2-4435665fd423",
+    //         "url": "http://localhost:4566/rrms-image/e0a8d123-c55b-4230-91e8-bd1b7b762366/20231215143502-b4cb_wm-1707128921481",
+    //         "type": "IMAGE",
+    //         "description": "Phòng khách 1"
+    //       },
+    //       {
+    //         "id": 27320,
+    //         "propertyId": "6bdca7ac-a3d9-4fc8-87b2-4435665fd423",
+    //         "url": "http://localhost:4566/rrms-image/e0a8d123-c55b-4230-91e8-bd1b7b762366/20231215143502-8356_wm-1707128921534",
+    //         "type": "IMAGE",
+    //         "description": "Phòng bếp"
+    //       }
+    //     ],
+    //     "tags": []
+    //   },
+    //   "unitId": "1b89ae5c-3e4e-4a6b-8873-3e49f95390b0",
+    //   "unit": {
+    //     "id": "1b89ae5c-3e4e-4a6b-8873-3e49f95390b0",
+    //     "propertyId": "6bdca7ac-a3d9-4fc8-87b2-4435665fd423",
+    //     "name": "P203",
+    //     "area": 20,
+    //     "floor": 2,
+    //     "numberOfLivingRooms": 0,
+    //     "numberOfBedrooms": 0,
+    //     "numberOfBathrooms": 0,
+    //     "numberOfToilets": 0,
+    //     "numberOfKitchens": 0,
+    //     "numberOfBalconies": 0,
+    //     "type": "ROOM",
+    //     "createdAt": "2024-02-05T17:28:41.895128+07:00",
+    //     "updatedAt": "2024-02-05T17:28:41.895128+07:00",
+    //     "amenities": [
+    //       {
+    //         "unitId": "1b89ae5c-3e4e-4a6b-8873-3e49f95390b0",
+    //         "amenityId": 1,
+    //         "description": "Đồ gỗ"
+    //       },
+    //       {
+    //         "unitId": "1b89ae5c-3e4e-4a6b-8873-3e49f95390b0",
+    //         "amenityId": 7,
+    //         "description": "Panasonic"
+    //       }
+    //     ],
+    //     "media": [
+    //       {
+    //         "id": 3,
+    //         "unitId": "1b89ae5c-3e4e-4a6b-8873-3e49f95390b0",
+    //         "url": "http://localhost:4566/rrms-image/e0a8d123-c55b-4230-91e8-bd1b7b762366/20231215143502-80ed_wm-1707128921683",
+    //         "type": "IMAGE",
+    //         "description": null
+    //       },
+    //       {
+    //         "id": 4,
+    //         "unitId": "1b89ae5c-3e4e-4a6b-8873-3e49f95390b0",
+    //         "url": "http://localhost:4566/rrms-image/e0a8d123-c55b-4230-91e8-bd1b7b762366/20231215143502-36a8_wm-1707128921728",
+    //         "type": "IMAGE",
+    //         "description": null
+    //       }
+    //     ]
+    //   },
+    //   "tenant": {
+    //     "profileImage": {
+    //       "name": "Mona_Lisa.jpg",
+    //       "size": 353433,
+    //       "type": "image/jpeg",
+    //       "url": "blob:http://localhost:3000/bb658348-bdb6-4f31-a871-ff5abd0bfdf6"
+    //     },
+    //     "tenantType": "INDIVIDUAL",
+    //     "tenantName": "Nguyen Van A",
+    //     "tenantPhone": "0912343457",
+    //     "tenantEmail": "anv12234@gmail.com",
+    //     "pets": [
+    //       {
+    //         "type": "dog",
+    //         "weight": 6,
+    //         "description": "asdf aer wer"
+    //       }
+    //     ],
+    //     "rentalIntention": "RESIDENCE",
+    //     "rentalPeriod": 12,
+    //     "moveinDate": new Date("2024-05-18T00:00:00.000Z"),
+    //     "startDate": new Date("2024-05-18T00:00:00.000Z")
+    //   },
+    //   "services": {
+    //     "paymentType": "POSTPAID",
+    //     "rentalPaymentBasis": 1,
+    //     "depositPaid": false,
+    //     "services": [
+    //       {
+    //         "name": "Internet",
+    //         "setupBy": "LANDLORD",
+    //         "provider": "FPT",
+    //         "price": 250000
+    //       },
+    //       {
+    //         "name": "Bãi đậu xe",
+    //         "setupBy": "LANDLORD",
+    //         "price": 900000
+    //       }
+    //     ],
+    //     "rentalPrice": 4000000,
+    //     "deposit": 120000,
+    //     "electricitySetupBy": "TENANT",
+    //     "waterSetupBy": "LANDLORD",
+    //     "waterPaymentType": "FIXED",
+    //     "waterPrice": 1200
+    //   },
+    // },
+
   });
 
   useEffect(() => {
-    dataCtx.setRentalData(data);
+    dataCtx.setSessionData(sessionData);
   }, []);
 
   function onSubmit(data: FormValues) {
@@ -265,12 +444,15 @@ function RentalForm({
   }
 
   function handleNext() {
-    var o : string = "";
-    switch(step) {
-      case 0: 
+    let o: string | string[] = "";
+    switch (step) {
+      case 0:
+        o = ["propertyId", "unitId", "property", "unit"];
+        break;
+      case 1:
         o = "tenant";
         break;
-      case 1: 
+      case 2:
         o = "services";
         break;
       default:
@@ -278,6 +460,7 @@ function RentalForm({
     form.trigger(o as any)
       .then((v) => {
         if (v) {
+          console.log(form.getValues());
           setStep(step + 1);
         } else {
           console.error(form.formState.errors);
@@ -302,6 +485,10 @@ function RentalForm({
         <DetailedStepper
           steps={[
             {
+              title: "Nhà cho thuê",
+              description: "Chọn nhà cho thuê",
+            },
+            {
               title: "Bên thuê",
               description: "Đại diện bên thuê",
             },
@@ -318,40 +505,43 @@ function RentalForm({
         <Form {...form}>
           <form onSubmit={form.handleSubmit(onSubmit)}>
             {step === 0 ? (
-              <TenantDetails />
+              <PropertySelection />
             ) : step === 1 ? (
+              <TenantDetails />
+            ) : step === 2 ? (
               <div className="space-y-4">
                 <Baseprice />
                 <BasicServices />
                 <ExtraServices />
               </div>
-            ) : step === 2 ? (
+            ) : step === 3 ? (
               <div className="space-y-4">
                 {/* <RentalPayment/> */}
-                <OtherPolicies/>
+                <ExtendLease/>
+                <OtherPolicies />
               </div>
             ) : null}
-          <div className="flex justify-between w-full mt-4">
-            <Button
-              type="button"
-              onClick={() => setStep(step - 1)}
-              disabled={step <= 0}
-            >
-              Quay lại
-            </Button>
-            {step < 2 && (
+            <div className="flex justify-between w-full mt-4">
               <Button
                 type="button"
-                onClick={handleNext}
+                onClick={() => setStep(step - 1)}
+                disabled={step <= 0}
               >
-                Tiếp tục
+                Quay lại
               </Button>
-            )}
-            {/* {JSON.stringify(form.formState.errors)} */}
-            {step === 2 && (
-              <Button type="submit">Hoàn tất</Button>
-            )}
-          </div>
+              {step < 3 && (
+                <Button
+                  type="button"
+                  onClick={handleNext}
+                >
+                  Tiếp tục
+                </Button>
+              )}
+              {JSON.stringify(form.formState.errors)}
+              {step === 3 && (
+                <Button type="submit">Hoàn tất</Button>
+              )}
+            </div>
           </form>
         </Form>
       </div>

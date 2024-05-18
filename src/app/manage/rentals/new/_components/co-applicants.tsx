@@ -211,7 +211,7 @@ export default function CoApplicants() {
       </CardHeader>
       <CardContent>
         <div className="flex flex-col gap-2">
-          {parentForm.watch("tenant.coaps").map((field, index) => (
+          {parentForm.watch("tenant.coaps")?.map((field, index) => (
             <div key={index} className="border flex flex-row justify-between py-2">
               <div className="space-y-2 px-4">
                 <div className="text-lg font-semibold">{field.fullName}</div>

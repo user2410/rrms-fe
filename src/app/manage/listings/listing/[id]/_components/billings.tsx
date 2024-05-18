@@ -77,7 +77,7 @@ export default function Billings() {
                   ({timeLeft < 0 ? (
                     <span className="text-red-600">(Đã hết hạn)</span>
                   ) : (
-                    `${timeLeft.toFixed(0)} ngày`
+                    `còn ${timeLeft.toFixed(0)} ngày`
                   )})
                 </div>
               </div>

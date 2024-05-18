@@ -13,12 +13,12 @@ import FieldMoneyDescription from "@/components/complex/field-money_desc";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import basicServicesInfo from "./basic_services.config.json";
 import { BasicServiceSelect } from "./basic_service_select";
-import { useDataCtx } from "../_context/data.context";
 import { getRegion } from "@/utils/dghcvn";
+import { Property } from "@/models/property";
 
 export default function BasicServices() {
-  const {property} = useDataCtx();
   const form = useFormContext<FormValues>();
+  const property = form.watch("property") as Property;
   const eType = form.watch("services.electricityPaymentType");
   const wType = form.watch("services.waterPaymentType");
 

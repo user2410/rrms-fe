@@ -11,14 +11,16 @@ import { useDataCtx } from "../_context/data.context";
 import { useQuery } from "@tanstack/react-query";
 import { Listing, rentalPolicies } from "@/models/listing";
 import { backendAPI } from "@/libs/axios";
+import { Application } from "@/models/application";
 
 export default function OtherPolicies() {
   const form = useFormContext<FormValues>();
-  const {application, sessionData} = useDataCtx();
+  const {sessionData} = useDataCtx();
   const { fields, append, remove } = useFieldArray({
     control: form.control,
     name: "policies.policies",
   });
+  const application = form.watch("application") as Application;
 
   const query = useQuery<Listing>({
     queryKey: ["listings", "listing", application?.listingId],
@@ -104,7 +106,7 @@ function AddPolicyDialog({ form }: { form: UseFormReturn<FormValues> }) {
 
   return (
     <Dialog onOpenChange={() => dispatch({ type: "reset" })}>
-      <DialogTrigger>
+      <DialogTrigger asChild>
         <Button type="button">Thêm quy định</Button>
       </DialogTrigger>
       <DialogContent>

@@ -4,20 +4,21 @@ import { Input } from "@/components/ui/input";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Separator } from "@/components/ui/separator";
 import { Textarea } from "@/components/ui/textarea";
+import { mapTenantType2Text } from "@/models/application";
+import { Property } from "@/models/property";
 import { addMonths, format } from "date-fns";
+import { useRef } from "react";
 import { useFormContext } from "react-hook-form";
 import { FaCamera } from "react-icons/fa";
+import { FormValues } from "../page";
 import CoApplicants from "./co-applicants";
 import Minors from "./minors";
 import Pets from "./pets";
-import { useRef } from "react";
-import { useDataCtx } from "../_context/data.context";
-import { mapTenantType2Text } from "@/models/application";
-import { FormValues } from "../page";
+import clsx from "clsx";
 
 export default function TenantDetails() {
   const form = useFormContext<FormValues>();
-  const {property} = useDataCtx();
+  const property = form.watch("property") as Property;
   const inputFileRef = useRef<HTMLInputElement>(null);
 
   const currentImage = form.watch('tenant.profileImage');
@@ -205,14 +206,16 @@ export default function TenantDetails() {
                     }} />
                   <button
                     type="button"
-                    className={
+                    className={clsx(
+                      "flex flex-row justify-center items-center",
                       field.value
                         ? "w-56 aspect-[3/4] relative"
-                        : "rounded-full bg-slate-100 w-56 h-56 flex flex-row justify-center items-center"
+                        : "rounded-full bg-slate-100 w-56 h-56"
+                    )
                     }
                     onClick={() => { inputFileRef.current?.click(); }}
                   >
-                    {field.value ? (
+                    {field.value.url ? (
                       <img
                         className="absolute inset-0 object-cover w-full h-full hover:opacity-25"
                         src={field.value.url}

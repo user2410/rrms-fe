@@ -1,6 +1,12 @@
-export const MapTenantTypeToText = {
+import { addMonths } from "date-fns";
+import { Application } from "./application";
+import { Property } from "./property";
+import { Unit } from "./unit";
+
+export const mapTenantTypeToText = {
   INDIVIDUAL: "Cá nhân",
   ORGANIZATION: "Tổ chức",
+  FAMILY: "Hộ gia đình",
 };
 
 export type RentalMinor = {
@@ -54,7 +60,7 @@ export type Rental = {
 
   tenantId?: string;
   profileImage: string;
-  tenantType: "INDIVIDUAL" | "ORGANIZATION";
+  tenantType: "INDIVIDUAL" | "ORGANIZATION" | "FAMILY";
   tenantName: string;
   tenantPhone: string;
   tenantEmail: string;
@@ -63,6 +69,7 @@ export type Rental = {
 
   startDate: Date;
   moveinDate: Date;
+  expiryDate?: Date;
 
   paymentType: "PREPAID" | "POSTPAID";
 
@@ -91,6 +98,19 @@ export type Rental = {
   minors: RentalMinor[];
   pets: RentalPet[];
   services: RentalService[];
+
+  status: 'INPROGRESS' | 'END';
+};
+
+function isRentalOver(r : Rental) {
+  return r.status === "END" || addMonths(new Date(r.startDate), r.rentalPeriod) < new Date();
+}
+
+export type ManagedRental = {
+  rental: Rental;
+  property: Property;
+  unit: Unit;
+  application?: Application;
 };
 
 export const rentalServices = {
@@ -210,3 +230,226 @@ export type RentalComplaintReply = {
   media: string[];
   createdAt: Date;
 };
+
+export const mockedRentals = [
+  {
+    "id": 13,
+    "creatorId": "e0a8d123-c55b-4230-91e8-bd1b7b762366",
+    "propertyId": "36d7a894-bbef-4493-be14-9f4f0ca8c052",
+    "unitId": "e19839d4-7512-41c0-8b74-8fe9fc6a9018",
+    "applicationId": 1,
+    "tenantId": "880ae376-5850-485d-8a9f-7bcd57ff8333",
+    "profileImage": "https://pt123.cdn.static123.com/images/thumbs/900x600/fit/2023/06/17/9e9b8e68ee899b038777e626e8ab6ae2_1686997946.jpg",
+    "tenantType": "FAMILY",
+    "tenantName": "Graham Gamma",
+    "tenantPhone": "0942286285",
+    "tenantEmail": "gamma@email.com",
+    "organizationName": null,
+    "organizationHqAddress": null,
+    "startDate": "2024-03-07T00:00:00Z",
+    "moveinDate": "2024-03-06T00:00:00Z",
+    "rentalPeriod": 12,
+    "paymentType": "POSTPAID",
+    "rentalPrice": 1200000,
+    "rentalPaymentBasis": 1,
+    "rentalIntention": "TENANCY",
+    "deposit": 4000000,
+    "depositPaid": false,
+    "electricitySetupBy": "LANDLORD",
+    "electricityPaymentType": "RETAIL",
+    "electricityCustomerCode": "PD11000059980",
+    "electricityProvider": "EVN Hà Nội",
+    "electricityPrice": null,
+    "waterSetupBy": "TENANT",
+    "waterPaymentType": null,
+    "waterPrice": null,
+    "waterCustomerCode": null,
+    "waterProvider": null,
+    "note": null,
+    "createdAt": "2024-04-29T11:06:16.448337+07:00",
+    "updatedAt": "2024-04-29T11:06:16.448337+07:00",
+    "coaps": [
+      {
+        "rentalId": 13,
+        "fullName": "Nguyen Van A",
+        "dob": "2006-03-15T00:00:00Z",
+        "job": "Luật sư",
+        "income": 50000000,
+        "email": "alpha@email.com",
+        "phone": "0912142214",
+        "description": "asndfjn efnjn wqnei asdf"
+      },
+      {
+        "rentalId": 13,
+        "fullName": "Nguyen Duc B",
+        "dob": "2006-03-02T00:00:00Z",
+        "job": "Luật sư",
+        "income": 40000000,
+        "email": "beta@email.com",
+        "phone": "0941901190",
+        "description": "sadfio qwdiqwn qwioe sndaion"
+      }
+    ],
+    "minors": [
+      {
+        "rentalId": 13,
+        "fullName": "Tran Van C",
+        "dob": "2024-03-14T00:00:00Z",
+        "email": null,
+        "phone": null,
+        "description": "asdf sadfnqw eqwe"
+      },
+      {
+        "rentalId": 13,
+        "fullName": "Dang Van D",
+        "dob": "2024-03-21T00:00:00Z",
+        "email": null,
+        "phone": null,
+        "description": "asdif qwei adnsfin"
+      }
+    ],
+    "pets": [
+      {
+        "rental_id": 13,
+        "type": "dog",
+        "weight": 6,
+        "description": "sadjfn asdfnna qwjne"
+      },
+      {
+        "rental_id": 13,
+        "type": "cat",
+        "weight": 4,
+        "description": "asdijfj qweniwq ef"
+      }
+    ],
+    "services": [
+      {
+        "id": 23,
+        "rental_id": 13,
+        "name": "Internet",
+        "setupBy": "LANDLORD",
+        "provider": "FPT",
+        "price": 250000
+      },
+      {
+        "id": 24,
+        "rental_id": 13,
+        "name": "Bãi đậu xe",
+        "setupBy": "LANDLORD",
+        "provider": null,
+        "price": 150000
+      }
+    ],
+    "policies": null
+  },
+  {
+    "id": 14,
+    "creatorId": "e0a8d123-c55b-4230-91e8-bd1b7b762366",
+    "propertyId": "36d7a894-bbef-4493-be14-9f4f0ca8c052",
+    "unitId": "e19839d4-7512-41c0-8b74-8fe9fc6a9018",
+    "applicationId": 1,
+    "tenantId": "880ae376-5850-485d-8a9f-7bcd57ff8333",
+    "profileImage": "https://pt123.cdn.static123.com/images/thumbs/900x600/fit/2023/06/17/9e9b8e68ee899b038777e626e8ab6ae2_1686997946.jpg",
+    "tenantType": "FAMILY",
+    "tenantName": "Graham Gamma",
+    "tenantPhone": "0942286285",
+    "tenantEmail": "gamma@email.com",
+    "organizationName": null,
+    "organizationHqAddress": null,
+    "startDate": "2024-03-07T00:00:00Z",
+    "moveinDate": "2024-03-06T00:00:00Z",
+    "rentalPeriod": 12,
+    "paymentType": "POSTPAID",
+    "rentalPrice": 1200000,
+    "rentalPaymentBasis": 1,
+    "rentalIntention": "TENANCY",
+    "deposit": 4000000,
+    "depositPaid": false,
+    "electricitySetupBy": "LANDLORD",
+    "electricityPaymentType": "RETAIL",
+    "electricityCustomerCode": "PD11000059980",
+    "electricityProvider": "EVN Hà Nội",
+    "electricityPrice": null,
+    "waterSetupBy": "TENANT",
+    "waterPaymentType": null,
+    "waterPrice": null,
+    "waterCustomerCode": null,
+    "waterProvider": null,
+    "note": null,
+    "createdAt": "2024-04-29T11:06:16.448337+07:00",
+    "updatedAt": "2024-04-29T11:06:16.448337+07:00",
+    "coaps": [
+      {
+        "rentalId": 13,
+        "fullName": "Nguyen Van A",
+        "dob": "2006-03-15T00:00:00Z",
+        "job": "Luật sư",
+        "income": 50000000,
+        "email": "alpha@email.com",
+        "phone": "0912142214",
+        "description": "asndfjn efnjn wqnei asdf"
+      },
+      {
+        "rentalId": 13,
+        "fullName": "Nguyen Duc B",
+        "dob": "2006-03-02T00:00:00Z",
+        "job": "Luật sư",
+        "income": 40000000,
+        "email": "beta@email.com",
+        "phone": "0941901190",
+        "description": "sadfio qwdiqwn qwioe sndaion"
+      }
+    ],
+    "minors": [
+      {
+        "rentalId": 13,
+        "fullName": "Tran Van C",
+        "dob": "2024-03-14T00:00:00Z",
+        "email": null,
+        "phone": null,
+        "description": "asdf sadfnqw eqwe"
+      },
+      {
+        "rentalId": 13,
+        "fullName": "Dang Van D",
+        "dob": "2024-03-21T00:00:00Z",
+        "email": null,
+        "phone": null,
+        "description": "asdif qwei adnsfin"
+      }
+    ],
+    "pets": [
+      {
+        "rental_id": 13,
+        "type": "dog",
+        "weight": 6,
+        "description": "sadjfn asdfnna qwjne"
+      },
+      {
+        "rental_id": 13,
+        "type": "cat",
+        "weight": 4,
+        "description": "asdijfj qweniwq ef"
+      }
+    ],
+    "services": [
+      {
+        "id": 23,
+        "rental_id": 13,
+        "name": "Internet",
+        "setupBy": "LANDLORD",
+        "provider": "FPT",
+        "price": 250000
+      },
+      {
+        "id": 24,
+        "rental_id": 13,
+        "name": "Bãi đậu xe",
+        "setupBy": "LANDLORD",
+        "provider": null,
+        "price": 150000
+      }
+    ],
+    "policies": null
+  },
+];

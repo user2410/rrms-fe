@@ -40,7 +40,7 @@ export default function UploadDialog({
         type: pi.type!.toLowerCase(),
         url: pi.url,
       }) : pi.url;
-      const rental = (await backendAPI.post("/api/rentals/", {
+      const submitData = {
         ...data,
 
         ...data.tenant,
@@ -55,7 +55,11 @@ export default function UploadDialog({
         policies: data.policies.policies,
 
         profileImage,
-      }, {
+      };
+      if(submitData.noticePeriod === 0) {
+        delete submitData.noticePeriod;
+      }
+      const rental = (await backendAPI.post("/api/rentals/", submitData, {
         headers: {
           Authorization: `Bearer ${sessionData.user.accessToken}`,
         },

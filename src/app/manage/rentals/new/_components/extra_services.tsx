@@ -12,7 +12,7 @@ import { DialogClose } from "@radix-ui/react-dialog";
 import { ChangeEvent, useReducer, useState } from "react";
 import { useFieldArray, useFormContext } from "react-hook-form";
 import { FormValues } from "../page";
-import { useDataCtx } from "../_context/data.context";
+import { Application } from "@/models/application";
 
 export default function ExtraServices() {
   const form = useFormContext<FormValues>();
@@ -237,7 +237,8 @@ function ParkingPrice({
   sum?: number,
   setSum: (value: number) => void,
 }) {
-  const {application} = useDataCtx();
+  const form = useFormContext<FormValues>();
+  const application = form.watch("application") as Application;
   const [values, setValues] = useState({
     car: 0,
     nCars: application?.vehicles.filter(v => v.type === "car").length || 0,

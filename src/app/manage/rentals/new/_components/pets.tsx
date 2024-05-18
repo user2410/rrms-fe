@@ -145,7 +145,7 @@ export default function Pets() {
       </CardHeader>
       <CardContent>
         <div className="flex flex-col gap-2">
-          {parentForm.watch("tenant.pets").map((field, index) => (
+          {parentForm.watch("tenant.pets")?.map((field, index) => (
             <div key={index} className="border flex flex-row justify-between py-2">
               <div className="space-y-2 px-4">
                 <div className="text-lg font-semibold">{field.type}</div>
