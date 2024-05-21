@@ -42,21 +42,8 @@ const formSchema = z.object({
 
 export type FormValues = z.infer<typeof formSchema>;
 
-export default function AddressFormWrapper() {
+export default function AddressForm()  {
   const {property, units} = usePropDataCtx();
-
-  return _.isEqual(property, {})
-  ? (<></>)
-  : (<AddressForm property={property} units={units}/>);
-}
-
-function AddressForm({
-  property,
-  units,
-} : {
-  property: Property;
-  units: Unit[];
-}) {
   const session = useSession();
   const [isEditing, setIsEditing] = useState(false);
   const {setPropData} = usePropDataCtx();

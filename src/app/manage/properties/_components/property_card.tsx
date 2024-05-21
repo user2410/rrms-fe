@@ -1,18 +1,21 @@
 "use client";
 
 import { PropertyTypeBadge } from "@/components/complex/property";
-import { Badge } from "@/components/ui/badge";
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
-import { getPropertyFullAddress, getPropertyTypeText, Property, propertyTypesToBgColor } from "@/models/property";
+import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
+import { getPropertyFullAddress, Property } from "@/models/property";
 import Image from "next/image";
 import Link from "next/link";
 import { Fragment } from "react";
+import { ManagedProperty } from "../page";
+import { Separator } from "@/components/ui/separator";
 
 export default function PropertyCard({
-  property
+  data
 }: {
-  property: Property;
+  data: ManagedProperty;
 }) {
+  const {property, listings, rentals} = data;
+
   return (
     <Fragment>
       <Card className="w-full overflow-hidden">
@@ -38,6 +41,17 @@ export default function PropertyCard({
             {getPropertyFullAddress(property)}
           </CardDescription>
         </CardContent>
+        <Separator/>
+        <CardFooter className="py-3 flex-row justify-between">
+          <span className="space-x-2">
+            <span className="text-sm font-light whitespace-nowrap">Đang cho thuê</span>
+            <span className="text-sm font-semibold">{rentals.length}</span>
+          </span>
+          <span className="space-x-2">
+            <span className="text-sm font-semibold">{listings.length}</span>
+            <span className="text-sm font-light whitespace-nowrap">tin đăng</span>
+          </span>
+        </CardFooter>
       </Card>
     </Fragment>
   );

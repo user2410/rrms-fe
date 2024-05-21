@@ -30,8 +30,8 @@ export default function RentArrearTile({
   sessionData: Session;
 }) {
   const arrearsQuery = useQuery<Data>({
-    queryKey: ["manage", "statistic", "arrears"],
-    queryFn: async () => {
+    queryKey: ["manage", "statistic", "arrears", sessionData!.user.accessToken],
+    queryFn: async ({queryKey}) => {
       const startTime = new Date(sessionData.user.user.createdAt);
       const res = (await backendAPI.get<Data>("/api/statistics/rentals/payments/arrears", {
         params: {
@@ -41,7 +41,7 @@ export default function RentArrearTile({
           offset: 0,
         },
         headers: {
-          Authorization: `Bearer ${sessionData.user.accessToken}`,
+          Authorization: `Bearer ${queryKey.at(-1)}`,
         },
       })).data || ([]);
       return res.map((item) => ({

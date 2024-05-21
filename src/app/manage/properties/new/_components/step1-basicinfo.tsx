@@ -94,34 +94,6 @@ export default function Step1BasicInfo() {
           />
         )}
       </div>
-      {propertyType === "APARTMENT" && (
-        <div className="flex flex-row justify-between gap-2">
-          <FormField
-            control={form.control}
-            name="property.project"
-            render={({ field }) => (
-              <FormItem className="grow">
-                <FormLabel>Dự án</FormLabel>
-                <FormControl>
-                  <Input {...field} placeholder="Dự án Thống Nhất Complex"/>
-                </FormControl>
-              </FormItem>
-            )}
-          />
-          <FormField
-            control={form.control}
-            name="property.building"
-            render={({ field }) => (
-              <FormItem className="grow">
-                <FormLabel>Toà nhà</FormLabel>
-                <FormControl>
-                  <Input {...field} placeholder="Tòa nhà Thống Nhất"/>
-                </FormControl>
-              </FormItem>
-            )}
-          />
-        </div>
-      )}
       <FormField
         control={form.control}
         name="property.name"

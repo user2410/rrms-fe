@@ -18,11 +18,11 @@ export default function NewApplications({
 }) {
 
   const query = useQuery<Data>({
-    queryKey: ["manage", "statistic", "applications"],
-    queryFn: async () => {
+    queryKey: ["manage", "statistic", "applications", sessionData!.user.accessToken],
+    queryFn: async ({queryKey}) => {
       return (await backendAPI.get<Data>("/api/statistics/applications", {
         headers: {
-          Authorization: `Bearer ${sessionData.user.accessToken}`,
+          Authorization: `Bearer ${queryKey.at(-1)}`,
         },
       })).data || ([]);
     },

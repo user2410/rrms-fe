@@ -38,7 +38,7 @@ export default function MessageList({
   const textInputRef = useRef<HTMLInputElement>(null);
 
   const query = useQuery<Message[]>({
-    queryKey: ["manage", "applications", "application", applicationData.application.id.toString(), "msg-group", msgGroup.groupId],
+    queryKey: ["manage", "applications", "application", applicationData.application.id.toString(), "msg-group", msgGroup.groupId, sessionData.user.accessToken],
     queryFn: async ({ queryKey }) => {
       var ms = (await backendAPI.get<Message[]>(`/api/chat/group/${queryKey.at(5)}/messages`, {
         params: {
@@ -46,7 +46,7 @@ export default function MessageList({
           offset,
         },
         headers: {
-          Authorization: `Bearer ${sessionData.user.accessToken}`,
+          Authorization: `Bearer ${queryKey.at(-1)}`,
         },
       })).data;
       ms = ms || ([] as Message[]);

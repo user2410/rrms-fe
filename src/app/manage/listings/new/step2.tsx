@@ -32,14 +32,14 @@ export default function Step2() {
   const propertyId = form.watch("propertyId");
 
   const allPropsQuery = useQuery<ManagedProperty[]>({
-    queryKey: ["manage", "listings", "new", "properties"],
-    queryFn: async () => {
-      return (await backendAPI.get<ManagedProperty[]>("/api/properties/my-properties", {
+    queryKey: ["manage", "listings", "new", "properties", session.data?.user.accessToken],
+    queryFn: async ({queryKey}) => {
+      return (await backendAPI.get<ManagedProperty[]>("/api/properties/managed-properties", {
         params: {
           fields: "name,full_address,area,orientation,lat,lng,type,media,year_built,primary_image,created_at,updated_at",
         },
         headers: {
-          Authorization: `Bearer ${session.data?.user.accessToken}`,
+          Authorization: `Bearer ${queryKey.at(-1)}`,
         },
       })).data;
     },
@@ -86,16 +86,16 @@ function SelectedProperty({
 }) {
   const form = useFormContext<ListingFormValues>();
   const selectedPropQuery = useQuery<PropertyData>({
-    queryKey: ['manage', "listings", "new", 'properties', 'property', propertyId],
+    queryKey: ['manage', "listings", "new", 'properties', 'property', propertyId, accessToken],
     queryFn: async ({ queryKey }) => {
       const propertyQuery = await backendAPI.get(`/api/properties/property/${queryKey.at(5)}`, {
         headers: {
-          Authorization: `Bearer ${accessToken}`,
+          Authorization: `Bearer ${queryKey.at(-1)}`,
         },
       });
       const unitsQuery = await backendAPI.get(`/api/properties/property/${queryKey.at(5)}/units`, {
         headers: {
-          Authorization: `Bearer ${accessToken}`,
+          Authorization: `Bearer ${queryKey.at(-1)}`,
         },
       });
       return {

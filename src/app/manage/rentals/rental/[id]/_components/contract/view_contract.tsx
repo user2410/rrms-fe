@@ -13,11 +13,11 @@ export default function ViewContractWrapper() {
   const data = useDataCtx();
 
   const query = useQuery<Contract>({
-    queryKey: ["manage", "rentals", "rental", data.rental.id, "contract"],
-    queryFn: async () => {
+    queryKey: ["manage", "rentals", "rental", data.rental.id, "contract", data.sessionData.user.accessToken],
+    queryFn: async ({queryKey}) => {
       return (await backendAPI.get<Contract>(`/api/rentals/rental/${data.rental.id}/contract`, {
         headers: {
-          Authorization: `Bearer ${data.sessionData.user.accessToken}`
+          Authorization: `Bearer ${queryKey.at(-1)}`
         }
       })).data;
     },

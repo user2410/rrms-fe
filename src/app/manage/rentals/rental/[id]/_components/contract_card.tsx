@@ -23,11 +23,11 @@ export default function ContractCard() {
   const { sessionData, rental } = useDataCtx();
 
   const query = useQuery<ContractPingData | null>({
-    queryKey: ["manage", "rentals", "rental", rental.id, "ping-contract"],
-    queryFn: async () => {
+    queryKey: ["manage", "rentals", "rental", rental.id, "ping-contract", sessionData.user.accessToken],
+    queryFn: async ({queryKey}) => {
       const res = await backendAPI.get<ContractPingData>(`/api/rentals/rental/${rental.id}/ping-contract`, {
         headers: {
-          Authorization: `Bearer ${sessionData.user.accessToken}`
+          Authorization: `Bearer ${queryKey.at(-1)}`
         },
         validateStatus: (status) => status === 200 || status === 404,
       });

@@ -24,21 +24,21 @@ export default function ArrearItem({
   sessionData: Session;
 }) {
   const query = useQuery<Data>({
-    queryKey: ["manage", "arrears", "rental", item.id, item.rentalId],
-    queryFn: async () => {
-      const rental = (await backendAPI.get<Rental>(`/api/rentals/rental/${item.rentalId}`, {
+    queryKey: ["manage", "arrears", "rental", item.id, item.rentalId, sessionData!.user.accessToken],
+    queryFn: async ({queryKey}) => {
+      const rental = (await backendAPI.get<Rental>(`/api/rentals/rental/${queryKey.at(4)}`, {
         headers: {
-          Authorization: `Bearer ${sessionData!.user.accessToken}`,
+          Authorization: `Bearer ${queryKey.at(-1)}`,
         }
       })).data;
       const property = (await backendAPI.get<Property>(`/api/properties/property/${rental.propertyId}`, {
         headers: {
-          Authorization: `Bearer ${sessionData!.user.accessToken}`,
+          Authorization: `Bearer ${queryKey.at(-1)}`,
         }
       })).data;
       const unit = (await backendAPI.get<Unit>(`/api/units/unit/${rental.unitId}`, {
         headers: {
-          Authorization: `Bearer ${sessionData!.user.accessToken}`,
+          Authorization: `Bearer ${queryKey.at(-1)}`,
         }
       })).data;
       return { rental, property, unit } as Data;

@@ -47,15 +47,15 @@ export default function WelcomeTile({
   sessionData: Session;
 }) {
   const query = useQuery<Data>({
-    queryKey: ["manage", "statistic", "properties"],
-    queryFn: async () => {
+    queryKey: ["manage", "statistic", "properties", sessionData!.user.accessToken],
+    queryFn: async ({queryKey}) => {
       return (await backendAPI.get<Data>("/api/statistics/properties", {
         params: {
           limit: 2,
           offset: 0,
         },
         headers: {
-          Authorization: `Bearer ${sessionData.user.accessToken}`,
+          Authorization: `Bearer ${queryKey.at(-1)}`,
         },
       })).data;
     },
@@ -67,15 +67,15 @@ export default function WelcomeTile({
     properties: Property[]
     units: Unit[];
   }>({
-    queryKey: ["manage", "statistic", "properties", "details"],
-    queryFn: async () => {
+    queryKey: ["manage", "statistic", "properties", "details", sessionData!.user.accessToken],
+    queryFn: async ({queryKey}) => {
       const properties = (await backendAPI.get<Property[]>("/api/properties/ids", {
         params: {
           propIds: query.data!.properties,
           fields: "name,full_address,city,district,ward",
         },
         headers: {
-          Authorization: `Bearer ${sessionData.user.accessToken}`,
+          Authorization: `Bearer ${queryKey.at(-1)}`,
         },
       })).data;
       const units = (await backendAPI.get<Unit[]>("/api/units/ids", {
@@ -84,7 +84,7 @@ export default function WelcomeTile({
           fields: "name,property_id",
         },
         headers: {
-          Authorization: `Bearer ${sessionData.user.accessToken}`,
+          Authorization: `Bearer ${queryKey.at(-1)}`,
         },
       })).data;
       return {

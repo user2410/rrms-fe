@@ -22,14 +22,14 @@ export default function ChatTab({
   // const groupName = getApplicationMsgGroupName(data.application.id);
   const {application} = data;
   const query = useQuery<MsgGroup | null>({
-    queryKey: ["manage", "applications", "application", application.id, "msg-group"],
+    queryKey: ["manage", "applications", "application", application.id, "msg-group", sessionData.user.accessToken],
     queryFn: async ({queryKey}) => {
       const res = await backendAPI.get<MsgGroup | null>(
         `/api/applications/application/${queryKey.at(3)}/msg-group`, 
         {
           validateStatus: (status) => status === 200 || status === 404,
           headers: {
-            Authorization: `Bearer ${sessionData.user.accessToken}`,
+            Authorization: `Bearer ${queryKey.at(-1)}`,
           },
         },
       );

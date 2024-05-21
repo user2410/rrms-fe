@@ -38,11 +38,11 @@ export default function PaymentPage({ params: { id } }: { params: { id: string }
   });
 
   const query = useQuery<Payment>({
-    queryKey: ["manage", "payment", id],
-    queryFn: async () => {
+    queryKey: ["manage", "payment", id, session.data?.user.accessToken],
+    queryFn: async ({queryKey}) => {
       return (await backendAPI.get<Payment>("/api/payments/payment/" + id, {
         headers: {
-          Authorization: `Bearer ${session.data?.user.accessToken}`
+          Authorization: `Bearer ${queryKey.at(-1)}`
         },
       })).data;
     },

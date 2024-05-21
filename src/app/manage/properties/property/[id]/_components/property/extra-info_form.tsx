@@ -44,21 +44,8 @@ const formSchema = z.object({
 
 type FormValues = z.infer<typeof formSchema>;
 
-export default function ExtraInfoFormWrapper() {
+export default function ExtraInfoForm(){
   const {property, units} = usePropDataCtx();
-
-  return _.isEqual(property, {})
-  ? (<></>)
-  : (<ExtraInfoForm property={property} units={units}/>);
-}
-
-function ExtraInfoForm({
-  property,
-  units,
-} : {
-  property: Property;
-  units: Unit[];
-}) {
   const session = useSession();
   const [isEditing, setIsEditing] = useState(false);
   const { setPropData } = usePropDataCtx();

@@ -12,7 +12,7 @@ import toast from "react-hot-toast";
 import * as z from "zod";
 import { usePropDataCtx } from "../../_context/property_data.context";
 import { Property } from "@/models/property";
-import { Unit } from "@/models/unit";
+import { BalconyIcon, BathroomIcon, BedroomIcon, KitchenIcon, LivingroomIcon, ToiletIcon, Unit } from "@/models/unit";
 import _ from "lodash";
 import { useSession } from "next-auth/react";
 
@@ -41,24 +41,13 @@ const formSchema = z.object({
 
 type FormValues = z.infer<typeof formSchema>;
 
-export default function GeneralInfoFormWrapper() {
-  const {property, units} = usePropDataCtx();
-
-  return _.isEqual(property, {})
-  ? (<></>)
-  : (<GeneralInfoForm property={property} units={units}/>);
-}
-
-function GeneralInfoForm({
-  property,
-  units,
-} : {
-  property: Property;
-  units: Unit[];
-}) {
+export default function GeneralInfoForm() {
+  const { property, units } = usePropDataCtx();
   const session = useSession();
   const [isEditing, setIsEditing] = useState(false);
-  const {setPropData} = usePropDataCtx();
+  const { setPropData } = usePropDataCtx();
+
+  const multiUnit = units.length > 1;
 
   const toggleEdit = () => setIsEditing((current) => !current);
 
@@ -144,7 +133,7 @@ function GeneralInfoForm({
               )}
             </div>
             {property.type === "APARTMENT" && (
-              <div className="flex flex-row justify-between gap-2">
+              <div className="grid grid-cols-2 gap-2">
                 <div className="space-y-2">
                   <div className="font-medium">
                     Dự án
@@ -193,11 +182,11 @@ function GeneralInfoForm({
                 </div>
               </div>
             )}
-            <div className="flex justify-between gap-2">
-              {["PRIVATE", "MINIAPARTMENT"].includes(property.type) && (
+            <div className="grid grid-cols-2 gap-2">
+              {["PRIVATE", "VILLA", "MINIAPARTMENT"].includes(property.type) && (
                 <div className="space-y-2">
                   <div className="font-medium">
-                    Số tầng
+                    tầng
                   </div>
                   {isEditing ? (
                     <FormField
@@ -222,36 +211,104 @@ function GeneralInfoForm({
                   )}
                 </div>
               )}
-              {!(["APARTMENT", "ROOM"].includes(property.type) && units.length > 1) && (
-                <div className="space-y-2">
-                  <div className="font-medium">
-                    Diện tích
-                  </div>
-                  {isEditing ? (
-                    <FormField
-                      control={form.control}
-                      name="area"
-                      render={({ field }) => (
-                        <FormItem className="grow">
-                          <FormControl>
-                            <Input
-                              {...field}
-                              type="number"
-                              min={1}
-                              onChange={(e) => field.onChange(e.target.valueAsNumber)} />
-                          </FormControl>
-                          <FormMessage />
-                        </FormItem>
-                      )}
-                    />
-                  ) : (
-                    <p className="text-sm mt-2">
-                      {property.area}m<sup>2</sup>
-                    </p>
-                  )}
+              <div className="space-y-2">
+                <div className="font-medium">
+                  Tổng diện tích
                 </div>
-              )}
+                {isEditing ? (
+                  <FormField
+                    control={form.control}
+                    name="area"
+                    render={({ field }) => (
+                      <FormItem className="grow">
+                        <FormControl>
+                          <Input
+                            {...field}
+                            type="number"
+                            min={1}
+                            onChange={(e) => field.onChange(e.target.valueAsNumber)} />
+                        </FormControl>
+                        <FormMessage />
+                      </FormItem>
+                    )}
+                  />
+                ) : (
+                  <p className="text-sm mt-2">
+                    {property.area}m<sup>2</sup>
+                  </p>
+                )}
+              </div>
             </div>
+            {(units.length === 1) && (
+              <div className="grid grid-cols-2 gap-2">
+                {units[0]?.numberOfBedrooms && (
+                  <div className="space-y-2">
+                    <div className="flex flex-row items-center gap-1 font-medium">
+                      <BedroomIcon size={18} />
+                      Phòng ngủ
+                    </div>
+                    <p className="text-sm mt-2">
+                      {units[0].numberOfBedrooms}
+                    </p>
+                  </div>
+                )}
+                {units[0]?.numberOfBathrooms && (
+                  <div className="space-y-2">
+                    <div className="flex flex-row items-center gap-1 font-medium">
+                      <BathroomIcon size={18} />
+                      Phòng tắm
+                    </div>
+                    <p className="text-sm mt-2">
+                      {units[0].numberOfBathrooms}
+                    </p>
+                  </div>
+                )}
+                {units[0]?.numberOfToilets && (
+                  <div className="space-y-2">
+                    <div className="flex flex-row items-center gap-1 font-medium">
+                      <ToiletIcon size={18} />
+                      Nhà vệ sinh
+                    </div>
+                    <p className="text-sm mt-2">
+                      {units[0].numberOfToilets}
+                    </p>
+                  </div>
+                )}
+                {units[0]?.numberOfBalconies && (
+                  <div className="space-y-2">
+                    <div className="flex flex-row items-center gap-1 font-medium">
+                      <BalconyIcon size={18} />
+                      Ban công
+                    </div>
+                    <p className="text-sm mt-2">
+                      {units[0].numberOfBalconies}
+                    </p>
+                  </div>
+                )}
+                {units[0]?.numberOfLivingRooms && (
+                  <div className="space-y-2">
+                    <div className="flex flex-row items-center gap-1 font-medium">
+                      <LivingroomIcon size={18} />
+                      Phòng khách
+                    </div>
+                    <p className="text-sm mt-2">
+                      {units[0].numberOfLivingRooms}
+                    </p>
+                  </div>
+                )}
+                {units[0]?.numberOfKitchens && (
+                  <div className="space-y-2">
+                    <div className="flex flex-row items-center gap-1 font-medium">
+                      <KitchenIcon size={18} />
+                      Phòng bếp
+                    </div>
+                    <p className="text-sm mt-2">
+                      {units[0].numberOfKitchens}
+                    </p>
+                  </div>
+                )}
+              </div>
+            )}
             <div className="space-y-2">
               <div className="font-medium">
                 Mô tả
@@ -264,14 +321,17 @@ function GeneralInfoForm({
                     <FormItem>
                       <FormControl>
                         {/* @ts-ignore */}
-                        <Editor {...field}/>
+                        <Editor {...field} />
                       </FormControl>
                       <FormMessage />
                     </FormItem>
                   )}
                 />
               ) : (
-                <div dangerouslySetInnerHTML={{__html: property.description || "N/A"}} />
+                <div
+                  dangerouslySetInnerHTML={{ __html: property.description || "N/A" }}
+                  className="px-2 py-1 bg-slate-200 rounded-md text-sm"
+                />
               )}
             </div>
             {isEditing && (

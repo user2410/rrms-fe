@@ -23,7 +23,7 @@ export default function PlanTile({
   const [selectedDate, setSelectedDate] = useState<number>(0);
 
   const query = useQuery<DataItem[]>({
-    queryKey: ["manage", "reminders", date],
+    queryKey: ["manage", "reminders", date, sessionData.user.accessToken],
     queryFn: async ({queryKey}) => {
       const days = [...Array(7).keys()].map((i) => addDays(new Date(queryKey.at(2) as any), i));
       const res : DataItem[] = [];
@@ -38,7 +38,7 @@ export default function PlanTile({
             maxStartAt,
           },
           headers: {
-            Authorization: `Bearer ${sessionData.user.accessToken}`,
+            Authorization: `Bearer ${queryKey.at(-1)}`,
           },
         })).data || ([] as Reminder[]);
         res.push({

@@ -23,11 +23,11 @@ export default function PaymentsWrapper() {
   const { rental, sessionData } = useDataCtx();
 
   const query = useQuery<RentalPayment[]>({
-    queryKey: ["manage", "rentals", "rental", rental.id, "payments"],
+    queryKey: ["manage", "rentals", "rental", rental.id, "payments", sessionData.user.accessToken],
     queryFn: async ({ queryKey }) => {
       const res = (await backendAPI.get<RentalPayment[]>(`/api/rental-payments/rental/${queryKey.at(3)}`, {
         headers: {
-          Authorization: `Bearer ${sessionData?.user.accessToken}`,
+          Authorization: `Bearer ${queryKey.at(-1)}`,
         },
       })).data || [];
 

@@ -137,26 +137,26 @@ export default function NewRentalPage() {
   const session = useSession();
 
   const query = useQuery<Data>({
-    queryKey: ["manage", "rentals", "new", "rental", applicationId, propertyId, unitId],
+    queryKey: ["manage", "rentals", "new", "rental", applicationId, propertyId, unitId, session.data?.user.accessToken],
     queryFn: async ({ queryKey }) => {
       var application: Application | undefined;
       if (queryKey.at(4)) {
         application = (await backendAPI.get<Application>(`/api/applications/application/${queryKey.at(4)}`, {
           headers: {
-            Authorization: `Bearer ${session.data!.user.accessToken}`,
+            Authorization: `Bearer ${queryKey.at(-1)}`,
           },
         })).data;
       }
 
       const property = queryKey.at(5) ? (await backendAPI.get<Property>(`/api/properties/property/${queryKey.at(5)}`, {
         headers: {
-          Authorization: `Bearer ${session.data!.user.accessToken}`,
+          Authorization: `Bearer ${queryKey.at(-1)}`,
         },
       })).data : undefined;
 
       const unit = queryKey.at(6) ? (await backendAPI.get<Unit>(`/api/units/unit/${queryKey.at(6)}`, {
         headers: {
-          Authorization: `Bearer ${session.data!.user.accessToken}`,
+          Authorization: `Bearer ${queryKey.at(-1)}`,
         },
       })).data : undefined;
 
@@ -173,7 +173,7 @@ export default function NewRentalPage() {
             ids: userIds,
           },
           headers: {
-            Authorization: `Bearer ${session.data!.user.accessToken}`,
+            Authorization: `Bearer ${queryKey.at(-1)}`,
           },
         })).data;
         tenant = users.find(u => (u.id === application?.creatorId));

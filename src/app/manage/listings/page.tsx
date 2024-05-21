@@ -22,14 +22,14 @@ export default function ManageListingsPage() {
   const router = useRouter();
 
   const query = useQuery<ManagedListing[]>({
-    queryKey: ['manage', 'listings'],
-    queryFn: async () => {
+    queryKey: ['manage', 'listings', session.data?.user.accessToken],
+    queryFn: async ({queryKey}) => {
       const listings = (await backendAPI.get<Listing[]>("api/listings/my-listings", {
         params: {
           fields: "property_id,units,title,price,active,created_at,updated_at,expired_at",
         },
         headers: {
-          Authorization: `Bearer ${session.data?.user.accessToken}`,
+          Authorization: `Bearer ${queryKey.at(-1)}`,
         },
       })).data || ([]);
       const properties = (await backendAPI.get<Property[]>("/api/properties/ids", {
@@ -38,7 +38,7 @@ export default function ManageListingsPage() {
           propIds: listings.map((listing: Listing) => listing.propertyId),
         },
         headers: {
-          Authorization: `Bearer ${session.data?.user.accessToken}`,
+          Authorization: `Bearer ${queryKey.at(-1)}`,
         }
       })).data || ([]);
       console.log('unitIds:',listings.map((listing: Listing) => listing.units.map((unit) => unit.unitId)).flat());
@@ -48,7 +48,7 @@ export default function ManageListingsPage() {
           unitIds: listings.map((listing: Listing) => listing.units.map((unit) => unit.unitId)).flat(),
         },
         headers: {
-          Authorization: `Bearer ${session.data?.user.accessToken}`,
+          Authorization: `Bearer ${queryKey.at(-1)}`,
         }
       })).data || ([]);
 

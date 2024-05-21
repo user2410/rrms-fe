@@ -12,11 +12,11 @@ export default function AccountTab() {
   const session = useSession();
 
   const query = useQuery<User>({
-    queryKey: ["manage", "my-account"],
-    queryFn: async () => {
+    queryKey: ["manage", "my-account", session.data?.user.accessToken],
+    queryFn: async ({queryKey}) => {
       return (await backendAPI.get<User>("/api/auth/credential/me", {
         headers: {
-          Authorization: `Bearer ${session.data?.user.accessToken}`,
+          Authorization: `Bearer ${queryKey.at(-1)}`,
         },
       })).data;
     },

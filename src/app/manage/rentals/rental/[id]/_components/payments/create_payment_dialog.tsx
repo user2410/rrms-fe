@@ -44,11 +44,11 @@ export default function CreatePaymentDialog() {
   const svcId = form.watch('svcId');
 
   const complaintsQuery = useQuery<RentalComplaint[]>({
-    queryKey: ["manage", "rentals", "rental", rental.id, 'complaints'],
+    queryKey: ["manage", "rentals", "rental", rental.id, 'complaints', sessionData.user.accessToken],
     queryFn: async ({ queryKey }) => {
       const res = (await backendAPI.get<RentalComplaint[]>(`/api/rental-complaints/rental/${queryKey[3]}`, {
         headers: {
-          Authorization: `Bearer ${sessionData.user.accessToken}`
+          Authorization: `Bearer ${queryKey.at(-1)}`
         },
       })).data;
       if (!res) {

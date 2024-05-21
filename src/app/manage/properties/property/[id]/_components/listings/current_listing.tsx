@@ -26,7 +26,7 @@ export default function CurrentListing({
   const router = useRouter();
 
   const query = useQuery<Listing[]>({
-    queryKey: ["manage", "properties", "property", property.id, "listings", "current"],
+    queryKey: ["manage", "properties", "property", property.id, "listings", "current", session.data!.user.accessToken],
     queryFn: async ({ queryKey }) => {
       return (await backendAPI.get<Listing[]>(
         `/api/properties/property/${queryKey.at(3)}/listings`,
@@ -36,7 +36,7 @@ export default function CurrentListing({
             expired: false,
           },
           headers: {
-            Authorization: `Bearer ${session.data!.user.accessToken}`,
+            Authorization: `Bearer ${queryKey.at(-1)}`,
           },
         }
       )).data || ([]);

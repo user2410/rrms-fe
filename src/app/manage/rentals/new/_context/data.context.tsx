@@ -1,8 +1,3 @@
-import { Application } from "@/models/application";
-import { Property } from "@/models/property";
-import { Rental } from "@/models/rental";
-import { Unit } from "@/models/unit";
-import { User } from "@/models/user";
 import { Session } from "next-auth";
 import { PropsWithChildren, createContext, useContext, useMemo, useReducer } from "react";
 

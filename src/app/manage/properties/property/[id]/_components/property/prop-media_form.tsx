@@ -45,21 +45,8 @@ const formSchema = z.object({
 
 type FormValues = z.infer<typeof formSchema>;
 
-export default function MediaFormWrapper() {
+export default function MediaForm() {
   const { property, units } = usePropDataCtx();
-
-  return _.isEqual(property, {})
-    ? (<></>)
-    : (<MediaForm property={property} units={units} />);
-}
-
-function MediaForm({
-  property,
-  units,
-}: {
-  property: Property;
-  units: Unit[];
-}) {
   const session = useSession();
   const [isEditing, setIsEditing] = useState(false);
   const [newMedia, setNewMedia] = useState<string[]>([]);

@@ -7,6 +7,7 @@ export type PropertyType =
   'ROOM' | 
   'STORE' |
   'OFFICE' |
+  'VILLA' |
   'MINIAPARTMENT'
 
 export type PropertyManager = {
@@ -70,6 +71,17 @@ export type Property = {
   updatedAt: Date;
 };
 
+export type NewPropertyManagerRequest = {
+  id: number;
+  creatorId: string;
+  propertyId: string;
+  userId: string;
+  email: string;
+  approved: boolean;
+  createdAt: Date;
+  updatedAt: Date;
+}
+
 export function getPrimaryImage (property: Property) {
   return property.media.find(m => m.id === property.primaryImage)?.url || "/img/property_image_placeholder.webp";
 }
@@ -90,6 +102,7 @@ export const mapPropertyTypeToText = {
   ROOM: 'Phòng trọ',
   OFFICE: 'Văn phòng',
   STORE: 'Cửa hàng',
+  VILLA: 'Biệt thự',
   MINIAPARTMENT: 'Chung cư mini',
 };
 

@@ -16,7 +16,7 @@ export default function OldListings({
   const session = useSession();
   
   const query = useQuery<Listing[]>({
-    queryKey: ["manage", "properties", "property", property.id, "listings", "old"],
+    queryKey: ["manage", "properties", "property", property.id, "listings", "old", session.data!.user.accessToken],
     queryFn: async ({ queryKey }) => {
       return (await backendAPI.get<Listing[]>(
         `/api/properties/property/${queryKey.at(3)}/listings`, 
@@ -28,7 +28,7 @@ export default function OldListings({
             offset: 0,
           },
           headers: {
-            Authorization: `Bearer ${session.data!.user.accessToken}`,
+            Authorization: `Bearer ${queryKey.at(-1)}`,
           },
         }
       )).data || ([]);

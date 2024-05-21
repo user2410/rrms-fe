@@ -52,11 +52,11 @@ export default function ComplaintItem({
   const isOnTheSameSideWithCreator = isOnTheSameSide(item.creatorId);
 
   const query = useQuery<RentalComplaintReply[]>({
-    queryKey: ["manage", "rentals", "rental", item.rentalId, "complaints", item.id, "replies"],
+    queryKey: ["manage", "rentals", "rental", item.rentalId, "complaints", item.id, "replies", sessionData.user.accessToken],
     queryFn: async ({ queryKey }) => {
       const res = (await backendAPI.get<RentalComplaintReply[]>(`/api/rental-complaints/rental-complaint/${queryKey[5]}/replies`, {
         headers: {
-          Authorization: `Bearer ${sessionData.user.accessToken}`
+          Authorization: `Bearer ${queryKey.at(-1)}`
         }
       })).data;
       if (!res) {

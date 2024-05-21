@@ -23,14 +23,14 @@ export default function ManagedRentalsPage() {
   const router = useRouter();
   const session = useSession();
   const query = useQuery<ManagedRental[]>({
-    queryKey: ["managed", "rentals", "managed-rentals"],
-    queryFn: async () => {
+    queryKey: ["managed", "rentals", "managed-rentals", session.data!.user.accessToken],
+    queryFn: async ({queryKey}) => {
       const rentals = (await backendAPI.get<Rental[]>("/api/rentals/managed-rentals", {
         params: {
           fields: "property_id,unit_id,tenant_id,tenant_name,tenant_email,tenant_phone,profile_image,organization_name,start_date,movein_date,rental_period",
         },
         headers: {
-          Authorization: `Bearer ${session.data?.user.accessToken}`,
+          Authorization: `Bearer ${queryKey.at(-1)}`,
         }
       })).data || ([]);
       const propIds = new Set<string>();
@@ -41,7 +41,7 @@ export default function ManagedRentalsPage() {
           propIds: [...propIds],
         },
         headers: {
-          Authorization: `Bearer ${session.data?.user.accessToken}`,
+          Authorization: `Bearer ${queryKey.at(-1)}`,
         }
       })).data || ([]);
       const unitIds = new Set<string>();
@@ -52,7 +52,7 @@ export default function ManagedRentalsPage() {
           unitIds: [...unitIds],
         },
         headers: {
-          Authorization: `Bearer ${session.data?.user.accessToken}`,
+          Authorization: `Bearer ${queryKey.at(-1)}`,
         }
       })).data || ([]);
       return rentals.map((rental) => {

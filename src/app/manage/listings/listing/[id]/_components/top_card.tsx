@@ -14,14 +14,14 @@ export default function TopCard() {
   const { listing, property, sessionData } = useDataCtx();
 
   const query = useQuery<User>({
-    queryKey: ["manage", "listings", "listing", "user", listing.creatorId],
+    queryKey: ["manage", "listings", "listing", "user", listing.creatorId, sessionData?.user.accessToken],
     queryFn: async ({ queryKey }) => {
       const res = (await backendAPI.get<User[]>("/api/auth/credential/ids", {
         params: {
           ids: queryKey.at(4),
         },
         headers: {
-          Authorization: `Bearer ${sessionData.user.accessToken}`,
+          Authorization: `Bearer ${queryKey.at(-1)}`,
         }
       })).data;
       return res[0];

@@ -23,11 +23,11 @@ export default function Billings() {
   const timeLeft = ((new Date(listing.expiredAt).getTime() - Date.now()) / (24 * 60 * 60 * 1000));
 
   const query = useQuery<Payment[]>({
-    queryKey: ["manage", "listings", "listing", "payments", listing.id],
-    queryFn: async () => {
+    queryKey: ["manage", "listings", "listing", "payments", listing.id, sessionData?.user.accessToken],
+    queryFn: async ({queryKey}) => {
       return (await backendAPI.get<Payment[]>(`/api/listings/listing/${listing.id}/payments`, {
         headers: {
-          Authorization: `Bearer ${sessionData?.user.accessToken}`,
+          Authorization: `Bearer ${queryKey.at(-1)}`,
         },
       })).data || ([]);
     },

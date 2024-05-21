@@ -29,11 +29,11 @@ export default function ApplicationPage({ params }: { params: { id: string } }) 
   const { id } = params;
 
   const query = useQuery<ManagedApplication>({
-    queryKey: ["manage", "rental", "applications", "application", id],
+    queryKey: ["manage", "rental", "applications", "application", id, session.data?.user.accessToken],
     queryFn: async ({ queryKey }) => {
       const application = (await backendAPI.get<Application>(`/api/applications/application/${queryKey.at(4)}`, {
         headers: {
-          Authorization: `Bearer ${session.data?.user.accessToken}`,
+          Authorization: `Bearer ${queryKey.at(-1)}`,
         },
         transformResponse: TransformApplicationRESTResponse,
       })).data;
@@ -42,19 +42,19 @@ export default function ApplicationPage({ params }: { params: { id: string } }) 
           status: "CONDITIONALLY_APPROVED",
         }, {
           headers: {
-            Authorization: `Bearer ${session.data?.user.accessToken}`,
+            Authorization: `Bearer ${queryKey.at(-1)}`,
           },
         });
         application.status = "CONDITIONALLY_APPROVED";
       }
       const listing = (await backendAPI.get<Listing>("/api/listings/listing/" + application.listingId, {
         headers: {
-          Authorization: `Bearer ${session.data?.user.accessToken}`,
+          Authorization: `Bearer ${queryKey.at(-1)}`,
         },
       })).data;
       const property = (await backendAPI.get<Property>("/api/properties/property/" + application.propertyId, {
         headers: {
-          Authorization: `Bearer ${session.data?.user.accessToken}`,
+          Authorization: `Bearer ${queryKey.at(-1)}`,
         },
       })).data;
       const unit = (await backendAPI.get<Unit>(`api/units/unit/${application.unitId}`)).data;

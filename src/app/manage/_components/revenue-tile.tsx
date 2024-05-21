@@ -32,7 +32,7 @@ export default function RevenueTile({
   const [endTime, setEndTime] = useState<Date>(new Date());
 
   const query = useQuery<Data>({
-    queryKey: ["manage", "statistic", "income", startTime, endTime],
+    queryKey: ["manage", "statistic", "income", startTime, endTime, sessionData!.user.accessToken],
     queryFn: async ({ queryKey }) => {
       const res = (await backendAPI.get<Data>("/api/statistics/rentals/payments/incomes", {
         params: {
@@ -40,7 +40,7 @@ export default function RevenueTile({
           endTime: queryKey.at(4), // endTime
         },
         headers: {
-          Authorization: `Bearer ${sessionData.user.accessToken}`,
+          Authorization: `Bearer ${queryKey.at(-1)}`,
         },
       })).data || ([]);
       return res.map((item) => ({

@@ -23,11 +23,11 @@ export default function OtherPolicies() {
   const application = form.watch("application") as Application;
 
   const query = useQuery<Listing>({
-    queryKey: ["listings", "listing", application?.listingId],
+    queryKey: ["listings", "listing", application?.listingId, sessionData.user.accessToken],
     queryFn: async ({queryKey}) => {
       return (await backendAPI.get(`/api/listings/listing/${queryKey.at(2)}`, {
         headers: {
-          Authorization: `Bearer ${sessionData.user.accessToken}`,
+          Authorization: `Bearer ${queryKey.at(-1)}`,
         }
       })).data;
     },

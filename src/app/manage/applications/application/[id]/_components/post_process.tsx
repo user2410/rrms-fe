@@ -17,11 +17,11 @@ export default function PostProcess({
   const { application, property, unit } = data;
 
   const query = useQuery<Rental | null>({
-    queryKey: ["manage", "rentals", "rental", data.application.id, "rental"],
+    queryKey: ["manage", "rentals", "rental", data.application.id, "rental", sessionData.user.accessToken],
     queryFn: async ({ queryKey }) => {
       const res = await backendAPI.get<Rental>(`/api/applications/application/${queryKey.at(3)}/rental`, {
         headers: {
-          Authorization: `Bearer ${sessionData.user.accessToken}`,
+          Authorization: `Bearer ${queryKey.at(-1)}`,
         },
         validateStatus: (status) => status === 200 || status === 404,
       });

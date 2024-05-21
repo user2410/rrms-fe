@@ -15,20 +15,21 @@ import ManagersTab from "./_components/managers";
 import PropertyTab from "./_components/property";
 import TenantsTab from "./_components/tenants";
 import { PropDataState, PropertyDataProvider, usePropDataCtx } from "./_context/property_data.context";
+import { Session } from "next-auth";
 
-export default function PropertyDetailPage({ params }: { params: { id: string } }) {
+export default function PropertyDetailPageWraper({ params }: { params: { id: string } }) {
   const session = useSession();
   const query = useQuery<PropDataState>({
-    queryKey: ['manage', 'properties', 'property', params.id],
+    queryKey: ['manage', 'properties', 'property', params.id, session.data!.user.accessToken],
     queryFn: async ({ queryKey }) => {
       const propertyQuery = await backendAPI.get(`/api/properties/property/${queryKey.at(3)}`, {
         headers: {
-          Authorization: `Bearer ${session.data!.user.accessToken}`,
+          Authorization: `Bearer ${queryKey.at(-1)}`,
         },
       });
       const unitsQuery = await backendAPI.get(`/api/properties/property/${queryKey.at(3)}/units`, {
         headers: {
-          Authorization: `Bearer ${session.data!.user.accessToken}`,
+          Authorization: `Bearer ${queryKey.at(-1)}`,
         },
       });
       return {
@@ -55,25 +56,28 @@ export default function PropertyDetailPage({ params }: { params: { id: string } 
 
   return (
     <PropertyDataProvider>
-      <PropertyPageContext data={query.data} />
+      <PropertyDetailPage data={query.data} sessionData={session.data!} />
     </PropertyDataProvider>
   );
 };
 
-function PropertyPageContext({
+function PropertyDetailPage({
   data,
+  sessionData,
 }: {
   data: PropDataState;
+  sessionData: Session;
 }) {
-  const {property, units, setPropData} = usePropDataCtx();
+  const {property, isSet, setPropData, setSessionData} = usePropDataCtx();
 
   useEffect(() => {
+    setSessionData(sessionData);
     setPropData(data);
   }, []);
 
   const propTypeText = getPropertyTypeText({ ...data.property, units: data.units });
 
-  return (
+  return isSet() && (
     <div className="container mx-auto py-10 space-y-8">
       <div className="space-y-4">
         <Link href="/manage/properties" className="flex flex-row items-center gap-1">

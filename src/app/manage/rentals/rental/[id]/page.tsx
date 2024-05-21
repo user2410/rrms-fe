@@ -21,28 +21,28 @@ import Maintenance from "./_components/maintenance";
 export default function RentalPageWrapper({ params: { id } }: { params: { id: string } }) {
   const session = useSession();
   const query = useQuery<RentalData>({
-    queryKey: ["manage", "rentals", "rental", id],
-    queryFn: async () => {
+    queryKey: ["manage", "rentals", "rental", id, session.data?.user.accessToken],
+    queryFn: async ({queryKey}) => {
       const rental = (await backendAPI.get<Rental>("/api/rentals/rental/" + id, {
         headers: {
-          Authorization: `Bearer ${session.data?.user.accessToken}`
+          Authorization: `Bearer ${queryKey.at(-1)}`
         },
       })).data;
       const property = (await backendAPI.get<Property>("/api/properties/property/" + rental.propertyId, {
         headers: {
-          Authorization: `Bearer ${session.data?.user.accessToken}`
+          Authorization: `Bearer ${queryKey.at(-1)}`
         }
       })).data;
       const unit = (await backendAPI.get<Unit>("/api/units/unit/" + rental.unitId, {
         headers: {
-          Authorization: `Bearer ${session.data?.user.accessToken}`
+          Authorization: `Bearer ${queryKey.at(-1)}`
         }
       })).data;
       var application: Application | undefined;
       if (rental.applicationId) {
         application = (await backendAPI.get<Application>(`/api/applications/application/${rental.applicationId}`, {
           headers: {
-            Authorization: `Bearer ${session.data!.user.accessToken}`,
+            Authorization: `Bearer ${queryKey.at(-1)}`
           },
         })).data;
       }
@@ -58,7 +58,7 @@ export default function RentalPageWrapper({ params: { id } }: { params: { id: st
           ids: [...userIds],
         },
         headers: {
-          Authorization: `Bearer ${session.data!.user.accessToken}`,
+          Authorization: `Bearer ${queryKey.at(-1)}`
         },
       })).data;
 

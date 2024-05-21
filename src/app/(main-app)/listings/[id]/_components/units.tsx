@@ -2,12 +2,11 @@ import { Button } from "@/components/ui/button";
 import { Checkbox } from "@/components/ui/checkbox";
 import { Collapsible, CollapsibleContent, CollapsibleTrigger } from "@/components/ui/collapsible";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
-import { uAmenities } from "@/models/unit";
+import { BalconyIcon, BathroomIcon, BedroomIcon, uAmenities } from "@/models/unit";
 import LightGallery from 'lightgallery/react';
 import { ChevronDown } from "lucide-react";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
-import { MdBalcony, MdBathtub, MdBed } from "react-icons/md";
 import { ListingDetail } from "../page";
 
 import { Tooltip, TooltipContent, TooltipProvider } from "@/components/ui/tooltip";
@@ -154,7 +153,7 @@ export default function UnitsList({
                             {unit.numberOfBedrooms && (
                               <div className="border-y grid grid-cols-2">
                                 <div className="flex items-center gap-1">
-                                  <MdBed size={24} />
+                                  <BedroomIcon size={24} />
                                   <span>Phòng ngủ</span>
                                 </div>
                                 <div className="py-4">{unit.numberOfBedrooms}</div>
@@ -163,7 +162,7 @@ export default function UnitsList({
                             {unit.numberOfBathrooms && (
                               <div className="border-y grid grid-cols-2">
                                 <div className="flex items-center gap-1">
-                                  <MdBathtub size={24} />
+                                  <BathroomIcon size={24} />
                                   <span>Phòng tắm</span>
                                 </div>
                                 <div className="py-4">{unit.numberOfBathrooms}</div>
@@ -172,7 +171,7 @@ export default function UnitsList({
                             {unit.numberOfBalconies && (
                               <div className="border-y grid grid-cols-2">
                                 <div className="flex items-center gap-1">
-                                  <MdBalcony size={24} />
+                                  <BalconyIcon size={24} />
                                   <span>Ban công</span>
                                 </div>
                                 <div className="py-4">{unit.numberOfBalconies}</div>

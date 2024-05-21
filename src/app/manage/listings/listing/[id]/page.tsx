@@ -22,21 +22,21 @@ import { Session } from "next-auth";
 export default function ListingPageWrapper({ params: { id } }: { params: { id: string } }) {
   const session = useSession();
   const query = useQuery<ManagedListing>({
-    queryKey: ["manage", "listings", "listing", id],
-    queryFn: async () => {
+    queryKey: ["manage", "listings", "listing", id, session.data?.user.accessToken],
+    queryFn: async ({queryKey}) => {
       const listing = (await backendAPI.get<Listing>(`/api/listings/listing/${id}`, {
         headers: {
-          Authorization: `Bearer ${session.data?.user.accessToken}`,
+          Authorization: `Bearer ${queryKey.at(-1)}`,
         }
       })).data;
       const property = (await backendAPI.get<Property>(`/api/properties/property/${listing.propertyId}`, {
         headers: {
-          Authorization: `Bearer ${session.data?.user.accessToken}`,
+          Authorization: `Bearer ${queryKey.at(-1)}`,
         }
       })).data;
       const units = (await backendAPI.get<Unit[]>(`/api/properties/property/${listing.propertyId}/units`, {
         headers: {
-          Authorization: `Bearer ${session.data?.user.accessToken}`,
+          Authorization: `Bearer ${queryKey.at(-1)}`,
         }
       })).data;
       const data = { listing, property, units };

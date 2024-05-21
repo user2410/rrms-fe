@@ -33,10 +33,9 @@ export default function CreateTenantDialog() {
                   value={unit.id}
                   className="space-x-2"
                 >
-                  <>{unit.name}</>
-                  {i % 2 === 0 && (
-                    <span className="font-thin text-xs">Đang cho thuê</span>
-                  )}
+                  <div className="flex flex-row gap-2">
+                    {unit.name}
+                  </div>
                 </SelectItem>
               ))}
             </SelectContent>

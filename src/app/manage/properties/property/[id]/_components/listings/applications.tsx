@@ -26,8 +26,8 @@ export default function Applications({
 }) {
   const router = useRouter();
   const query = useQuery<Application[]>({
-    queryKey: ["manage", "properties", "property", property.id, "listings", "current", "appliacations"],
-    queryFn: async () => {
+    queryKey: ["manage", "properties", "property", property.id, "listings", "current", "appliacations", accessToken],
+    queryFn: async ({queryKey}) => {
       return (await backendAPI.get<Application[]>(`/api/properties/property/${property.id}/applications`, {
         params: {
           fields: "full_name,created_at,status",
@@ -36,7 +36,7 @@ export default function Applications({
           offset: 0,
         },
         headers: {
-          Authorization: `Bearer ${accessToken}`,
+          Authorization: `Bearer ${queryKey.at(-1)}`,
         }
       })).data || ([]);
     },

@@ -33,3 +33,8 @@ export function dateDifference(d1: Date, d2: Date) {
   const diffDays = Math.abs(differenceInDays(d1, d2));
   return `${diffDays} ngày${diffDays > 1 ? 's' : ''}`;
 }
+
+export function toViTimeString(time: Date) {
+  const t = new Date(time);
+  return `${t.toLocaleDateString('vi-VN')} ${t.toLocaleTimeString('vi-VN', { hour: '2-digit', minute: '2-digit' })}`;
+}

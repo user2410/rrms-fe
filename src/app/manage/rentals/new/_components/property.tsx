@@ -29,14 +29,14 @@ export default function PropertySelection() {
   const { sessionData } = useDataCtx();
 
   const allPropsQuery = useQuery<ManagedProperty[]>({
-    queryKey: ["manage", "rentals", "new", "properties"],
-    queryFn: async () => {
-      return (await backendAPI.get<ManagedProperty[]>("/api/properties/my-properties", {
+    queryKey: ["manage", "rentals", "new", "properties", sessionData.user.accessToken],
+    queryFn: async ({queryKey}) => {
+      return (await backendAPI.get<ManagedProperty[]>("/api/properties/managed-properties", {
         params: {
           fields: "name,full_address,area,orientation,lat,lng,type,media,year_built,primary_image,created_at,updated_at",
         },
         headers: {
-          Authorization: `Bearer ${sessionData.user.accessToken}`,
+          Authorization: `Bearer ${queryKey.at(-1)}`,
         },
       })).data;
     },
@@ -46,17 +46,17 @@ export default function PropertySelection() {
   });
 
   const selectedPropQuery = useQuery<PropertyData>({
-    queryKey: ['manage', "rentals", "new", 'properties', 'property', propertyId],
+    queryKey: ['manage', "rentals", "new", 'properties', 'property', propertyId, sessionData.user.accessToken],
     queryFn: async ({ queryKey }) => {
       console.log("enable:", !!propertyId);
       const propertyQuery = await backendAPI.get(`/api/properties/property/${queryKey.at(5)}`, {
         headers: {
-          Authorization: `Bearer ${sessionData.user.accessToken}`,
+          Authorization: `Bearer ${queryKey.at(-1)}`,
         },
       });
       const unitsQuery = await backendAPI.get(`/api/properties/property/${queryKey.at(5)}/units`, {
         headers: {
-          Authorization: `Bearer ${sessionData.user.accessToken}`,
+          Authorization: `Bearer ${queryKey.at(-1)}`,
         },
       });
       return {

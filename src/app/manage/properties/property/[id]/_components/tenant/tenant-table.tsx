@@ -83,7 +83,7 @@ export default function TenantTable<TData, TValue>({
             ) : (
               <TableRow>
                 <TableCell colSpan={columns.length} className="h-24 text-center">
-                  No results.
+                  Chưa có lượt thuê.
                 </TableCell>
               </TableRow>
             )}

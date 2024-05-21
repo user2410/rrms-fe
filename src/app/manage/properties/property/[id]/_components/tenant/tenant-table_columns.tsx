@@ -15,8 +15,7 @@ export const tenantTColumns: ColumnDef<RentalExtended>[] = [
     cell: ({ row }) => {
       const unit = row.original.unit;
       return (
-        JSON.stringify(unit)
-        // <UnitDialog unit={unit} />
+        <UnitDialog unit={unit} />
       );
     }
   },

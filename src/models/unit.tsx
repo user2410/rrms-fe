@@ -1,8 +1,9 @@
-import { FaBed, FaCouch, FaInternetExplorer, FaQuestionCircle } from "react-icons/fa";
+import { FaBed, FaCouch, FaInternetExplorer, FaQuestionCircle, FaToilet } from "react-icons/fa";
 import { BiCloset, BiSolidFridge } from "react-icons/bi";
 import { TbAirConditioning, TbWashDry1, TbStairsUp } from "react-icons/tb";
 import { GiWashingMachine, GiHeatHaze } from "react-icons/gi";
 import { PiTelevisionSimple } from "react-icons/pi";
+import { MdBalcony, MdBathtub, MdBed, MdKitchen } from "react-icons/md";
 
 export type UnitType = 'ROOM' | 'APARTMENT' | 'STUDIO';
 
@@ -62,3 +63,10 @@ export const uAmenities = [
   { id: 11, amenity: "u-amenity_bed", text: "Giường", icon: FaBed },
   { id: 12, amenity: "u-amenity_other", text: "Khác", icon: FaQuestionCircle },
 ];
+
+export const BathroomIcon = MdBathtub;
+export const BalconyIcon = MdBalcony;
+export const BedroomIcon = MdBed;
+export const ToiletIcon = FaToilet;
+export const LivingroomIcon = FaCouch;
+export const KitchenIcon = MdKitchen;

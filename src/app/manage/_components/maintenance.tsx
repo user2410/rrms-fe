@@ -17,11 +17,11 @@ export default function Maintenance({
   sessionData: Session;
 }) {
   const query = useQuery<Data>({
-    queryKey: ["manage", "statistic", "maintenance"],
-    queryFn: async () => {
+    queryKey: ["manage", "statistic", "maintenance", sessionData!.user.accessToken],
+    queryFn: async ({queryKey}) => {
       const res = (await backendAPI.get<Data>("/api/statistics/rentals", {
         headers: {
-          Authorization: `Bearer ${sessionData.user.accessToken}`,
+          Authorization: `Bearer ${queryKey.at(-1)}`,
         },
       })).data;
       return res;
