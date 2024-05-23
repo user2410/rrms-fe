@@ -5,7 +5,7 @@ import { Card, CardContent, CardFooter } from "@/components/ui/card";
 import { FormControl, FormField, FormItem, FormLabel } from "@/components/ui/form";
 import MultipleSelector from "@/components/ui/multiple-selector";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
-import { OrientationItems, pFeatures } from "@/models/property";
+import { orientationItems, pFeatures } from "@/models/property";
 import { useFormContext } from "react-hook-form";
 import FilterNRooms from "./filter_nrooms";
 import { SearchFormValues } from "../../search_box";
@@ -34,7 +34,7 @@ export default function ExtraFilter() {
                   </SelectTrigger>
                 </FormControl>
                 <SelectContent>
-                  {OrientationItems.map((item) => (
+                  {orientationItems.map((item) => (
                     <SelectItem key={item.value} value={item.value}>{item.label}</SelectItem>
                   ))}
                 </SelectContent>

@@ -1,4 +1,4 @@
-import { OrientationItems, Property, PropertyType, getPrimaryImage, mapPropertyTypeToText } from "@/models/property";
+import { orientationItems, Property, PropertyType, getPrimaryImage, mapPropertyTypeToText } from "@/models/property";
 import { ColumnDef, Row } from "@tanstack/react-table";
 import { format } from "date-fns";
 
@@ -68,7 +68,7 @@ export const propertyTColumns: ColumnDef<Property>[] = [
     header: 'Hướng nhà',
     cell: ({row}) => {
       const v = row.getValue('orientation');
-      const o = OrientationItems.find((o) => o.value === v);
+      const o = orientationItems.find((o) => o.value === v);
       return o ? o.label : v;
     }
   },

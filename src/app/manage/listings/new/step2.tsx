@@ -34,7 +34,7 @@ export default function Step2() {
   const allPropsQuery = useQuery<ManagedProperty[]>({
     queryKey: ["manage", "listings", "new", "properties", session.data?.user.accessToken],
     queryFn: async ({queryKey}) => {
-      return (await backendAPI.get<ManagedProperty[]>("/api/properties/managed-properties", {
+      const res = (await backendAPI.get("/api/properties/managed-properties", {
         params: {
           fields: "name,full_address,area,orientation,lat,lng,type,media,year_built,primary_image,created_at,updated_at",
         },
@@ -42,6 +42,7 @@ export default function Step2() {
           Authorization: `Bearer ${queryKey.at(-1)}`,
         },
       })).data;
+      return res.items as ManagedProperty[];
     },
     enabled: session.status === "authenticated",
     staleTime: 1000 * 60 * 5,

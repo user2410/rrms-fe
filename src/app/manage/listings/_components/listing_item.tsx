@@ -7,6 +7,7 @@ import Image from "next/image";
 import Link from "next/link";
 import { FaClock } from "react-icons/fa";
 import ExpDuration from "./exp_duration";
+import { PropertyTypeBadge } from "@/components/complex/property";
 
 export default function ListingItem({
   listing,
@@ -34,16 +35,15 @@ export default function ListingItem({
           <Link href={`/manage/listings/listing/${listing.id}`} className="text-lg font-medium">{listing.title}</Link>
           <p className="text-sm">{getPropertyFullAddress(property)}</p>
           <div className="space-y-1">
-            <span>
-              <strong>Nhà cho thuê:</strong>&nbsp;
+            <div className="flex flex-row items-center gap-2">
+              <PropertyTypeBadge property={property} />
               <Link 
                 href={`/manage/properties/property/${property.id}`} 
-                
                 className="text-sm"
               >
-                {property.name.length > 20 ? `${property.name.slice(0, 20)}...` : property.name}
+                {property.name.length > 60 ? `${property.name.slice(0, 60)}...` : property.name}
               </Link>
-            </span>
+            </div>
             <div className="space-y-0.5">
               <h3><strong>Căn hộ/phòng: </strong></h3>
               <div className="grid grid-cols-2 gap-1">

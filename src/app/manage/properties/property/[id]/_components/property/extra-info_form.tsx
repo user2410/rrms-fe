@@ -6,7 +6,7 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import { Textarea } from "@/components/ui/textarea";
 import { backendAPI } from "@/libs/axios";
-import { OrientationItems, Property, PropertyFeature, pFeatures } from "@/models/property";
+import { orientationItems, Property, PropertyFeature, pFeatures } from "@/models/property";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { LayoutDashboard, Pencil, Plus } from "lucide-react";
 import { useState } from "react";
@@ -147,7 +147,7 @@ export default function ExtraInfoForm(){
                   />
                 ) : (
                   <p className="text-sm mt-2">
-                    {OrientationItems.find(i => i.value === property.orientation)?.label || "N/A"}
+                    {orientationItems.find(i => i.value === property.orientation)?.label || "N/A"}
                   </p>
                 )}
               </div>

@@ -5,7 +5,7 @@ import { FormControl, FormField, FormItem, FormLabel } from "@/components/ui/for
 import MultipleSelector from "@/components/ui/multiple-selector";
 import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
-import { OrientationItems, pFeatures } from "@/models/property";
+import { orientationItems, pFeatures } from "@/models/property";
 import { uAmenities } from "@/models/unit";
 import { useFormContext } from "react-hook-form";
 import { BsListUl } from "react-icons/bs";
@@ -57,7 +57,7 @@ export default function ExtraFilter() {
                   </SelectTrigger>
                 </FormControl>
                 <SelectContent>
-                  {OrientationItems.map((item) => (
+                  {orientationItems.map((item) => (
                     <SelectItem key={item.value} value={item.value}>{item.label}</SelectItem>
                   ))}
                 </SelectContent>

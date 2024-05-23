@@ -25,13 +25,12 @@ type PropertyData = {
 export default function PropertySelection() {
   const form = useFormContext<FormValues>();
   const propertyId = form.watch("propertyId");
-  console.log("propertyId:", propertyId, typeof propertyId);
   const { sessionData } = useDataCtx();
 
   const allPropsQuery = useQuery<ManagedProperty[]>({
     queryKey: ["manage", "rentals", "new", "properties", sessionData.user.accessToken],
     queryFn: async ({queryKey}) => {
-      return (await backendAPI.get<ManagedProperty[]>("/api/properties/managed-properties", {
+      const res = (await backendAPI.get("/api/properties/managed-properties", {
         params: {
           fields: "name,full_address,area,orientation,lat,lng,type,media,year_built,primary_image,created_at,updated_at",
         },
@@ -39,6 +38,7 @@ export default function PropertySelection() {
           Authorization: `Bearer ${queryKey.at(-1)}`,
         },
       })).data;
+      return res.items as ManagedProperty[];
     },
     enabled: !!sessionData.user,
     staleTime: 1000 * 60 * 5,

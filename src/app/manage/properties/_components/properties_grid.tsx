@@ -2,55 +2,81 @@
 
 import { Button } from "@/components/ui/button";
 import { Select, SelectContent, SelectGroup, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
-import { Property } from "@/models/property";
-import { Fragment, useMemo, useState } from "react";
+import Spinner from "@/components/ui/spinner";
+import { backendAPI } from "@/libs/axios";
+import { Listing } from "@/models/listing";
+import { Property, PropertyMedia } from "@/models/property";
+import { Rental } from "@/models/rental";
+import { Unit } from "@/models/unit";
+import { useQuery } from "@tanstack/react-query";
+import { Session } from "next-auth";
+import { Fragment, useState } from "react";
 import { ManagedProperty } from "../page";
 import PropertyCard from "./property_card";
 
 // type PropertyTab = "active" | "archived" | "draft";
 const pageSize = 6;
 
-export default function PropertiesGrid({
-  initialProperties
-}: {
-  initialProperties: ManagedProperty[];
-}) {
-  const [sortBy, setSortBy] = useState<string>("createdAt");
-  const [order, setOrder] = useState<"asc" | "desc">("asc");
+type Data = {
+  items: ManagedProperty[];
+  total: number;
+}
 
+export default function PropertiesGrid({
+  sessionData,
+}: {
+  sessionData: Session;
+}) {
+  const [sortBy, setSortBy] = useState<string>("created_at");
+  const [order, setOrder] = useState<"asc" | "desc">("asc");
   const [offset, setOffset] = useState<number>(0);
 
-  const properties = useMemo<ManagedProperty[]>(() => {
-    console.log(offset, Math.ceil(initialProperties.length / pageSize));
-    return initialProperties.
-      sort((a, b) => {
-        switch (sortBy) {
-          case "createdAt":
-            return order === "asc" 
-              ? a.property.createdAt.getTime() - b.property.createdAt.getTime()
-              : b.property.createdAt.getTime() - a.property.createdAt.getTime();
-          case "area":
-            return order === "asc"
-              ? a.property.area - b.property.area
-              : b.property.area - a.property.area;
-          case "rentals":
-            return order === "asc"
-              ? a.rentals.length - b.rentals.length
-              : b.rentals.length - a.rentals.length;
-          case "name":
-            return order === "asc"
-              ? a.property.name.localeCompare(b.property.name)
-              : b.property.name.localeCompare(a.property.name);
-        }
-        return 0;
-      }).
-      slice(offset, offset + pageSize);
-  }, [initialProperties, offset, sortBy, order]);
 
-  return (
+  const query = useQuery<Data>({
+    queryKey: ['manage', 'properties', 'managed', pageSize, offset, sortBy, order, sessionData.user.accessToken],
+    queryFn: async ({ queryKey }) => {
+      const res = (await backendAPI.get<Data>("api/properties/managed-properties", {
+        params: {
+          fields: "name,full_address,city,district,ward,area,orientation,lat,lng,media,type,primary_image,created_at",
+          limit: queryKey.at(3),
+          offset: queryKey.at(4),
+          sortBy: queryKey.at(5),
+          order: queryKey.at(6),
+        },
+        headers: {
+          Authorization: `Bearer ${queryKey.at(-1)}`,
+        },
+      })).data || ([]);
+      return {
+        ...res,
+        items: res.items.map((item: ManagedProperty) => ({
+          ...item,
+          property: {
+            ...item.property,
+            units: item.property.units || ([] as Unit[]),
+            media: item.property.media || ([] as PropertyMedia[])
+          },
+          listings: item.listings || ([] as Listing[]),
+          rentals: item.rentals || ([] as Rental[]),
+        })),
+      } as Data;
+    },
+    staleTime: 5 * 60 * 1000,
+    cacheTime: 5 * 60 * 1000,
+  });
+
+  return query.isLoading ? (
+    <div className="flex flex-row justify-center items-center w-full h-full">
+      <Spinner size={32} />
+    </div>
+  ) : query.isError ? (
+    <div className="flex flex-row justify-center items-center w-full h-full">
+      Đã có lỗi xảy ra
+    </div>
+  ) : (
     <Fragment>
       <div className="flex flex-row items-center justify-between w-full mb-4">
-        <h2>Có {initialProperties.length} nhà cho thuê</h2>
+        <h2>Có {query.data.total} nhà cho thuê</h2>
         <div className="flex flex-row items-center gap-2">
           <div className="flex flex-row items-center gap-1">
             <span className="text-sm font-light whitespace-nowrap">Sắp xếp theo</span>
@@ -65,7 +91,7 @@ export default function PropertiesGrid({
                 <SelectGroup>
                   <SelectItem value="name">Tên</SelectItem>
                   <SelectItem value="area">Diện tích</SelectItem>
-                  <SelectItem value="createdAt">Mới nhất</SelectItem>
+                  <SelectItem value="created_at">Mới nhất</SelectItem>
                   <SelectItem value="rentals">Số lượt thuê</SelectItem>
                 </SelectGroup>
               </SelectContent>
@@ -91,13 +117,13 @@ export default function PropertiesGrid({
         </div>
       </div>
       <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 w-full">
-        {properties.map((p, i) => (
+        {query.data.items.map((p, i) => (
           <PropertyCard key={i} data={p}></PropertyCard>
         ))}
       </div>
       <div className="w-full flex flex-row justify-center">
         <Button type="button" variant="outline" disabled={offset === 0} onClick={() => setOffset(v => v - pageSize)}>Trước</Button>
-        <Button type="button" variant="outline" disabled={offset + pageSize >= initialProperties.length} onClick={() => setOffset(v => v + pageSize)}>Sau</Button>
+        <Button type="button" variant="outline" disabled={offset + pageSize >= query.data.total} onClick={() => setOffset(v => v + pageSize)}>Sau</Button>
       </div>
     </Fragment>
   );

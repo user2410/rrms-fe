@@ -122,7 +122,7 @@ export const pFeatures = [
 ];
 
 
-export const OrientationItems = [
+export const orientationItems = [
   {
     value: "n",
     label: "Bắc",
