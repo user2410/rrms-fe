@@ -1,5 +1,4 @@
-import { getRentalPaymentReasonText, RentalPayment, RENTALPAYMENTSTATUS } from "@/models/rental";
-import { useDataCtx } from "../../_context/data.context";
+import { Button } from "@/components/ui/button";
 import {
   Dialog,
   DialogClose,
@@ -10,20 +9,26 @@ import {
   DialogTitle,
   DialogTrigger,
 } from "@/components/ui/dialog";
-import { useRef, useState } from "react";
-import { Button } from "@/components/ui/button";
 import { Label } from "@/components/ui/label";
-import { readMoneyVi } from "@/utils/currency";
 import { Textarea } from "@/components/ui/textarea";
 import { backendAPI } from "@/libs/axios";
+import { getRentalPaymentReasonText, Rental, RentalPayment } from "@/models/rental";
+import { readMoneyVi } from "@/utils/currency";
+import { Session } from "next-auth";
+import { useRef, useState } from "react";
 import toast from "react-hot-toast";
 
 export default function IssueDialog({
+  changePayment,
   payment,
-}: {
+  sessionData,
+  rental,
+} : {
+  changePayment: (data: RentalPayment) => void;
   payment: RentalPayment;
+  sessionData: Session;
+  rental: Rental;
 }) {
-  const { sessionData, changePayment, rental } = useDataCtx();
   const closeBtnRef = useRef<HTMLButtonElement>(null);
   const total = payment.amount - (payment.discount || 0);
   const [note, setNote] = useState<string>("");
@@ -78,7 +83,7 @@ export default function IssueDialog({
         <DialogHeader>
           <DialogTitle>Chi tiết khoản thu</DialogTitle>
           <DialogDescription>
-            Hạn nộp: {payment.expiryDate.toLocaleDateString("vi-VN")}.
+            Hạn nộp: {payment.expiryDate?.toLocaleDateString("vi-VN")}.
           </DialogDescription>
         </DialogHeader>
         <div className="grid grid-cols-6 gap-3">

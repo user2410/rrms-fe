@@ -57,7 +57,7 @@ export default function SuccessPage({ params: { id } }: { params: { id: string }
             <div className="mt-5">
               <Button 
                 variant="outline" 
-                onClick={() => router.push("/manage/payment/" + id)}
+                onClick={() => router.push("/manage/payments/payment/" + id)}
                 className="flex flex-row items-center gap-2"
               >
                 <ArrowLeft /> Thử lại

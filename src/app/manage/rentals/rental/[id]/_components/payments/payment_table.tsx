@@ -21,7 +21,7 @@ export default function PaymentTable({
   payments: RentalPayment[];
   status: 'PLAN' | "ISSUED" | 'PENDING' | 'PAID';
 }) {
-  const { isSideA, rental, sessionData } = useDataCtx();
+  const { isSideA, rental, property, changePayment, sessionData } = useDataCtx();
   const _isSideA = isSideA(sessionData.user.user.id);
   return (
     <>
@@ -42,7 +42,7 @@ export default function PaymentTable({
               )}
               <TableHead>Số tiền</TableHead>
               {['PENDING', 'ISSUED'].includes(status) && (<TableHead>Khấu trừ</TableHead>)}
-              {status ==="PAID" && (
+              {status === "PAID" && (
                 <TableHead>Tiền Phạt</TableHead>
               )}
               <TableHead>Trạng thái</TableHead>
@@ -62,25 +62,41 @@ export default function PaymentTable({
                 <TableCell>{getRentalPaymentReasonText(p, rental.services)}</TableCell>
                 <TableCell>{p.startDate.toLocaleDateString('vi-VN')} - {p.endDate.toLocaleDateString('vi-VN')}</TableCell>
                 {['PAID', 'CANCELLED'].includes(status) && (
-                  <TableCell>{p.paymentDate?.toLocaleDateString('vi-VN')} {(p.paymentDate && p.expiryDate && 
+                  <TableCell>{p.paymentDate?.toLocaleDateString('vi-VN')} {(p.paymentDate && p.expiryDate &&
                     p.paymentDate > p.expiryDate) ? `(Muộn ${dateDifference(p.paymentDate, p.expiryDate)})` : ''}</TableCell>
                 )}
                 <TableCell>{p.amount > 0 ? p.amount.toLocaleString('vi-VN', { style: 'currency', currency: 'VND' }) : "-"}</TableCell>
                 {!['PLAN', 'PAID'].includes(p.status) && (
                   <TableCell>{p.discount?.toLocaleString('vi-VN', { style: 'currency', currency: 'VND' })}</TableCell>
                 )}
-                {(p.status ==="PAID" && p.paymentDate && p.expiryDate && p.paymentDate > p.expiryDate) && (
+                {(p.status === "PAID" && p.paymentDate && p.expiryDate && p.paymentDate > p.expiryDate) && (
                   <TableCell>{p.penalty ? p.penalty.toLocaleString('vi-VN', { style: 'currency', currency: 'VND' }) : "-"}</TableCell>
                 )}p.paymentDate && p.expiryDate
                 <TableCell>{rentalPaymentStatus[p.status]}</TableCell>
                 {!['PAID', 'CANCELLED'].includes(status) && (
                   <TableCell>
                     {p.status === 'PLAN' && _isSideA ? (
-                      <PlanDialog payment={p} />
+                      <PlanDialog
+                        payment={p}
+                        changePayment={changePayment}
+                        sessionData={sessionData}
+                        rental={rental}
+                        property={property}
+                      />
                     ) : p.status === 'ISSUED' && !_isSideA ? (
-                      <IssueDialog payment={p} />
+                      <IssueDialog
+                        payment={p}
+                        changePayment={changePayment}
+                        sessionData={sessionData}
+                        rental={rental}
+                      />
                     ) : (p.status === 'PENDING' && !_isSideA) || (p.status === 'REQUEST2PAY' && _isSideA) ? (
-                      <PaymentDialog payment={p} isSideA={_isSideA} />
+                      <PaymentDialog
+                        payment={p}
+                        isSideA={_isSideA}
+                        changePayment={changePayment}
+                        sessionData={sessionData}
+                      />
                     ) : null}
                   </TableCell>
                 )}

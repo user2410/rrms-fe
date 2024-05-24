@@ -100,7 +100,7 @@ export default function UploadDialog({
             <p className="text-sm font-light">Thanh toán ngay để tin đăng được hiển thị</p>
             <div className="flex flex-row items-center gap-2">
               <Link href={`/manage/listings/listing/${res!.listing.id}`}>Tin đăng</Link>
-              <Link target="_blank" href={`/manage/payment/${res!.payment.id}`}>Thanh toán tin đăng</Link>
+              <Link target="_blank" href={`/manage/payments/payment/${res!.payment.id}`}>Thanh toán tin đăng</Link>
             </div>
           </div>
         )}

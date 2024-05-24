@@ -32,3 +32,19 @@ export const listingPaymentTypes = {
   EXTENDLISTING: "Gia hạn tin đăng",
   UPGRADELISTING: "Nâng cấp tin đăng",
 };
+
+export function getPaymentType(orderInfo: string): string {
+  return orderInfo.slice(1).split("_")[0];
+}
+
+export function getPaymentObjectID(orderInfo: string): string {
+  return orderInfo.slice(1).split("_")[1].split("]").at(0)!;
+}
+
+export function getPaymentGroup(paymentType: string) {
+  if (["CREATELISTING", "EXTENDLISTING", "UPGRADELISTING"].includes(paymentType)) {
+    return "LISTING";
+  }
+  return "SERVICE";
+}
+

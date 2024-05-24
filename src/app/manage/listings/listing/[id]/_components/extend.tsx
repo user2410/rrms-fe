@@ -126,7 +126,7 @@ export default function Extend({
             <div className="w-full flex flex-col items-center justify-center gap-2">
               <FaCheckCircle size={20} color="green" />
               <h2 className="text-center">Đã xác nhận yêu cầu, thanh toán ngay để tiến hành gia hạn tin đăng</h2>
-              <Link target="_blank" href={`/manage/payment/${res!.id}`} className="text-blue-600">Thanh toán</Link>
+              <Link target="_blank" href={`/manage/payments/payment/${res!.id}`} className="text-blue-600">Thanh toán</Link>
             </div>
           </>
         ) : stage === "error" && (

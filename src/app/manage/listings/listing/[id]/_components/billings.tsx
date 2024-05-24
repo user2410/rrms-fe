@@ -139,7 +139,7 @@ export default function Billings() {
                   <TableCell>
                     <Link
                       target="_blank"
-                      href={`/manage/payment/${item.id}`}
+                      href={`/manage/payments/payment/${item.id}`}
                       className="text-blue-400 hover:underline"
                     >
                       {item.orderInfo.slice(item.orderInfo.indexOf(']') + 1)}

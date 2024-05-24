@@ -15,11 +15,10 @@ import { Label } from "@/components/ui/label";
 import { backendAPI } from "@/libs/axios";
 import { RentalPayment } from "@/models/rental";
 import { readMoneyVi } from "@/utils/currency";
-import { differenceInDays, format } from "date-fns";
+import { dateDifference } from "@/utils/time";
+import { Session } from "next-auth";
 import { useRef, useState } from "react";
 import toast from "react-hot-toast";
-import { useDataCtx } from "../../_context/data.context";
-import { dateDifference } from "@/utils/time";
 
 type State = {
   paymentDate: Date
@@ -28,13 +27,16 @@ type State = {
 }
 
 export default function PaymentDialog({
+  changePayment,
   payment,
   isSideA,
-}: {
+  sessionData,
+} : {
+  changePayment: (data: RentalPayment) => void;
   payment: RentalPayment;
   isSideA: boolean;
+  sessionData: Session;
 }) {
-  const { sessionData, changePayment } = useDataCtx();
   const closeBtnRef = useRef<HTMLButtonElement>(null);
   const [state, setState] = useState<State>({
     paymentDate: new Date(),
@@ -106,11 +108,11 @@ export default function PaymentDialog({
               }));
             }}
           />
-          {state.paymentDate > payment.expiryDate && (
-            <p className="text-xs font-light text-red-600">Muộn {dateDifference(state.paymentDate, payment.expiryDate)}</p>
+          {state.paymentDate > payment.expiryDate! && (
+            <p className="text-xs font-light text-red-600">Muộn {dateDifference(state.paymentDate, payment.expiryDate!)}</p>
           )}
         </div>
-        {(isSideA && state.paymentDate > payment.expiryDate) && (
+        {(isSideA && state.paymentDate > payment.expiryDate!) && (
           <div className="space-y-2">
             <div className="flex items-center space-x-2">
               <Checkbox 

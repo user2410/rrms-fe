@@ -57,7 +57,7 @@ export default function PaymentPage({ params: { id } }: { params: { id: string }
         accessToken: session.data?.user.accessToken,
       })).data;
       window.open (res.url, '_ blank');
-      router.push("/manage/payment/" + id + "/success");
+      router.push("/manage/payments/payment/" + id + "/success");
     } catch (err) {
       console.error(err);
       toast.error("Có lỗi xảy ra khi tạo thanh toán");

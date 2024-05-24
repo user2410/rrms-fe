@@ -10,7 +10,7 @@ import { signOut, useSession } from "next-auth/react";
 import Image from "next/image";
 import toast from "react-hot-toast";
 import { BsBuildingFillAdd, BsFillBuildingsFill } from "react-icons/bs";
-import { FaFile, FaFileAlt, FaFileContract, FaHandHolding, FaUser } from "react-icons/fa";
+import { FaFile, FaFileAlt, FaFileContract, FaHandHolding, FaMoneyBill, FaUser } from "react-icons/fa";
 import { FiLifeBuoy } from "react-icons/fi";
 import NotificationDropdown from "./dropdowns/notification";
 import SidebarNavigation from "./sidebar_navigation";
@@ -121,6 +121,11 @@ export default function Sidebar() {
                     label: 'Quản lý thuê',
                     href: '/manage/rentals',
                     icon: <FaHandHolding size={ICON_SIZE} />,
+                  },
+                  {
+                    label: 'Thu chi',
+                    href: '/manage/payments',
+                    icon: <FaMoneyBill size={ICON_SIZE} />,
                   },
                   {
                     label: 'Tài khoản',

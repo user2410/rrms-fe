@@ -15,19 +15,20 @@ import { Form, FormControl, FormField, FormItem, FormLabel, FormLabelRequired } 
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { backendAPI } from "@/libs/axios";
-import { getRentalPaymentReason, getRentalPaymentReasonText, RentalPayment, RENTALPAYMENTSTATUS } from "@/models/rental";
+import { Property } from "@/models/property";
+import { getRentalPaymentReason, getRentalPaymentReasonText, Rental, RentalPayment } from "@/models/rental";
 import { readMoneyVi } from "@/utils/currency";
+import { getRegion } from "@/utils/dghcvn";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { AlertDialog } from "@radix-ui/react-alert-dialog";
+import clsx from "clsx";
 import { addDays, format } from "date-fns";
+import { Session } from "next-auth";
 import { useMemo, useRef } from "react";
 import { useForm } from "react-hook-form";
 import toast from "react-hot-toast";
 import * as z from "zod";
-import { useDataCtx } from "../../_context/data.context";
 import ServiceBill from "./service_bill";
-import { getRegion } from "@/utils/dghcvn";
-import clsx from "clsx";
 
 const formSchema = z.object({
   amount: z.number(),
@@ -42,11 +43,18 @@ const formSchema = z.object({
 type FormValues = z.infer<typeof formSchema>;
 
 export default function PlanDialog({
+  changePayment,
   payment,
-}: {
+  sessionData,
+  property,
+  rental,
+} : {
+  changePayment: (data: RentalPayment) => void;
   payment: RentalPayment;
+  sessionData: Session;
+  property: Property;
+  rental: Rental;
 }) {
-  const { sessionData, changePayment, rental, property } = useDataCtx();
   const closeBtnRef = useRef<HTMLButtonElement>(null);
   const form = useForm<FormValues>({
     resolver: zodResolver(formSchema),

@@ -1,6 +1,6 @@
 import { addMonths } from "date-fns";
 import { Application } from "./application";
-import { Property } from "./property";
+import { Property, PropertyManager } from "./property";
 import { Unit } from "./unit";
 
 export const mapTenantTypeToText = {
@@ -230,6 +230,13 @@ export type RentalComplaintReply = {
   media: string[];
   createdAt: Date;
 };
+
+export function isSideA(
+  userId: string,
+  managers: PropertyManager[],
+) {
+  return managers.some((m) => m.managerId === userId);
+}
 
 export const mockedRentals = [
   {
