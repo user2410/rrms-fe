@@ -1,11 +1,10 @@
-import { useQuery } from "@tanstack/react-query";
-import { SearchResult } from "../page";
-import { SearchFormValues } from "../../_components/search_box";
+import { Pagination, PaginationContent, PaginationItem, PaginationLink, PaginationNext, PaginationPrevious } from "@/components/ui/pagination";
 import { backendAPI } from "@/libs/axios";
-import { ListingCardSkeleton } from "./listing-card";
+import { SearchResult } from "@/models/listing";
+import { useQuery } from "@tanstack/react-query";
 import { useState } from "react";
+import { SearchFormValues } from "../../_components/search_box";
 import ListingsList from "./listings_list";
-import { Pagination, PaginationContent, PaginationEllipsis, PaginationItem, PaginationLink, PaginationNext, PaginationPrevious } from "@/components/ui/pagination";
 
 export default function Search({
   query,

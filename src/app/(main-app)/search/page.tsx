@@ -5,19 +5,9 @@ import { GetCityById, GetDistrictById, GetLocationName, GetWardById } from "@/ut
 import { useSearchParams } from "next/navigation";
 import { useMemo } from "react";
 import { SearchFormValues } from "../_components/search_box";
-import ListingsList from "./_components/listings_list";
+import Search from "./_components/search";
 import Sidebar from "./_components/sidebard";
 import TopSearchBar from "./_components/top-searchbar";
-import Search from "./_components/search";
-
-export type SearchResult = {
-  count: number;
-  items: { lid: string; }[];
-  limit: number;
-  offset: number;
-  sortby: string;
-  order: 'asc' | 'desc';
-};
 
 export default function SearchPage() {
   const searchParams = useSearchParams();

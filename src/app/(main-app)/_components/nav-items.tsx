@@ -3,45 +3,41 @@
 import { Icons } from "@/components/ui/icons";
 import { NavigationMenu, NavigationMenuContent, NavigationMenuItem, NavigationMenuLink, NavigationMenuList, NavigationMenuTrigger } from "@/components/ui/navigation-menu";
 import useRoutes from "@/hooks/use-route";
+import { mapPropertyTypeToText } from "@/models/property";
 import clsx from "clsx";
 import Link from "next/link";
 import React from "react";
 
-const components: { title: string; href: string; description: string }[] = [
+const properties: { key: string; title: string; description: string }[] = [
   {
-    title: "Alert Dialog",
-    href: "/docs/primitives/alert-dialog",
-    description:
-      "A modal dialog that interrupts the user with important content and expects a response.",
+    key: "APARTMENT",
+    title: "Căn hộ",
+    description: "Căn hộ chung cư, căn hộ dịch vụ, căn hộ mini, căn hộ officetel.",
   },
   {
-    title: "Hover Card",
-    href: "/docs/primitives/hover-card",
-    description:
-      "For sighted users to preview content available behind a link.",
+    key: "PRIVATE",
+    title: "Nhà riêng",
+    description: "Nhà nguyên căn, nhà mặt phố, nhà liền kề, nhà biệt thự.",
   },
   {
-    title: "Progress",
-    href: "/docs/primitives/progress",
-    description:
-      "Displays an indicator showing the completion progress of a task, typically displayed as a progress bar.",
+    key: "ROOM",
+    title: "Phòng trọ",
+    description: "Phòng trọ, phòng trọ chung chủ, phòng trọ khép kín.",
   },
   {
-    title: "Scroll-area",
-    href: "/docs/primitives/scroll-area",
-    description: "Visually or semantically separates content.",
+    key: "OFFICE",
+    title: "Văn phòng",
+    description: "Văn phòng cho thuê, văn phòng chia sẻ",
   },
   {
-    title: "Tabs",
-    href: "/docs/primitives/tabs",
-    description:
-      "A set of layered sections of content—known as tab panels—that are displayed one at a time.",
+    key: "STORE",
+    title: "Cửa hàng",
+    description: "Cửa hàng, cửa hàng kinh doanh, cửa hàng mặt phố.",
   },
   {
-    title: "Tooltip",
-    href: "/docs/primitives/tooltip",
-    description:
-      "A popup that displays information related to an element when the element receives keyboard focus or the mouse hovers over it.",
+    key: "VILLA",
+    title: "Biệt thự",
+    description: "Biệt thự, biệt thự nghỉ dưỡng, biệt thự liền kề.",
   },
 ];
 
@@ -52,68 +48,35 @@ export default function NavItems() {
     <div
       className="md:w-auto bg-background/95 backdrop-blur"
     >
-      {/* <ul className="flex flex-col font-medium p-4 md:p-0 mt-4 md:flex-row md:space-x-8 md:mt-0 ">
-        {rootRoute.subroutes?.map((item, index) => (
-          <li key={index}>
-            <a href={item.href} className="block py-2 pl-3 pr-4 text-foreground/60 hover:text-primary rounded bg-transparent md:p-0">{item.label}</a>
-          </li>
-        ))}
-      </ul> */}
       <NavigationMenu>
         <NavigationMenuList>
           <NavigationMenuItem>
-            <NavigationMenuTrigger>Getting started</NavigationMenuTrigger>
-            <NavigationMenuContent>
-              <ul className="grid gap-3 p-4 md:w-[400px] lg:w-[500px] lg:grid-cols-[.75fr_1fr]">
-                <li className="row-span-3">
-                  <NavigationMenuLink asChild>
-                    <a
-                      className="flex h-full w-full select-none flex-col justify-end rounded-md bg-gradient-to-b from-muted/50 to-muted p-6 no-underline outline-none focus:shadow-md"
-                      href="/"
-                    >
-                      <Icons.logo className="h-6 w-6" />
-                      <div className="mb-2 mt-4 text-lg font-medium">
-                        shadcn/ui
-                      </div>
-                      <p className="text-sm leading-tight text-muted-foreground">
-                        Beautifully designed components built with Radix UI and
-                        Tailwind CSS.
-                      </p>
-                    </a>
-                  </NavigationMenuLink>
-                </li>
-                <ListItem href="/docs" title="Introduction">
-                  Re-usable components built using Radix UI and Tailwind CSS.
-                </ListItem>
-                <ListItem href="/docs/installation" title="Installation">
-                  How to install dependencies and structure your app.
-                </ListItem>
-                <ListItem href="/docs/primitives/typography" title="Typography">
-                  Styles for headings, paragraphs, lists...etc
-                </ListItem>
-              </ul>
-            </NavigationMenuContent>
-          </NavigationMenuItem>
-          <NavigationMenuItem>
-            <NavigationMenuTrigger>Components</NavigationMenuTrigger>
+            <NavigationMenuTrigger>Nhà cho thuê</NavigationMenuTrigger>
             <NavigationMenuContent>
               <ul className="grid w-[400px] gap-3 p-4 md:w-[500px] md:grid-cols-2 lg:w-[600px] ">
-                {components.map((component) => (
+                {properties.map((item) => (
                   <ListItem
-                    key={component.title}
-                    title={component.title}
-                    href={component.href}
+                    key={item.title}
+                    title={item.title}
+                    href={`/search/ptypes=${item.key}`}
                   >
-                    {component.description}
+                    {item.description}
                   </ListItem>
                 ))}
               </ul>
             </NavigationMenuContent>
           </NavigationMenuItem>
           <NavigationMenuItem>
-            <Link href="/docs" legacyBehavior passHref>
-              <NavigationMenuLink>
-                Documentation
+            <Link href="/news" legacyBehavior passHref>
+              <NavigationMenuLink className="px-4 py-2">
+                Tin tức
+              </NavigationMenuLink>
+            </Link>
+          </NavigationMenuItem>
+          <NavigationMenuItem>
+            <Link href="/guide" legacyBehavior passHref>
+              <NavigationMenuLink className="px-4 py-2">
+                Hướng dẫn
               </NavigationMenuLink>
             </Link>
           </NavigationMenuItem>

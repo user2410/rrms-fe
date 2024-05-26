@@ -27,3 +27,18 @@ export type Place = {
     southwest: Location,
   }
 }
+
+export type GeolocationDB = {
+  country_code: string;
+  country_name: string;
+  city?: {
+    code: string;
+    name: string;
+    lowerName: string;
+  };
+  postal: string;
+  latitude: number;
+  longitude: number;
+  IPv4: string;
+  state: string;
+};

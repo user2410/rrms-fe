@@ -1,8 +1,9 @@
 import { Button } from "@/components/ui/button";
-import { Separator } from "@/components/ui/separator";
+import NewsTab from "./_components/landing-page/news_tab";
 import PerfectPropertyManagement from "./_components/landing-page/perfect_property_management";
-import RentalInplace from "./_components/landing-page/rental_inplace";
+import ListingInplace from "./_components/landing-page/listings_inplace";
 import SearchbarSuggestion from "./_components/landing-page/searchbar_suggestion";
+import Places from "./_components/landing-page/listing_byplace";
 
 export default function HomePage() {
   return (
@@ -14,8 +15,10 @@ export default function HomePage() {
       ">
         <div className="w-full h-full bg-slate-900 bg-opacity-75 py-24 px-10 flex flex-col items-center justify-center gap-8">
           <div>
-            <h1 className="w-full text-center text-6xl font-bold">Discover Your New Rental</h1>
-            <h3 className="w-full text-center text-2xl">Helping 100 million renters find their perfect fit.</h3>
+            <h1 className="w-full text-center text-6xl font-bold">Tìm nhà trọ, căn hộ, văn phòng cho thuê</h1>
+            <h3 className="w-full text-center text-2xl">
+              Tìm kiếm hàng ngàn bất động sản cho thuê từ chủ nhà và môi giới uy tín
+            </h3>
           </div>
           <form className="flex flex-row w-2/5 gap-1">
             <div className="flex-grow">
@@ -30,10 +33,27 @@ export default function HomePage() {
         </div>
       </div>
       
-      <div className="container space-y-4">
-        <RentalInplace />
-        <Separator />
-        <PerfectPropertyManagement />
+      <div className="">
+        <div className="bg-white odd:dark:bg-gray-200 even:bg-gray-50 even:dark:bg-gray-800">
+          <div className="py-10 container">
+            <NewsTab />
+          </div>
+        </div>
+        <div className="bg-white odd:dark:bg-gray-200 even:bg-gray-50 even:dark:bg-gray-800">
+          <div className="py-10 container">
+            <ListingInplace />
+          </div>
+        </div>
+        <div className="bg-white odd:dark:bg-gray-200 even:bg-gray-50 even:dark:bg-gray-800">
+          <div className="py-10 container">
+            <Places />
+          </div>
+        </div>
+        <div className="bg-white odd:dark:bg-gray-200 even:bg-gray-50 even:dark:bg-gray-800">
+          <div className="py-10 container">
+            <PerfectPropertyManagement />
+          </div>
+        </div>
       </div>
     </div>
   );

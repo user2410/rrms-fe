@@ -80,6 +80,15 @@ export type ReducedListing = {
   postAt: Date;
 }
 
+export type SearchResult = {
+  count: number;
+  items: { lid: string; }[];
+  limit: number;
+  offset: number;
+  sortby: string;
+  order: 'asc' | 'desc';
+};
+
 export const rentalPolicies = [
   { id: 1, policy: "rental_policy-payment", text: "Trả tiền thuê", icon: 'fas fa-money-check-dollar' },
   { id: 2, policy: "rental_policy-maintenance", text: "Bảo trì", icon: 'fas fa-toolbox' },
