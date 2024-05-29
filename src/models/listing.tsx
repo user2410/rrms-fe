@@ -82,7 +82,12 @@ export type ReducedListing = {
 
 export type SearchResult = {
   count: number;
-  items: { lid: string; }[];
+  items: { 
+    lid: string;
+    listing?: Listing;    // derived field
+    property?: Property;  // derieve field
+    units?: Unit[];  // derieve field
+  }[];
   limit: number;
   offset: number;
   sortby: string;
@@ -105,10 +110,10 @@ export const rentalPolicies = [
 ];
 
 export const listingPriorities = [
-  {priority: 1, basePrice: 2000 ,label: "Tin thường", desc: "2,000 đ/ngày"},
-  {priority: 2, basePrice: 5000 ,label: "Tin bạc", desc: "5,000 đ/ngày"},
-  {priority: 3, basePrice: 7000 ,label: "Tin vàng", desc: "7,000 đ/ngày"},
-  {priority: 4, basePrice: 9000 ,label: "Tin kim cương", desc: "9,000 đ/ngày"},
+  {priority: 1, basePrice: 2000 ,label: "Tin thường", desc: "2,000 đ/ngày", bgColor: "bg-slate-500", textColor: "text-red-600"},
+  {priority: 2, basePrice: 5000 ,label: "Tin bạc", desc: "5,000 đ/ngày", bgColor: "bg-cyan-200", textColor: "text-pink-600"},
+  {priority: 3, basePrice: 7000 ,label: "Tin vàng", desc: "7,000 đ/ngày", bgColor: "bg-yellow-500", textColor: "text-orange-600"},
+  {priority: 4, basePrice: 9000 ,label: "Tin kim cương", desc: "9,000 đ/ngày", bgColor: "bg-red-500", textColor: "text-blue-600"},
 ];
 
 export const listingDiscount = [
@@ -123,7 +128,7 @@ export const mockupListings : Listing[] = [
     creatorId: 'f6ca05c0-fad5-46fc-a237-a8e930e7cb01',
     propertyId: 'f6ca05c0-fad5-46fc-a237-a8e930e7cb01',
     title: "Chính chủ cần cho thuê gấp cả nhà 7T hoặc cho thuê riêng tầng 1, 2 DT 100m2 ngay số 9 Nguyễn Xiển",
-    description: "Cần cho thuê gấp mặt bằng kinh doanh văn phòng T1, 2 giá rẻ ngay số 9 Nguyễn Xiển: Tầng 01 DT 100m²/sàn giá cho thuê: 38tr/tháng. Văn phòng T2 DT 30m² giá: 5tr/sàn. Tầng 1, 2 DT 180m² cho cho thuê: 110tr/tháng. Có thể vào được luôn.",
+    description: "Cần cho thuê gấp mặt bằng kinh doanh văn phòng T1, 2 giá rẻ ngay số 9 Nguyễn Xiển: Tầng 01 DT 100m²/sàn giá cho thuê: 38tr/tháng. Văn phòng T2 DT 30m² giá: 5tr/sàn. Tầng 1, 2 DT 180m² cho cho thuê: 110tr/tháng. Có thể vào được luôn. Cần cho thuê gấp mặt bằng kinh doanh văn phòng T1, 2 giá rẻ ngay số 9 Nguyễn Xiển: Tầng 01 DT 100m²/sàn giá cho thuê: 38tr/tháng. Văn phòng T2 DT 30m² giá: 5tr/sàn. Tầng 1, 2 DT 180m² cho cho thuê: 110tr/tháng. Có thể vào được luôn.",
     fullName: 'Nguyễn Văn A',
     email: 'a.nv19234@sis.hust.edu.vn',
     phone: '01233456789',
@@ -134,7 +139,7 @@ export const mockupListings : Listing[] = [
     leaseTerm: 36,
     petsAllowed: true,
     numberOfResidents: 12,
-    priority: 2,
+    priority: 4,
     active: true,
     units: [],
     policies: [
@@ -166,7 +171,7 @@ export const mockupListings : Listing[] = [
     creatorId: 'f6ca05c0-fad5-46fc-a237-a8e930e7cb01',
     propertyId: 'f6ca05c0-fad5-46fc-a237-a8e930e7cb01',
     title: "Cho thuê làm văn phòng tầng 1+2+3",
-    description: "Cho thuê làm văn phòng tầng 1 + 2 + 3 toà nhà ngõ 149 Nguyễn Tuân, diện tích 55m²/sàn, có thang máy đi riêng biệt, ngõ nông hai ô tô tránh nhau, khu vực đông đúc bậc nhất Hà nôi. Giá 25 tr/tháng.",
+    description: "Cho thuê làm văn phòng tầng 1 + 2 + 3 toà nhà ngõ 149 Nguyễn Tuân, diện tích 55m²/sàn, có thang máy đi riêng biệt, ngõ nông hai ô tô tránh nhau, khu vực đông đúc bậc nhất Hà nôi. Giá 25 tr/tháng. Cần cho thuê gấp mặt bằng kinh doanh văn phòng T1, 2 giá rẻ ngay số 9 Nguyễn Xiển: Tầng 01 DT 100m²/sàn giá cho thuê: 38tr/tháng. Văn phòng T2 DT 30m² giá: 5tr/sàn. Tầng 1, 2 DT 180m² cho cho thuê: 110tr/tháng. Có thể vào được luôn.",
     fullName: 'Nguyễn Văn A',
     email: 'a.nv19234@sis.hust.edu.vn',
     phone: '01233456789',
@@ -177,7 +182,7 @@ export const mockupListings : Listing[] = [
     leaseTerm: 36,
     petsAllowed: true,
     numberOfResidents: 12,
-    priority: 2,
+    priority: 1,
     active: true,
     units: [],
     policies: [

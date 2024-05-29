@@ -7,13 +7,12 @@ import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { orientationItems, pFeatures } from "@/models/property";
 import { uAmenities } from "@/models/unit";
+import { PopoverClose } from "@radix-ui/react-popover";
+import { useRouter } from "next/navigation";
 import { useFormContext } from "react-hook-form";
 import { BsListUl } from "react-icons/bs";
 import FilterNRooms from "../../_components/landing-page/filters/filter_nrooms";
 import { SearchFormValues } from "../../_components/search_box";
-import { useRouter } from "next/navigation";
-import { objectToQueryString } from "@/utils/query";
-import { beforeSubmitSearchForm } from "./top-searchbar";
 
 export default function ExtraFilter() {
   const router = useRouter();
@@ -39,7 +38,7 @@ export default function ExtraFilter() {
           Lọc thêm
         </Button>
       </PopoverTrigger>
-      <PopoverContent className="w-80 space-y-4 p-1">
+      <PopoverContent className="w-96 space-y-4 px-2">
         <FilterNRooms />
         <FormField
           control={form.control}
@@ -91,15 +90,14 @@ export default function ExtraFilter() {
           <Button type="button" variant="outline" onClick={handleResetFields}>
             Đặt lại
           </Button>
-          <Button
-            type="button"
-            variant="default"
-            onClick={() => {
-              router.push(`/search?${objectToQueryString(beforeSubmitSearchForm(form.getValues()))}`);
-            }}
-          >
-            Tìm kiếm
-          </Button>
+          <PopoverClose asChild>
+            <Button
+              type="button"
+              variant="default"
+            >
+              Áp dụng
+            </Button>
+          </PopoverClose>
         </div>
       </PopoverContent>
     </Popover>

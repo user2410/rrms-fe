@@ -8,35 +8,13 @@ import { Unit } from "@/models/unit";
 import '@fortawesome/fontawesome-free/css/all.min.css';
 import ContactForm from "./contact";
 import ListingDetails from "./details";
+import Faq from "./faq";
 import ListingsForyou from "./for_you";
 import GeneralInfo from "./general-info";
 import MapNNearby from "./map_nearby";
 import PostedBy from "./posted-by";
 import RentalPolicies from "./rental_policies";
-import Tags from "./tags";
 import UnitsList from "./units";
-import { GetCityById, GetDistrictById } from "@/utils/dghcvn";
-import Breadcrumb from "@/components/ui/breadcrumb";
-import Faq from "./faq";
-
-const TopBreadcrumb = ({
-  cityCode,
-  districtCode,
-}: {
-  cityCode: string;
-  districtCode: string;
-}) => {
-
-  return (
-    <Breadcrumb
-      items={[
-        { label: GetCityById(cityCode)!.name, href: `/city/${cityCode}` },
-        { label: GetDistrictById(districtCode)!.name, href: `/city/${cityCode}/district/${districtCode}` }
-      ]}
-      className="mt-4"
-    />
-  );
-};
 
 export default function ListingContent({
   listing, 
@@ -55,7 +33,7 @@ export default function ListingContent({
         {/* Main content */}
         <div className="space-y-4 col-span-4">
           <div className="space-y-3">
-            <TopBreadcrumb cityCode={property.city} districtCode={property.district} />
+            {/* <TopBreadcrumb cityCode={property.city} districtCode={property.district} /> */}
             <h1 className="font-semibold text-xl">{listing.title}</h1>
             <h3 className="font-normal">{property.fullAddress}</h3>
             <h4 className="font-light text-sm">Đăng vào {format(new Date(2014, 1, 11), 'hh:mm dd/MM/yyyy')}</h4>

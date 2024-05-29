@@ -2,18 +2,15 @@ import { Button } from "@/components/ui/button";
 import { Command, CommandEmpty, CommandGroup, CommandInput, CommandItem, CommandSeparator } from "@/components/ui/command";
 import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
 import { mapPropertyTypeToText } from "@/models/property";
+import { PopoverClose } from "@radix-ui/react-popover";
 import clsx from "clsx";
 import { Check } from "lucide-react";
 import { useState } from "react";
 import { useFormContext } from "react-hook-form";
 import { BsChevronDown } from "react-icons/bs";
 import { SearchFormValues } from "../../_components/search_box";
-import { objectToQueryString } from "@/utils/query";
-import { useRouter } from "next/navigation";
-import { beforeSubmitSearchForm } from "./top-searchbar";
 
 export default function PropTypesFilter() {
-  const router = useRouter();
   const [open, setOpen] = useState(false);
   const form = useFormContext<SearchFormValues>();
   const ptypes = form.watch('ptypes');
@@ -74,16 +71,14 @@ export default function PropTypesFilter() {
           >
             Đặt lại
           </Button>
-          <Button
-            type="button"
-            variant="default"
-            onClick={() => {
-              setOpen(false);
-              router.push(`/search?${objectToQueryString(beforeSubmitSearchForm(form.getValues()))}`);
-            }}
-          >
-            Tìm kiếm
-          </Button>
+          <PopoverClose asChild>
+            <Button
+              type="button"
+              variant="default"
+            >
+              Áp dụng
+            </Button>
+          </PopoverClose>
         </div>
       </PopoverContent>
     </Popover>

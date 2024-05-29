@@ -1,97 +1,92 @@
-import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardFooter, CardHeader } from "@/components/ui/card";
-import { listingPriorities } from "@/models/listing";
-import clsx from "clsx";
+import { ManagedListing } from "@/models/listing";
 import Image from "next/image";
-import { BsHeart, BsHeartFill } from "react-icons/bs";
-import { FaPhone } from "react-icons/fa";
+import { BsHeartFill } from "react-icons/bs";
 
-import styles from "../_styles/listing_card.module.css";
-import { SearchListingItem } from "./listings_list";
+import { ListingTitle } from "@/components/complex/listing";
+import { Avatar, AvatarFallback } from "@/components/ui/avatar";
 import { Skeleton } from "@/components/ui/skeleton";
-import { useContext } from "react";
-import { FavListingsContext } from "@/context/favorite_listings.context";
-import Link from "next/link";
+import { cn } from "@/libs/utils";
+import { getPrimaryImage } from "@/models/property";
+import { GetLocationName } from "@/utils/dghcvn";
+import { stripHtml } from "@/utils/string";
+import { formatDistance } from 'date-fns';
+import { vi as vilocale } from "date-fns/locale";
+import styles from "../_styles/listing_card.module.css";
 
 const ListingCard = ({
-  listing,
+  item,
 }: {
-  listing: SearchListingItem;
+  item: ManagedListing;
 }): JSX.Element => {
-  const { listing: l, property } = listing;
-  const favListingCtx = useContext(FavListingsContext);
-  const listingPriority = listingPriorities.find(item => item.priority === listing.listing.priority);
-  const images = property.media.filter((item) => item.type === "IMAGE");
+  const { listing, property } = item;
+  const images = property.media.filter(m => m.type === "IMAGE");
 
   return (
-    <Card className="relative hover:shadow-md cursor-pointer">
-      <div className="absolute top-2 -left-2 z-[5]">
-        {listingPriority && (
-          <Badge className={clsx(
-            "text-white",
-            listingPriority.priority === 1 && "bg-slate-500",
-            listingPriority.priority === 2 && "bg-cyan-200",
-            listingPriority.priority === 3 && "bg-yellow-500",
-            listingPriority.priority === 4 && "bg-red-500",
-          )}>
-            {listingPriority.label}
-          </Badge>
-        )}
-      </div>
-      <CardHeader>
-        <div className="grid grid-cols-2 gap-2 lg:gap-4">
-          <div className="relative aspect-video">
-            <Image className="max-w-full rounded-md object-cover" fill src={images[0].url} alt="" />
-          </div>
-          <div className="grid grid-cols-2 gap-2 lg:gap-4">
-            <div className="relative">
-              {images[1] && (
-                <Image className="max-w-full rounded-md object-cover" fill src={images[1].url} alt="" />
-              )}
-            </div>
-            <div className="relative">
-              {images[2] && (
-                <Image className="max-w-full rounded-md object-cover" fill src={images[2].url} alt="" />
-              )}
-            </div>
-            <div className="relative">
-              {images[3] && (
-                <Image className="max-w-full rounded-md object-cover" fill src={images[3].url} alt="" />
-              )}
-            </div>
-            <div className="relative">
-              {images[4] && (
-                <Image className="max-w-full rounded-md object-cover" fill src={images[4].url} alt="" />
-              )}
-            </div>
-          </div>
+    <Card className={cn("relative hover:shadow-md cursor-pointer", listing.priority === 4 && "bg-orange-100")}>
+      <CardHeader className="py-2" />
+      <CardContent className="pb-2 px-2 grid grid-cols-8 gap-2">
+        <div className={cn("relative aspect-square", listing.priority === 4 ? "col-span-3 grid grid-cols-2 gap-0.5" : "col-span-2")}>
+          {listing.priority === 4 ? (
+            Array.from({ length: 4 }).map((_, i) => (
+              <div key={i} className="relative aspect-square">
+                <Image
+                  src={images[i]?.url || `/img/property_image_placeholder.webp`}
+                  alt={images[i].description ?? property.name}
+                  fill
+                />
+              </div>
+            ))) : (
+            <Image
+              src={getPrimaryImage(property) || `/img/property_image_placeholder.webp`}
+              alt={property.name}
+              fill
+            />
+          )}
         </div>
-      </CardHeader>
-      <CardContent className="space-y-2">
-        <Link href={`/listings/${listing.listing.id}`}><h2 className="font-semibold uppercase">{listing.listing.title}</h2></Link>
-        <div className="flex flex-row gap-2">
-          <h3 className="text-red-600 font-semibold">{listing.listing.price.toLocaleString('vi-VN', { style: 'currency', currency: 'VND' })} / tháng - {listing.property.area} m<sup>2</sup> -{" "}</h3>
-          <h3>{listing.property.city}</h3>
-        </div>
-        <div className={styles.pcontainer}>
-          <p className="font-light">{listing.listing.description.replace(/<[^>]*>?/gm, '')}</p>
+        <div className={cn("space-y-3", listing.priority === 4 ? "col-span-5" : "col-span-6")}>
+          <ListingTitle
+            listing={listing}
+            className="text-lg"
+          />
+          <div className="w-full flex flex-row items-end justify-between">
+            <p className="text-base font-semibold text-green-600">
+              {listing.price.toLocaleString('vi-VN', { style: 'currency', currency: 'VND' })}/tháng
+            </p>
+            <p className="text-sm">{property.area.toLocaleString("vi-VN")}m<sup>2</sup></p>
+            <p className="text-sm">
+              {GetLocationName(
+                property.city,
+                property.district,
+                property.ward || "",
+              )}
+            </p>
+            <p className="text-sm text-gray-500">
+              {formatDistance(new Date(listing.createdAt), new Date(), {
+                addSuffix: true,
+                locale: vilocale,
+              })}
+            </p>
+          </div>
+          <p className="text-sm text-slate-400 line-clamp-3">
+            {stripHtml(listing.description)}
+          </p>
+          <div className="w-full flex flex-row justify-between items-center">
+            <div className="flex flex-row items-center gap-1">
+              <Avatar>
+                <AvatarFallback>{listing.fullName.split(" ").map(i => i[0]).join("")}</AvatarFallback>
+              </Avatar>
+              <span className="text-sm text-gray-500">{listing.fullName}</span>
+            </div>
+            <div className="space-x-2">
+              <Button type="button">Gọi {listing.phone}</Button>
+              <Button type="button" variant="outline" className="bg-blue-500 text-white">Nhắn Zalo</Button>
+              <Button type="button"><BsHeartFill size={12}/></Button>
+            </div>
+          </div>
         </div>
       </CardContent>
-      <CardFooter className="justify-end">
-        <div className="flex flex-row gap-2">
-          <Button type="button" variant="default" className="text-white">
-            <FaPhone size={16} />
-            <span className="ml-2">
-              Liên hệ: <span className="font-semibold">0123456789</span>
-            </span>
-          </Button>
-          {favListingCtx.favListings.find((item: string) => item === listing.listing.id)
-            ? (<Button type="button" variant="outline" onClick={() => favListingCtx.removeFavListing(listing.listing.id)}><BsHeartFill size={16} /></Button>)
-            : (<Button type="button" variant="outline" onClick={() => favListingCtx.addFavListing(listing.listing.id)}><BsHeart size={16} /></Button>)
-          }
-        </div>
-      </CardFooter>
     </Card>
   );
 };

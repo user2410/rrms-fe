@@ -2,13 +2,12 @@ import DivisionSelector from "@/components/complex/division-selector";
 import { Button } from "@/components/ui/button";
 import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
 import { GetLocationName } from "@/utils/dghcvn";
-import { objectToQueryString } from "@/utils/query";
+import { PopoverClose } from "@radix-ui/react-popover";
 import { useRouter } from "next/navigation";
 import { useMemo } from "react";
 import { useFormContext } from "react-hook-form";
 import { BsChevronDown } from "react-icons/bs";
 import { SearchFormValues } from "../../_components/search_box";
-import { beforeSubmitSearchForm } from "./top-searchbar";
 
 export default function LocationFilter() {
   const router = useRouter();
@@ -49,15 +48,14 @@ export default function LocationFilter() {
           <Button type="button" variant="outline" onClick={handleResetFields}>
             Đặt lại
           </Button>
-          <Button
-            type="button"
-            variant="default"
-            onClick={() => {
-              router.push(`/search?${objectToQueryString(beforeSubmitSearchForm(form.getValues()))}`);
-            }}
-          >
-            Tìm kiếm
-          </Button>
+          <PopoverClose asChild>
+            <Button
+              type="button"
+              variant="default"
+            >
+              Áp dụng
+            </Button>
+          </PopoverClose>
         </div>
       </PopoverContent>
     </Popover>

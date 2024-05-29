@@ -6,47 +6,44 @@ import { useMemo, useState } from "react";
 import { useFormContext } from "react-hook-form";
 import { BsChevronDown } from "react-icons/bs";
 import { SearchFormValues } from "../../_components/search_box";
-import priceRanges from "@configs/price_ranges.json";
+import areaRanges from "@configs/area_ranges.json";
 import { Badge } from "@/components/ui/badge";
 
-export default function PriceFilter() {
+export default function AreaFilter() {
   const form = useFormContext<SearchFormValues>();
   const [open, setOpen] = useState(false);
 
-  const [min, setMin] = useState<number | undefined>(form.getValues("lminPrice"));
-  const [max, setMax] = useState<number | undefined>(form.getValues("lmaxPrice"));
+  const [min, setMin] = useState<number | undefined>(form.getValues("pminArea"));
+  const [max, setMax] = useState<number | undefined>(form.getValues("pmaxArea"));
   const [error, setError] = useState<boolean>(false);
 
-  const _min = form.watch("lminPrice");
-  const _max = form.watch("lmaxPrice");
+  const _min = form.watch("pminArea");
+  const _max = form.watch("pmaxArea");
 
   const label = useMemo(() => {
     if (_min) {
-      const __min = _min / 1e6;
       if (_max) {
-        const __max = _max / 1e6;
-        return `${__min} triệu - ${__max} triệu`;
+        return `${_min} m2 - ${_max} m2`;
       }
-      return `Trên ${__min} triệu`;
+      return `Trên ${_min} m2`;
     }
     if (_max) {
-      const __max = _max / 1e6;
-      return `Dưới ${__max} triệu`;
+      return `Dưới ${_max} m2`;
     }
     return "Giá thuê...";
   }, [_min, _max]);
 
   return (
     <Popover open={open} onOpenChange={(open) => {
-      setMin(form.getValues("lminPrice"));
-      setMax(form.getValues("lmaxPrice"));
+      setMin(form.getValues("pminArea"));
+      setMax(form.getValues("pmaxArea"));
       setOpen(open);
       setError(false);
     }}>
       <PopoverTrigger asChild>
         <Button type="button" variant="ghost" className="block text-left rounded-none h-full">
           <div className="flex items-center gap-2 text-md font-medium">
-            Mức giá
+            Diện tích
             <BsChevronDown size={16} />
           </div>
           <div className="text-sm font-light">
@@ -61,9 +58,9 @@ export default function PriceFilter() {
               type="number"
               min={0}
               className="w-20"
-              value={min ? min/1e6 : ""}
-              onChange={(e) => setMin(e.target.valueAsNumber * 1e6)} />
-            <FormDescription>triệu</FormDescription>
+              value={min ? min : ""}
+              onChange={(e) => setMin(e.target.valueAsNumber)} />
+            <FormDescription>m<sup>2</sup></FormDescription>
           </FormItem>
           <FormItem className="flex-grow flex flex-row gap-2">
             <FormControl>
@@ -71,31 +68,31 @@ export default function PriceFilter() {
                 type="number"
                 min={0}
                 className="w-20"
-                value={max ? max/1e6 : ""}
-                onChange={(e) => setMax(e.target.valueAsNumber * 1e6)} />
+                value={max ? max : ""}
+                onChange={(e) => setMax(e.target.valueAsNumber)} />
             </FormControl>
-            <FormDescription>triệu</FormDescription>
+            <FormDescription>m<sup>2</sup></FormDescription>
           </FormItem>
         </div>
         <div className="flex flex-row items-center flex-wrap gap-2">
-          {priceRanges.map((item, index) => (
+          {areaRanges.map((item, index) => (
             <Badge
               key={index}
               onClick={() => {
                 // @ts-ignore
-                setMin(item.min * 1e6);
+                setMin(item.min);
                 // @ts-ignore
-                setMax(item.max * 1e6);
+                setMax(item.max);
               }}
               className="cursor-pointer"
             >
-              {item.title}&nbsp;triệu
+              {item.title}&nbsp;m<sup>2</sup>
             </Badge>
           ))}
         </div>
         {error && (
           <p className="text-sm font-medium text-destructive">
-            Giá tối thiểu phải nhỏ hơn giá tối đa
+            Diện tích tối thiểu phải nhỏ hơn diện tích tối đa
           </p>
         )}
         <div className="w-full flex flex-row justify-end gap-2 py-2">
@@ -117,8 +114,8 @@ export default function PriceFilter() {
                 setError(true);
                 return;
               }
-              form.setValue("lminPrice", min);
-              form.setValue("lmaxPrice", max);
+              form.setValue("pminArea", min);
+              form.setValue("pmaxArea", max);
               setOpen(false);
             }}
           >

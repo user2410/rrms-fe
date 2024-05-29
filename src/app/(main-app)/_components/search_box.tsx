@@ -3,7 +3,6 @@
 import { Button } from "@/components/ui/button";
 import { Dialog, DialogContent, DialogFooter, DialogHeader, DialogTrigger } from "@/components/ui/dialog";
 import { Form } from "@/components/ui/form";
-import { objectToQueryString } from "@/utils/query";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { DialogClose } from "@radix-ui/react-dialog";
 import { useRouter } from "next/navigation";
@@ -17,7 +16,7 @@ import PriceFilter from "./landing-page/filters/filter_price";
 import { PropTypesFilter } from "./landing-page/filters/filter_proptypes";
 import SearchbarSuggestion from "./searchbar_suggestion";
 
-export const SearchFormSchema = z.object({
+export const searchFormSchema = z.object({
   ptypes: z
     .array(
       z.string()
@@ -39,7 +38,8 @@ export const SearchFormSchema = z.object({
     .min(0)
     .optional(),
   pcity: z
-    .string(),
+    .string()
+    .optional(),
   pdistrict: z
     .string()
     .optional(),
@@ -83,7 +83,7 @@ export const SearchFormSchema = z.object({
     ),
 });
 
-export type SearchFormValues = z.infer<typeof SearchFormSchema>;
+export type SearchFormValues = z.infer<typeof searchFormSchema>;
 
 export const SearchFormDefaultValues: DeepPartial<SearchFormValues> = {
   ptypes: [],
@@ -94,15 +94,19 @@ export const SearchFormDefaultValues: DeepPartial<SearchFormValues> = {
 export default function SearchBox() {
   const router = useRouter();
   const form = useForm<SearchFormValues>({
-    resolver: zodResolver(SearchFormSchema),
+    resolver: zodResolver(searchFormSchema),
     defaultValues: SearchFormDefaultValues,
   });
 
   async function onSubmit(data: SearchFormValues) {
-    // console.log(data);
-    data.lmaxPrice = data.lmaxPrice ? data.lmaxPrice * 1000000 : undefined;
-    data.lminPrice = data.lminPrice ? data.lminPrice * 1000000 : undefined;
-    router.push(`/search?${objectToQueryString(data)}`);
+    const transformedData = Object.fromEntries(
+      Object.entries(data).map(([key, value]) => [
+        key,
+        value === "" ? undefined : value,
+      ])
+    );
+    const sendData = encodeURIComponent(JSON.stringify(transformedData));
+    router.push(`/search?q=${sendData}`);
   }
 
   return (
