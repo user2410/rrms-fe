@@ -98,7 +98,7 @@ const searchData = [...citiesArr, ...districtsArr, ...wardsArr];
 export function FuzzySearch(input: string, limit: number = 10) {
   const fuseInstance = new Fuse(searchData, {
     keys: ["name"],
-    threshold: 0.3,
+    threshold: 0.4,
   });
   
   var r: { cities: any[]; districts: any[]; wards: any[] } = {

@@ -1,13 +1,8 @@
-"use client";
+// "use client";
 
-import { Badge } from "@/components/ui/badge";
-import { ScrollArea, ScrollBar } from "@/components/ui/scroll-area";
 import { Place } from "@/models/dghcvn";
 import { Property } from "@/models/property";
 import { GoogleMap, MarkerF } from "@react-google-maps/api";
-import axios from "axios";
-import clsx from "clsx";
-import { useEffect, useMemo, useState } from "react";
 
 const interests = [
   {type: 'bus_station', text: 'Trạm xe buýt'},
@@ -30,7 +25,7 @@ type MapPlaces = {
 }
 
 export default function MapNNearby({ property }: { property: Property }) {
-  const [selectedInterests, setSelectedInterests] = useState<number[]>([]);
+  // const [selectedInterests, setSelectedInterests] = useState<number[]>([]);
   // const nearbyPlaces = useMemo(() => {
   //   (async () => {
   //     for (const i of selectedInterests) {
@@ -49,19 +44,19 @@ export default function MapNNearby({ property }: { property: Property }) {
   //   })();
   // }, [selectedInterests]);
 
-  const handleSelect = (i : number) => {
-    if (selectedInterests.includes(i)) {
-      setSelectedInterests(selectedInterests.filter((item) => item !== i));
-    } else {
-      setSelectedInterests([...selectedInterests, i]);
-    }
-  };
+  // const handleSelect = (i : number) => {
+  //   if (selectedInterests.includes(i)) {
+  //     setSelectedInterests(selectedInterests.filter((item) => item !== i));
+  //   } else {
+  //     setSelectedInterests([...selectedInterests, i]);
+  //   }
+  // };
 
   // fetch nearby places
 
-  useEffect(() => {
+  // useEffect(() => {
     
-  }, [selectedInterests]);
+  // }, [selectedInterests]);
 
   return (
     <div>
@@ -74,7 +69,7 @@ export default function MapNNearby({ property }: { property: Property }) {
         <MarkerF
           position={{ lat: property.lat, lng: property.lng }}
         />
-        {selectedInterests.map((si) => {
+        {/* {selectedInterests.map((si) => {
           const interest = interests[si];
           return (
             <MarkerF
@@ -82,9 +77,9 @@ export default function MapNNearby({ property }: { property: Property }) {
               position={{ lat: property.lat + 0.001, lng: property.lng + 0.001 }}
               />
           );
-        })}
+        })} */}
       </GoogleMap>
-      <ScrollArea className="p-4 w-[880px] whitespace-nowrap rounded-md border">
+      {/* <ScrollArea className="p-4 w-[880px] whitespace-nowrap rounded-md border">
         <div className="flex w-full space-x-4">
           {interests.map((interest, index) => (
             <Badge 
@@ -100,7 +95,7 @@ export default function MapNNearby({ property }: { property: Property }) {
           ))}
         </div>
         <ScrollBar orientation="horizontal"/>
-      </ScrollArea>
+      </ScrollArea> */}
     </div>
   );
 }

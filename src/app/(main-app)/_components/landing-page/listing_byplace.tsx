@@ -1,19 +1,33 @@
-import clsx from "clsx";
+"use client";
+
 import Link from "next/link";
+import { useEffect, useState } from "react";
 
 type Place = {
   code: string;
   title: string;
-  bgImg: string;
+  bgImgs: string[];
 };
 
 function Placecard({ place }: { place: Place }) {
+  const [bgImageIndex, setBgImageIndex] = useState(0);
+
+  useEffect(() => {
+    const intervalId = setInterval(() => {
+      setBgImageIndex((prevIndex) => (prevIndex + 1) % place.bgImgs.length);
+    }, 5000); // change image every 5 seconds
+
+    return () => {
+      clearInterval(intervalId);
+    };
+  }, [place.bgImgs.length]);
+
   return (
     <Link
       href={`/search?pcity=${place.code}`}
-      className="hover:underline pt-4 pl-4 space-y-2 bg-cover bg-center bg-no-repeat aspect-[4/3] text-white"
+      className="hover:underline pt-4 pl-4 space-y-2 bg-cover bg-center bg-no-repeat aspect-[4/3] text-white transition-all duration-1000 ease-in-out"
       style={{
-        backgroundImage: `linear-gradient(rgba(0, 0, 0, 0.4), rgba(0, 0, 0, 0.1)), url(${place.bgImg})`,
+        backgroundImage: `linear-gradient(rgba(0, 0, 0, 0.4), rgba(0, 0, 0, 0.1)), url(${place.bgImgs[bgImageIndex]})`,
       }}
     >
       <h3 className="text-lg font-semibold">{place.title}</h3>
@@ -28,38 +42,57 @@ export default function Places() {
       <div className="grid grid-cols-2 gap-8">
         <Placecard
           place={{
-            code: "hn",
+            code: "HN",
             title: "Hà Nội",
-            bgImg: "https://file4.batdongsan.com.vn/images/newhome/cities1/HN-web-1.jpg",
+            bgImgs: [
+              "https://file4.batdongsan.com.vn/images/newhome/cities1/HN-web-1.jpg",
+              "https://file4.batdongsan.com.vn/images/newhome/cities1/HN-web-2.jpg",
+              "https://file4.batdongsan.com.vn/images/newhome/cities1/HN-web-3.jpg",
+            ],
           }}
         />
         <div className="grid grid-cols-2 gap-4">
           <Placecard
             place={{
-              code: "hcm",
+              code: "SG",
               title: "Hồ Chí Minh",
-              bgImg: "https://file4.batdongsan.com.vn/images/newhome/cities1/HCM-web-1.jpg",
+              bgImgs: [
+                "https://file4.batdongsan.com.vn/images/newhome/cities1/HCM-web-1.jpg",
+                "https://file4.batdongsan.com.vn/images/newhome/cities1/HCM-web-2.jpg",
+                "https://file4.batdongsan.com.vn/images/newhome/cities1/HCM-web-3.jpg",
+              ],
             }}
           />
           <Placecard
             place={{
-              code: "hcm",
-              title: "Hồ Chí Minh",
-              bgImg: "https://file4.batdongsan.com.vn/images/newhome/cities1/HCM-web-1.jpg",
+              code: "DDN",
+              title: "Đà Nẵng",
+              bgImgs: [
+                "https://file4.batdongsan.com.vn/images/newhome/cities1/DDN-web-1.jpg",
+                "https://file4.batdongsan.com.vn/images/newhome/cities1/DDN-web-2.jpg",
+                "https://file4.batdongsan.com.vn/images/newhome/cities1/DDN-web-3.jpg",
+              ],
             }}
           />
           <Placecard
             place={{
-              code: "hcm",
-              title: "Hồ Chí Minh",
-              bgImg: "https://file4.batdongsan.com.vn/images/newhome/cities1/HCM-web-1.jpg",
+              code: "BD",
+              title: "Bình Dương",
+              bgImgs: [
+                "https://file4.batdongsan.com.vn/images/newhome/cities1/BD-web-1.jpg",
+                "https://file4.batdongsan.com.vn/images/newhome/cities1/BD-web-2.jpg"
+              ],
             }}
           />
           <Placecard
             place={{
-              code: "hcm",
-              title: "Hồ Chí Minh",
-              bgImg: "https://file4.batdongsan.com.vn/images/newhome/cities1/HCM-web-1.jpg",
+              code: "DNA",
+              title: "Đồng Nai",
+              bgImgs: [
+                "https://file4.batdongsan.com.vn/images/newhome/cities1/DNA-web-1.jpg",
+                "https://file4.batdongsan.com.vn/images/newhome/cities1/DNA-web-2.jpg",
+                "https://file4.batdongsan.com.vn/images/newhome/cities1/DNA-web-3.jpg",
+              ],
             }}
           />
         </div>

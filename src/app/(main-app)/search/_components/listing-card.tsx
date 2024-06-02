@@ -14,6 +14,7 @@ import { stripHtml } from "@/utils/string";
 import { formatDistance } from 'date-fns';
 import { vi as vilocale } from "date-fns/locale";
 import styles from "../_styles/listing_card.module.css";
+import { readNumberVi } from "@/utils/currency";
 
 const ListingCard = ({
   item,
@@ -30,13 +31,13 @@ const ListingCard = ({
         <div className={cn("relative aspect-square", listing.priority === 4 ? "col-span-3 grid grid-cols-2 gap-0.5" : "col-span-2")}>
           {listing.priority === 4 ? (
             Array.from({ length: 4 }).map((_, i) => (
-              <div key={i} className="relative aspect-square">
+              images[i] && (<div key={i} className="relative aspect-square">
                 <Image
                   src={images[i]?.url || `/img/property_image_placeholder.webp`}
                   alt={images[i].description ?? property.name}
                   fill
                 />
-              </div>
+              </div>)
             ))) : (
             <Image
               src={getPrimaryImage(property) || `/img/property_image_placeholder.webp`}
@@ -50,18 +51,18 @@ const ListingCard = ({
             listing={listing}
             className="text-lg"
           />
+          <p className="text-sm">
+            {GetLocationName(
+              property.city,
+              property.district,
+              property.ward || "",
+            )}
+          </p>
           <div className="w-full flex flex-row items-end justify-between">
-            <p className="text-base font-semibold text-green-600">
-              {listing.price.toLocaleString('vi-VN', { style: 'currency', currency: 'VND' })}/tháng
+            <p className="text-sm font-semibold text-green-600">
+              {listing.price.toLocaleString("vi-VN", { style: 'currency', currency: 'VND' })}/tháng
             </p>
             <p className="text-sm">{property.area.toLocaleString("vi-VN")}m<sup>2</sup></p>
-            <p className="text-sm">
-              {GetLocationName(
-                property.city,
-                property.district,
-                property.ward || "",
-              )}
-            </p>
             <p className="text-sm text-gray-500">
               {formatDistance(new Date(listing.createdAt), new Date(), {
                 addSuffix: true,
@@ -82,7 +83,7 @@ const ListingCard = ({
             <div className="space-x-2">
               <Button type="button">Gọi {listing.phone}</Button>
               <Button type="button" variant="outline" className="bg-blue-500 text-white">Nhắn Zalo</Button>
-              <Button type="button"><BsHeartFill size={12}/></Button>
+              <Button type="button"><BsHeartFill size={12} /></Button>
             </div>
           </div>
         </div>

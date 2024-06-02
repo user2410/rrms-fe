@@ -4,6 +4,7 @@ import PerfectPropertyManagement from "./_components/landing-page/perfect_proper
 import ListingInplace from "./_components/landing-page/listings_inplace";
 import SearchbarSuggestion from "./_components/landing-page/searchbar_suggestion";
 import Places from "./_components/landing-page/listing_byplace";
+import Searchbar from "./_components/landing-page/searchbar";
 
 export default function HomePage() {
   return (
@@ -14,22 +15,13 @@ export default function HomePage() {
         text-white
       ">
         <div className="w-full h-full bg-slate-900 bg-opacity-75 py-24 px-10 flex flex-col items-center justify-center gap-8">
-          <div>
-            <h1 className="w-full text-center text-6xl font-bold">Tìm nhà trọ, căn hộ, văn phòng cho thuê</h1>
+          <div className="space-y-4">
+            <h1 className="w-full text-center text-4xl font-bold">Tìm nhà trọ, căn hộ, văn phòng cho thuê</h1>
             <h3 className="w-full text-center text-2xl">
               Tìm kiếm hàng ngàn bất động sản cho thuê từ chủ nhà và môi giới uy tín
             </h3>
           </div>
-          <form className="flex flex-row w-2/5 gap-1">
-            <div className="flex-grow">
-              <SearchbarSuggestion
-                placeholder="Tìm kiếm theo khu vực"
-                type="search"
-                color="black"
-              />
-            </div>
-            <Button className="">Tìm kiếm</Button>
-          </form>
+          <Searchbar />
         </div>
       </div>
       

@@ -1,6 +1,6 @@
-import { Listing, mockupListings, SearchResult } from "@/models/listing";
-import { mockupProperties, Property } from "@/models/property";
-import wait from "@/utils/wait-fn";
+import { backendAPI } from "@/libs/axios";
+import { Listing, SearchResult } from "@/models/listing";
+import { Property } from "@/models/property";
 import { useQuery } from "@tanstack/react-query";
 import { useState } from "react";
 import { SearchFormValues } from "../../_components/search_box";
@@ -8,8 +8,6 @@ import Header from "./header";
 import ListingsSection, { ListingSectionLoadingState } from "./listings_section";
 import Sidebar from "./sidebar/sidebar";
 import TopSearchBar from "./top-searchbar";
-import { backendAPI } from "@/libs/axios";
-import { property } from "lodash";
 
 export default function SearchPage({ query }: { query: SearchFormValues }) {
   const [limit, setLimit] = useState<number>(10);
@@ -22,7 +20,7 @@ export default function SearchPage({ query }: { query: SearchFormValues }) {
     queryKey: ["search", limit, offset, sortby, order, query],
     queryFn: async ({ queryKey }) => {
       const q = queryKey.at(-1) as SearchFormValues;
-      const r = (await backendAPI.get<SearchResult>("/api/listings/", {
+      const r = (await backendAPI.get<SearchResult>("/api/listings/search", {
         params: {
           ...q,
           limit: queryKey.at(1),
@@ -39,7 +37,7 @@ export default function SearchPage({ query }: { query: SearchFormValues }) {
         listings = (await backendAPI.get<Listing[]>('/api/listings/ids', {
           params: {
             listingIds: [...new Set(r.items.map(i => i.lid))],
-            fields: "priority,price,title,description,created_at,updated_at,creator_id,property_id",
+            fields: "priority,price,title,description,created_at,updated_at,creator_id,property_id,full_name,email,phone",
           }
         })).data;
         properties = (await backendAPI.get<Property[]>('/api/properties/ids', {

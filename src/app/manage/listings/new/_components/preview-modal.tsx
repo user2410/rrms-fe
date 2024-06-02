@@ -28,6 +28,7 @@ export default function PreviewModal({
         listing={listing as any}
         property={property}
         units={units}
+        preview={true}
       />
     </div>
   );

@@ -14,10 +14,8 @@ export default function ListingItem({
   className?: string;
 }) {
   return (
-    <Link
-      href={`/listings/${listing.id}`}
-    >
-      <li className={`py-3 m-0 border-b border-solid flex flex-row gap-2 ${className}`}>
+    <Link href={`/listings/${listing.id}`}>
+      <li className={`py-3 m-0 border-b border-solid flex flex-row items-center gap-2 ${className}`}>
         <div className="relative w-16 h-16 min-w-max min-h-max aspect-square">
           <img
             src={getPrimaryImage(property)}

@@ -1,6 +1,6 @@
 "use client";
 
-import { Listing } from "@/models/listing";
+import { Listing, ListingUnit } from "@/models/listing";
 import { Property } from "@/models/property";
 import { useQuery } from "@tanstack/react-query";
 
@@ -22,7 +22,12 @@ export default function ListingPage({ params }: { params: { id: string } }) {
       const listingQuery = await backendAPI.get(`/api/listings/listing/${queryKey.at(3)}`);
       const listing = listingQuery.data;
       const propertyQuery = await backendAPI.get(`/api/properties/property/${listing.propertyId}`);
-      const unitsQuery = await backendAPI.get(`/api/properties/property/${listing.propertyId}/units`);
+      const unitsQuery = await backendAPI.get("/api/units/ids", {
+        params: {
+          unitIds: [...new Set(listing.units.map((lu: ListingUnit) => lu.unitId))],
+          fields: "name,property_id,area,floor,number_of_living_rooms,number_of_bedrooms,number_of_bathrooms,number_of_toilets,number_of_balconies,number_of_kitchens,type,created_at,updated_at,amenities,media"
+        }
+      });
       const data = {
         listing,
         property : propertyQuery.data,
@@ -52,6 +57,7 @@ export default function ListingPage({ params }: { params: { id: string } }) {
         listing={data!.listing}
         property={data!.property}
         units={data!.units}
+        preview={false}
       />
     </div>
   );

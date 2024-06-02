@@ -21,6 +21,7 @@ export const searchFormSchema = z.object({
     .array(
       z.string()
     ),
+  lcreatorId: z.string().optional(),
   lminPrice: z
     .number()
     .min(0)

@@ -1,31 +1,44 @@
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { backendAPI } from "@/libs/axios";
-import { Listing, ManagedListing } from "@/models/listing";
+import { ManagedListing } from "@/models/listing";
 import { Property } from "@/models/property";
 import { useQuery } from "@tanstack/react-query";
 import { Fragment } from "react";
 import ListingItem, { ListingItemSkeleton } from "./listing_item";
 
-export default function NewListingsSection() {
+export default function RecommendedListings({
+  listingId,
+} : {
+  listingId: string;
+}) {
   const query = useQuery<ManagedListing[]>({
-    queryKey: ["search", "new-listings"],
+    queryKey: ["listings", listingId, "recommended"],
     queryFn: async () => {
-      const listings = (await backendAPI.get<Listing[]>("/api/landing/recent", {
+      const recommendation = (await backendAPI.get("/api/landing/suggest", {
         params: {
+          listingId,
+          limit: 5,
+        },
+      })).data.hits;
+      if (recommendation.length === 0) {
+        return [];
+      }
+      const listings = (await backendAPI.get("/api/listings/ids", {
+        params: {
+          listingIds: recommendation.map((l: any) => l.id),
           fields: "title,property_id,price,created_at,updated_at,creator_id,priority",
-          limit: 7,
         },
       })).data;
       const properties = (await backendAPI.get<Property[]>("/api/properties/ids", {
         params: {
-          propIds: [...new Set(listings.map(l => l.propertyId))],
-          fields: "area,city,district,ward,type,primary_image,media",
+          propIds: [...new Set(listings.map((l: any) => l.propertyId))],
+          fields: "area,full_address,city,district,ward,type,primary_image,media",
         },
       })).data;
-      return listings.map(l => ({
+      return listings.map((l: any) => ({
         listing: l,
-        property: properties.find(p => p.id === l.propertyId)!,
-      }) as ManagedListing);
+        property: properties.find((p) => p.id === l.propertyId)!,
+      }));
     },
     staleTime: 1000 * 60 * 5,
     cacheTime: 1000 * 60 * 5,
@@ -35,7 +48,7 @@ export default function NewListingsSection() {
     <Card>
       <CardHeader>
         <CardTitle className="text-xl">
-          Tin mới đăng
+          Tin đăng tương tự
         </CardTitle>
       </CardHeader>
       <CardContent>

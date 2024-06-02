@@ -51,7 +51,7 @@ export default function UnitsList({
         </h2>
         <TooltipProvider>
           <Tooltip>
-            <TooltipTrigger>
+            <TooltipTrigger asChild>
               <Button
                 type="button"
                 disabled={!selectedUnit || session.status !== "authenticated" || !!listingDetail.property.managers.map(m => m.managerId).find(m => m === session.data?.user.user.id)}

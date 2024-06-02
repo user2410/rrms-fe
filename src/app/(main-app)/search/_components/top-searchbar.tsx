@@ -62,6 +62,9 @@ export default function TopSearchBar({
           <SearchbarSuggestion
             placeholder="Tìm kiếm theo khu vực"
             type="search"
+            handlecityChange={(city) => {}}
+            handledistrictChange={(district) => {}}
+            handlewardChange={(ward) => {}}
           />
         </div>
         <Separator orientation="vertical" />

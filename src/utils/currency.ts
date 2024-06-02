@@ -107,7 +107,7 @@ export function readNumberVi(So: number): string {
   if (KetQua.substring(KetQua.length - 1) == ',') {
     KetQua = KetQua.substring(0, KetQua.length - 1);
   }
-  KetQua = KetQua.substring(1, 2).toUpperCase() + KetQua.substring(2);
+  KetQua = (KetQua.substring(1, 2).toUpperCase() + KetQua.substring(2)).replace(/\s+/g, ' ');
   if (soAm) {
     return "Âm " + KetQua;
   }

@@ -13,8 +13,14 @@ type SearchSuggestionItem = {
   wards: (Ward & {cityId: string, cityName: string, districtName: string})[];
 }
 
-const SearchbarSuggestion = forwardRef<HTMLInputElement, InputProps>(
-  function Render({ className, type, ...props }, ref) {
+interface Props extends InputProps {
+  handlecityChange: (city: string) => void;
+  handledistrictChange: (district: string) => void;
+  handlewardChange: (ward: string) => void;
+};
+
+const SearchbarSuggestion = forwardRef<HTMLInputElement, Props>(
+  function Render({ className, type, handlecityChange, handledistrictChange, handlewardChange, ...props }, ref) {
     const [searchValue, setSearchValue] = useState<string>('');
     const debouncedValue = useDebounce(searchValue, 500);
     const [activeSearch, setActiveSearch] = useState<SearchSuggestionItem | null>(null);
@@ -33,6 +39,7 @@ const SearchbarSuggestion = forwardRef<HTMLInputElement, InputProps>(
 
       let ignore = false;
       const data = FuzzySearch(debouncedValue, 2);
+      console.log(data);
       if(!ignore) setActiveSearch(data);
 
       return () => { ignore = true; };
@@ -46,7 +53,7 @@ const SearchbarSuggestion = forwardRef<HTMLInputElement, InputProps>(
           {...props}
           value={searchValue}
           onChange={(e: ChangeEvent<HTMLInputElement>) => setSearchValue(e.target.value)}
-          className="h-10 w-full px-3 py-2 text-sm rounded-md ring-0 focus-visible:ring-0"
+          className="h-10 w-full px-3 py-2 text-sm rounded-md ring-0 text-black"
         />
         {
           activeSearch && (
@@ -62,6 +69,9 @@ const SearchbarSuggestion = forwardRef<HTMLInputElement, InputProps>(
                           onSelect={(value) => {
                             console.log("select ward", value);
                             setSearchValue(`${w.name}, ${w.districtName}, ${w.cityName}`);
+                            handlecityChange(w.cityId);
+                            handledistrictChange(w.districtId);
+                            handlewardChange(w.id);
                             setEnableSuggestion(false);
                           }}>
                           <span>{`${w.name}, ${w.districtName}, ${w.cityName}`}</span>
@@ -78,6 +88,8 @@ const SearchbarSuggestion = forwardRef<HTMLInputElement, InputProps>(
                             onSelect={(value) => {
                               console.log("select district", value);
                               setSearchValue(`${d.name}, ${d.cityName}`);
+                              handlecityChange(d.cityCode);
+                              handledistrictChange(d.id);
                               setEnableSuggestion(false);
                             }}>
                             <span>{`${d.name}, ${d.cityName}`}</span>
@@ -95,6 +107,7 @@ const SearchbarSuggestion = forwardRef<HTMLInputElement, InputProps>(
                             onSelect={(value) => {
                               console.log("select city", value);
                               setSearchValue(`${c.name}`);
+                              handlecityChange(c.id);
                               setEnableSuggestion(false);
                             }}>
                             <span>{c.name}</span>
