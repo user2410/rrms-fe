@@ -18,11 +18,16 @@ export default function Maintenance() {
     isSideA: _isSideA, 
     sessionData, rental, 
   } = useDataCtx();
-  const [page, setPage] = useState<number>(0);
+  const [limit, setLimit] = useState<number>(PAGE_SIZE);
+  const [offset, setOffset] = useState<number>(0);
   const query = useQuery<RentalComplaint[]>({
-    queryKey: ["manage", "rentals", "rental", rental.id, 'complaints', sessionData.user.accessToken],
+    queryKey: ["manage", "rentals", "rental", rental.id, 'complaints', limit, offset, sessionData.user.accessToken],
     queryFn: async ({ queryKey }) => {
-      const res = (await backendAPI.get<RentalComplaint[]>(`/api/rental-complaints/rental/${queryKey[3]}`, {
+      const res = (await backendAPI.get<RentalComplaint[]>(`/api/rental-complaints/rental/${queryKey.at(3)}`, {
+        params: {
+          limit: queryKey.at(5),
+          offset: queryKey.at(6),
+        },
         headers: {
           Authorization: `Bearer ${queryKey.at(-1)}`
         },
@@ -44,7 +49,7 @@ export default function Maintenance() {
   return (
     <Card>
       <CardHeader className="flex flex-row justify-between">
-        <CardTitle className="text-lg">Các báo cáo / đề xuất</CardTitle>
+        <CardTitle className="text-lg">Báo cáo / đề xuất</CardTitle>
         <div className="flex flex-row items-center gap-2">
           <Button
             variant="outline"
@@ -58,7 +63,7 @@ export default function Maintenance() {
               <Button>Tạo</Button>
             </AlertDialogTrigger>
             <AlertDialogContent className="max-w-[40vw]">
-              <CreateComplaintDialog />
+              <CreateComplaintDialog rentalId={rental.id} sessionData={sessionData}/>
             </AlertDialogContent>
           </AlertDialog>
         </div>
@@ -72,21 +77,21 @@ export default function Maintenance() {
           <p className="w-full text-center text-sm font-light">Không có báo cáo nào</p>
         ) : (
           <>
-            {query.data.slice(page * PAGE_SIZE).map((item, index) => (
+            {query.data.slice(offset * PAGE_SIZE).map((item, index) => (
               <ComplaintItem item={item} key={index}/>
             ))}
             <div className="flex flex-row justify-center gap-2">
               <Button
                 variant="outline"
-                disabled={page === 0}
-                onClick={() => setPage(v => (v - 1))}
+                disabled={offset === 0}
+                onClick={() => setOffset(v => (v - limit))}
               >
                 Trước
               </Button>
               <Button
                 variant="outline"
-                disabled={page === Math.floor(query.data.length / PAGE_SIZE)}
-                onClick={() => setPage(v => (v + 1))}
+                disabled={offset === Math.floor(query.data.length / PAGE_SIZE)}
+                onClick={() => setOffset(v => (v + limit))}
               >
                 Sau
               </Button>

@@ -1,16 +1,16 @@
-import { uploadFile } from "@/actions/upload-file";
 import { AlertDialogContent, AlertDialogTrigger } from "@/components/ui/alert-dialog";
 import { Button } from "@/components/ui/button";
 import Spinner from "@/components/ui/spinner";
 import { backendAPI } from "@/libs/axios";
 import { AlertDialog } from "@radix-ui/react-alert-dialog";
 import { useSession } from "next-auth/react";
+import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 import { UseFormReturn } from "react-hook-form";
 import { FaCheckCircle } from "react-icons/fa";
+import preUploadApplication from "../_actions/preupload";
 import { ApplicationForm } from "./main_form";
-import Link from "next/link";
 
 type UPLOADSTAGE = "CONFIRMATION" | "CREATING_APPLICATION" | "DONE" | "ERROR";
 
@@ -32,40 +32,7 @@ export default function UploadDialog({
     setStage("CREATING_APPLICATION");
     try {
       const accessToken = session.data?.user.accessToken;
-      const data = form.getValues();
-      const pi = data.ao.profileImage;
-      const selectedUnit = data.units.find((u) => u.unitId === data.unitId)!;
-      // Upload profile images
-      const profileImage = await uploadFile({
-        name: pi.name as string,
-        size: pi.size as number,
-        type: pi.type.toLowerCase(),
-        url: pi.url,
-      });
-      // Upload proofs of income
-      // var employmentProofsOfIncome = [];
-      // for(const image of data.yd.employmentProofsOfIncome) {
-      //   const fileUrl = await uploadFile({
-      //     name: image.name as string,
-      //     size: image.size as number,
-      //     type: image.type.toLowerCase(),
-      //     url: image.url,
-      //   }, accessToken);
-      //   employmentProofsOfIncome.push(fileUrl);
-      // }
-      const sendData = {
-        ...data.ao,
-        ...data.yd,
-        listingId: data.listingId,
-        propertyId: data.propertyId,
-        unitId: data.unitId,
-        listingPrice: selectedUnit.listingPrice,
-        offeredPrice: selectedUnit.offeredPrice,
-        profileImage,
-        k: data.k,
-        // employmentProofsOfIncome,
-      };
-
+      const sendData = await preUploadApplication(form.getValues(), accessToken!);
       // send POST request to backend
       const newApplication = (await backendAPI.post("/api/applications", sendData, {
         headers: {

@@ -3,82 +3,81 @@
 import { PropertyForm } from "@/app/manage/properties/new/page";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
-import { FormDescription, FormField, FormItem, FormMessage } from "@/components/ui/form";
+import { FormField, FormItem, FormMessage } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
 import { Separator } from "@/components/ui/separator";
 import { DisplayFileSize } from "@/utils/file";
 import clsx from "clsx";
-import { Fragment, useRef, useState } from "react";
-import { UseFormReturn, useFieldArray, useFormContext } from "react-hook-form";
-import { IoClose } from "react-icons/io5";
+import { useRef } from "react";
+import { useFieldArray, useFormContext } from "react-hook-form";
 
-function VideoInput({ form }: { form: UseFormReturn<PropertyForm> }) {
-  const [value, setValue] = useState<string>("");
-  const [error, setError] = useState<string>("");
+// function VideoInput({ form }: { form: UseFormReturn<PropertyForm> }) {
+//   const [value, setValue] = useState<string>("");
+//   const [error, setError] = useState<string>("");
 
-  const { fields, append, remove } = useFieldArray({
-    name: "property.media",
-    control: form.control,
-  });
-  const videos = fields.filter((item) => item.type .startsWith("VIDEO"));
+//   const { fields, append, remove } = useFieldArray({
+//     name: "property.media",
+//     control: form.control,
+//   });
+//   const videos = fields.filter((item) => item.type .startsWith("VIDEO"));
 
-  function addVideoHandler() {
-    const regex = /^(?:https?:\/\/)?(?:m\.|www\.)?(?:youtu\.be\/|youtube\.com\/(?:embed\/|v\/|watch\?v=|watch\?.+&v=))((\w|-){11})(?:\S+)?$/;
-    if (value.match(regex)) {
-      append({ url: value, type: "VIDEO" });
-      setValue('');
-      setError('');
-    } else {
-      setError('Link video youtube không hợp lệ');
-    }
-  }
+//   function addVideoHandler() {
+//     const regex = /^(?:https?:\/\/)?(?:m\.|www\.)?(?:youtu\.be\/|youtube\.com\/(?:embed\/|v\/|watch\?v=|watch\?.+&v=))((\w|-){11})(?:\S+)?$/;
+//     if (value.match(regex)) {
+//       append({ url: value, type: "VIDEO" });
+//       setValue('');
+//       setError('');
+//     } else {
+//       setError('Link video youtube không hợp lệ');
+//     }
+//   }
 
-  return (
-    <Fragment>
-      <CardHeader className="px-0">
-        <CardTitle>Thêm video từ Youtube</CardTitle>
-        <div className="text-sm text-muted-foreground">
-          <ul className="list-disc list-inside">
-            <li>Video phải được chia sẻ công khai</li>
-            <li>Video phải có độ dài ít nhất 30 giây</li>
-          </ul>
-        </div>
-      </CardHeader>
-      <CardContent className="px-0">
-        <div className="space-y-2 my-3">
-          {videos.map((item, index) => (
-            <div key={index} className="h-full flex items-center">
-              <a href={item.url} className="flex-grow">{item.url}</a>
-              <Button
-                type="button"
-                variant="ghost"
-                onClick={() => remove(index)}
-              >
-                <IoClose size={24} />
-              </Button>
-            </div>
-          ))}
-        </div>
-        <div className="h-full flex gap-1 my-3">
-          <Input
-            value={value}
-            onChange={(e) => setValue(e.target.value)}
-            placeholder="VD: https://www.youtube.com/watch?v=dQw4w9WgXcQ"
-          />
-          <Button
-            type="button"
-            variant="ghost"
-            onClick={addVideoHandler}
-          >+</Button>
-        </div>
-        <FormDescription>
-          {error && (<span className="text-red-600">{error}</span>)}
-        </FormDescription>
-        <FormMessage/>
-      </CardContent>
-    </Fragment>
-  );
-}
+//   return (
+//     <Fragment>
+//       <CardHeader className="px-0">
+//         <CardTitle>Thêm video từ Youtube</CardTitle>
+//         <div className="text-sm text-muted-foreground">
+//           <ul className="list-disc list-inside">
+//             <li>Video phải được chia sẻ công khai</li>
+//             <li>Video phải có độ dài ít nhất 30 giây</li>
+//           </ul>
+//         </div>
+//       </CardHeader>
+//       <CardContent className="px-0">
+//         <div className="space-y-2 my-3">
+//           {videos.map((item, index) => (
+//             <div key={index} className="h-full flex items-center">
+//               <a href={item.url} className="flex-grow">{item.url}</a>
+//               <Button
+//                 type="button"
+//                 variant="ghost"
+//                 onClick={() => remove(index)}
+//               >
+//                 <IoClose size={24} />
+//               </Button>
+//             </div>
+//           ))}
+//         </div>
+//         <div className="h-full flex gap-1 my-3">
+//           <Input
+//             value={value}
+//             onChange={(e) => setValue(e.target.value)}
+//             placeholder="VD: https://www.youtube.com/watch?v=dQw4w9WgXcQ"
+//           />
+//           <Button
+//             type="button"
+//             variant="ghost"
+//             onClick={addVideoHandler}
+//           >+</Button>
+//         </div>
+//         <FormDescription>
+//           {error && (<span className="text-red-600">{error}</span>)}
+//         </FormDescription>
+//         <FormMessage/>
+//       </CardContent>
+//     </Fragment>
+//   );
+// }
 
 export default function Step1MediaUpload({
   accept,
@@ -196,8 +195,6 @@ export default function Step1MediaUpload({
           </Card>
         ))}
       </CardContent>
-      <Separator className="my-4" />
-      <VideoInput form={form} />
       <CardFooter>
         <FormField
           control={form.control}

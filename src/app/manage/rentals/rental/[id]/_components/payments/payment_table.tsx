@@ -71,7 +71,7 @@ export default function PaymentTable({
                 )}
                 {(p.status === "PAID" && p.paymentDate && p.expiryDate && p.paymentDate > p.expiryDate) && (
                   <TableCell>{p.penalty ? p.penalty.toLocaleString('vi-VN', { style: 'currency', currency: 'VND' }) : "-"}</TableCell>
-                )}p.paymentDate && p.expiryDate
+                )}
                 <TableCell>{rentalPaymentStatus[p.status]}</TableCell>
                 {!['PAID', 'CANCELLED'].includes(status) && (
                   <TableCell>

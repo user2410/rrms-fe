@@ -1,26 +1,38 @@
 import { AlertDialogCancel, AlertDialogFooter, AlertDialogHeader, AlertDialogTitle } from "@/components/ui/alert-dialog";
+import { Button } from "@/components/ui/button";
 import { Form, FormControl, FormField, FormItem, FormLabel, FormLabelRequired, FormMessage } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
+import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
+import { ScrollArea } from "@/components/ui/scroll-area";
 import { Textarea } from "@/components/ui/textarea";
+import { FileUpload } from "@/models/file";
 import { zodResolver } from "@hookform/resolvers/zod";
+import { useRef } from "react";
 import { useFieldArray, useForm } from "react-hook-form";
 import * as z from "zod";
 import { useDataCtx } from "../../_context/data.context";
-import { Button } from "@/components/ui/button";
-import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
-import { useRef } from "react";
-import { FileUpload } from "@/models/file";
-import { ScrollArea } from "@/components/ui/scroll-area";
 
-import 'lightgallery/css/lightgallery.css';
-import 'lightgallery/css/lg-zoom.css';
+import { backendAPI } from "@/libs/axios";
 import 'lightgallery/css/lg-thumbnail.css';
+import 'lightgallery/css/lg-zoom.css';
+import 'lightgallery/css/lightgallery.css';
 import lgThumbnail from 'lightgallery/plugins/thumbnail';
 import lgZoom from 'lightgallery/plugins/zoom';
 import LightGallery from 'lightgallery/react';
-import { backendAPI } from "@/libs/axios";
-import { uploadFile } from "@/actions/upload-file";
 import toast from "react-hot-toast";
+import { uploadFileWithPresignedURL } from "@/actions/upload-file";
+import { Session } from "next-auth";
+import { useQuery } from "@tanstack/react-query";
+import { ManagedRental, Rental } from "@/models/rental";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
+import { Property } from "@/models/property";
+import { Card, CardHeader, CardTitle } from "@/components/ui/card";
 
 const formSchema = z.object({
   rentalId: z.number(),
@@ -42,13 +54,18 @@ const formSchema = z.object({
 
 type FormValues = z.infer<typeof formSchema>;
 
-export default function CreateComplaintDialog() {
+export default function CreateComplaintDialog({
+  rentalId,
+  sessionData
+}: {
+  rentalId?: number;
+  sessionData: Session;
+}) {
   const closeBtnRef = useRef<HTMLButtonElement>(null);
-  const { sessionData, rental } = useDataCtx();
   const form = useForm<FormValues>({
     resolver: zodResolver(formSchema),
     defaultValues: {
-      rentalId: rental.id,
+      rentalId,
       creatorId: sessionData.user.user.id,
       occurredAt: new Date(),
       type: "REPORT",
@@ -61,23 +78,71 @@ export default function CreateComplaintDialog() {
     name: "media",
   });
 
-  async function submitHandler(data: FormValues) {
-    console.log(data);
-    try {
-      // upload images
-      const media : string[] = [];
-      for(const image of data.media) {
-        media.push(await uploadFile({
-          name: image.name as string,
-          size: image.size as number,
-          type: image.type.toLowerCase(),
-          url: image.url,
-        }));
+  const query = useQuery<ManagedRental[]>({
+    queryKey: ["manage", "rentals", sessionData.user.accessToken],
+    queryFn: async ({ queryKey }) => {
+      const rentals = (await backendAPI.get<Rental[]>("/api/rentals/my-rentals", {
+        params: {
+          fields: "property_id,tenant_name,tenant_type",
+          expired: false,
+        },
+        headers: {
+          Authorization: `Bearer ${queryKey.at(-1)}`
+        },
+      })).data;
+      if (rentals.length === 0) {
+        return [] as ManagedRental[];
       }
+      const properties = (await backendAPI.get<Property[]>("/api/properties/ids", {
+        params: {
+          fields: "name",
+          propIds: rentals.map(r => r.propertyId),
+        },
+        headers: {
+          Authorization: `Bearer ${queryKey.at(-1)}`
+        },
+      })).data;
+      return rentals.map(r => {
+        const property = properties.find(p => p.id === r.propertyId)!;
+        return {
+          rental: r,
+          property,
+        } as ManagedRental;
+      }
+      );
+    },
+    enabled: !rentalId,
+    staleTime: 1000 * 60 * 5,
+    cacheTime: 1000 * 60 * 5,
+  });
+
+  async function submitHandler(data: FormValues) {
+    try {
+      var id = 1;
+      const originalMedia = data.media.map((file) => ({
+        id: id++,
+        ...file,
+      }));
+      const complaintData = (await backendAPI.post(
+        "/api/rental-complaints/create/_pre",
+        {
+          media: originalMedia,
+        }, {
+        headers: {
+          Authorization: `Bearer ${sessionData.user.accessToken}`
+        },
+      })).data;
+      const mediaUrls: string[] = [];
+      for (const media of complaintData.media) {
+        const om = originalMedia.find((m) => m.id === media.id);
+        const newUrl = await uploadFileWithPresignedURL(om!, media.url);
+        mediaUrls.push(newUrl);
+      }
+
       // create complaint
-      const res = await backendAPI.post("/api/rental-complaints", {
+      const res = await backendAPI.post("/api/rental-complaints/create", {
         ...data,
-        media,
+        media: mediaUrls,
       }, {
         headers: {
           Authorization: `Bearer ${sessionData.user.accessToken}`
@@ -86,7 +151,7 @@ export default function CreateComplaintDialog() {
       toast.success("Tạo thành công");
       closeBtnRef.current?.click();
       form.reset();
-    } catch(err) {
+    } catch (err) {
       console.error(err);
       toast.error("Có lỗi xảy ra");
     }
@@ -110,15 +175,14 @@ export default function CreateComplaintDialog() {
   }
 
   return (
-    <>
-      <AlertDialogHeader>
-        <AlertDialogTitle>Tạo báo cáo / đề xuất</AlertDialogTitle>
-      </AlertDialogHeader>
+    <Card className="border-none">
+      <CardHeader>
+        <CardTitle className="text-lg">Báo cáo / đề xuất</CardTitle>
+      </CardHeader>
       <Form {...form}>
         <form onSubmit={form.handleSubmit(submitHandler)}>
           <ScrollArea className="h-[70vh]">
             <div className="space-y-4 px-2 pb-2">
-            
               <FormField
                 control={form.control}
                 name="type"
@@ -152,6 +216,33 @@ export default function CreateComplaintDialog() {
                   </FormItem>
                 )}
               />
+              {!rentalId  && (
+                <FormField
+                  control={form.control}
+                  name="rentalId"
+                  render={({ field }) => (
+                    <FormItem>
+                      <FormLabelRequired>Nhà cho thuê thuê</FormLabelRequired>
+                      <Select 
+                        onValueChange={(v) => field.onChange(parseInt(v, 10))} 
+                      >
+                        <FormControl>
+                          <SelectTrigger>
+                            <SelectValue placeholder="Chọn nhà cho thuê" />
+                          </SelectTrigger>
+                        </FormControl>
+                        <SelectContent>
+                          {query.isSuccess && (
+                            query.data.map((r, i) => (
+                              <SelectItem key={i} value={r.rental.id.toString()}>{r.property.name}</SelectItem>
+                            ))
+                          )}
+                        </SelectContent>
+                      </Select>
+                    </FormItem>
+                  )}
+                />
+              )}
               <FormField
                 control={form.control}
                 name="title"
@@ -259,10 +350,10 @@ export default function CreateComplaintDialog() {
           </ScrollArea>
           <AlertDialogFooter>
             <AlertDialogCancel ref={closeBtnRef}>Hủy</AlertDialogCancel>
-            <Button type="submit">Lưu</Button>
+            <Button type="submit">Tạo</Button>
           </AlertDialogFooter>
         </form>
       </Form>
-    </>
+    </Card>
   );
-};
+}

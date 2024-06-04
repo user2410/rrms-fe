@@ -460,3 +460,52 @@ export const mockedRentals = [
     "policies": null
   },
 ];
+
+export const mockupRentalComplaints : RentalComplaint[] = [
+  {
+    "id": 1,
+    "rentalId": 13,
+    "creatorId": "e0a8d123-c55b-4230-91e8-bd1b7b762366",
+    "title": "Đèn hành lang không sáng",
+    "content": "Đèn hành lang không sáng, xin kiểm tra lại",
+    "media": [],
+    "occurredAt": new Date("2024-04-29T11:06:16.448337+07:00"),
+    "type": "REPORT",
+    "status": "RESOLVED",
+    "replies": [
+      {
+        "complaintId": 1,
+        "replierId": "e0a8d123-c55b-4230-91e8-bd1b7b762366",
+        "reply": "Đã kiểm tra lại, sẽ sửa ngay",
+        "media": [],
+        "createdAt": new Date("2024-04-29T11:06:16.448337+07:00")
+      }
+    ],
+    "createdAt": new Date("2024-04-29T11:06:16.448337+07:00"),
+    "updatedAt": new Date("2024-04-29T11:06:16.448337+07:00"),
+    "updatedBy": "e0a8d123-c55b-4230-91e8-bd1b7b762366"
+  },
+  {
+    "id": 2,
+    "rentalId": 13,
+    "creatorId": "e0a8d123-c55b-4230-91e8-bd1b7b762366",
+    "title": "Đèn hành lang không sáng",
+    "content": "Đèn hành lang không sáng, xin kiểm tra lại",
+    "media": [],
+    "occurredAt": new Date("2024-04-29T11:06:16.448337+07:00"),
+    "type": "REPORT",
+    "status": "RESOLVED",
+    "replies": [
+      {
+        "complaintId": 1,
+        "replierId": "e0a8d123-c55b-4230-91e8-bd1b7b762366",
+        "reply": "Đã kiểm tra lại, sẽ sửa ngay",
+        "media": [],
+        "createdAt": new Date("2024-04-29T11:06:16.448337+07:00")
+      }
+    ],
+    "createdAt": new Date("2024-04-29T11:06:16.448337+07:00"),
+    "updatedAt": new Date("2024-04-29T11:06:16.448337+07:00"),
+    "updatedBy": "e0a8d123-c55b-4230-91e8-bd1b7b762366"
+  },
+];

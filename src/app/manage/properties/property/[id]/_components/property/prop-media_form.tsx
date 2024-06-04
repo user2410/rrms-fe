@@ -2,7 +2,6 @@ import { Button } from "@/components/ui/button";
 import { Form, FormField, FormItem, FormMessage } from "@/components/ui/form";
 import { IconBadge } from "@/components/ui/icon-badge";
 import { backendAPI } from "@/libs/axios";
-import { Property } from "@/models/property";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Image, Pencil } from "lucide-react";
 import { useRef, useState } from "react";
@@ -10,6 +9,7 @@ import { useFieldArray, useForm } from "react-hook-form";
 import toast from "react-hot-toast";
 import * as z from "zod";
 
+import { uploadFile, uploadFileWithPresignedURL } from "@/actions/upload-file";
 import { Card, CardContent, CardFooter, CardHeader } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Separator } from "@/components/ui/separator";
@@ -20,11 +20,8 @@ import 'lightgallery/css/lightgallery.css';
 import lgThumbnail from 'lightgallery/plugins/thumbnail';
 import lgZoom from 'lightgallery/plugins/zoom';
 import LightGallery from "lightgallery/react";
-import _ from "lodash";
-import { usePropDataCtx } from "../../_context/property_data.context";
 import { useSession } from "next-auth/react";
-import { Unit } from "@/models/unit";
-import { uploadFile } from "@/actions/upload-file";
+import { usePropDataCtx } from "../../_context/property_data.context";
 
 const formSchema = z.object({
   primaryImage: z.number(),
@@ -49,7 +46,8 @@ export default function MediaForm() {
   const { property, units } = usePropDataCtx();
   const session = useSession();
   const [isEditing, setIsEditing] = useState(false);
-  const [newMedia, setNewMedia] = useState<string[]>([]);
+  // @ts-ignore
+  const [newMedia, setNewMedia] = useState<FormValues["media"]>([] as FormValues["media"]);
   const inputFileRef = useRef<HTMLInputElement>(null);
   const { setPropData } = usePropDataCtx();
 
@@ -81,15 +79,36 @@ export default function MediaForm() {
     if (!isDirty) return;
     try {
       const imgs = d.media.filter(m => m.type.startsWith("IMAGE"));
-      const newImgs = imgs.filter(m => newMedia.includes(m.url));
-      for(const img of newImgs) {
-        const newUrl = await uploadFile(img);
-        img.url = newUrl;
-        img.type = "IMAGE";
+      var id = 1;
+      const newImgs = imgs.filter(m => newMedia.map(nm => nm.url).includes(m.url)).map(m => ({
+        ...m,
+        id: id++,
+      }));
+      const oldMedia = imgs.filter(m => !d.media.map(nm => nm.url).includes(m.url));
+      const newImageData = (await backendAPI.patch(`/api/properties/property/${property.id}/_pre`, {
+        media: newImgs,
+      }, {
+        headers: {
+          Authorization: `Bearer ${session.data!.user.accessToken}`,
+        }
+      })).data;
+      for (const media of newImageData.media) {
+        var i : any = undefined;
+        for(const ni of newImgs) {
+          if (ni.id === media.id) {
+            i = ni;
+            break;
+          }
+        }
+        if (!!i) {
+          const newUrl = await uploadFileWithPresignedURL(i, media.url);
+          media.url = newUrl;
+        }
       }
       await backendAPI.patch(`/api/properties/property/${property.id}`, {
         ...d,
         primaryImageUrl: (imgs.find(i => i.mediaId === primaryImage) || imgs[d.primaryImage]).url,
+        media: [...oldMedia, ...newImageData.media],
       }, {
         headers: {
           Authorization: `Bearer ${session.data!.user.accessToken}`,
@@ -116,19 +135,21 @@ export default function MediaForm() {
   }
 
   function handleFileInputChange(event: React.ChangeEvent<HTMLInputElement>) {
-    const newFiles : object[] = [];
+    // @ts-ignore
+    const newFiles : FormValues['media'] = [];
     for(const [e, f] of Object.entries(event.target.files!)) {
       const { name, size, type } = f;
       const newFile = {
         propertyId: property.id,
-        name, size,
+        name, 
+        size,
         type: type.toUpperCase(),
         url: URL.createObjectURL(f)
       };
       append(newFile);
       newFiles.push(newFile);
     }
-    setNewMedia(v => [...v, ...newFiles.map(f => (f as any).url)]);
+    setNewMedia([...newFiles]);
   }
 
   function handleRemoveFile(fileUrl: string, i: number) {

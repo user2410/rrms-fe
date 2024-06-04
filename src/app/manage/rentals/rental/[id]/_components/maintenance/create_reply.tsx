@@ -9,16 +9,17 @@ import { useRef } from "react";
 import { useFieldArray, useForm } from "react-hook-form";
 import * as z from "zod";
 
+import { uploadFileWithPresignedURL } from "@/actions/upload-file";
+import { backendAPI } from "@/libs/axios";
 import 'lightgallery/css/lg-thumbnail.css';
 import 'lightgallery/css/lg-zoom.css';
 import 'lightgallery/css/lightgallery.css';
 import lgThumbnail from 'lightgallery/plugins/thumbnail';
 import lgZoom from 'lightgallery/plugins/zoom';
 import LightGallery from 'lightgallery/react';
-import { backendAPI } from "@/libs/axios";
-import { useDataCtx } from "../../_context/data.context";
-import { uploadFile } from "@/actions/upload-file";
 import toast from "react-hot-toast";
+import { useDataCtx } from "../../_context/data.context";
+import { Session } from "next-auth";
 
 const formSchema = z.object({
   reply: z.string().min(1),
@@ -39,12 +40,13 @@ export default function CreateReply({
   disabled,
   item,
   refresh,
+  sessionData,
 }: {
   disabled: boolean;
   item: RentalComplaint;
   refresh: () => void;
+  sessionData: Session;
 }) {
-  const {sessionData} = useDataCtx();
   const imgInputRef = useRef<HTMLInputElement>(null);
   const form = useForm<FormValues>({
     resolver: zodResolver(formSchema),
@@ -60,21 +62,32 @@ export default function CreateReply({
 
   async function handleSubmit(data: FormValues) {
     try {
-      // upload images
-      const media : string[] = [];
-      for(const image of data.media) {
-        media.push(await uploadFile({
-          name: image.name as string,
-          size: image.size as number,
-          type: image.type.toLowerCase(),
-          url: image.url,
-        }));
+      var id = 1;
+      const originalMedia = data.media.map((file) => ({
+        id: id++,
+        ...file,
+      }));
+      const complaintData = (await backendAPI.post(
+        `/api/rental-complaints/rental-complaint/${item.id}/replies/create/_pre`,
+        {
+          media: originalMedia,
+        }, {
+        headers: {
+          Authorization: `Bearer ${sessionData.user.accessToken}`
+        },
+      })).data;
+      const mediaUrls : string[] = [];
+      for (const media of complaintData.media) {
+        const om = originalMedia.find((m) => m.id === media.id);
+        const newUrl = await uploadFileWithPresignedURL(om!, media.url);
+        mediaUrls.push(newUrl);
       }
+
       // create complaint reply
-      await backendAPI.post(`/api/rental-complaints/rental-complaint/${item.id}/replies`, {
+      await backendAPI.post(`/api/rental-complaints/rental-complaint/${item.id}/replies/create`, {
         ...data,
         complaintId: item.id,
-        media,
+        media: mediaUrls,
       }, {
         headers: {
           Authorization: `Bearer ${sessionData?.user.accessToken}`,
@@ -83,7 +96,7 @@ export default function CreateReply({
       toast.success("Phản hồi đã được gửi");
       form.reset();
       refresh();
-    } catch(err) {
+    } catch (err) {
       console.error(err);
       toast.error("Có lỗi xảy ra, vui lòng thử lại sau");
     }

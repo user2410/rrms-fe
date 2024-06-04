@@ -78,7 +78,7 @@ export const aboutToExpireColumns: ColumnDef<ManagedRental>[] = [
   }
 ];
 
-export const nonExpireColumns: ColumnDef<ManagedRental>[] = [
+export const nonExpiredColumns: ColumnDef<ManagedRental>[] = [
   {
     header: "Bên thuê",
     cell: ({ row }) => {
@@ -166,7 +166,7 @@ export const endColumns: ColumnDef<ManagedRental>[] = [
   },
   {
     header: "Ngày hết hạn thuê",
-    cell: ({ row }) => (`${row.original.rental.expiryDate!.toLocaleDateString("vi-VN")} (${row.original.rental.timeLeft < 0 ? "Hết hạn" : `còn ${row.original.rental.timeLeft.toFixed(0)} ngày`})`),
+    cell: ({ row }) => (`${row.original.rental.expiryDate!.toLocaleDateString("vi-VN")}`),
   },
   {
     header: "Trạng thái",

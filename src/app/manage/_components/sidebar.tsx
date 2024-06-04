@@ -149,17 +149,12 @@ export default function Sidebar() {
                   },
                   {
                     label: 'Nhà thuê',
-                    href: '/manage/rentals/my-rentals',
+                    href: '/manage/rentals',
                     icon: <BsFillBuildingsFill size={ICON_SIZE} />,
                   },
                   {
-                    label: 'Hợp đồng thuê',
-                    href: '/manage/rentals/leases',
-                    icon: <FaFileContract size={ICON_SIZE} />,
-                  },
-                  {
                     label: 'Báo cáo',
-                    href: '/manage/reports',
+                    href: '/manage/rentals/rental-complaints',
                     icon: <FaFileAlt size={ICON_SIZE} />,
                   },
                   {

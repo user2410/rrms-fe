@@ -7,12 +7,11 @@ import {
   CollapsibleTrigger,
 } from "@/components/ui/collapsible";
 import { Separator } from "@/components/ui/separator";
-import { RentalComplaint, RentalComplaintReply } from "@/models/rental";
-import { getUserAvatarFallback, getUserFullName } from "@/models/user";
+import { Rental, RentalComplaint, RentalComplaintReply } from "@/models/rental";
+import { getUserAvatarFallback, getUserFullName, User } from "@/models/user";
 import clsx from "clsx";
 import { Check, Clock, PauseCircle } from "lucide-react";
-import { useDataCtx } from "../../_context/data.context";
-import CreateReply from "./create_reply";
+import CreateReply from "../../rental/[id]/_components/maintenance/create_reply";
 import { useQuery } from "@tanstack/react-query";
 import { backendAPI } from "@/libs/axios";
 import Spinner from "@/components/ui/spinner";
@@ -36,6 +35,8 @@ import lgZoom from 'lightgallery/plugins/zoom';
 import LightGallery from 'lightgallery/react';
 import { useMemo } from "react";
 import toast from "react-hot-toast";
+import { Session } from "next-auth";
+import { Property } from "@/models/property";
 
 const mapItemStatus2BgColor = {
   PENDING: "bg-gray-400",
@@ -43,16 +44,56 @@ const mapItemStatus2BgColor = {
   CLOSED: "bg-purple-400",
 };
 
+type Data = {
+  users: User[];
+  rental: Rental;
+  property: Property;
+}
+
 export default function ComplaintItem({
   item,
+  sessionData,
 }: {
   item: RentalComplaint;
+  sessionData: Session;
 }) {
-  const { users, isOnTheSameSide, sessionData } = useDataCtx();
-  const isOnTheSameSideWithCreator = isOnTheSameSide(item.creatorId);
-
-  const query = useQuery<RentalComplaintReply[]>({
-    queryKey: ["manage", "rentals", "rental", item.rentalId, "complaints", item.id, "replies", sessionData.user.accessToken],
+  const dataQuery = useQuery<Data>({
+    queryKey: ["manage", "rentals", "rental-complaints", item.rentalId, "users", sessionData.user.accessToken],
+    queryFn: async({queryKey}) => {
+      const rental = (await backendAPI.get(`/api/rentals/rental/${queryKey.at(3)}`, {
+        headers: {
+          Authorization: `Bearer ${queryKey.at(-1)}`,
+        }
+      })).data;
+      const property = (await backendAPI.get(`/api/properties/property/${rental.propertyId}`, {
+        headers: {
+          Authorization: `Bearer ${queryKey.at(-1)}`,
+        }
+      })).data;
+      const userIds = new Set([
+        ...property.managers.map((pm: any) => pm.managerId),
+        rental.creatorId,
+        rental.tenantId,
+      ]);
+      const users = (await backendAPI.get<User[]>("/api/auth/credential/ids", {
+        params: {
+          ids: [...userIds],
+        },
+        headers: {
+          Authorization: `Bearer ${queryKey.at(-1)}`,
+        }
+      })).data || ([]);
+      return ({
+        users,
+        rental,
+        property,
+      }) as Data;
+    },
+    staleTime: 1000 * 60 * 5,
+    cacheTime: 1000 * 60 * 5,
+  });
+  const repliesQuery = useQuery<RentalComplaintReply[]>({
+    queryKey: ["manage", "rentals", "rental-complaints", item.rentalId, "complaints", item.id, "replies", sessionData.user.accessToken],
     queryFn: async ({ queryKey }) => {
       const res = (await backendAPI.get<RentalComplaintReply[]>(`/api/rental-complaints/rental-complaint/${queryKey[5]}/replies`, {
         headers: {
@@ -71,6 +112,17 @@ export default function ComplaintItem({
     cacheTime: 1000 * 60, // 1 minute
   });
 
+  const isOnTheSameSideWithCreator = (id: string) => {
+    if (!dataQuery.isSuccess) {
+      return;
+    }
+    const {property} = dataQuery.data;
+    const isSideA = (_id: string) => property.managers.filter(m => m.managerId === _id).length > 0;
+    const _isSideA = isSideA(id);
+    const __isSideA = isSideA(sessionData.user.user.id);
+    return (_isSideA && __isSideA) || (!_isSideA && !__isSideA);
+  };
+
   // console.log("owner", owners, "managers", managers);
   async function handleUpdateStatus(status: "RESOLVED" | "CLOSED") {
     try {
@@ -86,20 +138,20 @@ export default function ComplaintItem({
     }
   }
 
-  return (
+  return (dataQuery.isSuccess && repliesQuery.isSuccess) && (
     <Collapsible>
       <CollapsibleTrigger asChild>
         <Button variant="ghost" className="w-full min-h-[64px] flex items-center justify-between border">
           <div className="flex flex-row items-center p-2 gap-2">
             <Avatar>
-              <AvatarFallback>{getUserAvatarFallback(users.find(u => u.id === item.creatorId)!)}</AvatarFallback>
+              <AvatarFallback>{getUserAvatarFallback(dataQuery.data.users.find(u => u.id === item.creatorId)!)}</AvatarFallback>
             </Avatar>
             <div className="space-y-2 text-left">
               <h4 className="text-base font-semibold">
                 {item.title}
               </h4>
               <p className="text-sm font-normal">
-                {item.type === "REPORT" ? "Báo cáo" : "Đề nghị"}&nbsp; | &nbsp; Ngày tạo {item.createdAt.toLocaleDateString("vi-VN")}, bởi {getUserFullName(users.find(u => u.id === item.creatorId)!)}
+                {item.type === "REPORT" ? "Báo cáo" : "Đề nghị"}&nbsp; | &nbsp; Ngày tạo {item.createdAt.toLocaleDateString("vi-VN")}, bởi {getUserFullName(dataQuery.data.users.find(u => u.id === item.creatorId)!)}
               </p>
             </div>
           </div>
@@ -166,7 +218,7 @@ export default function ComplaintItem({
               )}
           </div>
         </div>
-        {(isOnTheSameSideWithCreator && item.status === 'PENDING') && (
+        {(isOnTheSameSideWithCreator(item.creatorId) && item.status === 'PENDING') && (
           <div className="flex flex-row items-center justify-start">
             <AlertDialog>
               <AlertDialogTrigger className="flex flex-row items-center gap-1 p-2  hover:bg-green-600 hover:text-white">
@@ -208,23 +260,23 @@ export default function ComplaintItem({
         )}
         <Separator />
         <div className="px-2 py-3">
-          {query.isLoading ? (
+          {repliesQuery.isLoading ? (
             <div className="w-full flex flex-row justify-center">
               <Spinner size={16} />
             </div>
-          ) : query.isError ? (
+          ) : repliesQuery.isError ? (
             <p className="text-sm font-light text-center">Đã có lỗi xảy ra</p>
-          ) : query.data.length === 0 ? (
+          ) : repliesQuery.data.length === 0 ? (
             <p className="text-sm font-light text-center">Chưa có phản hồi</p>
           ) : (
-            query.data.map((reply, index) => (
+            repliesQuery.data.map((reply, index) => (
               <div className="flex flex-row items-center justify-start gap-3 px-4 py-3" key={index}>
                 <Avatar>
-                  <AvatarFallback>{getUserAvatarFallback(users.find(u => u.id === item.creatorId)!)}</AvatarFallback>
+                  <AvatarFallback>{getUserAvatarFallback(dataQuery.data.users.find(u => u.id === item.creatorId)!)}</AvatarFallback>
                 </Avatar>
                 <div className="space-y-2">
                   <h4 className="text-sm font-semibold">
-                    {getUserFullName(users.find(u => u.id === reply.replierId)!)}&nbsp;
+                    {getUserFullName(dataQuery.data.users.find(u => u.id === reply.replierId)!)}&nbsp;
                     <span className="text-xs font-light">
                       {reply.createdAt.toLocaleDateString("vi-VN")}, {reply.createdAt.toLocaleTimeString("vi-VN")}
                     </span>
@@ -260,9 +312,9 @@ export default function ComplaintItem({
         </div>
         {!["RESOLVED", "CLOSED"].includes(item.status) && (
           <CreateReply
-            disabled={isOnTheSameSide(item.updatedBy)}
+            disabled={!!isOnTheSameSideWithCreator(item.updatedBy)}
             item={item}
-            refresh={query.refetch}
+            refresh={repliesQuery.refetch}
             sessionData={sessionData}
           />
         )}

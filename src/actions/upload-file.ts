@@ -8,24 +8,27 @@ interface FileUpload {
   url: string;
 }
 
-export async function uploadFile(fileUpload: FileUpload) : Promise<string> {
-  console.log('uploadFile', fileUpload.url, fileUpload.name, fileUpload.size, fileUpload.type);
-  
+export async function uploadFileWithPresignedURL(fileUpload: FileUpload, presignedUrl: string) : Promise<string> {
   const blob = (await axios.get<Blob>(fileUpload.url, { responseType: 'blob' })).data;
   const file = new File([blob], fileUpload.name, { type: fileUpload.type });
 
-  // get presigned url
-  const presignedURL = (await backendAPI.post('/api/storage/presign', fileUpload)).data;
-  console.log('presignedURL', presignedURL);
-
-  // upload file
-  await axios.put(presignedURL.url, file, {
+  console.log('uploadFileWithPresignedURL', file.size.toString(), file.type, file.name, presignedUrl);
+  await axios.put(presignedUrl, file, {
     headers: {
       "Content-Type": fileUpload.type,
     },
   });
 
-  return presignedURL.url.split('?')[0];
+  return presignedUrl.split('?')[0];
+}
+
+export async function uploadFile(fileUpload: FileUpload) : Promise<string> {
+  // get presigned url
+  const presignedURL = (await backendAPI.post('/api/storage/presign', fileUpload)).data;
+  console.log('presignedURL', presignedURL);
+
+  // upload file
+  return (await uploadFileWithPresignedURL(fileUpload, presignedURL.url));  
 }
 
 // export default async function uploadFile(fileUpload: FileUpload, accessToken: string) : Promise<string> {

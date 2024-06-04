@@ -1,15 +1,15 @@
-import { uploadFile } from "@/actions/upload-file";
 import { AlertDialog, AlertDialogContent, AlertDialogTrigger } from "@/components/ui/alert-dialog";
 import { Button } from "@/components/ui/button";
 import { backendAPI } from "@/libs/axios";
 import { Session } from "next-auth";
+import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 import { UseFormReturn } from "react-hook-form";
 import { FaCheckCircle } from "react-icons/fa";
 import { MdCancel } from "react-icons/md";
+import preUploadRental from "../_actions/preupload";
 import { FormValues } from "../page";
-import Link from "next/link";
 
 type UPLOADSTAGE = "CONFIRMATION" | "PENDING" | "DONE" | "ERROR";
 
@@ -31,35 +31,8 @@ export default function UploadDialog({
   async function handleUpload() {
     try {
       setStage("PENDING");
-      const data = form.getValues();
-      const pi = data.tenant.profileImage;
-      // console.log("done uploading property and units");
-      const profileImage = pi.name ? await uploadFile({
-        name: pi.name as string,
-        size: pi.size as number,
-        type: pi.type!.toLowerCase(),
-        url: pi.url,
-      }) : pi.url;
-      const submitData = {
-        ...data,
-
-        ...data.tenant,
-        coaps: data.tenant.tenantType === "FAMILY" ? data.tenant.coaps : [],
-        minors: data.tenant.tenantType === "FAMILY" ? data.tenant.minors : [],
-        pets: (data.tenant.tenantType === "INDIVIDUAL" || data.tenant.tenantType === "FAMILY") ? data.tenant.pets : [],
-
-        ...data.services,
-        services: data.services.services,
-        
-        ...data.policies,
-        policies: data.policies.policies,
-
-        profileImage,
-      };
-      if(submitData.noticePeriod === 0) {
-        delete submitData.noticePeriod;
-      }
-      const rental = (await backendAPI.post("/api/rentals/", submitData, {
+      const submitData = await preUploadRental(form.getValues(), sessionData.user.accessToken);
+      const rental = (await backendAPI.post("/api/rentals/create", submitData, {
         headers: {
           Authorization: `Bearer ${sessionData.user.accessToken}`,
         },
