@@ -1,7 +1,7 @@
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import Spinner from "@/components/ui/spinner";
 import { backendAPI } from "@/libs/axios";
-import { RentalPayment } from "@/models/rental";
+import { RentalPayment, RentalService } from "@/models/rental";
 import { useQuery } from "@tanstack/react-query";
 import { Session } from "next-auth";
 import Link from "next/link";
@@ -14,6 +14,7 @@ export type RentalPaymentItem = RentalPayment & {
   tenantName: string;
   propertyId: string;
   unitId: string;
+  services: RentalService[];
 };
 
 type RentalPaymentArrearsItem = {
@@ -31,7 +32,7 @@ export default function RentArrearTile({
 }) {
   const arrearsQuery = useQuery<Data>({
     queryKey: ["manage", "statistic", "arrears", sessionData!.user.accessToken],
-    queryFn: async ({queryKey}) => {
+    queryFn: async ({ queryKey }) => {
       const startTime = new Date(sessionData.user.user.createdAt);
       const res = (await backendAPI.get<Data>("/api/statistics/rentals/payments/arrears", {
         params: {
@@ -103,7 +104,7 @@ export default function RentArrearTile({
           <span className="text-xl font-light">/ {allTimeArrears.reduce((acc, item) => acc + item.amount, 0).toLocaleString()}</span> */}
           <div className="space-y-3">
             {allTimeArrears.slice(0, 5).map((item, index) => (
-              <ArrearItem key={index} item={item} sessionData={sessionData}/>
+              <ArrearItem key={index} item={item} sessionData={sessionData} />
             ))}
           </div>
         </CardContent>

@@ -70,7 +70,7 @@ export default function ListingInplace() {
     queryKey: ['landing', "listings-inplace"],
     queryFn: async () => {
       const geolocation = (await axios.get<GeolocationDB>("/api/location/geolocationdb")).data;
-      const searchListings = (await backendAPI.get<SearchResult>(`/api/listings/`, {
+      const searchListings = (await backendAPI.get<SearchResult>(`/api/listings/search`, {
         params: {
           pcity: geolocation.city?.code ?? "SG",
           limit: 8,

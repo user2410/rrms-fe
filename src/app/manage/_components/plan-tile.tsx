@@ -8,6 +8,7 @@ import { backendAPI } from "@/libs/axios";
 import { Session } from "next-auth";
 import { useState } from "react";
 import Spinner from "@/components/ui/spinner";
+import { cn } from "@/libs/utils";
 
 type DataItem = {
   day: Date;
@@ -15,8 +16,10 @@ type DataItem = {
 };
 
 export default function PlanTile({
+  className,
   sessionData
 }: {
+  className?: string;
   sessionData: Session;
 }) {
   const [date] = useState<Date>(new Date());
@@ -58,9 +61,9 @@ export default function PlanTile({
     cacheTime: 1000 * 60 * 5,
   });
   return (
-    <Card className="w-full h-full">
+    <Card className={cn("w-full h-full", className)}>
       <CardHeader>
-        <CardTitle>Kế hoạch</CardTitle>
+        <CardTitle className="text-xl">Kế hoạch</CardTitle>
       </CardHeader>
       {query.isLoading ? (
         <div className="flex items-center justify-center h-32">
@@ -71,7 +74,7 @@ export default function PlanTile({
           Lỗi khi tải dữ liệu
         </div>
       ) : (
-        <CardContent className="space-y-6">
+        <CardContent className="space-y-4 px-2">
           <DarkCalendarStripe
             dates={query.data.map((item, index) => ({
               date: item.day,

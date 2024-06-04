@@ -1,6 +1,5 @@
 "use client";
 
-import Empty from "@/components/complex/empty";
 import { AlertDialog, AlertDialogContent, AlertDialogTrigger } from "@/components/ui/alert-dialog";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
@@ -11,8 +10,8 @@ import { useQuery } from "@tanstack/react-query";
 import { RotateCcw } from "lucide-react";
 import { useSession } from "next-auth/react";
 import { useState } from "react";
-import ComplaintItem from "./_components/complaint_item";
 import CreateComplaintDialog from "../rental/[id]/_components/maintenance/create_complaint_dialog";
+import ComplaintItem from "./_components/complaint_item";
 
 export default function ReportsPage() {
   const [limit, setLimit] = useState<number>(10);

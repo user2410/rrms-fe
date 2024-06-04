@@ -11,17 +11,6 @@ import ManagedModal from '@/components/complex/managed-modal';
 
 import '@fortawesome/fontawesome-free/css/all.min.css';
 import '../assets/globals.css';
-import 'swiper/css';
-import 'swiper/css/navigation';
-import "swiper/css/grid";
-import 'swiper/css/pagination';
-import 'swiper/css/scrollbar';
-import 'lightgallery/css/lightgallery.css';
-import 'lightgallery/css/lg-zoom.css';
-import 'lightgallery/css/lg-thumbnail.css';
-
-import "quill/dist/quill.core.css";
-import "quill/dist/quill.snow.css";
 
 const inter = Inter({ subsets: ['latin'] });
 

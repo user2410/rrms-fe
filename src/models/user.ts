@@ -30,7 +30,7 @@ export function userRoleName(role?: string) : string {
   }
 }
 
-export function getUserFullName(user: User) : string {
+export function getUserFullName(user: {firstName: string; lastName: string}) : string {
   return `${user.firstName} ${user.lastName}`;
 }
 
