@@ -1,9 +1,7 @@
-import { Button } from "@/components/ui/button";
+import Places from "./_components/landing-page/listing_byplace";
+import ListingInplace from "./_components/landing-page/listings_inplace";
 import NewsTab from "./_components/landing-page/news_tab";
 import PerfectPropertyManagement from "./_components/landing-page/perfect_property_management";
-import ListingInplace from "./_components/landing-page/listings_inplace";
-import SearchbarSuggestion from "./_components/landing-page/searchbar_suggestion";
-import Places from "./_components/landing-page/listing_byplace";
 import Searchbar from "./_components/landing-page/searchbar";
 
 export default function HomePage() {

@@ -34,7 +34,7 @@ export default function RentArrearTile({
     queryKey: ["manage", "statistic", "arrears", sessionData!.user.accessToken],
     queryFn: async ({ queryKey }) => {
       const startTime = new Date(sessionData.user.user.createdAt);
-      const res = (await backendAPI.get<Data>("/api/statistics/rentals/payments/arrears", {
+      const res = (await backendAPI.get<Data>("/api/statistics/manager/rentals/payments/arrears", {
         params: {
           startTime,
           endTime: new Date(),

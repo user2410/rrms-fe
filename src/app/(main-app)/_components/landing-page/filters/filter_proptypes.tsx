@@ -20,7 +20,13 @@ import { useFormContext } from "react-hook-form";
 import { SearchFormValues } from "../../search_box";
 import { useState } from "react";
 
-export function PropTypesFilter() {
+type CONTEXT = "LANDING" | "SEARCH";
+
+export function PropTypesFilter({
+  context = "LANDING",
+}: {
+  context?: CONTEXT;
+}) {
   const [open, setOpen] = useState(false);
   const form = useFormContext<SearchFormValues>();
   const ptypes = form.watch('ptypes');
@@ -28,19 +34,33 @@ export function PropTypesFilter() {
   return (
     <Popover open={open} onOpenChange={setOpen}>
       <PopoverTrigger asChild>
-        <Button
-          variant="outline"
-          role="combobox"
-          aria-expanded={open}
-          className="justify-between"
-        >
-          <span className="text-oneline text-ellipsis">
-            {ptypes && ptypes.length > 0
-              ? ptypes.map(t => mapPropertyTypeToText[t as keyof typeof mapPropertyTypeToText]).join(", ")
-              : "Loaị nhà cho thuê..."}
-          </span>
-          <ChevronDown className="ml-2 h-4 w-4 shrink-0 opacity-50" />
-        </Button>
+        {context === "LANDING" ? (
+          <Button
+            variant="outline"
+            role="combobox"
+            aria-expanded={open}
+            className="justify-between"
+          >
+            <span className="text-oneline text-ellipsis">
+              {ptypes && ptypes.length > 0
+                ? ptypes.map(t => mapPropertyTypeToText[t as keyof typeof mapPropertyTypeToText]).join(", ")
+                : "Loaị nhà cho thuê..."}
+            </span>
+            <ChevronDown className="ml-2 h-4 w-4 shrink-0 opacity-50" />
+          </Button>
+        ) : (
+          <Button type="button" variant="ghost" className="block text-left rounded-none h-full">
+            <div className="flex items-center gap-2 text-md font-medium">
+              Loại nhà cho thuê
+              <ChevronDown className="ml-2 h-4 w-4 shrink-0 opacity-50" />
+            </div>
+            <div className="text-sm font-light text-oneline text-ellipsis">
+              {ptypes && ptypes.length > 0
+                ? ptypes.map(t => mapPropertyTypeToText[t as keyof typeof mapPropertyTypeToText]).join(", ")
+                : "Loaị nhà cho thuê..."}
+            </div>
+          </Button>
+        )}
       </PopoverTrigger>
       <PopoverContent className="w-[400px] p-0">
         <Command>
@@ -72,7 +92,7 @@ export function PropTypesFilter() {
                 {item[1]}
               </CommandItem>
             ))}
-            <CommandSeparator/>
+            <CommandSeparator />
           </CommandGroup>
         </Command>
         <div className="w-full flex flex-row justify-end gap-2 p-2">

@@ -120,7 +120,7 @@ function Graph({
                 labels: query.data.map((item) => `T${item.startTime.getMonth() + 1}-${item.startTime.getFullYear()}`),
                 datasets: [
                   {
-                    label: "Thu nhập",
+                    label: "Chi tiêu",
                     data: query.data.map((item) => item.expenditure),
                     backgroundColor: "rgba(0, 99, 132, 0.6)",
                     borderColor: "rgba(0, 99, 132, 1)",

@@ -1,16 +1,26 @@
 import { Button } from "@/components/ui/button";
-import { FormControl, FormDescription, FormField, FormItem } from "@/components/ui/form";
+import { FormControl, FormDescription, FormItem } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
 import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
-import { ChevronDown } from "lucide-react";
 import { useMemo, useState } from "react";
 import { useFormContext } from "react-hook-form";
+import { BsChevronDown } from "react-icons/bs";
+import areaRanges from "@configs/area_ranges.json";
+import { Badge } from "@/components/ui/badge";
 import { SearchFormValues } from "../../search_box";
+import { ChevronDown } from "lucide-react";
+import { Label } from "@/components/ui/label";
 
-export default function AreaFilter() {
+type CONTEXT = "LANDING" | "SEARCH";
+
+export default function AreaFilter({
+  context = "LANDING",
+} : {
+  context?: CONTEXT;
+}) {
   const form = useFormContext<SearchFormValues>();
   const [open, setOpen] = useState(false);
-  
+
   const [min, setMin] = useState<number | undefined>(form.getValues("pminArea"));
   const [max, setMax] = useState<number | undefined>(form.getValues("pmaxArea"));
   const [error, setError] = useState<boolean>(false);
@@ -28,7 +38,7 @@ export default function AreaFilter() {
     if (_max) {
       return `Dưới ${_max} m2`;
     }
-    return "Diện tích...";
+    return "Giá thuê...";
   }, [_min, _max]);
 
   return (
@@ -39,36 +49,66 @@ export default function AreaFilter() {
       setError(false);
     }}>
       <PopoverTrigger asChild>
-        <Button
-          variant="outline"
-          role="combobox"
-          aria-expanded={open}
-          className="justify-between text-ellipsis"
-        >
-          {label}
-          <ChevronDown className="ml-2 h-4 w-4 shrink-0 opacity-50" />
-        </Button>
+        {context === "LANDING" ? (
+          <Button
+            variant="outline"
+            role="combobox"
+            aria-expanded={open}
+            className="justify-between text-ellipsis"
+          >
+            {label}
+            <ChevronDown className="ml-2 h-4 w-4 shrink-0 opacity-50" />
+          </Button>
+        ) : (
+          <Button type="button" variant="ghost" className="block text-left rounded-none h-full">
+            <div className="flex items-center gap-2 text-md font-medium">
+              Diện tích
+              <BsChevronDown size={16} />
+            </div>
+            <div className="text-sm font-light">
+              {label}
+            </div>
+          </Button>
+        )}
       </PopoverTrigger>
-      <PopoverContent className="w-[400px] p-2">
-        <div className="flex justify-between">
-          <FormItem className="flex gap-2">
+      <PopoverContent className="w-[400px] p-2 space-y-4">
+        <div className="flex flex-row justify-between">
+          <div className="flex-grow flex flex-row items-center gap-2">
+            <Label>Từ:</Label>
             <Input
               type="number"
+              min={0}
               className="w-20"
-              value={min || ""}
+              value={min ? min : ""}
               onChange={(e) => setMin(e.target.valueAsNumber)} />
             <FormDescription>m<sup>2</sup></FormDescription>
-          </FormItem>
-          <FormItem className="flex gap-2">
-            <FormControl>
-              <Input
-                type="number"
-                className="w-20"
-                value={max || ""}
-                onChange={(e) => setMax(e.target.valueAsNumber)} />
-            </FormControl>
+          </div>
+          <div className="flex-grow flex flex-row items-center gap-2">
+            <Label>Đến:</Label>
+            <Input
+              type="number"
+              min={0}
+              className="w-20"
+              value={max ? max : ""}
+              onChange={(e) => setMax(e.target.valueAsNumber)} />
             <FormDescription>m<sup>2</sup></FormDescription>
-          </FormItem>
+          </div>
+        </div>
+        <div className="flex flex-row items-center flex-wrap gap-2">
+          {areaRanges.map((item, index) => (
+            <Badge
+              key={index}
+              onClick={() => {
+                // @ts-ignore
+                setMin(item.min);
+                // @ts-ignore
+                setMax(item.max);
+              }}
+              className="cursor-pointer"
+            >
+              {item.title}&nbsp;m<sup>2</sup>
+            </Badge>
+          ))}
         </div>
         {error && (
           <p className="text-sm font-medium text-destructive">
@@ -90,7 +130,7 @@ export default function AreaFilter() {
             type="button"
             variant="default"
             onClick={() => {
-              if((min as number) > (max as number)) {
+              if ((min as number) > (max as number)) {
                 setError(true);
                 return;
               }
@@ -99,7 +139,7 @@ export default function AreaFilter() {
               setOpen(false);
             }}
           >
-            OK
+            Áp dụng
           </Button>
         </div>
       </PopoverContent>

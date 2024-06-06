@@ -6,11 +6,21 @@ import { ChevronDown } from "lucide-react";
 import { useMemo, useState } from "react";
 import { useFormContext } from "react-hook-form";
 import { SearchFormValues } from "../../search_box";
+import { BsChevronDown } from "react-icons/bs";
+import priceRanges from "@configs/price_ranges.json";
+import { Badge } from "@/components/ui/badge";
+import { Label } from "@/components/ui/label";
 
-export default function PriceFilter() {
+type CONTEXT = "LANDING" | "SEARCH";
+
+export default function PriceFilter({
+  context = "LANDING",
+}: {
+  context?: CONTEXT;
+}) {
   const form = useFormContext<SearchFormValues>();
   const [open, setOpen] = useState(false);
-  
+
   const [min, setMin] = useState<number | undefined>(form.getValues("lminPrice"));
   const [max, setMax] = useState<number | undefined>(form.getValues("lmaxPrice"));
   const [error, setError] = useState<boolean>(false);
@@ -20,13 +30,16 @@ export default function PriceFilter() {
 
   const label = useMemo(() => {
     if (_min) {
+      const __min = _min / 1e6;
       if (_max) {
-        return `${_min} triệu - ${_max} triệu`;
+        const __max = _max / 1e6;
+        return `${__min} triệu - ${__max} triệu`;
       }
-      return `Trên ${_min} triệu`;
+      return `Trên ${__min} triệu`;
     }
     if (_max) {
-      return `Dưới ${_max} triệu`;
+      const __max = _max / 1e6;
+      return `Dưới ${__max} triệu`;
     }
     return "Giá thuê...";
   }, [_min, _max]);
@@ -39,36 +52,66 @@ export default function PriceFilter() {
       setError(false);
     }}>
       <PopoverTrigger asChild>
-        <Button
-          variant="outline"
-          role="combobox"
-          aria-expanded={open}
-          className="justify-between text-ellipsis"
-        >
-          {label}
-          <ChevronDown className="ml-2 h-4 w-4 shrink-0 opacity-50" />
-        </Button>
+        {context === "LANDING" ? (
+          <Button
+            variant="outline"
+            role="combobox"
+            aria-expanded={open}
+            className="justify-between text-ellipsis"
+          >
+            {label}
+            <ChevronDown className="ml-2 h-4 w-4 shrink-0 opacity-50" />
+          </Button>
+        ) : (
+          <Button type="button" variant="ghost" className="block text-left rounded-none h-full">
+            <div className="flex items-center gap-2 text-md font-medium">
+              Mức giá
+              <BsChevronDown size={16} />
+            </div>
+            <div className="text-sm font-light">
+              {label}
+            </div>
+          </Button>
+        )}
       </PopoverTrigger>
-      <PopoverContent className="w-[400px] p-2">
-        <div className="flex justify-between">
-          <FormItem className="flex gap-2">
+      <PopoverContent className="w-[400px] p-2 space-y-4">
+        <div className="flex flex-row justify-between">
+          <div className="flex-grow flex flex-row items-center gap-2">
+            <Label>Từ:</Label>
             <Input
               type="number"
+              min={0}
               className="w-20"
-              value={min || ""}
-              onChange={(e) => setMin(e.target.valueAsNumber)} />
+              value={min ? min/1e6 : ""}
+              onChange={(e) => setMin(e.target.valueAsNumber * 1e6)} />
             <FormDescription>triệu</FormDescription>
-          </FormItem>
-          <FormItem className="flex gap-2">
-            <FormControl>
-              <Input
-                type="number"
-                className="w-20"
-                value={max || ""}
-                onChange={(e) => setMax(e.target.valueAsNumber)} />
-            </FormControl>
+          </div>
+          <div className="flex-grow flex flex-row items-center gap-2">
+            <Label>Đến:</Label>
+            <Input
+              type="number"
+              min={0}
+              className="w-20"
+              value={max ? max/1e6 : ""}
+              onChange={(e) => setMax(e.target.valueAsNumber * 1e6)} />
             <FormDescription>triệu</FormDescription>
-          </FormItem>
+          </div>
+        </div>
+        <div className="flex flex-row items-center flex-wrap gap-2">
+          {priceRanges.map((item, index) => (
+            <Badge
+              key={index}
+              onClick={() => {
+                // @ts-ignore
+                setMin(item.min * 1e6);
+                // @ts-ignore
+                setMax(item.max * 1e6);
+              }}
+              className="cursor-pointer"
+            >
+              {item.title}&nbsp;triệu
+            </Badge>
+          ))}
         </div>
         {error && (
           <p className="text-sm font-medium text-destructive">
@@ -90,7 +133,7 @@ export default function PriceFilter() {
             type="button"
             variant="default"
             onClick={() => {
-              if((min as number) > (max as number)) {
+              if ((min as number) > (max as number)) {
                 setError(true);
                 return;
               }
@@ -99,9 +142,8 @@ export default function PriceFilter() {
               setOpen(false);
             }}
           >
-            OK
+            Áp dụng
           </Button>
-
         </div>
       </PopoverContent>
     </Popover>

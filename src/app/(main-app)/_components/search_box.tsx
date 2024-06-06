@@ -15,6 +15,7 @@ import LocationFilter from "./landing-page/filters/filter_location";
 import PriceFilter from "./landing-page/filters/filter_price";
 import { PropTypesFilter } from "./landing-page/filters/filter_proptypes";
 import SearchbarSuggestion from "./searchbar_suggestion";
+import { getSearchURL } from "../search/_components/get_searchurl";
 
 export const searchFormSchema = z.object({
   ptypes: z
@@ -100,14 +101,7 @@ export default function SearchBox() {
   });
 
   async function onSubmit(data: SearchFormValues) {
-    const transformedData = Object.fromEntries(
-      Object.entries(data).map(([key, value]) => [
-        key,
-        value === "" ? undefined : value,
-      ])
-    );
-    const sendData = encodeURIComponent(JSON.stringify(transformedData));
-    router.push(`/search?q=${sendData}`);
+    router.push(getSearchURL(data));
   }
 
   return (

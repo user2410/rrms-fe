@@ -34,7 +34,7 @@ export default function RevenueTile({
   const query = useQuery<Data>({
     queryKey: ["manage", "statistic", "income", startTime, endTime, sessionData!.user.accessToken],
     queryFn: async ({ queryKey }) => {
-      const res = (await backendAPI.get<Data>("/api/statistics/rentals/payments/incomes", {
+      const res = (await backendAPI.get<Data>("/api/statistics/manager/rentals/payments/incomes", {
         params: {
           startTime: queryKey.at(3), // startTime
           endTime: queryKey.at(4), // endTime

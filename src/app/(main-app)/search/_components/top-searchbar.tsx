@@ -9,14 +9,16 @@ import { useForm } from "react-hook-form";
 import { MdRestartAlt, MdSearch } from "react-icons/md";
 import SearchbarSuggestion from "../../_components/landing-page/searchbar_suggestion";
 import { searchFormSchema, SearchFormValues } from "../../_components/search_box";
-import AreaFilter from "./filter_area";
+
 import ExtraFilter from "./filter_extra";
-import LocationFilter from "./filter_location";
-import PriceFilter from "./filter_price";
-import PropTypesFilter from "./filter_ptypes";
 import { useEffect } from "react";
 import toast from "react-hot-toast";
 import * as _ from "lodash";
+import AreaFilter from "../../_components/landing-page/filters/filter_area";
+import PriceFilter from "../../_components/landing-page/filters/filter_price";
+import LocationFilter from "../../_components/landing-page/filters/filter_location";
+import { PropTypesFilter } from "../../_components/landing-page/filters/filter_proptypes";
+import { getSearchURL } from "./get_searchurl";
 
 export default function TopSearchBar({
   defaultValues,
@@ -35,14 +37,7 @@ export default function TopSearchBar({
   });
 
   function onSubmit(data: SearchFormValues) {
-    const transformedData = Object.fromEntries(
-      Object.entries(data).map(([key, value]) => [
-        key,
-        value === "" ? undefined : value,
-      ])
-    );
-    const sendData = encodeURIComponent(JSON.stringify(transformedData));
-    router.push(`/search?q=${sendData}`);
+    router.push(getSearchURL(data));
   }
 
   useEffect(() => {
@@ -62,19 +57,19 @@ export default function TopSearchBar({
           <SearchbarSuggestion
             placeholder="Tìm kiếm theo khu vực"
             type="search"
-            handlecityChange={(city) => {}}
-            handledistrictChange={(district) => {}}
-            handlewardChange={(ward) => {}}
+            handlecityChange={(city) => form.setValue("pcity", city)}
+            handledistrictChange={(district) => form.setValue("pdistrict", district)}
+            handlewardChange={(ward) => form.setValue("pward", ward)}
           />
         </div>
         <Separator orientation="vertical" />
-        <PropTypesFilter />
+        <PropTypesFilter context="SEARCH" />
         <Separator orientation="vertical" />
-        <LocationFilter />
+        <LocationFilter context="SEARCH" />
         <Separator orientation="vertical" />
-        <PriceFilter />
+        <PriceFilter context="SEARCH" />
         <Separator orientation="vertical" />
-        <AreaFilter />
+        <AreaFilter context="SEARCH"/>
         <Separator orientation="vertical" />
         <ExtraFilter />
         <Separator orientation="vertical" />

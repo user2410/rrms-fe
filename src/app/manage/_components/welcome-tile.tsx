@@ -49,7 +49,7 @@ export default function WelcomeTile({
   const query = useQuery<Data>({
     queryKey: ["manage", "statistic", "properties", sessionData!.user.accessToken],
     queryFn: async ({queryKey}) => {
-      return (await backendAPI.get<Data>("/api/statistics/properties", {
+      return (await backendAPI.get<Data>("/api/statistics/manager/properties", {
         params: {
           limit: 2,
           offset: 0,

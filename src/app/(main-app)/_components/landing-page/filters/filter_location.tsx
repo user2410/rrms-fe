@@ -7,7 +7,13 @@ import { useMemo, useRef } from "react";
 import { useFormContext } from "react-hook-form";
 import { SearchFormValues } from "../../search_box";
 
-export default function LocationFilter() {
+type CONTEXT = "LANDING" | "SEARCH";
+
+export default function LocationFilter({
+  context = "LANDING",
+} : {
+  context?: CONTEXT;
+}) {
   const form = useFormContext<SearchFormValues>();
   const triggerBtnRef = useRef<HTMLButtonElement>(null);
 
@@ -26,10 +32,22 @@ export default function LocationFilter() {
   return (
     <Popover>
       <PopoverTrigger asChild>
-        <Button ref={triggerBtnRef} type="button" role="combobox" variant="outline" className="justify-between text-ellipsis">
-          {locationName ? locationName : "Toàn quốc"}
-          <ChevronDown className="ml-2 h-4 w-4 shrink-0 opacity-50" />
-        </Button>
+        {context === "LANDING" ? (
+          <Button ref={triggerBtnRef} type="button" role="combobox" variant="outline" className="justify-between text-ellipsis">
+            {locationName ? locationName : "Toàn quốc"}
+            <ChevronDown className="ml-2 h-4 w-4 shrink-0 opacity-50" />
+          </Button>
+        ) : (
+          <Button type="button" variant="ghost" className="block text-left rounded-none h-full">
+            <div className="flex items-center gap-2 text-md font-medium">
+              Khu vực
+              <ChevronDown className="ml-2 h-4 w-4 shrink-0 opacity-50" />
+            </div>
+            <div className="text-sm font-light">
+              {locationName ? locationName : "Toàn quốc"}
+            </div>
+          </Button>
+        )}
       </PopoverTrigger>
       <PopoverContent className="w-[360px] md:w-[480px]">
         <DivisionSelector
