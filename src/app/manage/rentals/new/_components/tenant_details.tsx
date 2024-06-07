@@ -122,19 +122,6 @@ export default function TenantDetails() {
               />
             </>
           )}
-          <FormField
-            control={form.control}
-            name="note"
-            render={({ field }) => (
-              <FormItem className="col-span-2">
-                <FormLabel>Ghi chú</FormLabel>
-                <FormControl>
-                  <Textarea {...field} rows={3} />
-                </FormControl>
-                <FormMessage />
-              </FormItem>
-            )}
-          />
         </CardContent>
       </Card>
       <Card>

@@ -9,6 +9,7 @@ import { Application } from "@/models/application";
 import { Property } from "@/models/property";
 import { Unit } from "@/models/unit";
 import { User } from "@/models/user";
+import { getMessages } from "@/utils/error";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useQuery } from "@tanstack/react-query";
 import { Session } from "next-auth";
@@ -16,18 +17,17 @@ import { useSession } from "next-auth/react";
 import { useSearchParams } from "next/navigation";
 import { useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
+import toast from "react-hot-toast";
 import * as z from "zod";
 import Baseprice from "./_components/baseprice";
 import BasicServices from "./_components/basic_services";
 import ExtraServices from "./_components/extra_services";
-import TenantDetails from "./_components/tenant_details";
-import { DataProvider, useDataCtx } from "./_context/data.context";
-import UploadDialog from "./_components/upload-dialog";
 import OtherPolicies from "./_components/other_policies";
-import toast from "react-hot-toast";
-import { getMessages } from "@/utils/error";
+import PaymentPolicy from "./_components/payment_policy";
 import PropertySelection from "./_components/property";
-import ExtendLease from "./_components/extend_lease";
+import TenantDetails from "./_components/tenant_details";
+import UploadDialog from "./_components/upload-dialog";
+import { DataProvider, useDataCtx } from "./_context/data.context";
 
 const formSchema = z.object({
   applicationId: z.number().optional(),
@@ -85,8 +85,6 @@ const formSchema = z.object({
     paymentType: z.enum(['PREPAID', 'POSTPAID']),
     rentalPrice: z.number(),
     rentalPaymentBasis: z.number(),
-    deposit: z.number(),
-    depositPaid: z.boolean(),
 
     electricitySetupBy: z.enum(["LANDLORD", "TENANT"]),
     electricityPaymentType: z.enum(["RETAIL", "FIXED"]).optional(),
@@ -106,8 +104,12 @@ const formSchema = z.object({
     })),
   }),
 
-  noticePeriod: z.number().min(0).optional(),
   policies: z.object({
+    // grace period
+    gracePeriod: z.number().min(0), // number of days
+    enableLatePaymentPenalty: z.boolean(),
+    latePaymentPenaltyScheme: z.enum(["FIXED", "PERCENT"]),
+    latePaymentPenaltyAmount: z.number(),
     policies: z.array(z.object({
       title: z.string(),
       content: z.string(),
@@ -239,6 +241,7 @@ function RentalForm({
       unitId: unit?.id ?? "",
       unit,
       applicationId: application?.id,
+      application,
       tenantId: application?.creatorId,
       users,
 
@@ -274,11 +277,127 @@ function RentalForm({
         paymentType: 'POSTPAID',
         rentalPaymentBasis: 1,
         rentalPrice: application?.offeredPrice,
-        depositPaid: false,
         services: [],
       }
     },
-    // defaultValues: {
+  });
+
+  useEffect(() => {
+    dataCtx.setSessionData(sessionData);
+  }, []);
+
+  function onSubmit(data: FormValues) {
+    console.log("submitting data:", data);
+    setOpenUploadDialog(true);
+  }
+
+  function handleNext() {
+    let o: string | string[] = "";
+    switch (step) {
+      case 0:
+        o = ["propertyId", "unitId", "property", "unit"];
+        break;
+      case 1:
+        o = "tenant";
+        break;
+      case 2:
+        o = "services";
+        break;
+      default:
+    }
+    form.trigger(o as any)
+      .then((v) => {
+        if (v) {
+          console.log(form.getValues());
+          setStep(step + 1);
+        } else {
+          console.error(form.formState.errors);
+          const messages = getMessages(form.formState.errors as any);
+          toast.error(messages.join("\n"));
+        }
+      })
+      .catch((e) => {
+        console.error(e);
+      });
+  }
+
+  return (
+    <>
+      <UploadDialog
+        form={form}
+        open={openUploadDialog}
+        changeOpen={() => setOpenUploadDialog(v => !v)}
+        sessionData={sessionData}
+      />
+      <div className="space-y-4">
+        <DetailedStepper
+          steps={[
+            {
+              title: "Nhà cho thuê",
+              description: "Chọn nhà cho thuê",
+            },
+            {
+              title: "Bên thuê",
+              description: "Đại diện bên thuê",
+            },
+            {
+              title: "Chi phí",
+              description: "Chi phí khách thuê nhà chi trả ",
+            },
+            {
+              title: "Quy định",
+            }
+          ]}
+          currentStep={step}
+        />
+        <Form {...form}>
+          <form onSubmit={form.handleSubmit(onSubmit)}>
+            {step === 0 ? (
+              <PropertySelection />
+            ) : step === 1 ? (
+              <TenantDetails />
+            ) : step === 2 ? (
+              <div className="space-y-4">
+                <Baseprice />
+                <BasicServices />
+                <ExtraServices />
+              </div>
+            ) : step === 3 ? (
+              <div className="space-y-4">
+                <PaymentPolicy />
+                <OtherPolicies />
+              </div>
+            ) : null}
+            <div className="flex justify-between w-full mt-4">
+              <Button
+                type="button"
+                variant="outline"
+                onClick={() => setStep(step - 1)}
+                disabled={step <= 0}
+              >
+                Quay lại
+              </Button>
+              {step < 3 && (
+                <Button
+                  type="button"
+                  onClick={handleNext}
+                >
+                  Tiếp tục
+                </Button>
+              )}
+              {step === 3 && (
+                <Button type="submit">Hoàn tất</Button>
+              )}
+              {JSON.stringify(form.formState.errors)}
+            </div>
+          </form>
+        </Form>
+      </div>
+    </>
+  );
+}
+
+// defaultValues: {
     //   "propertyId": "6bdca7ac-a3d9-4fc8-87b2-4435665fd423",
     //   "property": {
     //     "id": "6bdca7ac-a3d9-4fc8-87b2-4435665fd423",
@@ -431,120 +550,3 @@ function RentalForm({
     //     "waterPrice": 1200
     //   },
     // },
-
-  });
-
-  useEffect(() => {
-    dataCtx.setSessionData(sessionData);
-  }, []);
-
-  function onSubmit(data: FormValues) {
-    console.log("submitting data:", data);
-    setOpenUploadDialog(true);
-  }
-
-  function handleNext() {
-    let o: string | string[] = "";
-    switch (step) {
-      case 0:
-        o = ["propertyId", "unitId", "property", "unit"];
-        break;
-      case 1:
-        o = "tenant";
-        break;
-      case 2:
-        o = "services";
-        break;
-      default:
-    }
-    form.trigger(o as any)
-      .then((v) => {
-        if (v) {
-          console.log(form.getValues());
-          setStep(step + 1);
-        } else {
-          console.error(form.formState.errors);
-          const messages = getMessages(form.formState.errors as any);
-          toast.error(messages.join("\n"));
-        }
-      })
-      .catch((e) => {
-        console.error(e);
-      });
-  }
-
-  return (
-    <>
-      <UploadDialog
-        form={form}
-        open={openUploadDialog}
-        changeOpen={() => setOpenUploadDialog(v => !v)}
-        sessionData={sessionData}
-      />
-      <div className="space-y-4">
-        <DetailedStepper
-          steps={[
-            {
-              title: "Nhà cho thuê",
-              description: "Chọn nhà cho thuê",
-            },
-            {
-              title: "Bên thuê",
-              description: "Đại diện bên thuê",
-            },
-            {
-              title: "Chi phí",
-              description: "Chi phí khách thuê nhà chi trả ",
-            },
-            {
-              title: "Quy định",
-            }
-          ]}
-          currentStep={step}
-        />
-        <Form {...form}>
-          <form onSubmit={form.handleSubmit(onSubmit)}>
-            {step === 0 ? (
-              <PropertySelection />
-            ) : step === 1 ? (
-              <TenantDetails />
-            ) : step === 2 ? (
-              <div className="space-y-4">
-                <Baseprice />
-                <BasicServices />
-                <ExtraServices />
-              </div>
-            ) : step === 3 ? (
-              <div className="space-y-4">
-                {/* <RentalPayment/> */}
-                <ExtendLease/>
-                <OtherPolicies />
-              </div>
-            ) : null}
-            <div className="flex justify-between w-full mt-4">
-              <Button
-                type="button"
-                onClick={() => setStep(step - 1)}
-                disabled={step <= 0}
-              >
-                Quay lại
-              </Button>
-              {step < 3 && (
-                <Button
-                  type="button"
-                  onClick={handleNext}
-                >
-                  Tiếp tục
-                </Button>
-              )}
-              {JSON.stringify(form.formState.errors)}
-              {step === 3 && (
-                <Button type="submit">Hoàn tất</Button>
-              )}
-            </div>
-          </form>
-        </Form>
-      </div>
-    </>
-  );
-}

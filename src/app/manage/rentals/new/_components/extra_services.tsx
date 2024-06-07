@@ -114,12 +114,28 @@ function AddServiceModal() {
   const [state, dispatch] = useReducer(minorFormReducer, minorFormInitialState);
   const [selectedService, setSelectedService] = useState<string>("");
 
+  function handleSubmit() {
+    const sName = state.type === "other" ? state.name : rentalServices[state.type as keyof typeof rentalServices];
+    console.log("about to add:", {
+      name: sName,
+      setupBy: state.setupBy,
+      provider: state.provider,
+      price: state.price,
+    });
+    form.setValue("services.services", [...form.getValues("services.services"), {
+      name: sName,
+      setupBy: state.setupBy,
+      provider: state.provider,
+      price: state.price,
+    }]);
+  }
+
   return (
     <Dialog onOpenChange={() => {
       setSelectedService("");
       dispatch({ type: "reset" });
     }}>
-      <DialogTrigger>
+      <DialogTrigger asChild>
         <Button type="button">Thêm dịch vụ</Button>
       </DialogTrigger>
       <DialogContent>
@@ -159,6 +175,7 @@ function AddServiceModal() {
             <RadioGroup
               value={state.setupBy}
               onValueChange={(v) => dispatch({ type: "setupBy", payload: v as any })}
+              disabled={!selectedService}
             >
               <div className="flex flex-row items-center space-x-2">
                 <RadioGroupItem value="TENANT" />
@@ -183,6 +200,7 @@ function AddServiceModal() {
               value={state.provider}
               onChange={(e) => dispatch({ type: "provider", payload: e.currentTarget.value })}
               autoFocus={false}
+              disabled={!selectedService}
             />
           </div>
 
@@ -198,6 +216,7 @@ function AddServiceModal() {
                 autoFocus={false}
                 type="number"
                 onChange={(e) => dispatch({ type: "price", payload: e.currentTarget.valueAsNumber })}
+                disabled={!selectedService}
               />
               <p className="text-sm font-light">{state.price ? `${state.price.toLocaleString('vi-VN', { style: 'currency', currency: 'VND' })} (${readMoneyVi(state.price)}/tháng)` : ""}</p>
             </div>
@@ -208,21 +227,7 @@ function AddServiceModal() {
             <Button type="button" variant="outline">Hủy</Button>
           </DialogClose>
           <DialogClose asChild>
-            <Button type="button" onClick={() => {
-              const sName = state.type === "other" ? state.name : rentalServices[state.type as keyof typeof rentalServices];
-              console.log("about to add:", {
-                name: sName,
-                setupBy: state.setupBy,
-                provider: state.provider,
-                price: state.price,
-              });
-              form.setValue("services.services", [...form.getValues("services.services"), {
-                name: sName,
-                setupBy: state.setupBy,
-                provider: state.provider,
-                price: state.price,
-              }]);
-            }}>Thêm</Button>
+            <Button type="button" onClick={handleSubmit}>Thêm</Button>
           </DialogClose>
         </DialogFooter>
       </DialogContent>

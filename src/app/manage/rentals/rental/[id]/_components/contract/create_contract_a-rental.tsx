@@ -6,8 +6,9 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@
 import Link from "next/link";
 import { useFormContext } from "react-hook-form";
 import { ContractAFormValues } from "./create_contract_a";
+import { Switch } from "@/components/ui/switch";
 
-export default function Rental() {
+export default function CreateContractARentalDetails() {
   const form = useFormContext<ContractAFormValues>();
 
   return (
@@ -24,7 +25,7 @@ export default function Rental() {
               <FormItem>
                 <FormLabelRequired>Nơi thành lập hợp đồng</FormLabelRequired>
                 <FormControl>
-                  <Input {...field} placeholder="VD: Hà Nội, Đà Nắng"/>
+                  <Input {...field} placeholder="VD: Hà Nội, Đà Nắng" />
                 </FormControl>
               </FormItem>
             )}
@@ -36,7 +37,7 @@ export default function Rental() {
               <FormItem>
                 <FormLabelRequired>Số bản sao hợp đồng</FormLabelRequired>
                 <FormControl>
-                  <Input 
+                  <Input
                     {...field}
                     value={field.value}
                     onChange={(e) => field.onChange(e.currentTarget.valueAsNumber)}
@@ -107,25 +108,6 @@ export default function Rental() {
               </FormItem>
             )}
           />
-          <FormField
-            control={form.control}
-            name="paymentDay"
-            render={({ field }) => (
-              <FormItem>
-                <FormLabelRequired>Ngày thanh toán</FormLabelRequired>
-                <FormControl>
-                  <Input
-                    {...field}
-                    value={field.value}
-                    onChange={(e) => field.onChange(e.currentTarget.valueAsNumber)}
-                    type="number"
-                    min={1}
-                    max={28}
-                  />
-                </FormControl>
-                <FormDescription>Ngày thanh toán hàng tháng (1-28)</FormDescription>
-              </FormItem>
-            )} />
         </CardContent>
       </Card>
     </div>

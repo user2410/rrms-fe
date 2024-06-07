@@ -48,7 +48,7 @@ export type Application = {
   creatorId: string;
   createdAt: Date;
   updatedAt: Date;
-  tenantType: 'INDIVIDUAL' | 'ORGANIZATION';
+  tenantType: 'INDIVIDUAL' | 'ORGANIZATION' | 'FAMILY';
   fullName: string;
   email: string;
   phone: string;

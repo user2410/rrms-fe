@@ -1,12 +1,13 @@
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
-import { Checkbox } from "@/components/ui/checkbox";
 import { FormControl, FormDescription, FormField, FormItem, FormLabel, FormLabelRequired } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
+import { Switch } from "@/components/ui/switch";
 import { readMoneyVi } from "@/utils/currency";
 import { useFormContext } from "react-hook-form";
 import { FormValues } from "../page";
-import FieldMoneyDescription from "@/components/complex/field-money_desc";
+import FormLabelWithInfo from "@/components/complex/label-with-info";
+import { cn } from "@/libs/utils";
 
 export default function Baseprice() {
   const form = useFormContext<FormValues>();
@@ -27,8 +28,8 @@ export default function Baseprice() {
               <div className="grid grid-cols-3 gap-2">
                 <Select
                   onValueChange={(v) => {
-                    var basis : number;
-                    switch(v) {
+                    var basis: number;
+                    switch (v) {
                       case "MONTHLY":
                         basis = 1;
                         break;
@@ -58,7 +59,7 @@ export default function Baseprice() {
                 {field.value !== 1 && (
                   <div className="flex flex-row items-center gap-1">
                     <FormControl>
-                      <Input {...field} type="number" min={2} max={form.watch('tenant.rentalPeriod')} className="flex-grow"/>
+                      <Input {...field} type="number" min={2} max={form.watch('tenant.rentalPeriod')} className="flex-grow" />
                     </FormControl>
                     <span>tháng</span>
                   </div>
@@ -76,7 +77,7 @@ export default function Baseprice() {
               <Select onValueChange={field.onChange} defaultValue={field.value}>
                 <FormControl>
                   <SelectTrigger>
-                    <SelectValue/>
+                    <SelectValue />
                   </SelectTrigger>
                 </FormControl>
                 <SelectContent>
@@ -85,9 +86,9 @@ export default function Baseprice() {
                 </SelectContent>
               </Select>
               <FormDescription>
-                {field.value === "PREPAID" 
-                ? "Tiền thuê được tính vào đầu mỗi kỳ thuê nhà" 
-                : "Tiền thuê được tính vào đầu mỗi kỳ thuê nhà"}
+                {field.value === "PREPAID"
+                  ? "Tiền thuê được tính vào đầu mỗi kỳ thuê nhà"
+                  : "Tiền thuê được tính vào đầu mỗi kỳ thuê nhà"}
               </FormDescription>
             </FormItem>
           )}
@@ -105,49 +106,32 @@ export default function Baseprice() {
                   onChange={(e) => field.onChange(e.currentTarget.valueAsNumber)}
                 />
               </FormControl>
-              <FieldMoneyDescription value={field.value}/>
+              <FormDescription>
+                Khách hàng phải trả mỗi {form.watch("services.rentalPaymentBasis")} tháng: {field.value ? `${field.value.toLocaleString('vi-VN', { style: 'currency', currency: 'VND' })}` : ""} {field.value ? `(${readMoneyVi(field.value)})` : ""}</FormDescription>
             </FormItem>
           )}
         />
-        <div className="space-y-2">
-          <FormField
-            control={form.control}
-            name="services.deposit"
-            render={({ field }) => (
-              <FormItem>
-                <FormLabelRequired>Tiền đặt cọc</FormLabelRequired>
+        <FormField
+          control={form.control}
+          name="policies.gracePeriod"
+          render={({ field }) => (
+            <FormItem>
+              <FormLabelRequired>Thời gian ân hạn</FormLabelRequired>
+              <div className="flex flex-row items-center gap-2">
                 <FormControl>
                   <Input
                     {...field}
                     type="number"
-                    onChange={(e) => field.onChange(e.currentTarget.valueAsNumber)}
+                    min={1}
+                    onChange={(e) => field.onChange(e.target.valueAsNumber)}
                   />
                 </FormControl>
-                <FormDescription>
-                  Tiền đặt cọc thuê nhà, đặt 0 nếu không yêu cầu.{" "}
-                  {field.value > 0 && `${field.value.toLocaleString('vi-VN', { style: 'currency', currency: 'VND' })}`} {field.value > 0 && `(${readMoneyVi(field.value)})`}
-                </FormDescription>
-              </FormItem>
-            )}
-          />
-          <FormField
-            control={form.control}
-            name="services.depositPaid"
-            render={({ field }) => (
-              <FormItem className="flex flex-row items-center gap-1 space-y-0">
-                <FormControl>
-                  <Checkbox
-                    checked={field.value}
-                    onCheckedChange={field.onChange}
-                  />
-                </FormControl>
-                <FormLabel className="text-sm font-normal">
-                  Đã trả tiền đặt cọc
-                </FormLabel>
-              </FormItem>
-            )}
-          />
-        </div>
+                <FormDescription>ngày</FormDescription>
+              </div>
+              <FormDescription>Khoảng thời gian sau hạn trả tiền thuê mà khách thuê không bị tính phí trễ hạn</FormDescription>
+            </FormItem>
+          )}
+        />
       </CardContent>
     </Card>
   );

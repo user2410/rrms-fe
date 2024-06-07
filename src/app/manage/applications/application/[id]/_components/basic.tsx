@@ -18,10 +18,14 @@ export default function BasicInfo({
       <BasicTenant data={data}/>
       <BasicUnits data={data}/>
       {/* <BasicIdentity data={data}/> */}
-      {application.tenantType === "INDIVIDUAL" && (
+      {application.tenantType === "FAMILY" && (
         <>
           <BasicCoaps data={data}/>
           <BasicMinors data={data}/>
+        </>
+      )}
+      {["INDIVIDUAL", "FAMILY"].includes(application.tenantType) && (
+        <>
           <BasicPets data={data}/>
           <PersonalVehicles data={data}/>
         </>

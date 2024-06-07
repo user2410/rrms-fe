@@ -5,39 +5,35 @@ import { ScrollArea } from "@/components/ui/scroll-area";
 import DetailedStepper from "@/components/ui/stepper/detailed-stepper";
 import { getUserFullAddress, getUserFullName } from "@/models/user";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { useState } from "react";
+import { useMemo, useState } from "react";
 import { useForm } from "react-hook-form";
 import * as z from "zod";
 import { useDataCtx } from "../../_context/data.context";
-import Rental from "./rental";
-import SideA from "./side_a";
+import CreateContractARentalDetails from "./create_contract_a-rental";
+import SideA from "./create_contract_a-side_a";
 import ContractEditor from "./contract_editor_b";
 import toast from "react-hot-toast";
 import { backendAPI } from "@/libs/axios";
+import CreateContractAContract from "./create_contract_a-contract";
 
 const placeholder = ".................................";
 const formSchema = z.object({
-  sides: z.object({
-    aFullName: z.string(),
-    aDob: z.date(),
-    aPhone: z.string(),
-    aAddress: z.string(),
-    aHouseholdRegistration: z.string(),
-    aIdentity: z.string(),
-    aIdentityIssuedBy: z.string(),
-    aIdentityIssuedAt: z.date(),
-    aDocuments: z.array(
-      z.object({ cert: z.string() })
-    ),
-    aBankAccount: z.string().optional(),
-    aBank: z.string().optional(),
-    aRegistrationNumber: z.string(),
+  aFullName: z.string(),
+  aDob: z.date(),
+  aPhone: z.string(),
+  aAddress: z.string(),
+  aHouseholdRegistration: z.string(),
+  aIdentity: z.string(),
+  aIdentityIssuedBy: z.string(),
+  aIdentityIssuedAt: z.date(),
+  aDocuments: z.array(
+    z.object({ cert: z.string() })
+  ),
+  aBankAccount: z.string().optional(),
+  aBank: z.string().optional(),
+  aRegistrationNumber: z.string(),
 
-    bFullName: z.string(),
-    bPhone: z.string(),
-  }),
   paymentMethod: z.string(),
-  paymentDay: z.number().min(1).max(28),
   nCopies: z.number().min(1),
   createdAtPlace: z.string(),
 });
@@ -51,54 +47,63 @@ export default function CreateContractA() {
 
   const form = useForm<ContractAFormValues>({
     resolver: zodResolver(formSchema),
-    defaultValues: {
-      sides: {
-        aFullName: getUserFullName(owners[0]),
-        aAddress: getUserFullAddress(owners[0]),
-        aPhone: owners[0].phone,
-        bFullName: rental.tenantName,
-        bPhone: rental.tenantPhone,
-      },
-    },
     // defaultValues: {
-    //   "sides": {
-    //     "aFullName": "Albert Alpha",
-    //     "aAddress": "Số 1, Đường Giải Phóng, Phường Bách Khoa, Hai Bà Trưng, Hà Nội",
-    //     "aPhone": "0912142214",
-    //     "bFullName": "Graham Gamma",
-    //     "bPhone": "0942286285",
-    //     "aDob": new Date("1989-12-12T00:00:00.000Z"),
-    //     "aHouseholdRegistration": "Số 2 Nhà Thờ, Hoàn Kiếm, Hà Nội",
-    //     "aIdentity": "0151651631187",
-    //     "aIdentityIssuedBy": "Cục quản lý di trú",
-    //     "aIdentityIssuedAt": new Date("2024-04-19T00:00:00.000Z"),
-    //     "aBankAccount": "213854199152412",
-    //     "aBank": "SCB",
-    //     "aRegistrationNumber": "HTDN/1243143125",
-    //     "aDocuments": [
-    //       {
-    //         "cert": "Chứng từ số ABC/12214325"
-    //       },
-    //       {
-    //         "cert": "Hợp đồng HAH/1242"
-    //       }
-    //     ]
-    //   },
-    //   "paymentMethod": "cash",
-    //   "paymentDay": 5,
-    //   "createdAtPlace": "Hà Nội",
-    //   "nCopies": 2
+    //   aFullName: getUserFullName(owners[0]),
+    //   aAddress: getUserFullAddress(owners[0]),
+    //   aPhone: owners[0].phone,
     // },
+    defaultValues: {
+      "aFullName": "Albert Alpha",
+      "aAddress": "Số 1, Đường Giải Phóng, Phường Bách Khoa, Hai Bà Trưng, Hà Nội",
+      "aPhone": "0912142214",
+      "aDob": new Date("1989-12-12T00:00:00.000Z"),
+      "aHouseholdRegistration": "Số 2 Nhà Thờ, Hoàn Kiếm, Hà Nội",
+      "aIdentity": "0151651631187",
+      "aIdentityIssuedBy": "Cục quản lý di trú",
+      "aIdentityIssuedAt": new Date("2024-04-19T00:00:00.000Z"),
+      "aBankAccount": "213854199152412",
+      "aBank": "SCB",
+      "aRegistrationNumber": "HTDN/1243143125",
+      "aDocuments": [
+        {
+          "cert": "Chứng từ số ABC/12214325"
+        },
+        {
+          "cert": "Hợp đồng HAH/1242"
+        }
+      ],
+      "paymentMethod": "cash",
+      "createdAtPlace": "Hà Nội",
+      "nCopies": 2
+    },
   });
+
+  const stepperSteps = useMemo(() => {
+    const steps = ([
+      {
+        title: "Bên A",
+        description: "Bổ sung thông tin của bên cho thuê",
+      },
+      {
+        title: "Chi tiết hợp đồng",
+        description: "Thông tin hợp đồng và các điều khoản khác",
+      },
+    ]);
+    return rental.tenantId
+      ? steps
+      : [
+        ...steps,
+        {
+          title: "Hợp đồng",
+          description: "Hợp đồng được sinh dựa trên những thông tin đã cung cấp",
+        },
+      ];
+  }, [rental.tenantId]);
 
   async function onSubmit(data: ContractAFormValues) {
     const submitData = {
-      ...data.sides,
-      paymentMethod: data.paymentMethod,
-      paymentDay: data.paymentDay,
-      aDocuments: data.sides.aDocuments.map((doc) => doc.cert),
-      nCopies: data.nCopies,
-      createdAtPlace: data.createdAtPlace,
+      ...data,
+      aDocuments: data.aDocuments.map((doc) => doc.cert),
     };
     try {
       if (!res) {
@@ -126,6 +131,26 @@ export default function CreateContractA() {
     }
   }
 
+  async function handleNext() {
+    try {
+      var valid: boolean = true;
+      if (step === 1) {
+        valid = await form.trigger(["aFullName", "aDob", "aPhone", "aAddress", "aHouseholdRegistration", "aIdentity", "aIdentityIssuedBy", "aIdentityIssuedAt", "aDocuments", "aBankAccount", "aBank", "aRegistrationNumber"]);
+      } else if (step === 2) {
+        valid = await form.trigger(["paymentMethod", "nCopies", "createdAtPlace"]);
+      }
+      if (!valid) {
+        console.error(form.formState.errors);
+        return;
+      }
+      setStep(v => (v + 1));
+
+    } catch (err) {
+      console.error(err);
+      toast.error("Có lỗi xảy ra, vui lòng thử lại sau");
+    }
+  }
+
   return (
     <Dialog>
       <DialogTrigger>
@@ -141,20 +166,7 @@ export default function CreateContractA() {
         <div className="max-w-[80vw] lg:max-w-[960px] xl:max-w-[1024px] 2xl:max-w-[1200px]">
           <DetailedStepper
             currentStep={step}
-            steps={[
-              {
-                title: "Bên A",
-                description: "Bổ sung thông tin của bên cho thuê",
-              },
-              {
-                title: "Chi tiết hợp đồng",
-                description: "Thông tin hợp đồng và các điều khoản khác",
-              },
-              // {
-              //   title: "Xem trước hợp đồng",
-              //   description: "Xem trước hợp đông được tạo dựa trên những thông tin đã có",
-              // },
-            ]}
+            steps={stepperSteps}
           />
         </div>
         <Form {...form}>
@@ -163,17 +175,13 @@ export default function CreateContractA() {
               {step === 0 ? (
                 <SideA />
               ) : step === 1 ? (
-                <Rental />
-                // ) : step === 2 ? (
-                //   // <div className="w-full h-full flex flex-col items-center justify-center gap-4">
-                //   //   <h2 className="text-xl">Hoàn thành nhập thông tin bổ sung</h2>
-                //   //   <p>Thông báo sẽ được gửi tới bên thuê để hoàn thành thông tin bổ sung và tạo hợp đồng</p>
-                //   // </div>
-                //   <ContractEditor/>
-              ) : null}
+                <CreateContractARentalDetails />
+              ) : step === 2 && (
+                <CreateContractAContract />
+              )}
             </ScrollArea>
             <DialogFooter className="flex flex-row justify-between">
-            <Button
+              <Button
                 type="button"
                 variant="outline"
                 disabled={step === 0}
@@ -181,29 +189,17 @@ export default function CreateContractA() {
               >
                 Quay lại
               </Button>
-              {step < 1 && (
-                <Button
-                  type="button"
-                  onClick={(e) => {
-                    form.trigger("sides")
-                      .then((valid) => {
-                        if (valid) {
-                          console.log('next', form.getValues());
-                          setStep(step + 1);
-                        } else {
-                          console.error(form.formState.errors);
-                        }
-                      })
-                      .catch((err) => {
-                        console.error(err);
-                      });
-                  }}
-                >
-                  Tiếp tục
-                </Button>
-              )}
+              {((step < 1 && rental.tenantId) || (step < 2 && !rental.tenantId))
+                && (
+                  <Button
+                    type="button"
+                    onClick={handleNext}
+                  >
+                    Tiếp tục
+                  </Button>
+                )}
               {/* {JSON.stringify(form.formState.errors)} */}
-              {step === 1 && (
+              {(step === 1 && rental.id) && (
                 <Button type="submit">{res ? "Cập nhật" : "Hoàn tất"}</Button>
               )}
             </DialogFooter>
@@ -214,3 +210,4 @@ export default function CreateContractA() {
 
   );
 };
+

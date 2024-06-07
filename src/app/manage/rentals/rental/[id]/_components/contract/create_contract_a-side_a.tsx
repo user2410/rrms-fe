@@ -12,7 +12,7 @@ export default function SideA() {
   const form = useFormContext<ContractAFormValues>();
   const { fields: aCerts, append: aCertAppend, remove: aCertRemove } = useFieldArray<ContractAFormValues>({
     control: form.control,
-    name: "sides.aDocuments",
+    name: "aDocuments",
   });
 
   return (
@@ -23,7 +23,7 @@ export default function SideA() {
       <CardContent className="grid grid-cols-6 gap-3">
         <FormField
           control={form.control}
-          name="sides.aFullName"
+          name="aFullName"
           render={({ field }) => (
             <FormItem className="col-span-3">
               <FormLabelRequired>Họ và tên</FormLabelRequired>
@@ -35,7 +35,7 @@ export default function SideA() {
         />
         <FormField
           control={form.control}
-          name="sides.aDob"
+          name="aDob"
           render={({ field }) => (
             <FormItem className="col-span-3">
               <FormLabelRequired>Ngày tháng năm sinh</FormLabelRequired>
@@ -56,7 +56,7 @@ export default function SideA() {
         />
         <FormField
           control={form.control}
-          name="sides.aAddress"
+          name="aAddress"
           render={({ field }) => (
             <FormItem className="col-span-3">
               <FormLabelRequired>Địa chỉ</FormLabelRequired>
@@ -68,7 +68,7 @@ export default function SideA() {
         />
         <FormField
           control={form.control}
-          name="sides.aHouseholdRegistration"
+          name="aHouseholdRegistration"
           render={({ field }) => (
             <FormItem className="col-span-3">
               <FormLabelRequired>Hộ khẩu</FormLabelRequired>
@@ -80,7 +80,7 @@ export default function SideA() {
         />
         <FormField
           control={form.control}
-          name="sides.aIdentity"
+          name="aIdentity"
           render={({ field }) => (
             <FormItem className="col-span-2">
               <FormLabelRequired>CMND/CCCD số</FormLabelRequired>
@@ -92,7 +92,7 @@ export default function SideA() {
         />
         <FormField
           control={form.control}
-          name="sides.aIdentityIssuedBy"
+          name="aIdentityIssuedBy"
           render={({ field }) => (
             <FormItem className="col-span-2">
               <FormLabelRequired>Nơi cấp</FormLabelRequired>
@@ -104,7 +104,7 @@ export default function SideA() {
         />
         <FormField
           control={form.control}
-          name="sides.aIdentityIssuedAt"
+          name="aIdentityIssuedAt"
           render={({ field }) => (
             <FormItem className="col-span-2">
               <FormLabelRequired>Ngày cấp</FormLabelRequired>
@@ -124,7 +124,7 @@ export default function SideA() {
         />
         <FormField
           control={form.control}
-          name="sides.aBankAccount"
+          name="aBankAccount"
           render={({ field }) => (
             <FormItem className="col-span-3">
               <FormLabel>Số tài khoản</FormLabel>
@@ -136,7 +136,7 @@ export default function SideA() {
         />
         <FormField
           control={form.control}
-          name="sides.aBank"
+          name="aBank"
           render={({ field }) => (
             <FormItem className="col-span-3">
               <FormLabel>Ngân hàng</FormLabel>
@@ -148,7 +148,7 @@ export default function SideA() {
         />
         <FormField
           control={form.control}
-          name="sides.aRegistrationNumber"
+          name="aRegistrationNumber"
           render={({ field }) => (
             <FormItem className="col-span-6">
               <FormLabelRequired>Giấy chứng nhận quyền sở hữu nhà số</FormLabelRequired>
@@ -162,7 +162,7 @@ export default function SideA() {
           <Label className="block">Các chứng từ sở hữu và tham khảo về nhà ở đã được cơ quan có thẩm quyền cấp cho Bên A:</Label>
           {aCerts.map((cert, index) => (
             <div key={cert.id} className="flex flex-row items-center space-x-3">
-              <Input {...form.register(`sides.aDocuments.${index}.cert`)} />
+              <Input {...form.register(`aDocuments.${index}.cert`)} />
               <Button type="button" onClick={() => aCertRemove(index)}>Xóa</Button>
             </div>
           ))}

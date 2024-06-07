@@ -10,6 +10,7 @@ import { FaCheckCircle } from "react-icons/fa";
 import { MdCancel } from "react-icons/md";
 import preUploadRental from "../_actions/preupload";
 import { FormValues } from "../page";
+import { Checkbox } from "@/components/ui/checkbox";
 
 type UPLOADSTAGE = "CONFIRMATION" | "PENDING" | "DONE" | "ERROR";
 
@@ -18,13 +19,14 @@ export default function UploadDialog({
   open,
   changeOpen,
   sessionData,
-} : {
+}: {
   form: UseFormReturn<FormValues, any, undefined>;
   open: boolean;
   changeOpen: () => void;
   sessionData: Session;
 }) {
   const [stage, setStage] = useState<UPLOADSTAGE>("CONFIRMATION");
+  const [commit, setCommit] = useState<boolean>(false);
   const [res, setRes] = useState<any>();
   const router = useRouter();
 
@@ -47,6 +49,7 @@ export default function UploadDialog({
 
   useEffect(() => {
     setStage("CONFIRMATION");
+    setCommit(false);
   }, [open]);
 
   return (
@@ -58,9 +61,22 @@ export default function UploadDialog({
         {stage === "CONFIRMATION" ? (
           <div className="w-full flex flex-col items-center justify-center gap-2">
             <h2>Xác nhận thêm khách thuê <strong>{form.getValues("tenant.tenantName") as string}</strong> ? </h2>
+            <div className="flex items-center space-x-2">
+              <Checkbox
+                id="commit"
+                checked={commit}
+                onCheckedChange={(c) => setCommit(!!c)}
+              />
+              <label
+                htmlFor="commit"
+                className="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
+              >
+                Tôi cam kết thông tin trên là chính xác
+              </label>
+            </div>
             <div className="flex flex-row gap-2">
               <Button variant="outline" onClick={changeOpen}>Quay lại</Button>
-              <Button onClick={handleUpload}>Đồng ý</Button>
+              <Button disabled={!commit} onClick={handleUpload}>Đồng ý</Button>
             </div>
           </div>
         ) : stage === "DONE" && res ? (

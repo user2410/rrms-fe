@@ -1,21 +1,22 @@
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { useFieldArray, useForm, useFormContext, UseFormReturn } from "react-hook-form";
-import { FormValues } from "../page";
 import { Button } from "@/components/ui/button";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Dialog, DialogClose, DialogContent, DialogFooter, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
-import { useEffect, useReducer } from "react";
-import { Label } from "@/components/ui/label";
+import { FormControl, FormField, FormItem, FormLabel, FormMessage } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
-import { useDataCtx } from "../_context/data.context";
-import { useQuery } from "@tanstack/react-query";
-import { Listing, rentalPolicies } from "@/models/listing";
 import { backendAPI } from "@/libs/axios";
 import { Application } from "@/models/application";
+import { Listing, rentalPolicies } from "@/models/listing";
+import { useQuery } from "@tanstack/react-query";
+import { useEffect, useReducer } from "react";
+import { useFieldArray, useFormContext, UseFormReturn } from "react-hook-form";
+import { useDataCtx } from "../_context/data.context";
+import { FormValues } from "../page";
 
 export default function OtherPolicies() {
   const form = useFormContext<FormValues>();
-  const {sessionData} = useDataCtx();
+  const { sessionData } = useDataCtx();
   const { fields, append, remove } = useFieldArray({
     control: form.control,
     name: "policies.policies",
@@ -24,7 +25,7 @@ export default function OtherPolicies() {
 
   const query = useQuery<Listing>({
     queryKey: ["listings", "listing", application?.listingId, sessionData.user.accessToken],
-    queryFn: async ({queryKey}) => {
+    queryFn: async ({ queryKey }) => {
       return (await backendAPI.get(`/api/listings/listing/${queryKey.at(2)}`, {
         headers: {
           Authorization: `Bearer ${queryKey.at(-1)}`,
@@ -37,7 +38,7 @@ export default function OtherPolicies() {
   });
 
   useEffect(() => {
-    if(query.status !== "success" || fields.length > 0) {
+    if (query.status !== "success" || fields.length > 0) {
       return;
     }
     query.data.policies.forEach(policy => {
@@ -50,26 +51,47 @@ export default function OtherPolicies() {
   }, [query.status, fields]);
 
   return (
-    <Card>
-      <CardHeader className="flex flex-row items-center justify-between">
-        <CardTitle className="text-lg">Các quy định khác</CardTitle>
-        <AddPolicyDialog form={form} />
-      </CardHeader>
-      <CardContent className="space-y-2">
-        {fields.length === 0 && (
-          <div className="text-center">Chưa có quy định nào</div>
-        )}
-        {fields.map((policy, index) => (
-          <div className="border py-2 px-4" key={index}>
-            <div className="flex flex-row justify-between items-center">
-              <h2 className="text-lg font-semibold">{policy.title}</h2>
-              <Button type="button" variant="destructive" onClick={() => remove(index)}>Xóa</Button>
+    <>
+      <Card>
+        <CardHeader className="flex flex-row items-center justify-between">
+          <CardTitle className="text-lg">Các quy định khác</CardTitle>
+          <AddPolicyDialog form={form} />
+        </CardHeader>
+        <CardContent className="space-y-2">
+          {fields.length === 0 && (
+            <div className="text-center">Chưa có quy định nào</div>
+          )}
+          {fields.map((policy, index) => (
+            <div className="border py-2 px-4" key={index}>
+              <div className="flex flex-row justify-between items-center">
+                <h2 className="text-lg font-semibold">{policy.title}</h2>
+                <Button type="button" variant="destructive" onClick={() => remove(index)}>Xóa</Button>
+              </div>
+              <p className="text-md font-normal">{policy.content}</p>
             </div>
-            <p className="text-md font-normal">{policy.content}</p>
-          </div>
-        ))}
-      </CardContent>
-    </Card>
+          ))}
+        </CardContent>
+      </Card>
+      <Card>
+        <CardHeader>
+          <CardTitle className="text-lg">Ghi chú</CardTitle>
+        </CardHeader>
+        <CardContent>
+          <FormField
+            control={form.control}
+            name="note"
+            render={({ field }) => (
+              <FormItem className="col-span-2">
+                <FormControl>
+                  <Textarea {...field} rows={3} />
+                </FormControl>
+                <FormMessage />
+              </FormItem>
+            )}
+          />
+        </CardContent>
+      </Card>
+    </>
   );
 };
 

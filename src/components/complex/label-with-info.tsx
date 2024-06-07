@@ -5,13 +5,16 @@ import React from "react";
 export default function FormLabelWithInfo({
   label,
   info,
+  required,
 }: {
   label: string;
   info: React.ReactNode;
+  required?: boolean;
 }) {
   return (
     <FormLabel>
       {label}
+      {required && <span className="ml-1 text-red-500">*</span>}
       <TooltipProvider>
         <Tooltip>
           <TooltipTrigger asChild className="ml-2">

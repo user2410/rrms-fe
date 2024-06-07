@@ -16,7 +16,9 @@ export default function ApplicationToMePage() {
     queryFn: async ({ queryKey }) => {
       return (await backendAPI.get<FetchedApplication[]>("/api/applications/to-me", {
         params: {
-          fields: "listing_id,property_id,unit_id,status,full_name,movein_date,preferred_term,employment_status,employment_position,employment_monthly_income,created_at"
+          fields: "listing_id,property_id,unit_id,status,full_name,movein_date,preferred_term,employment_status,employment_position,employment_monthly_income,created_at",
+          limit: 10,
+          offset: 0,
         },
         headers: {
           Authorization: `Bearer ${queryKey.at(-1)}`,

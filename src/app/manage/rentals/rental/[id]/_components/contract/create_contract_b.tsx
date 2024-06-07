@@ -13,7 +13,6 @@ import SideB from "./side_b";
 import DetailedStepper from "@/components/ui/stepper/detailed-stepper";
 import ContractEditor from "./contract_editor_b";
 
-const placeholder = ".................................";
 const formSchema = z.object({
   bFullName: z.string(),
   bOrganizationName: z.string().optional(),

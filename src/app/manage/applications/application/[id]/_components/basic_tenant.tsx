@@ -36,7 +36,7 @@ export default function BasicTenant({
   data: ManagedApplication;
 }) {
   const { application } = data;
-  return application.tenantType === "INDIVIDUAL" ? (
+  return ["INDIVIDUAL", "FAMILY"].includes(application.tenantType) ? (
     <Card>
       <CardHeader className="!p-4 lg:!p-6 bg-gray-400">
         Người thuê nhà
@@ -90,14 +90,14 @@ export default function BasicTenant({
               <InfoItem
                 icon={<CircleDollarSign className="w-4 h-4" />}
                 title="Thu nhập hàng tháng"
-                content={`${application.employmentMonthlyIncome.toLocaleString('vi-VN', { style: 'currency', currency: 'VND' })}/tháng (${data.application.employmentMonthlyIncome / data.listing.price}x giá thuê)`}
+                content={`${application.employmentMonthlyIncome.toLocaleString('vi-VN', { style: 'currency', currency: 'VND' })}/tháng (${(data.application.employmentMonthlyIncome / data.listing.price).toFixed(0)}x giá thuê)`}
               />
             </div>
           </div>
         </div>
       </CardContent>
     </Card>
-  ) : (
+  ) : application.tenantType === "ORGANIZATION" && (
     <Card>
       <CardHeader className="!p-4 lg:!p-6 bg-gray-400">
         Tổ chức

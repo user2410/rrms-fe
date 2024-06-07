@@ -11,7 +11,7 @@ import { FormValues } from "../page";
 
 import FieldMoneyDescription from "@/components/complex/field-money_desc";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
-import basicServicesInfo from "./basic_services.config.json";
+import basicServicesInfo from "@configs/basic_services.config.json";
 import { BasicServiceSelect } from "./basic_service_select";
 import { getRegion } from "@/utils/dghcvn";
 import { Property } from "@/models/property";
@@ -30,7 +30,7 @@ export default function BasicServices() {
       </CardHeader>
       <CardContent className="grid grid-cols-1 md:grid-cols-2 gap-3">
         <div>
-          <h2 className="text-lg font-semibold">Điện <span className="text-red-600 ml-2">*</span></h2>
+          <h2 className="font-semibold">Điện <span className="text-red-600 ml-1">*</span></h2>
           <div className="space-y-3">
             <FormField
               control={form.control}
@@ -127,7 +127,7 @@ export default function BasicServices() {
           </div>
         </div>
         <div>
-          <h2 className="text-lg font-semibold">Nước <span className="text-red-600 ml-2">*</span></h2>
+          <h2 className="font-semibold">Nước <span className="text-red-600 ml-1">*</span></h2>
           <div className="space-y-3">
             <FormField
               control={form.control}
