@@ -6,7 +6,8 @@
     "dev": "next dev --turbo",
     "build": "next build",
     "start": "next start",
-    "lint": "next lint"
+    "lint": "next lint",
+    "postinstall": "node scripts/generate-firebase-sw.js"
   },
   "dependencies": {
     "@babel/runtime": "^7.22.10",
@@ -49,8 +50,10 @@
     "clsx": "^2.0.0",
     "cmdk": "^0.2.0",
     "date-fns": "^2.30.0",
+    "dotenv": "^16.4.5",
     "eslint": "8.50.0",
     "eslint-config-next": "^14.0.4",
+    "firebase": "^10.12.2",
     "fuse.js": "^7.0.0",
     "lightgallery": "^2.7.2",
     "lodash": "^4.17.21",

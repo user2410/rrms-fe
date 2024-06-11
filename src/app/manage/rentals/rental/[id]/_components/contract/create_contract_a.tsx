@@ -16,7 +16,6 @@ import toast from "react-hot-toast";
 import { backendAPI } from "@/libs/axios";
 import CreateContractAContract from "./create_contract_a-contract";
 
-const placeholder = ".................................";
 const formSchema = z.object({
   aFullName: z.string(),
   aDob: z.date(),
@@ -116,7 +115,8 @@ export default function CreateContractA() {
         setRes(contract);
         toast.success("Hợp đồng đã được tạo thành công");
       } else {
-        // update current contract
+        // update current contractconst placeholder = ".................................";
+
         await backendAPI.patch(`/api/contracts/contract/${res.id}`, submitData, {
           headers: {
             Authorization: `Bearer ${sessionData.user.accessToken}`,

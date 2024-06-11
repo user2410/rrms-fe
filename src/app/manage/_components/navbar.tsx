@@ -1,15 +1,13 @@
 "use client";
 
-import { Badge } from "@/components/ui/badge";
+import { Button } from "@/components/ui/button";
+import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet";
 import { ThemeSwitcher } from "@/components/ui/theme-switcher";
 import { format } from "date-fns";
-import Link from "next/link";
-import { IoMdMail, IoMdNotifications } from "react-icons/io";
 import vi from "date-fns/locale/vi";
-import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet";
-import { Button } from "@/components/ui/button";
-import Sidebar from "./sidebar";
 import { useSession } from "next-auth/react";
+import NotificationDropdown from "./notification_dropdown";
+import Sidebar from "./sidebar";
 
 const ICON_SIZE = 24;
 
@@ -45,14 +43,7 @@ export default function ManageDashboardNavbar() {
       {/* Form */}
       <div className="flex items-center gap-8">
         <ThemeSwitcher size={20} />
-        <div className="relative">
-          <IoMdMail size={ICON_SIZE} />
-          <Badge variant="destructive" className="absolute -top-4 -right-4">12</Badge>
-        </div>
-        <div className="relative">
-          <IoMdNotifications size={ICON_SIZE} />
-          <Badge variant="destructive" className="absolute -top-4 -right-4">12</Badge>
-        </div>
+        <NotificationDropdown />
       </div>
     </nav>
   );

@@ -12,7 +12,6 @@ import toast from "react-hot-toast";
 import { BsBuildingFillAdd, BsFillBuildingsFill } from "react-icons/bs";
 import { FaFile, FaFileAlt, FaFileContract, FaHandHolding, FaMoneyBill, FaUser } from "react-icons/fa";
 import { FiLifeBuoy } from "react-icons/fi";
-import NotificationDropdown from "./dropdowns/notification";
 import SidebarNavigation from "./sidebar_navigation";
 
 const ICON_SIZE = 16;
@@ -58,7 +57,7 @@ export default function Sidebar() {
         {/* User */}
         <ul className="md:hidden items-center flex flex-wrap list-none">
           <li className="inline-block relative">
-            <NotificationDropdown />
+            NotificationDropdown
           </li>
 
         </ul>

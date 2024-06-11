@@ -3,6 +3,7 @@ import AuthItem from "./auth-item";
 import NavItems from "./nav-items";
 import SearchModal from "./search.modal";
 import Sidebar from "./sidebar";
+import NotificationDropdown from "@/app/manage/_components/notification_dropdown";
 
 export default function HeaderMain() {
 
@@ -18,12 +19,13 @@ export default function HeaderMain() {
         </div>
 
         {/* Right icons */}
-        <div className="flex flex-row gap-2">
+        <div className="flex flex-row items-center gap-4">
           {/* Hamburger menu - trigger nav items dropdown */}
           <div className="md:hidden">
             <Sidebar/>
           </div>
           <SearchModal/>
+          <NotificationDropdown/>
           <AuthItem />
         </div>
       </div>

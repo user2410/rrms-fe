@@ -72,6 +72,14 @@ export const authOptions: AuthOptions = {
       return session;
     },
   },
+  events: {
+    async signIn(message) {
+      console.log("signIn message log:", message); // {user: full response from backend, account: {providerAccountId: undefined,type: 'credentials',provider: 'credentials'}}
+      // @ts-expect-error
+      const user = message.user as Session['user'];
+      const userId = user.user.id;
+    },
+  },
   // session: {
   //   maxAge: parseInt(process.env.SESSION_MAX_AGE || "900"), // 15 minutes,
   // },
