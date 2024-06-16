@@ -113,7 +113,7 @@ function RentalPage({
   return isSet() && (
     <>
       <GeneralCard rental={data.rental} />
-      <Tabs.Root defaultValue="detail" className="TabsRoot">
+      <Tabs.Root defaultValue="payment" className="TabsRoot">
         <Tabs.List className="TabsList">
           <Tabs.Trigger className="TabsTrigger" value="detail">Khách thuê</Tabs.Trigger>
           <Tabs.Trigger className="TabsTrigger" value="payment">Thu chi</Tabs.Trigger>

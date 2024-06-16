@@ -1,4 +1,4 @@
-import { addMonths } from "date-fns";
+import { addDays, addMonths } from "date-fns";
 import { Application } from "./application";
 import { Property, PropertyManager } from "./property";
 import { Unit } from "./unit";
@@ -42,7 +42,7 @@ export type RentalService = {
   name: string;
   setupBy: string;
   provider: string;
-  price: string;
+  price: number;
 };
 
 export type RentalPolicy = {
@@ -74,6 +74,7 @@ export type Rental = {
   paymentType: "PREPAID" | "POSTPAID";
 
   rentalPeriod: number;
+  rentalPaymentBasis: number;
   rentalPrice: number;
   rentalIntention: string;
   deposit: number;
@@ -90,6 +91,11 @@ export type Rental = {
   waterCustomerCode?: string;
   waterPrice?: number;
   note: string;
+
+  noticePeriod?: number;
+  gracePeriod: number;
+  latePaymentPenaltyScheme: 'FIXED' | 'PERCENT' | 'NONE';
+  latePaymentPenaltyAmount?: number;
 
   createdAt: Date;
   updatedAt: Date;
@@ -131,8 +137,10 @@ export type RENTALPAYMENTSTATUS =
   | "PENDING"
   | "ISSUED"
   | "REQUEST2PAY"
+  | "PARTIALLYPAID"
   | "PAID"
-  | "CANCELLED";
+  | "CANCELLED"
+  | "PAYFINE";
 
 export type RentalPayment = {
   id: number;
@@ -148,9 +156,14 @@ export type RentalPayment = {
   note?: string;
   status: RENTALPAYMENTSTATUS;
   amount: number;
+  paid: number;
+  payamount?: number;
+  fine?: number;
   discount?: number;
-  penalty?: number;
+
+  // calculated fields
   overdue?: boolean;
+  mustPay?: number;
 };
 
 export const rentalPaymentStatus = {
@@ -158,8 +171,10 @@ export const rentalPaymentStatus = {
   ISSUED: "Đang chờ bên thuê",
   PENDING: "Đang chờ",
   REQUEST2PAY: "Đang chờ xác nhận",
+  PARTIALLYPAID: "Đã thanh toán một phần",
   PAID: "Đã thanh toán",
   CANCELLED: "Đã hủy",
+  PAYFINE: "Phạt",
 };
 
 const rentalPaymentReasons = {
@@ -195,14 +210,25 @@ export function getRentalPaymentReasonText(
   }
 }
 
-export function getTotalAmount(payment: RentalPayment): number {
-  return payment.amount - (payment.discount || 0);
+export function getTotalAmount(payment: RentalPayment, rental: Rental): number {
+  const baseprice = payment.amount - (payment.discount || 0) - payment.paid;
+  if(payment.status === 'PAYFINE') {
+    switch (rental.latePaymentPenaltyScheme) {
+      case 'FIXED':
+        return baseprice + (rental.latePaymentPenaltyAmount!);
+      case 'PERCENT':
+        return baseprice + baseprice * (rental.latePaymentPenaltyAmount!) / 100;
+      default:
+        return baseprice;
+    }
+  }
+  return baseprice;
 }
 
-export function isOverdue(payment: RentalPayment): boolean {
+export function isOverdue(payment: RentalPayment, rental: Rental): boolean {
   return !!payment.expiryDate || (
-    ["PENDING", "ISSUED"].includes(payment.status) &&
-    new Date(payment.expiryDate!) < new Date()
+    ["PENDING", "ISSUED", "PARTIALLYPAID"].includes(payment.status) &&
+    addDays(new Date(payment.expiryDate!), rental.gracePeriod) < new Date()
   );
 }
 

@@ -1,11 +1,14 @@
-import { getRentalPaymentReasonText, isSideA, rentalPaymentStatus } from "@/models/rental";
+import { getRentalPaymentReasonText, getTotalAmount, isSideA, rentalPaymentStatus } from "@/models/rental";
+import { readMoneyVi } from "@/utils/currency";
 import { ColumnDef } from "@tanstack/react-table";
-import Link from "next/link";
-import { RentalPaymentItem } from "./incomes_tab";
 import { Session } from "next-auth";
-import PlanDialog from "../../rentals/rental/[id]/_components/payments/plan_dialog";
+import Link from "next/link";
+import ConfirmFinePaymentDialog from "../../rentals/rental/[id]/_components/payments/confirm-finepayment_dialog";
+import ConfirmRequest2PayDialog from "../../rentals/rental/[id]/_components/payments/confirm_request2pay_dialog";
 import IssueDialog from "../../rentals/rental/[id]/_components/payments/issue_dialog";
-import PaymentDialog from "../../rentals/rental/[id]/_components/payments/payment_dialog";
+import PlanDialog from "../../rentals/rental/[id]/_components/payments/plan_dialog";
+import WaitingPaymentDialog from "../../rentals/rental/[id]/_components/payments/waiting_payment-dialog";
+import { RentalPaymentItem } from "./incomes_tab";
 
 export function pendingPaymentsColumns(sessionData: Session, refetch: () => void): ColumnDef<RentalPaymentItem>[] {
   return ([
@@ -47,13 +50,14 @@ export function pendingPaymentsColumns(sessionData: Session, refetch: () => void
       },
     },
     {
-      header: "Số tiền",
+      header: "Số tiền cần thanh toán",
       cell: ({ row }) => {
-        const { payment } = row.original;
+        const { payment, rental } = row.original;
+        const total = getTotalAmount(payment, rental);
+
         return (
           <span className="">
-            {payment.amount.toLocaleString('vi-VN', { style: 'currency', currency: 'VND' })}&nbsp;
-            {!!payment.discount && (`(-${payment.discount.toLocaleString('vi-VN', { style: 'currency', currency: 'VND' })})`)}
+            {total.toLocaleString('vi-VN', { style: 'currency', currency: 'VND' })}&nbsp;{readMoneyVi(total)}
           </span>
         );
       },
@@ -85,18 +89,39 @@ export function pendingPaymentsColumns(sessionData: Session, refetch: () => void
             ) : payment.status === 'ISSUED' && !_isSideA ? (
               <IssueDialog
                 payment={payment}
+                rental={rental}
+                changePayment={() => refetch()}
+                sessionData={sessionData}
+              />
+            ) : payment.status === 'PENDING' && !_isSideA ? (
+              <WaitingPaymentDialog
+                payment={payment}
+                rental={rental}
+                changePayment={() => refetch()}
+                sessionData={sessionData}
+              />
+            ) : (payment.status === 'REQUEST2PAY' && _isSideA) ? (
+              <ConfirmRequest2PayDialog
+                payment={payment}
+                rental={rental}
+                changePayment={() => refetch()}
+                sessionData={sessionData}
+              />
+            ) : (payment.status === 'PARTIALLYPAID' && !_isSideA) ? (
+              <ConfirmFinePaymentDialog
+                payment={payment}
                 changePayment={() => refetch()}
                 sessionData={sessionData}
                 rental={rental}
               />
-            ) : (payment.status === 'PENDING' && !_isSideA) || (payment.status === 'REQUEST2PAY' && _isSideA) ? (
-              <PaymentDialog
+            ) : ((payment.status === 'PAYFINE' && _isSideA) && (
+              <ConfirmFinePaymentDialog
                 payment={payment}
-                isSideA={_isSideA}
                 changePayment={() => refetch()}
                 sessionData={sessionData}
+                rental={rental}
               />
-            ) : null}
+            ))}
           </>
         );
       },
@@ -108,7 +133,7 @@ export const finishedPaymentsColumns: ColumnDef<RentalPaymentItem>[] = [
   {
     header: "Khách thuê",
     cell: ({ row }) => {
-      const { rental} = row.original;
+      const { rental } = row.original;
       return (
         <Link
           href={`/manage/rentals/rental/${rental.id}`}

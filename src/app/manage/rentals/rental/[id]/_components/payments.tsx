@@ -1,23 +1,23 @@
-import { isOverdue, RentalPayment } from "@/models/rental";
-import { useQuery } from "@tanstack/react-query";
-import { useDataCtx } from "../_context/data.context";
-import { backendAPI } from "@/libs/axios";
-import PaymentsTable from "./payments/payment_table";
-import Spinner from "@/components/ui/spinner";
-import { useEffect } from "react";
-import { Card, CardHeader, CardTitle } from "@/components/ui/card";
-import { Separator } from "@/components/ui/separator";
 import { Button } from "@/components/ui/button";
-import { RefreshCcw } from "lucide-react";
+import { Card, CardHeader, CardTitle } from "@/components/ui/card";
 import {
   Dialog,
   DialogContent,
-  DialogDescription,
   DialogHeader,
   DialogTitle,
-  DialogTrigger,
+  DialogTrigger
 } from "@/components/ui/dialog";
+import { Separator } from "@/components/ui/separator";
+import Spinner from "@/components/ui/spinner";
+import { backendAPI } from "@/libs/axios";
+import { RentalPayment } from "@/models/rental";
+import { useQuery } from "@tanstack/react-query";
+import { RefreshCcw } from "lucide-react";
+import { useEffect } from "react";
+import { useDataCtx } from "../_context/data.context";
 import CreatePaymentDialog from "./payments/create_payment_dialog";
+import { PaymentTableHistory, PaymentTablePlan, PaymentTableWaitingForConfirmation, PaymentTableWaitingForPayment } from "./payments/payment_table";
+import PaymentinfoCard from "./payments/paymentinfo_card";
 
 export default function PaymentsWrapper() {
   const { rental, sessionData } = useDataCtx();
@@ -80,7 +80,10 @@ function Payments({
 
   return (
     <div className="space-y-4">
-      <Card className="space-y-3">
+      <div className="">
+        <PaymentinfoCard/>
+      </div>
+      <Card className=" space-y-3">
         <CardHeader className="pt-6 pb-3 px-6 flex flex-row items-center justify-between">
           <CardTitle className="text-xl">Khoản thu</CardTitle>
           <div className="flex flex-row items-center gap-2">
@@ -98,43 +101,25 @@ function Payments({
             <Button variant="outline" onClick={refetch}><RefreshCcw className="w-6 h-6" /></Button>
           </div>
         </CardHeader>
-        <PaymentsTable
-          payments={payments.
-            filter(p => p.status === 'PENDING').
-            map(p => ({ ...p, overdue: isOverdue(p) })).
-            // sort by overdue first, then by start date
-            sort((a, b) => {
-              if (a.overdue && !b.overdue) return -1;
-              if (!a.overdue && b.overdue) return 1;
-              return a.startDate.getTime() - b.startDate.getTime();
-            })
-          }
-          status="PENDING"
+        <PaymentTableWaitingForPayment
+          payments={payments.filter(p => ['PENDING', 'PARTIALLYPAID'].includes(p.status))}
         />
         <Separator />
         {isSideA(sessionData.user.user.id) && (
           <>
-            <PaymentsTable
+            <PaymentTablePlan
               payments={payments.filter(p => p.status === 'PLAN')}
-              status="PLAN"
             />
             <Separator />
           </>
         )}
-        <PaymentsTable
-          payments={payments.filter(p => ['ISSUED', 'REQUEST2PAY'].includes(p.status))}
-          status="ISSUED"
+        <PaymentTableWaitingForConfirmation
+          payments={payments.filter(p => ['ISSUED', 'REQUEST2PAY', 'PAYFINE'].includes(p.status))}
         />
         <Separator />
-        <PaymentsTable
+        <PaymentTableHistory
           payments={payments.filter(p => ['PAID', 'CANCELLED'].includes(p.status))}
-          status="PAID"
         />
-      </Card>
-      <Card className="">
-        <CardHeader className="pt-6 pb-3 px-6">
-          <CardTitle>Chi phí</CardTitle>
-        </CardHeader>
       </Card>
     </div>
   );

@@ -8,7 +8,7 @@ export async function checkToken(
   accessToken: string,
 ) {
   console.log("checkToken", sessionId, token, accessToken);
-  return (await backendAPI.get<DeviceToken | null>("/api/misc/notifications/devices/", {
+  return (await backendAPI.get<DeviceToken[] | null>("/api/misc/notifications/devices/", {
     params: {
       sessionId,
       token,

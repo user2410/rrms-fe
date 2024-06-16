@@ -99,7 +99,7 @@ export default function ServiceBill({
       form.reset();
       setStage("form");
     }}>
-      <DialogTrigger>
+      <DialogTrigger asChild>
         <Button type="button" variant="outline">
           Tra cứu hóa đơn {providersQuery.data?.productName.toLowerCase() || (<Spinner size={16} />)}
         </Button>

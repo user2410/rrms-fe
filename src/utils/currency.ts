@@ -59,7 +59,7 @@ export function readNumberVi(So: number): string {
   let ViTri: number[] = new Array(6).fill(0);
 
   if (So < 0) soAm = true;
-  if (So === 0) return "Không đồng";
+  if (So === 0) return "Không";
   if (So > 0) {
     so = So;
   }
@@ -117,5 +117,5 @@ export function readNumberVi(So: number): string {
 }
 
 export function readMoneyVi(SoTien: number): string {
-  return readNumberVi(SoTien) + " đồng";
+  return SoTien > 0 ? readNumberVi(SoTien) + " đồng" : "";
 }

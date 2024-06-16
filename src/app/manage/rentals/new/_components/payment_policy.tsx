@@ -98,11 +98,11 @@ export default function PaymentPolicy() {
                         onChange={(e) => field.onChange(e.target.valueAsNumber)}
                       />
                     </FormControl>
-                    <p className="text-muted-foreground">%/năm</p>
+                    <p className="text-muted-foreground">%</p>
                   </div>
                   {latePaymentPenaltyAmount && (
                     <FormDescription>
-                      {`${latePaymentPenaltyAmount}%/năm số tiền còn nợ`}
+                      {`${latePaymentPenaltyAmount}% số tiền còn nợ`}
                     </FormDescription>
                   )}
                 </FormItem>

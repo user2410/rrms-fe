@@ -12,34 +12,34 @@ const useFcmToken = (userId: string, accessKey: string) => {
   useEffect(() => {
     if (!userId || !accessKey) { return; }
     (async () => {
-      // get permission for background notification service worker
-      const permission = await Notification.requestPermission();
-      if (permission !== 'granted') {
-        console.log('Permission denied');
-        return;
-      }
-
-      // get the token from localStorage
-      const storedToken = lsGetFCMToken(userId);
-      const storedTokenSessionID = lsGetTokenSessionId();
-      if (storedTokenSessionID !== null) {
-        if (storedToken !== null) {
-          const dt = await checkToken(storedTokenSessionID, storedToken.token, accessKey);
-          if (dt) {
-            setToken(storedToken.token);
-            return;
-          }
-        } else {
-          const dt = await retrieveToken(storedTokenSessionID, accessKey);
-          if (dt) {
-            lsSaveFCMToken(userId, dt.token);
-            setToken(dt.token);
-            return;
+      try {
+        // get permission for background notification service worker
+        const permission = await Notification.requestPermission();
+        if (permission !== 'granted') {
+          console.log('Permission denied');
+          return;
+        }
+  
+        // get the token from localStorage
+        const storedToken = lsGetFCMToken(userId);
+        const storedTokenSessionID = lsGetTokenSessionId();
+        if (storedTokenSessionID !== null) {
+          if (storedToken !== null) {
+            const dt = await checkToken(storedTokenSessionID, storedToken.token, accessKey);
+            if (dt) {
+              setToken(storedToken.token);
+              return;
+            }
+          } else {
+            const dt = await retrieveToken(storedTokenSessionID, accessKey);
+            if (dt) {
+              lsSaveFCMToken(userId, dt.token);
+              setToken(dt.token);
+              return;
+            }
           }
         }
-      }
-
-      try {
+        
         if (typeof window !== 'undefined' && 'serviceWorker' in navigator) {
           const registration = await navigator.serviceWorker.register("/firebase-messaging-sw.js", { scope: "/firebase-cloud-messaging-push-scope" });
 

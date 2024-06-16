@@ -16,7 +16,7 @@ export default function ConfirmPaymentDialog({
 }) {
   return (
     <Dialog>
-      <DialogTrigger>
+      <DialogTrigger asChild>
         <Button>Xác nhận thanh toán</Button>
       </DialogTrigger>
       <DialogContent>

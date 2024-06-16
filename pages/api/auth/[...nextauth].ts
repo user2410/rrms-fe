@@ -1,9 +1,5 @@
 import { backendAPI } from "@/libs/axios";
-import { Session, User } from "next-auth";
-import { AuthOptions } from "next-auth";
-import NextAuth from "next-auth";
-import { AdapterUser } from "next-auth/adapters";
-import { JWT } from "next-auth/jwt";
+import NextAuth, { AuthOptions } from "next-auth";
 import CredentialsProvider from "next-auth/providers/credentials";
 
 export const authOptions: AuthOptions = {
@@ -41,10 +37,9 @@ export const authOptions: AuthOptions = {
   ],
   callbacks: {
     // In jwt object we are calling the async function that stores our response in token.
-    async jwt({ token, trigger, user, session}) {
+    async jwt({ token, user}) {
       console.log("jwt token log:", token); // full response from backend
       console.log("jwt user log:", user); // undefined
-      console.log("jwt session log:", session); //
 
       // if (account && user) {
       //   return {
@@ -53,11 +48,6 @@ export const authOptions: AuthOptions = {
       //     refreshToken: user.refreshToken,
       //   };
       // }
-      if (trigger === "update" && session?.accessToken && session?.accessExp) {
-        console.log("update session: ", session);
-        token.accessToken = session.accessToken;
-        token.accessExp = session.accessExp;
-      }
 
       return {...token, ...user};
     },
@@ -70,14 +60,6 @@ export const authOptions: AuthOptions = {
       session.user = token as any;
       // session.user.accessToken = token.accessToken;
       return session;
-    },
-  },
-  events: {
-    async signIn(message) {
-      console.log("signIn message log:", message); // {user: full response from backend, account: {providerAccountId: undefined,type: 'credentials',provider: 'credentials'}}
-      // @ts-expect-error
-      const user = message.user as Session['user'];
-      const userId = user.user.id;
     },
   },
   // session: {

@@ -64,7 +64,7 @@ export default function IncomesTab({
         params: {
           limit: pagination.pageSize,
           offset: pagination.pageIndex,
-          status: ['PLAN', 'ISSUED', 'PENDING', 'REQUEST2PAY'],
+          status: ['PLAN', 'ISSUED', 'PENDING', 'REQUEST2PAY', 'PARTIALLYPAID', 'PAYFINE'],
         },
         headers: {
           Authorization: `Bearer ${queryKey.at(-1)}`,

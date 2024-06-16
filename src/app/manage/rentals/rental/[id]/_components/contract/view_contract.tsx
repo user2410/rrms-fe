@@ -52,7 +52,7 @@ function ContractViewer({
     <Dialog onOpenChange={(open) => {
       if(open) {refresh();}
     }}>
-      <DialogTrigger>
+      <DialogTrigger asChild>
         <Button type="button">Xem chi tiết hợp đồng</Button>
       </DialogTrigger>
       <DialogContent className="max-w-[80vw] lg:max-w-[960px] xl:max-w-[1024px] 2xl:max-w-[1200px]">

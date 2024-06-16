@@ -12,7 +12,7 @@ import {
 import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
 import { backendAPI } from "@/libs/axios";
-import { getRentalPaymentReasonText, Rental, RentalPayment } from "@/models/rental";
+import { getRentalPaymentReasonText, getTotalAmount, Rental, RentalPayment } from "@/models/rental";
 import { readMoneyVi } from "@/utils/currency";
 import { Session } from "next-auth";
 import { useRef, useState } from "react";
@@ -30,13 +30,14 @@ export default function IssueDialog({
   rental: Rental;
 }) {
   const closeBtnRef = useRef<HTMLButtonElement>(null);
-  const total = payment.amount - (payment.discount || 0);
+  const total = getTotalAmount(payment, rental);
   const [note, setNote] = useState<string>("");
 
   async function handleRequest() {
     try {
       await backendAPI.patch(`/api/rental-payments/rental-payment/${payment.id}/issued`, {
         status: "PLAN",
+        note,
       }, {
         headers: {
           Authorization: `Bearer ${sessionData?.user.accessToken}`,
@@ -76,7 +77,7 @@ export default function IssueDialog({
 
   return (
     <Dialog>
-      <DialogTrigger>
+      <DialogTrigger asChild>
         <Button>Chi tiết khoản thu</Button>
       </DialogTrigger>
       <DialogContent className="max-w-[750px]">

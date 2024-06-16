@@ -61,7 +61,7 @@ export default function PlanDialog({
     defaultValues: {
       amount: payment.amount,
       discount: payment.discount || undefined,
-      expiryDate: payment.expiryDate || undefined,
+      expiryDate: addDays(new Date(), 1),
       startDate: payment.startDate,
       endDate: payment.endDate,
     },

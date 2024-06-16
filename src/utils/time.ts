@@ -31,7 +31,7 @@ export function nMonthsToYears(n: number) : string{
 
 export function dateDifference(d1: Date, d2: Date) {
   const diffDays = Math.abs(differenceInDays(d1, d2));
-  return `${diffDays} ngày${diffDays > 1 ? 's' : ''}`;
+  return `${diffDays} ngày`;
 }
 
 export function toViTimeString(time: Date) {
