@@ -19,7 +19,7 @@ export default function Layout({
   }
 
   if (session.status === "unauthenticated") {
-    router.replace("/");
+    router.replace(`/auth/login/?redirect=${encodeURIComponent(window.location.pathname)}`);
     return <p>Access Denied</p>;
   }
 
