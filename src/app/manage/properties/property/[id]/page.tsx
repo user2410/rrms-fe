@@ -16,6 +16,7 @@ import PropertyTab from "./_components/property";
 import TenantsTab from "./_components/tenants";
 import { PropDataState, PropertyDataProvider, usePropDataCtx } from "./_context/property_data.context";
 import { Session } from "next-auth";
+import VerificationStatus from "./_components/veification_status";
 
 export default function PropertyDetailPageWraper({ params }: { params: { id: string } }) {
   const session = useSession();
@@ -91,6 +92,7 @@ function PropertyDetailPage({
               <span>{propTypeText}</span>
             </Badge>
             <h2 className="text-2xl font-medium capitalize">{property.name}</h2>
+            <VerificationStatus propertyId={property.id} sessionData={sessionData}/>
           </div>
           <div className="relative w-80 aspect-video">
             <Image

@@ -29,7 +29,6 @@ export default function RegisterForm({
 }: {
   changeOpenModal: () => void;
 }) {
-  const [isLoading, setLoading] = useState<boolean>(false);
   const [showPassword, setShowPassword] = useState<boolean>(false);
 
   const form = useForm<RegisterFormValues>({
@@ -44,7 +43,6 @@ export default function RegisterForm({
   });
 
   const onSubmit: SubmitHandler<RegisterFormValues> = async (data) => {
-    setLoading(true);
     console.log(data);
     try {
       const res = await backendAPI.post("/api/auth/credential/register", data);
@@ -54,7 +52,6 @@ export default function RegisterForm({
       console.error(err);
       toast.error("Something went wrong");
     } finally {
-      setLoading(false);
       form.reset();
       changeOpenModal();
     }
@@ -77,7 +74,7 @@ export default function RegisterForm({
                         {...field}
                         placeholder="John"
                         autoCapitalize="words"
-                        disabled={isLoading}
+                        disabled={form.formState.isSubmitting}
                       />
                     </FormControl>
                     <FormMessage />
@@ -95,7 +92,7 @@ export default function RegisterForm({
                         {...field}
                         placeholder="Doe"
                         autoCapitalize="words"
-                        disabled={isLoading}
+                        disabled={form.formState.isSubmitting}
                       />
                     </FormControl>
                     <FormMessage />
@@ -117,7 +114,7 @@ export default function RegisterForm({
                       autoCapitalize="none"
                       autoComplete="email"
                       autoCorrect="off"
-                      disabled={isLoading}
+                      disabled={form.formState.isSubmitting}
                     />
                   </FormControl>
                   <FormMessage />
@@ -148,7 +145,7 @@ export default function RegisterForm({
                         autoCapitalize="none"
                         autoComplete="email"
                         autoCorrect="off"
-                        disabled={isLoading}
+                        disabled={form.formState.isSubmitting}
                       />
                       <div className="absolute inset-y-0 right-0 pr-3 flex items-center text-gray-400 cursor-pointer">
                         {showPassword ? (
@@ -186,8 +183,8 @@ export default function RegisterForm({
             />
           </div>
 
-          <Button disabled={isLoading} type="submit" className="w-full">
-            {isLoading && (
+          <Button disabled={form.formState.isSubmitting} type="submit" className="w-full">
+            {form.formState.isSubmitting && (
               <Icons.spinner className="mr-2 h-4 w-4 animate-spin" />
             )}
             Đăng kí
@@ -205,16 +202,16 @@ export default function RegisterForm({
         </div>
       </div>
       <div className="flex flex-col gap-2">
-        <Button variant="outline" type="button" disabled={isLoading} className="bg-black hover:bg-gray-900 text-white hover:text-white">
-          {isLoading ? (
+        <Button variant="outline" type="button" disabled={form.formState.isSubmitting} className="bg-black hover:bg-gray-900 text-white hover:text-white">
+          {form.formState.isSubmitting ? (
             <Icons.spinner className="mr-2 h-4 w-4 animate-spin" />
           ) : (
             <Icons.gitHub className="mr-2 h-4 w-4" />
           )}{" "}
           GitHub
         </Button>
-        <Button variant="outline" type="button" disabled={isLoading} className="bg-blue-600 hover:bg-blue-500 text-white hover:text-white">
-          {isLoading ? (
+        <Button variant="outline" type="button" disabled={form.formState.isSubmitting} className="bg-blue-600 hover:bg-blue-500 text-white hover:text-white">
+          {form.formState.isSubmitting ? (
             <Icons.spinner className="mr-2 h-4 w-4 animate-spin" color="red" />
           ) : (
             <Icons.google className="mr-2 h-4 w-4" />

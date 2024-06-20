@@ -10,6 +10,7 @@ export const authOptions: AuthOptions = {
       credentials: {
         email: { label: "Email", type: "text" },
         password: { label: "Password", type: "password" },
+        admin: { label: "Admin", type: "text"}
       },
       async authorize(credentials, req) {
         if (!credentials?.email || !credentials.password) {
@@ -17,8 +18,9 @@ export const authOptions: AuthOptions = {
         }
 
         try {
+          console.log(`/api/auth/credential/login${credentials.admin ? "?admin=true" : ""}`);
           const res = await backendAPI.post(
-            "/api/auth/credential/login",
+            `/api/auth/credential/login${credentials.admin ? "?admin=true" : ""}`,
             credentials,
           );
           if (res.status === 401) {

@@ -1,14 +1,14 @@
 import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from "@/components/ui/accordion";
 import { Badge } from "@/components/ui/badge";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
-import { Property, getPropertyFullAddress, getPropertyTypeText, mapPropertyTypeToText } from "@/models/property";
+import { getPropertyFullAddress, getPropertyTypeText } from "@/models/property";
 import Image from "next/image";
 import { useFormContext } from "react-hook-form";
 import SummaryBasicInfo from "./_components/summary-basicinfo";
+import SummaryBlock from "./_components/summary-block";
 import SummaryFA from "./_components/summary-fa";
 import SummaryMedia from "./_components/summary-media";
 import { PropertyForm } from "./page";
-import SummaryBlock from "./_components/summary-block";
 
 export default function Summary() {
   const form = useFormContext<PropertyForm>();

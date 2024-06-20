@@ -29,7 +29,6 @@ export default function LoginForm({
 } : {
   changeOpenModal: () => void;
 }) {
-  const [isLoading, setLoading] = useState<boolean>(false);
   const [showPassword, setShowPassword] = useState<boolean>(false);
 
   const form = useForm<LoginFormValues>({
@@ -42,7 +41,6 @@ export default function LoginForm({
   });
 
   const onSubmit: SubmitHandler<LoginFormValues> = async (data) => {
-    setLoading(true);
     console.log(data);
     try {
       const cb = await signIn('credentials', {
@@ -60,7 +58,6 @@ export default function LoginForm({
       console.error(err);
       toast.error("Something went wrong");
     } finally {
-      setLoading(false);
       form.reset();
       changeOpenModal();
     }
@@ -85,7 +82,7 @@ export default function LoginForm({
                       autoCapitalize="none"
                       autoComplete="email"
                       autoCorrect="off"
-                      disabled={isLoading}
+                      disabled={form.formState.isSubmitting}
                     />
                   </FormControl>
                   <FormMessage />
@@ -106,7 +103,7 @@ export default function LoginForm({
                         autoCapitalize="none"
                         autoComplete="email"
                         autoCorrect="off"
-                        disabled={isLoading}
+                        disabled={form.formState.isSubmitting}
                       />
                       <div className="absolute inset-y-0 right-0 pr-3 flex items-center text-gray-400 cursor-pointer">
                         {showPassword ? (
@@ -140,8 +137,8 @@ export default function LoginForm({
             />
             <ForgetPasswordModal />
           </div>
-          <Button disabled={isLoading} type="submit" className="w-full">
-            {isLoading && (
+          <Button disabled={form.formState.isSubmitting} type="submit" className="w-full">
+            {form.formState.isSubmitting && (
               <Icons.spinner className="mr-2 h-4 w-4 animate-spin" />
             )}
             Đăng nhập
@@ -159,16 +156,16 @@ export default function LoginForm({
         </div>
       </div>
       <div className="flex flex-col gap-2">
-        <Button variant="outline" type="button" disabled={isLoading} className="bg-black hover:bg-gray-900 text-white hover:text-white">
-          {isLoading ? (
+        <Button variant="outline" type="button" disabled={form.formState.isSubmitting} className="bg-black hover:bg-gray-900 text-white hover:text-white">
+          {form.formState.isSubmitting ? (
             <Icons.spinner className="mr-2 h-4 w-4 animate-spin" />
           ) : (
             <Icons.gitHub className="mr-2 h-4 w-4" />
           )}{" "}
           GitHub
         </Button>
-        <Button variant="outline" type="button" disabled={isLoading} className="bg-blue-600 hover:bg-blue-500 text-white hover:text-white">
-          {isLoading ? (
+        <Button variant="outline" type="button" disabled={form.formState.isSubmitting} className="bg-blue-600 hover:bg-blue-500 text-white hover:text-white">
+          {form.formState.isSubmitting ? (
             <Icons.spinner className="mr-2 h-4 w-4 animate-spin" color="red" />
           ) : (
             <Icons.google className="mr-2 h-4 w-4" />

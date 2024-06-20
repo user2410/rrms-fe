@@ -20,10 +20,10 @@ export default function PropertyTab() {
             <GeneralInfoForm />
             <AddressForm />
             <MediaForm />
-            <ExtraInfoForm/>
           </div>
-          <div>
+          <div className="space-y-6">
             <UnitsForm/>
+            <ExtraInfoForm/>
           </div>
         </div>
       ) : (

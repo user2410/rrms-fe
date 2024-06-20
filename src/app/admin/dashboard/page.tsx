@@ -1,3 +1,5 @@
-export default function DashboardPage(){
-    return <h1>DashboardPage</h1>
-}
+export default function AdminDashboardPage() {
+  return (
+    <>admin dashboard page</>
+  );
+};

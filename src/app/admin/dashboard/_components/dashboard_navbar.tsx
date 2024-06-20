@@ -1,18 +1,14 @@
-"use client";
-
 import { Button } from "@/components/ui/button";
 import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet";
 import { ThemeSwitcher } from "@/components/ui/theme-switcher";
 import { format } from "date-fns";
 import vi from "date-fns/locale/vi";
 import { useSession } from "next-auth/react";
-import NotificationDropdown from "./notification_dropdown";
+// import NotificationDropdown from "./notification_dropdown";
 import Sidebar from "./sidebar";
 
-export default function ManageDashboardNavbar() {
-  // const routes = useRoutes();
-  const {data: session} = useSession();
-
+export default function DashboardNavbar() {
+  
   return (
     <nav className="shadow-md bg-background border-b flex justify-between items-center px-8 py-6 md:px-10">
       {/* Breadcrumb */}
@@ -28,12 +24,9 @@ export default function ManageDashboardNavbar() {
           </SheetTrigger>
           <SheetContent side="left">
             {/* Mobile menu */}
-            <Sidebar/>
+            <Sidebar />
           </SheetContent>
         </Sheet>
-        <span className="text-lg capitalize font-semibold">
-          {session?.user.user.role === "LANDLORD" ? "Chủ nhà" : "Người thuê nhà"}
-        </span>
       </div>
       <div className="capitalize text-sm font-normal">
         {format(new Date(), "EEEE, d MMMM, yyyy", { locale: vi })}
@@ -41,8 +34,8 @@ export default function ManageDashboardNavbar() {
       {/* Form */}
       <div className="flex items-center gap-8">
         <ThemeSwitcher size={20} />
-        <NotificationDropdown />
+        {/* <NotificationDropdown /> */}
       </div>
     </nav>
   );
-}
+};

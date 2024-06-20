@@ -11,6 +11,7 @@ export type UnitMedia = {
   url: string;
   propertyId: string;
   type: 'IMAGE' | 'VIDEO';
+  description?: string;
 }
 
 export type UAmenity = {

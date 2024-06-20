@@ -82,6 +82,26 @@ export type NewPropertyManagerRequest = {
   updatedAt: Date;
 }
 
+export type PropertyVerificationRequest = {
+  id: number;
+  creatorId: string;
+  propertyId: string;
+  videoUrl: string;
+  houseOwnershipCertificate?: string;
+  certificateOfLanduseRight?: string;
+  frontIdcard: string;
+  backIdcard: string;
+  note: string;
+  status: 'PENDING' | 'APPROVED' | 'REJECTED';
+  createdAt: Date;
+  updatedAt: Date;
+}
+
+export type GetPropertyVerificationRequestsResponse = {
+  fullCount: number;
+  items: PropertyVerificationRequest[];
+};
+
 export function getPrimaryImage (property: Property) {
   return property.media.find(m => m.id === property.primaryImage)?.url || "/img/property_image_placeholder.webp";
 }
