@@ -112,8 +112,8 @@ function RentalPage({
 
   return isSet() && (
     <>
-      <GeneralCard rental={data.rental} />
-      <Tabs.Root defaultValue="payment" className="TabsRoot">
+      <GeneralCard rental={data.rental} property={data.property} unit={data.unit}/>
+      <Tabs.Root defaultValue="detail" className="TabsRoot">
         <Tabs.List className="TabsList">
           <Tabs.Trigger className="TabsTrigger" value="detail">Khách thuê</Tabs.Trigger>
           <Tabs.Trigger className="TabsTrigger" value="payment">Thu chi</Tabs.Trigger>
@@ -123,7 +123,7 @@ function RentalPage({
           <div className="grid grid-cols-4 gap-4">
             <ContractCard/>
             <div className="col-span-3">
-              <TenantCard/>
+              <TenantCard rental={data.rental}/>
             </div>
           </div>
         </Tabs.Content>

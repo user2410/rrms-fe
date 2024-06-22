@@ -8,19 +8,14 @@ import { backendAPI } from "@/libs/axios";
 import { GetLocationName } from "@/utils/dghcvn";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { GoogleMap, MarkerF } from "@react-google-maps/api";
-import { useQuery } from "@tanstack/react-query";
 import axios from "axios";
 import { LocateFixed, Pencil } from "lucide-react";
 import { Fragment, useEffect, useState } from "react";
 import { UseFormReturn, useForm } from "react-hook-form";
 import toast from "react-hot-toast";
 import * as z from "zod";
-import DivisionSelector from "./division-selector";
 import { usePropDataCtx } from "../../_context/property_data.context";
-import { Property } from "@/models/property";
-import _ from "lodash";
-import { useSession } from "next-auth/react";
-import { Unit } from "@/models/unit";
+import DivisionSelector from "./division-selector";
 
 const formSchema = z.object({
   fullAddress: z
@@ -43,8 +38,7 @@ const formSchema = z.object({
 export type FormValues = z.infer<typeof formSchema>;
 
 export default function AddressForm()  {
-  const {property, units} = usePropDataCtx();
-  const session = useSession();
+  const {property, units, isManager, sessionData} = usePropDataCtx();
   const [isEditing, setIsEditing] = useState(false);
   const {setPropData} = usePropDataCtx();
   const toggleEdit = () => setIsEditing((current) => !current);
@@ -60,7 +54,7 @@ export default function AddressForm()  {
     try {
       await backendAPI.patch(`/api/properties/property/${property.id}`, d, {
         headers: {
-          Authorization: `Bearer ${session.data!.user.accessToken}`,
+          Authorization: `Bearer ${sessionData!.user.accessToken}`,
         }
       });
       setPropData({
@@ -86,7 +80,7 @@ export default function AddressForm()  {
             Địa chỉ
           </h2>
         </div>
-        <Button onClick={toggleEdit} variant="ghost">
+        <Button onClick={toggleEdit} variant="ghost" disabled={!isManager(sessionData.user.user.id)}>
           {isEditing ? (
             <>Hủy</>
           ) : (

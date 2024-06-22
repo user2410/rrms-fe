@@ -1,18 +1,14 @@
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { backendAPI } from "@/libs/axios";
-import { Contract } from "@/models/contract";
-import { Rental } from "@/models/rental";
-import { useQuery } from "@tanstack/react-query";
-import { Session } from "next-auth";
 import Image from "next/image";
 import Link from "next/link";
 import { FaPhone, FaRegAddressCard } from "react-icons/fa";
 import { IoMdMail } from "react-icons/io";
 import { MdContactPhone } from "react-icons/md";
+import { useDataCtx } from "../_context/data.context";
 import TenantCoap from "./tenant_coap";
 import TenantMinor from "./tenant_minor";
 import TenantPet from "./tenant_pet";
-import { useDataCtx } from "../_context/data.context";
+import { Rental } from "@/models/rental";
 
 function InfoItem({
   icon,
@@ -34,9 +30,11 @@ function InfoItem({
   );
 }
 
-export default function TenantCard() {
-  const {rental} = useDataCtx();
-
+export default function TenantCard({
+  rental,
+} : {
+  rental: Rental;
+}) {
   return (
     <Card>
       <CardHeader>
@@ -84,7 +82,7 @@ export default function TenantCard() {
               "Không có người thuê cùng"
             )}
             {rental.coaps.map((coap, index) => (
-              <TenantCoap coap={coap} key={index}/>
+              <TenantCoap coap={coap} key={index} />
             ))}
           </div>
         </div>
@@ -92,7 +90,7 @@ export default function TenantCard() {
           <div className="text-base font-medium">Trẻ vị thành niên</div>
           <div className="text-base font-normal">
             {rental.minors.map((minor, index) => (
-              <TenantMinor minor={minor} key={index}/>
+              <TenantMinor minor={minor} key={index} />
             ))}
           </div>
         </div>
@@ -100,7 +98,7 @@ export default function TenantCard() {
           <div className="text-base font-medium">Thú nuôi</div>
           <div className="text-base font-normal">
             {rental.pets.map((pet, index) => (
-              <TenantPet pet={pet} key={index}/>
+              <TenantPet pet={pet} key={index} />
             ))}
           </div>
         </div>

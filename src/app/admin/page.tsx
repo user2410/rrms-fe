@@ -42,7 +42,8 @@ export default function AdminPage() {
       const cb = await signIn('credentials', {
         ...values,
         admin: true,
-        redirect: false
+        redirect: false,
+        accessToken: session.data?.user.accessToken,
       });
       if (cb?.error) {
         console.error(cb.error);

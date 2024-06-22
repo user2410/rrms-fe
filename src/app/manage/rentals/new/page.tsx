@@ -106,10 +106,10 @@ const formSchema = z.object({
 
   policies: z.object({
     // grace period
+    enableLatePaymentPenalty: z.boolean().optional(),
     gracePeriod: z.number().min(0), // number of days
-    enableLatePaymentPenalty: z.boolean(),
-    latePaymentPenaltyScheme: z.enum(["FIXED", "PERCENT"]),
-    latePaymentPenaltyAmount: z.number(),
+    latePaymentPenaltyScheme: z.enum(["FIXED", "PERCENT", "NONE"]).optional(),
+    latePaymentPenaltyAmount: z.number().optional(),
     policies: z.array(z.object({
       title: z.string(),
       content: z.string(),
@@ -278,6 +278,13 @@ function RentalForm({
         rentalPaymentBasis: 1,
         rentalPrice: application?.offeredPrice,
         services: [],
+      },
+
+      policies: {
+        enableLatePaymentPenalty: false,
+        gracePeriod: 0,
+        latePaymentPenaltyScheme: "NONE",
+        latePaymentPenaltyAmount: 0,
       }
     },
   });

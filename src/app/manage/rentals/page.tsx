@@ -1,14 +1,15 @@
 "use client";
 
 import { Button } from "@/components/ui/button";
-import Spinner from "@/components/ui/spinner";
 import { Property } from "@/models/property";
 import { Rental } from "@/models/rental";
 import { Unit } from "@/models/unit";
+import * as Tabs from '@radix-ui/react-tabs';
 import { useSession } from "next-auth/react";
 import { useRouter } from "next/navigation";
 import Expired from "./_components/expired";
 import NonExpired from "./_components/non-expired";
+import Prerentals from "./_components/prerentals";
 
 export type ManagedRental = {
   rental: Rental & { timeLeft: number };
@@ -29,22 +30,31 @@ export default function ManagedRentalsPage() {
             <Button type="button" variant="default" onClick={() => router.push('/manage/rentals/new')}>Thêm người thuê mới</Button>
           )}
         </div>
-        {session.status !== "authenticated"
-        ? (
-          <div className="w-full h-full flex justify-center items-center">
-            <Spinner size={32} />
-          </div>
-        ) : (
-          <div className="space-y-4">
-            <NonExpired 
-              sessionData={session.data}
-              segment={session.data.user.user.role === "LANDLORD" ? "managed-rentals" : "my-rentals"}
+        {session.status === "authenticated" && (
+          <Tabs.Root defaultValue="rentals" className="TabsRoot">
+            <Tabs.List className="TabsList">
+              <Tabs.Trigger className="TabsTrigger" value="rentals">Profile thuê nhà</Tabs.Trigger>
+              <Tabs.Trigger className="TabsTrigger" value="prerentals">Profile thuê nhà (chờ duyệt)</Tabs.Trigger>
+            </Tabs.List>
+            <Tabs.Content className="TabsContent" value="rentals">
+              <div className="space-y-4">
+                <NonExpired
+                  sessionData={session.data}
+                  segment={session.data.user.user.role === "LANDLORD" ? "managed-rentals" : "my-rentals"}
+                />
+                <Expired
+                  sessionData={session.data}
+                  segment={session.data.user.user.role === "LANDLORD" ? "managed-rentals" : "my-rentals"}
+                />
+              </div>
+            </Tabs.Content>
+            <Tabs.Content className="TabsContent" value="prerentals">
+              <Prerentals
+                sessionData={session.data}
+                segment={session.data.user.user.role === "LANDLORD" ? "managed" : "to-me"}
               />
-            <Expired 
-              sessionData={session.data}
-              segment={session.data.user.user.role === "LANDLORD" ? "managed-rentals" : "my-rentals"}
-            />
-          </div>
+            </Tabs.Content>
+          </Tabs.Root>
         )}
       </div>
     </div>

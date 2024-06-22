@@ -1,6 +1,6 @@
 "use client";
 
-import { Button } from "@/components/ui/button";
+import { Button, buttonVariants } from "@/components/ui/button";
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -174,4 +174,17 @@ export const endColumns: ColumnDef<ManagedRental>[] = [
       return row.original.rental.status === "END" ? "Đã kết thúc" : "Đã hết hạn";
     }, 
   }
+];
+
+export const prerentalColumns: ColumnDef<ManagedRental>[] = [
+  ...nonExpiredColumns,
+  {
+    id: "actions",
+    cell: ({row}) => (
+      <Link 
+        href={`/manage/rentals/prerentals/prerental/${row.original.rental.id}`}
+        className={buttonVariants({variant: "default"})}
+      >Chi tiết</Link>
+    ),
+  },
 ];

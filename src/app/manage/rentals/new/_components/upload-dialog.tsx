@@ -34,7 +34,7 @@ export default function UploadDialog({
     try {
       setStage("PENDING");
       const submitData = await preUploadRental(form.getValues(), sessionData.user.accessToken);
-      const rental = (await backendAPI.post("/api/rentals/create", submitData, {
+      const rental = (await backendAPI.post("/api/rentals/create/pre", submitData, {
         headers: {
           Authorization: `Bearer ${sessionData.user.accessToken}`,
         },
@@ -82,8 +82,9 @@ export default function UploadDialog({
         ) : stage === "DONE" && res ? (
           <div className="w-full flex flex-col items-center justify-center gap-2">
             <FaCheckCircle size={20} color="green" />
-            <h2>Thêm khách thuê <strong>{form.getValues("tenant.tenantName")}</strong> thành công</h2>
-            <Link href={`/manage/rentals/rental/${res.id}`}>Xem chi tiết</Link>
+            <h2>Đã tạo profile thuê nhà cho <strong>{form.getValues("tenant.tenantName")}</strong> thành công</h2>
+            <p className="text-sm">Chờ phản hồi từ {form.getValues("tenant.tenantName")} để bắt đầu quản lý thuê nhà</p>
+            <Link href={`/manage/rentals/prerentals/prerental/${res.id}`}>Xem chi tiết</Link>
           </div>
         ) : stage === "ERROR" ? (
           <div className="w-full flex flex-col items-center justify-center gap-2">

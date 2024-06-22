@@ -42,8 +42,7 @@ const formSchema = z.object({
 type FormValues = z.infer<typeof formSchema>;
 
 export default function GeneralInfoForm() {
-  const { property, units } = usePropDataCtx();
-  const session = useSession();
+  const { property, units, isManager, sessionData } = usePropDataCtx();
   const [isEditing, setIsEditing] = useState(false);
   const { setPropData } = usePropDataCtx();
 
@@ -63,7 +62,7 @@ export default function GeneralInfoForm() {
     try {
       await backendAPI.patch(`/api/properties/property/${property.id}`, d, {
         headers: {
-          Authorization: `Bearer ${session.data!.user.accessToken}`,
+          Authorization: `Bearer ${sessionData!.user.accessToken}`,
         }
       });
       setPropData({
@@ -89,7 +88,7 @@ export default function GeneralInfoForm() {
             Thông tin cơ bản
           </h2>
         </div>
-        <Button onClick={toggleEdit} variant="ghost">
+        <Button onClick={toggleEdit} variant="ghost" disabled={!isManager(sessionData.user.user.id)}>
           {isEditing ? (
             <>Hủy</>
           ) : (

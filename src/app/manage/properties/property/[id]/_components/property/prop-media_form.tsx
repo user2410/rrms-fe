@@ -9,7 +9,7 @@ import { useFieldArray, useForm } from "react-hook-form";
 import toast from "react-hot-toast";
 import * as z from "zod";
 
-import { uploadFile, uploadFileWithPresignedURL } from "@/actions/upload-file";
+import { uploadFileWithPresignedURL } from "@/actions/upload-file";
 import { Card, CardContent, CardFooter, CardHeader } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Separator } from "@/components/ui/separator";
@@ -20,7 +20,6 @@ import 'lightgallery/css/lightgallery.css';
 import lgThumbnail from 'lightgallery/plugins/thumbnail';
 import lgZoom from 'lightgallery/plugins/zoom';
 import LightGallery from "lightgallery/react";
-import { useSession } from "next-auth/react";
 import { usePropDataCtx } from "../../_context/property_data.context";
 
 const formSchema = z.object({
@@ -43,8 +42,7 @@ const formSchema = z.object({
 type FormValues = z.infer<typeof formSchema>;
 
 export default function MediaForm() {
-  const { property, units } = usePropDataCtx();
-  const session = useSession();
+  const { property, units, isManager, sessionData } = usePropDataCtx();
   const [isEditing, setIsEditing] = useState(false);
   // @ts-ignore
   const [newMedia, setNewMedia] = useState<FormValues["media"]>([] as FormValues["media"]);
@@ -89,7 +87,7 @@ export default function MediaForm() {
         media: newImgs,
       }, {
         headers: {
-          Authorization: `Bearer ${session.data!.user.accessToken}`,
+          Authorization: `Bearer ${sessionData.user.accessToken}`,
         }
       })).data;
       for (const media of newImageData.media) {
@@ -111,7 +109,7 @@ export default function MediaForm() {
         media: [...oldMedia, ...newImageData.media],
       }, {
         headers: {
-          Authorization: `Bearer ${session.data!.user.accessToken}`,
+          Authorization: `Bearer ${sessionData.user.accessToken}`,
         }
       });
       setPropData({
@@ -172,7 +170,7 @@ export default function MediaForm() {
             Media
           </h2>
         </div>
-        <Button onClick={toggleEdit} variant="ghost">
+        <Button onClick={toggleEdit} variant="ghost" disabled={!isManager(sessionData.user.user.id)}>
           {isEditing ? (
             <>Hủy</>
           ) : (

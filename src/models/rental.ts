@@ -104,6 +104,7 @@ export type Rental = {
   minors: RentalMinor[];
   pets: RentalPet[];
   services: RentalService[];
+  policies: RentalPolicy[];
 
   status: 'INPROGRESS' | 'END';
 };

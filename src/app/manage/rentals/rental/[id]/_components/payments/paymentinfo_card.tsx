@@ -1,11 +1,14 @@
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { Table, TableBody, TableCell, TableFooter, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import { Separator } from "@/components/ui/separator";
-import { useDataCtx } from "../../_context/data.context";
+import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
+import { Rental } from "@/models/rental";
 import { readMoneyVi } from "@/utils/currency";
 
-export default function PaymentinfoCard() {
-  const { rental } = useDataCtx();
+export default function PaymentinfoCard({
+  rental
+} : {
+  rental: Rental;
+}) {
 
   return (
     <Card className="pt-1">

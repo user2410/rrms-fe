@@ -39,6 +39,7 @@ type PropDataCtx = State & {
   setPropData: (data: PropDataState) => void;
   resetPropData: () => void;
   isSet: () => boolean;
+  isManager: (userId: string) => boolean,
 }
 
 export const PropertyDataContext = createContext<PropDataCtx>({
@@ -47,6 +48,7 @@ export const PropertyDataContext = createContext<PropDataCtx>({
   setPropData: () => {},
   resetPropData: () => {},
   isSet: () => false,
+  isManager: (userId: string) => false,
 });
 
 function propDataReducer(state: State, action: Action) {
@@ -80,6 +82,9 @@ export function PropertyDataProvider(props: PropsWithChildren<any>) {
     && state.units.length > 0
     && state.sessionData.user !== undefined
   );
+  const isManager = (userId: string) => (
+    state.property.managers.findIndex((manager) => manager.managerId === userId) !== -1
+  );
 
   const value = useMemo<PropDataCtx>(() => ({
     ...state,
@@ -87,6 +92,7 @@ export function PropertyDataProvider(props: PropsWithChildren<any>) {
     setPropData,
     resetPropData,
     isSet,
+    isManager,
   }), [state]);
 
   return <PropertyDataContext.Provider value={value} {...props} />;

@@ -69,8 +69,8 @@ function PropertyDetailPage({
   data: PropDataState;
   sessionData: Session;
 }) {
-  const {property, isSet, setPropData, setSessionData} = usePropDataCtx();
-
+  const {property, isSet, isManager, setPropData, setSessionData} = usePropDataCtx();
+  
   useEffect(() => {
     setSessionData(sessionData);
     setPropData(data);
@@ -110,13 +110,13 @@ function PropertyDetailPage({
           <Tabs.Trigger value="property" className="TabsTrigger">
             {propTypeText}
           </Tabs.Trigger>
-          <Tabs.Trigger value="managers" className="TabsTrigger">
+          <Tabs.Trigger value="managers" disabled={!isManager(sessionData.user.user.id)} className="TabsTrigger">
             Quản lý nhà trọ
           </Tabs.Trigger>
-          <Tabs.Trigger value="listings" className="TabsTrigger">
+          <Tabs.Trigger value="listings" disabled={!isManager(sessionData.user.user.id)} className="TabsTrigger">
             Tin đăng
           </Tabs.Trigger>
-          <Tabs.Trigger value="tenants" className="TabsTrigger">
+          <Tabs.Trigger value="tenants" disabled={!isManager(sessionData.user.user.id)} className="TabsTrigger">
             Quản lý thuê trọ
           </Tabs.Trigger>
         </Tabs.List>

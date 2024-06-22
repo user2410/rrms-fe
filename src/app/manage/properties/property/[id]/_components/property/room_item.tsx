@@ -3,17 +3,10 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import { mapPropertyTypeToText, Property } from "@/models/property";
 import { BalconyIcon, BathroomIcon, BedroomIcon, KitchenIcon, LivingroomIcon, ToiletIcon, uAmenities, Unit, UnitAmenity, UnitMedia } from "@/models/unit";
-import { Pencil, Sofa } from "lucide-react";
+import { Pencil } from "lucide-react";
 
-import 'lightgallery/css/lg-thumbnail.css';
-import 'lightgallery/css/lg-zoom.css';
-import 'lightgallery/css/lightgallery.css';
-import lgThumbnail from 'lightgallery/plugins/thumbnail';
-import lgZoom from 'lightgallery/plugins/zoom';
-import LightGallery from "lightgallery/react";
-import { useState } from "react";
-import { Label } from "@/components/ui/label";
 import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
 import {
   Select,
   SelectContent,
@@ -21,6 +14,14 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
+import 'lightgallery/css/lg-thumbnail.css';
+import 'lightgallery/css/lg-zoom.css';
+import 'lightgallery/css/lightgallery.css';
+import lgThumbnail from 'lightgallery/plugins/thumbnail';
+import lgZoom from 'lightgallery/plugins/zoom';
+import LightGallery from "lightgallery/react";
+import { useState } from "react";
+import { usePropDataCtx } from "../../_context/property_data.context";
 
 type FormValues = {
   numberOfLivingRooms: number;
@@ -40,6 +41,8 @@ export default function RoomItem({
   property: Property,
   unit: Unit,
 }) {
+  const {isManager, sessionData} = usePropDataCtx();
+
   const defaultValues = {
     numberOfLivingRooms: unit.numberOfLivingRooms || 0,
     numberOfKitchens: unit.numberOfKitchens || 0,
@@ -62,7 +65,9 @@ export default function RoomItem({
           type="button"
           variant="ghost"
           className="p-1"
-          onClick={() => setIsEditing(v => !v)}>
+          onClick={() => setIsEditing(v => !v)}
+          disabled={!isManager(sessionData.user.user.id)}
+        >
           {isEditing ? (
             "Lưu"
           ) : (

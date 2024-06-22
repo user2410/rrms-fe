@@ -72,7 +72,7 @@ function Payments({
   _payments: RentalPayment[];
   refetch: () => void;
 }) {
-  const { payments, setPayments, isSideA, sessionData } = useDataCtx();
+  const { payments, rental, setPayments, isSideA, sessionData } = useDataCtx();
 
   useEffect(() => {
     setPayments(_payments);
@@ -81,7 +81,7 @@ function Payments({
   return (
     <div className="space-y-4">
       <div className="">
-        <PaymentinfoCard/>
+        <PaymentinfoCard rental={rental}/>
       </div>
       <Card className=" space-y-3">
         <CardHeader className="pt-6 pb-3 px-6 flex flex-row items-center justify-between">
@@ -89,7 +89,7 @@ function Payments({
           <div className="flex flex-row items-center gap-2">
             <Dialog>
               <DialogTrigger asChild>
-                <Button type="button" onClick={refetch}>Tạo</Button>
+                <Button type="button" onClick={refetch} disabled={!isSideA(sessionData.user.user.id)}>Tạo</Button>
               </DialogTrigger>
               <DialogContent>
                 <DialogHeader>

@@ -8,7 +8,7 @@ import { Input } from "@/components/ui/input";
 import { Switch } from "@/components/ui/switch";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Eye, EyeOff } from "lucide-react";
-import { signIn } from "next-auth/react";
+import { signIn, useSession } from "next-auth/react";
 import { useState } from "react";
 import { SubmitHandler, useForm } from "react-hook-form";
 import toast from "react-hot-toast";
@@ -29,6 +29,7 @@ export default function LoginForm({
 } : {
   changeOpenModal: () => void;
 }) {
+  const session = useSession();
   const [showPassword, setShowPassword] = useState<boolean>(false);
 
   const form = useForm<LoginFormValues>({
@@ -45,7 +46,8 @@ export default function LoginForm({
     try {
       const cb = await signIn('credentials', {
         ...data,
-        redirect: false
+        redirect: false,
+        accessToken: session.data?.user.accessToken,
       });
       if (cb?.error) {
         console.error(cb.error);

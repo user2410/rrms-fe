@@ -1,13 +1,10 @@
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
-import { FormControl, FormDescription, FormField, FormItem, FormLabel, FormLabelRequired } from "@/components/ui/form";
+import { FormControl, FormDescription, FormField, FormItem, FormLabelRequired } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
-import { Switch } from "@/components/ui/switch";
 import { readMoneyVi } from "@/utils/currency";
 import { useFormContext } from "react-hook-form";
 import { FormValues } from "../page";
-import FormLabelWithInfo from "@/components/complex/label-with-info";
-import { cn } from "@/libs/utils";
 
 export default function Baseprice() {
   const form = useFormContext<FormValues>();
@@ -46,24 +43,24 @@ export default function Baseprice() {
                   }}
                   defaultValue="MONTHLY"
                 >
-                  <SelectTrigger className={field.value === 1 ? "col-span-3" : "col-span-2"}>
+                  <SelectTrigger className="col-span-3">
                     <SelectValue />
                   </SelectTrigger>
                   <SelectContent>
                     <SelectItem value="MONTHLY">Hàng tháng</SelectItem>
-                    <SelectItem value="QUARTERLY">Hàng quý</SelectItem>
-                    <SelectItem value="YEARLY">Hàng năm</SelectItem>
+                    <SelectItem value="QUARTERLY">Hàng quý (3 tháng)</SelectItem>
+                    <SelectItem value="YEARLY">Hàng năm (12 tháng)</SelectItem>
                     <SelectItem value="UPFRONT"></SelectItem>
                   </SelectContent>
                 </Select>
-                {field.value !== 1 && (
+                {/* {field.value !== 1 && (
                   <div className="flex flex-row items-center gap-1">
                     <FormControl>
                       <Input {...field} type="number" min={2} max={form.watch('tenant.rentalPeriod')} className="flex-grow" />
                     </FormControl>
                     <span>tháng</span>
                   </div>
-                )}
+                )} */}
               </div>
             </FormItem>
           )}
