@@ -22,10 +22,18 @@ export default function NewListingsSection() {
           fields: "area,city,district,ward,type,primary_image,media",
         },
       })).data;
-      return listings.map(l => ({
-        listing: l,
-        property: properties.find(p => p.id === l.propertyId)!,
-      }) as ManagedListing);
+      const verificationStatus = (await backendAPI.get<{ propertyId: string; status: 'PENDING' | 'APPROVED' | 'REJECTED' }[]>("/api/properties/verification-status", {
+        params: {
+          ids: properties.map(p => p.id),
+        }
+      })).data;
+      return listings.map(l => {
+        const property = properties.find(p => p.id === l.propertyId)!;
+        return ({
+          listing: l,
+          property: { ...property, verificationStatus: verificationStatus.find(v => v.propertyId === property.id)?.status },
+        }) as ManagedListing;
+      });
     },
     staleTime: 1000 * 60 * 5,
     cacheTime: 1000 * 60 * 5,
@@ -54,7 +62,7 @@ export default function NewListingsSection() {
                 className={index === 0 ? '' : 'border-t'}
               />
             ))
-          ) }
+          )}
         </ul>
       </CardContent>
     </Card>

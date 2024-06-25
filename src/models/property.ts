@@ -66,9 +66,16 @@ export type Property = {
   features: PropertyFeature[];
   tags: PropertyTag[];
   managers: PropertyManager[];
-  units: Unit[],
   createdAt: Date;
   updatedAt: Date;
+
+  units: Unit[],
+  verificationStatus?: 'PENDING' | 'APPROVED' | 'REJECTED';
+};
+
+export type PropertyVerificationStatus = {
+  propertyId: string;
+  status: 'PENDING' | 'APPROVED' | 'REJECTED';
 };
 
 export type NewPropertyManagerRequest = {

@@ -19,19 +19,24 @@ export default function ListingPage({ params }: { params: { id: string } }) {
   const detailListingQuery = useQuery<ListingDetail>({
     queryKey: ['listings', 'listing', 'detail-view', params.id],
     queryFn: async ({queryKey}) => {
-      const listingQuery = await backendAPI.get(`/api/listings/listing/${queryKey.at(3)}`);
-      const listing = listingQuery.data;
-      const propertyQuery = await backendAPI.get(`/api/properties/property/${listing.propertyId}`);
-      const unitsQuery = await backendAPI.get("/api/units/ids", {
+      const listing = (await backendAPI.get(`/api/listings/listing/${queryKey.at(3)}`)).data;
+      const property = (await backendAPI.get(`/api/properties/property/${listing.propertyId}`)).data;
+      const units = (await backendAPI.get("/api/units/ids", {
         params: {
           unitIds: [...new Set(listing.units.map((lu: ListingUnit) => lu.unitId))],
           fields: "name,property_id,area,floor,number_of_living_rooms,number_of_bedrooms,number_of_bathrooms,number_of_toilets,number_of_balconies,number_of_kitchens,type,created_at,updated_at,amenities,media"
         }
-      });
+      })).data;
+      const verificationStatus = (await backendAPI.get<{propertyId: string; status: 'PENDING' | 'APPROVED' | 'REJECTED'}[]>("/api/properties/verification-status", {
+        params: {
+          ids: property.id,
+        },
+        validateStatus: (status) => status === 200 || status === 404,
+      })).data || [];
       const data = {
         listing,
-        property : propertyQuery.data,
-        units : unitsQuery.data,
+        property : {...property, verificationStatus: verificationStatus.find(v => v.propertyId === property.id)?.status},
+        units,
       };
       console.log(data);
       return data;

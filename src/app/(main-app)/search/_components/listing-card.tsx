@@ -1,8 +1,7 @@
-import { Button } from "@/components/ui/button";
+import { Button, buttonVariants } from "@/components/ui/button";
 import { Card, CardContent, CardFooter, CardHeader } from "@/components/ui/card";
 import { ManagedListing } from "@/models/listing";
 import Image from "next/image";
-import { BsHeartFill } from "react-icons/bs";
 
 import { ListingTitle } from "@/components/complex/listing";
 import { Avatar, AvatarFallback } from "@/components/ui/avatar";
@@ -14,7 +13,9 @@ import { stripHtml } from "@/utils/string";
 import { formatDistance } from 'date-fns';
 import { vi as vilocale } from "date-fns/locale";
 import styles from "../_styles/listing_card.module.css";
-import { readNumberVi } from "@/utils/currency";
+import { useFavListings } from "@/context/favorite_listings.context";
+import { BookmarkCheck } from "lucide-react";
+import Link from "next/link";
 
 const ListingCard = ({
   item,
@@ -22,6 +23,7 @@ const ListingCard = ({
   item: ManagedListing;
 }): JSX.Element => {
   const { listing, property } = item;
+  const {isFavoriteListing, toggleFavListing} = useFavListings();
   const images = property.media.filter(m => m.type === "IMAGE");
 
   return (
@@ -49,6 +51,7 @@ const ListingCard = ({
         <div className={cn("space-y-3", listing.priority === 4 ? "col-span-5" : "col-span-6")}>
           <ListingTitle
             listing={listing}
+            verificationStatus={property.verificationStatus}
             className="text-lg"
           />
           <p className="text-sm">
@@ -80,10 +83,12 @@ const ListingCard = ({
               </Avatar>
               <span className="text-sm text-gray-500">{listing.fullName}</span>
             </div>
-            <div className="space-x-2">
-              <Button type="button">Gọi {listing.phone}</Button>
-              <Button type="button" variant="outline" className="bg-blue-500 text-white">Nhắn Zalo</Button>
-              <Button type="button"><BsHeartFill size={12} /></Button>
+            <div className="flex flex-row items-center gap-2">
+              <Link className={buttonVariants({variant: "outline"})} href={`tel:${listing.phone}`}>Gọi {listing.phone}</Link>
+              <Link className={cn(buttonVariants({variant: "outline"}), "bg-blue-500 text-white")} href={`https://zalo.me/${listing.phone}`}>Nhắn Zalo</Link>
+              <Button type="button" variant={isFavoriteListing(listing.id) ? "default" : "outline"} onClick={() => toggleFavListing(listing.id)}>
+                <BookmarkCheck className={cn(isFavoriteListing(listing.id) ? "text-white" : "text-primary")} />
+              </Button>
             </div>
           </div>
         </div>

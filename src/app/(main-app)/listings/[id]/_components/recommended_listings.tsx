@@ -13,10 +13,9 @@ export default function RecommendedListings({
 }) {
   const query = useQuery<ManagedListing[]>({
     queryKey: ["listings", listingId, "recommended"],
-    queryFn: async () => {
-      const recommendation = (await backendAPI.get("/api/landing/suggest", {
+    queryFn: async ({queryKey}) => {
+      const recommendation = (await backendAPI.get(`/api/landing/suggest/listings/listing/${queryKey.at(1)}`, {
         params: {
-          listingId,
           limit: 5,
         },
       })).data.hits;
@@ -35,10 +34,18 @@ export default function RecommendedListings({
           fields: "area,full_address,city,district,ward,type,primary_image,media",
         },
       })).data;
-      return listings.map((l: any) => ({
-        listing: l,
-        property: properties.find((p) => p.id === l.propertyId)!,
-      }));
+      const verificationStatus = (await backendAPI.get<{propertyId: string; status: 'PENDING' | 'APPROVED' | 'REJECTED'}[]>("/api/properties/verification-status", {
+        params: {
+          ids: properties.map(p => p.id),
+        }
+      })).data;
+      return listings.map((l: any) => {
+        const property = properties.find(p => p.id === l.propertyId)!;
+        return ({
+          listing: l,
+          property: { ...property, verificationStatus: verificationStatus.find(v => v.propertyId === property.id)?.status },
+        }) as ManagedListing;
+      });
     },
     staleTime: 1000 * 60 * 5,
     cacheTime: 1000 * 60 * 5,

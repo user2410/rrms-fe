@@ -24,7 +24,7 @@ export default function ListingItem({
           />
         </div>
         <div className="space-y-3 flex-grow">
-          <ListingTitle listing={listing}/>
+          <ListingTitle listing={listing} verificationStatus={property.verificationStatus}/>
           <p className="text-xs text-slate-600">{getPropertyFullAddress(property)}</p>
           <div className="w-full flex flex-row items-end justify-between">
             <p className="text-sm font-semibold text-green-600">

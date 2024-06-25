@@ -111,9 +111,9 @@ export const rentalPolicies = [
 
 export const listingPriorities = [
   {priority: 1, basePrice: 2000 ,label: "Tin thường", desc: "2,000 đ/ngày", bgColor: "bg-slate-500", textColor: "text-red-600"},
-  {priority: 2, basePrice: 5000 ,label: "Tin bạc", desc: "5,000 đ/ngày", bgColor: "bg-cyan-200", textColor: "text-pink-600"},
-  {priority: 3, basePrice: 7000 ,label: "Tin vàng", desc: "7,000 đ/ngày", bgColor: "bg-yellow-500", textColor: "text-orange-600"},
-  {priority: 4, basePrice: 9000 ,label: "Tin kim cương", desc: "9,000 đ/ngày", bgColor: "bg-red-500", textColor: "text-blue-600"},
+  {priority: 2, basePrice: 10000 ,label: "Tin bạc", desc: "10,000 đ/ngày", bgColor: "bg-cyan-200", textColor: "text-pink-600"},
+  {priority: 3, basePrice: 20000 ,label: "Tin vàng", desc: "20,000 đ/ngày", bgColor: "bg-yellow-500", textColor: "text-orange-600"},
+  {priority: 4, basePrice: 30000 ,label: "Tin kim cương", desc: "30,000 đ/ngày", bgColor: "bg-red-500", textColor: "text-blue-600"},
 ];
 
 export const listingDiscount = [

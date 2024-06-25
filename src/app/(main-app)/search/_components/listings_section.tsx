@@ -1,10 +1,10 @@
+import PaginationControl from "@/components/complex/pagination";
 import { Card, CardContent, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
-import { SearchResult } from "@/models/listing";
 import { Select, SelectContent, SelectGroup, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
+import { Skeleton } from "@/components/ui/skeleton";
+import { SearchResult } from "@/models/listing";
 import { Search as SearchIcon } from "lucide-react";
 import ListingCard, { ListingCardSkeleton } from "./listing-card";
-import { Skeleton } from "@/components/ui/skeleton";
-import PaginationControl from "@/components/complex/pagination";
 
 const EmptyState = (
   <div className="w-full flex flex-row justify-center items-center text-muted-foreground">
@@ -38,7 +38,7 @@ export default function ListingsSection({
     <Card>
       {r.count > 0 ? (
         <CardHeader className="flex flex-row justify-between items-center">
-          <CardTitle className="text-xl">Tổng {r.count} kết quả</CardTitle>
+          <CardTitle className="text-base font-normal">Tổng {r.count} kết quả</CardTitle>
           <div className="flex flex-row items-center gap-2">
             <div className="flex flex-row items-center gap-1">
               <span className="text-sm font-light whitespace-nowrap">Sắp xếp theo</span>
@@ -83,7 +83,14 @@ export default function ListingsSection({
         {r.count === 0 ? (
           EmptyState
         ) : (
-          r.items.map((item, index) => (
+          r.items.sort((a, b) => {
+            // sort by listing priority of each item first, if 2 items have the same priority, sort by property.verificationStatus
+            const priorityDiff = b.listing!.priority - a.listing!.priority;
+            if (priorityDiff !== 0) {
+              return priorityDiff;
+            }
+            return b.property!.verificationStatus === "APPROVED" ? -1 : 1;
+          }).map((item, index) => (
             <ListingCard
               key={index}
               item={{

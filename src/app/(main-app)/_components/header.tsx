@@ -1,12 +1,13 @@
+import NotificationDropdown from "@/app/manage/_components/notification_dropdown";
 import Logo from "@/components/ui/logo";
 import AuthItem from "./auth-item";
 import NavItems from "./nav-items";
 import SearchModal from "./search.modal";
 import Sidebar from "./sidebar";
-import NotificationDropdown from "@/app/manage/_components/notification_dropdown";
+import FavoriteBtn from "./favorite_btn";
 
 export default function HeaderMain() {
-
+  
   return (
     <nav className="fixed top-0 w-screen z-50 bg-background">
       <div className="container flex flex-wrap items-center justify-between mx-auto p-8">
@@ -24,6 +25,7 @@ export default function HeaderMain() {
           <div className="md:hidden">
             <Sidebar/>
           </div>
+          <FavoriteBtn/>
           <SearchModal/>
           <NotificationDropdown/>
           <AuthItem />

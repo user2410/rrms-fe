@@ -17,6 +17,10 @@ type Action =
       payload: string;
     }
   | {
+      type: 'TOGGLE_FAV_LISTING';
+      payload: string;
+    }
+  | {
       type: 'REMOVE_FAV_LISTING';
       payload: string;
     }
@@ -39,6 +43,19 @@ function favListingsReducer(state: State, action: Action) {
           action.payload,
         ]
       };
+    case 'TOGGLE_FAV_LISTING':
+      if (state.favListings.includes(action.payload)) {
+        return {
+          favListings: state.favListings.filter(id => id !== action.payload),
+        };
+      } else {
+        return {
+          favListings: [
+            ...state.favListings,
+            action.payload,
+          ]
+        };
+      }
     default:
       throw new Error(`Unhandled action type`);
   }
@@ -49,11 +66,15 @@ export function FavListingsProvider(props: PropsWithChildren<any>) {
 
   const addFavListing = (listingId: string) => dispatch({ type: 'ADD_FAV_LISTING',  payload: listingId});
   const removeFavListing = (listingId: string) => dispatch({ type: 'REMOVE_FAV_LISTING',  payload: listingId});
+  const toggleFavListing = (listingId: string) => dispatch({ type: 'TOGGLE_FAV_LISTING',  payload: listingId});
+  const isFavoriteListing = (listingId: string) => state.favListings.includes(listingId);
 
   const value = useMemo(() => ({
     ...state,
     addFavListing,
     removeFavListing,
+    toggleFavListing,
+    isFavoriteListing,
   }), [state]);
 
   return <FavListingsContext.Provider value={value} {...props} />;

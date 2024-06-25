@@ -33,6 +33,7 @@ export default function SearchPage({ query }: { query: SearchFormValues }) {
       r.items = r.items ?? [];
       let listings: Listing[] = [];
       let properties: Property[] = [];
+      
       if (r.items.length > 0) {
         listings = (await backendAPI.get<Listing[]>('/api/listings/ids', {
           params: {
@@ -46,6 +47,15 @@ export default function SearchPage({ query }: { query: SearchFormValues }) {
             fields: "area,city,district,ward,type,primary_image,media",
           }
         })).data;
+        const verificationStatus = (await backendAPI.get<{propertyId: string; status: 'PENDING' | 'APPROVED' | 'REJECTED'}[]>("/api/properties/verification-status", {
+          params: {
+            ids: properties.map(p => p.id),
+          }
+        })).data;
+        properties = properties.map(p => ({
+          ...p,
+          verificationStatus: verificationStatus.find(v => v.propertyId === p.id)?.status,
+        }));
       }
       return ({
         ...r,

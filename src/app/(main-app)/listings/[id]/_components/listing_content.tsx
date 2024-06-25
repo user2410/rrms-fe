@@ -1,6 +1,6 @@
 import { Separator } from "@/components/ui/separator";
 import { Listing } from "@/models/listing";
-import { Property } from "@/models/property";
+import { getPropertyFullAddress, Property } from "@/models/property";
 import { format } from "date-fns";
 import Gallery from "./gallery";
 
@@ -14,13 +14,15 @@ import RecommendedListings from "./recommended_listings";
 import RentalPolicies from "./rental_policies";
 import UnitsList from "./units";
 import NewListingsSection from "@/app/(main-app)/search/_components/sidebar/new_listings_section";
+import { Badge } from "@/components/ui/badge";
+import { ShieldCheck } from "lucide-react";
 
 export default function ListingContent({
-  listing, 
-  property, 
+  listing,
+  property,
   units,
   preview = false,
-} : {
+}: {
   listing: Listing;
   property: Property;
   units: Unit[];
@@ -36,20 +38,26 @@ export default function ListingContent({
           <div className="space-y-3">
             {/* <TopBreadcrumb cityCode={property.city} districtCode={property.district} /> */}
             <h1 className="font-semibold text-xl">{listing.title}</h1>
-            <h3 className="font-normal">{property.fullAddress}</h3>
-            <h4 className="font-light text-sm">Đăng vào {format(new Date(2014, 1, 11), 'hh:mm dd/MM/yyyy')}</h4>
+            {property.verificationStatus === "APPROVED" && (
+              <Badge className="bg-green-400">
+                <ShieldCheck className="w-4 h-4 inline" />
+                <span className="ml-1">Đã xác minh</span>
+              </Badge>
+            )}
+            <h3 className="font-normal">{getPropertyFullAddress(property)}</h3>
+            <h4 className="font-light text-sm">Đăng lúc {format(new Date(2014, 1, 11), 'hh:mm dd/MM/yyyy')}</h4>
           </div>
           <Separator />
-          <GeneralInfo listingDetail={{listing, property, units}} />
+          <GeneralInfo listingDetail={{ listing, property, units }} />
           <Separator />
           <div>
             <h2 className="font-semibold text-xl mb-2">Thông tin mô tả</h2>
-            <div dangerouslySetInnerHTML={{__html: listing.description}}></div>
+            <div dangerouslySetInnerHTML={{ __html: listing.description }}></div>
           </div>
           <Separator />
-          <ListingDetails listingDetail={{listing, property, units}} />
+          <ListingDetails listingDetail={{ listing, property, units }} />
           <Separator />
-          <UnitsList listingDetail={{listing, property, units}} />
+          <UnitsList listingDetail={{ listing, property, units }} />
           {listing.policies && listing.policies.length > 0 && (
             <>
               <Separator />
@@ -66,7 +74,7 @@ export default function ListingContent({
             <PostedBy listing={listing} />
             {!preview && (
               <>
-                <RecommendedListings listingId={listing.id}/>
+                <RecommendedListings listingId={listing.id} />
                 <NewListingsSection />
               </>
             )}
