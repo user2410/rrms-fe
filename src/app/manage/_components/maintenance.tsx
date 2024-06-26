@@ -58,7 +58,7 @@ export default function Maintenance({
         icon={<i className="fas fa-screwdriver-wrench" />}
         data={thisMonth.toString() || "0"}
         statArrow={change > 0 ? "up" : change < 0 ? "down" : "none"}
-        change={change > 0 ? change.toString() : ""}
+        change={change > 0 ? `${change} %` : ""}
         since="Từ tháng trước"
       />
     </Link>

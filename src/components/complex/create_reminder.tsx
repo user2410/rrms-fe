@@ -3,12 +3,15 @@ import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle, Di
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
+import { backendAPI } from "@/libs/axios";
 import { toISOStringWithTimezone } from "@/utils/time";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { DialogClose } from "@radix-ui/react-dialog";
 import { addHours } from "date-fns";
+import { Session } from "next-auth";
 import { forwardRef, useRef } from "react";
 import { useForm } from "react-hook-form";
+import toast from "react-hot-toast";
 import * as z from "zod";
 
 const formSchema = z.object({
@@ -25,7 +28,7 @@ export type FormValues = z.infer<typeof formSchema>;
 
 type CreateReminderDialogProps = {
   triggerBtn: React.ReactNode;
-  handleCreateReminder: (data: FormValues) => Promise<void> | void;
+  sessionData: Session;
 };
 
 export default function CreateReminderDialog(props: CreateReminderDialogProps){
@@ -43,9 +46,22 @@ export default function CreateReminderDialog(props: CreateReminderDialogProps){
     },
   });
 
+  async function handleCreateReminder(values: FormValues) {
+    try {
+      await backendAPI.post("/api/reminders/", values, {
+        headers: {
+          Authorization: `Bearer ${props.sessionData.user.accessToken}`,
+        },
+      });
+    } catch(err) {
+      console.error("error creating reminder", err);
+      toast.error("Đã có lỗi xảy ra");
+    }
+  }
+
   return (
     <Dialog onOpenChange={() => form.reset()}>
-      <DialogTrigger>
+      <DialogTrigger asChild>
         {props.triggerBtn}
       </DialogTrigger>
       <DialogContent>
@@ -55,7 +71,7 @@ export default function CreateReminderDialog(props: CreateReminderDialogProps){
         </DialogHeader>
         <Form {...form}>
           <form onSubmit={(e) => {
-            form.handleSubmit(props.handleCreateReminder)(e);
+            form.handleSubmit(handleCreateReminder)(e);
             closeBtnRef.current?.click();
           }}>
             <FormField

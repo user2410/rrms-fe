@@ -9,6 +9,7 @@ import { Session } from "next-auth";
 import { useState } from "react";
 import Spinner from "@/components/ui/spinner";
 import { cn } from "@/libs/utils";
+import CreateReminderDialog from "@/components/complex/create_reminder";
 
 type DataItem = {
   day: Date;
@@ -62,8 +63,12 @@ export default function PlanTile({
   });
   return (
     <Card className={cn("w-full h-full", className)}>
-      <CardHeader>
+      <CardHeader className="flex flex-row justify-between">
         <CardTitle className="text-xl">Kế hoạch</CardTitle>
+        <CreateReminderDialog
+          triggerBtn={<button className="btn btn-primary">Tạo lịch hẹn</button>}
+          sessionData={sessionData}
+        />
       </CardHeader>
       {query.isLoading ? (
         <div className="flex items-center justify-center h-32">

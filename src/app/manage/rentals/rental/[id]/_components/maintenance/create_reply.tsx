@@ -102,10 +102,6 @@ export default function CreateReply({
     }
   }
 
-  function handleCreateReminder(data: ReminderFormValues) {
-    form.setValue("reminder", data);
-  }
-
   function handleFileInputChange(event: React.ChangeEvent<HTMLInputElement>) {
     Object.entries(event.target.files!).forEach((e) => {
       const { name, size, type } = e[1];
@@ -175,7 +171,7 @@ export default function CreateReply({
               <Calendar className="w-6 h-6" />
             </button>
           )}
-          handleCreateReminder={handleCreateReminder}
+          sessionData={sessionData}
         />
         <input
           ref={imgInputRef} type="file"

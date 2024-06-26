@@ -27,23 +27,25 @@ export default function StatCard({
       </CardHeader>
       <CardContent>
         <div className="text-2xl font-bold">{data}</div>
-        {statArrow === "up" ? (
-          <div className="inline-block space-x-1 text-emerald-500">
-            <i className="fas fa-arrow-up"/>
-            <span>{change}</span>
-          </div>
-        ) : statArrow === "down" ? (
-          <div className="inline-block space-x-1 text-red-500">
-            <i className="fas fa-arrow-down"/>
-            <span>{change}</span>
-          </div>
-        ) : (
-          <div className="inline-block space-x-1 text-gray-500">
-            <i className="fas fa-equals"/>
-            <span>{change}</span>
-          </div>
-        )}
-        <p className="text-xs text-muted-foreground">{since}</p>
+        <div className="flex flex-row items-center gap-2">
+          {statArrow === "up" ? (
+            <div className="inline-block space-x-1 text-emerald-500">
+              <i className="fas fa-arrow-up"/>
+              <span>{change}</span>
+            </div>
+          ) : statArrow === "down" ? (
+            <div className="inline-block space-x-1 text-red-500">
+              <i className="fas fa-arrow-down"/>
+              <span>{change}</span>
+            </div>
+          ) : (
+            <div className="inline-block space-x-1 text-gray-500">
+              <i className="fas fa-equals"/>
+              <span>{change}</span>
+            </div>
+          )}
+          <span className="text-xs text-muted-foreground">{since}</span>
+        </div>
       </CardContent>
     </Card>
   );

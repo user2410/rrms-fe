@@ -13,6 +13,7 @@ import WelcomeTile from "./_components/welcome-tile";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import RentalComplaints from "./_components/rental_complaints";
 import PendingPayments from "./_components/pending_payments";
+import TotalTenants from "./_components/total_tenants";
 
 export default function ManageDashboard() {
   const session = useSession();
@@ -30,10 +31,13 @@ export default function ManageDashboard() {
                 <div className="xl:col-span-6">
                   <WelcomeTile sessionData={session.data!} />
                 </div>
-                <div className="xl:col-span-3">
+                <div className="xl:col-span-2">
                   <NewApplications sessionData={session.data!} />
                 </div>
-                <div className="xl:col-span-3">
+                <div className="xl:col-span-2">
+                  <TotalTenants sessionData={session.data!} />
+                </div>
+                <div className="xl:col-span-2">
                   <Maintenance sessionData={session.data!} />
                 </div>
               </div>

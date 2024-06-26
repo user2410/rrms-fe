@@ -5,6 +5,7 @@ import { useSession } from "next-auth/react";
 import { useRouter } from "next/navigation";
 import ManageDashboardNavbar from "./_components/navbar";
 import Sidebar from "./_components/sidebar";
+import ReminderComponent from "@/components/complex/reminder";
 
 export default function Layout({ 
   children
@@ -25,6 +26,7 @@ export default function Layout({
 
   return (
     <div className="w-full h-full grid grid-cols-12 bg-gray-100 dark:bg-background">
+      <ReminderComponent/>
       <div className="hidden xl:block xl:col-span-2">
         <Sidebar />
       </div>

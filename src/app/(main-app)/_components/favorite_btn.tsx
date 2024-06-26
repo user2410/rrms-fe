@@ -17,9 +17,11 @@ export default function FavoriteBtn() {
         <TooltipTrigger>
           <Link href="/favorites" className={cn(buttonVariants({ variant: "ghost" }), "relative")}>
             <Bookmark className="w-6 h-6" />
-            <Badge variant="destructive" className="absolute top-0 right-0">
-              {favListings.length}
-            </Badge>
+            {favListings.length > 0 && (
+              <Badge variant="destructive" className="absolute top-0 right-0">
+                {favListings.length}
+              </Badge>
+            )}
           </Link>
         </TooltipTrigger>
         <TooltipContent>
