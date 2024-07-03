@@ -214,8 +214,8 @@ export default function CreatePropertyPage() {
       />
       <div className="container mx-auto py-10 space-y-8">
         <div className="">
-          <span className="font-light text-md">Properties /</span>
-          <span className="font-bold text-lg"> Add property </span>
+          <span className="font-light text-md">Nhà cho thuê /</span>
+          <span className="font-bold text-lg"> Tạo nhà cho thuê mới </span>
         </div>
         <DetailedStepper
           steps={[

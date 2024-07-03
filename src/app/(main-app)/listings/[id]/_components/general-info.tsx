@@ -15,10 +15,11 @@ import ShareModal from "./share-modal";
 
 export default function GeneralInfo({
   listingDetail,
+  preview,
 }: {
-  listingDetail: ListingDetail
+  listingDetail: ListingDetail;
+  preview?: boolean;
 }) {
-  const { isFavoriteListing, toggleFavListing } = useFavListings();
   const { listing, property } = listingDetail;
 
   return (
@@ -43,23 +44,38 @@ export default function GeneralInfo({
             <h4 className="font-semibold">{property.project}</h4>
           </div>)}
         </div>
-        <div className="flex gap-4">
-          <TooltipProvider>
-            <Tooltip>
-              <TooltipTrigger>
-                <Button type="button" variant={isFavoriteListing(listing.id) ? "default" : "ghost"} onClick={() => toggleFavListing(listing.id)}>
-                  <BookmarkCheck className={cn(isFavoriteListing(listing.id) ? "text-white" : "text-primary")} />
-                </Button>
-              </TooltipTrigger>
-              <TooltipContent>
-                <p>{isFavoriteListing(listing.id) ? "Bỏ đánh dấu tin đăng" : "Đánh dấu tin đăng"}</p>
-              </TooltipContent>
-            </Tooltip>
-          </TooltipProvider>
-          <ShareModal listing={listing} />
-          <ReportModal listingId={listing.id} />
-        </div>
+        {!preview && (
+          <ActionsBar listingDetail={listingDetail} />
+        )}
       </div>
+    </div>
+  );
+}
+
+function ActionsBar({
+  listingDetail,
+}: {
+  listingDetail: ListingDetail;
+}) {
+  const { listing, property } = listingDetail;
+  const { isFavoriteListing, toggleFavListing } = useFavListings();
+
+  return (
+    <div className="flex gap-4">
+      <TooltipProvider>
+        <Tooltip>
+          <TooltipTrigger asChild>
+            <Button type="button" variant={isFavoriteListing(listing.id) ? "default" : "ghost"} onClick={() => toggleFavListing(listing.id)}>
+              <BookmarkCheck className={cn(isFavoriteListing(listing.id) ? "text-white" : "text-primary")} />
+            </Button>
+          </TooltipTrigger>
+          <TooltipContent>
+            <p>{isFavoriteListing(listing.id) ? "Bỏ đánh dấu tin đăng" : "Đánh dấu tin đăng"}</p>
+          </TooltipContent>
+        </Tooltip>
+      </TooltipProvider>
+      <ShareModal listing={listing} />
+      <ReportModal listingId={listing.id} />
     </div>
   );
 }

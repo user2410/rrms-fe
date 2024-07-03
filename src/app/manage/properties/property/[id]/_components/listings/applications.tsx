@@ -46,7 +46,7 @@ export default function Applications({
   });
 
   return (
-    <div className="space-y-3 col-span-2">
+    <div className="space-y-3">
       <div className="flex flex-row justify-between items-end">
         <h3 className="font-semibold">Đơn ứng tuyển</h3>
         <Link

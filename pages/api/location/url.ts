@@ -9,14 +9,26 @@ const redirectedUrlHandlers : {
   {
     regex: /^https:\/\/www.google.com\/maps\/place\/.+$/,
     processFn: (redirectedUrl: string) => {
+      // try 2 ways to extract lat, lng
       const x1 = redirectedUrl.split('@')[1];
-      if (!x1) return { redirectedUrl };
-      const x2 = x1.split(',');
-      if (x2.length !== 3) return { redirectedUrl };
-      return ({
-        redirectedUrl,
-        coord: { lat: parseFloat(x2[0]), lng: parseFloat(x2[1]) }
-      });
+      if(x1) {
+        const x2 = x1.split(',');
+        if (x2.length >= 3) return { redirectedUrl };
+        return ({
+          redirectedUrl,
+          coord: { lat: parseFloat(x2[0]), lng: parseFloat(x2[1]) }
+        });
+      } else {
+        const url = new URL(redirectedUrl);
+        const llValue = url.searchParams.get('ll');
+        if (!llValue) return { redirectedUrl };
+        const ll = llValue.split(',');
+        if (ll.length !== 2) return { redirectedUrl };
+        return ({
+          redirectedUrl,
+          coord: { lat: parseFloat(ll[0]), lng: parseFloat(ll[1]) }
+        });
+      }
     }
   },
   // Redirect URL type 2: "https://www.google.com/maps/search/20.996719,+105.804936?entry=tts"

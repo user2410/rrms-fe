@@ -99,17 +99,17 @@ export default function PaymentPage({ params: { id } }: { params: { id: string }
                     {p.items.map((item, i) => (
                       <TableRow key={i}>
                         <TableCell>{item.name}</TableCell>
-                        <TableCell>{item.price}</TableCell>
+                        <TableCell>{item.price.toLocaleString('vi-VN', { style: 'currency', currency: 'VND' })}</TableCell>
                         <TableCell>{item.quantity}</TableCell>
                         <TableCell>{item.discount}%</TableCell>
-                        <TableCell className="text-right">{((item.price * item.quantity) * (100 - item.discount) / 100).toFixed(0)} đ</TableCell>
+                        <TableCell className="text-right">{((item.price * item.quantity) * (100 - item.discount) / 100).toLocaleString('vi-VN', { style: 'currency', currency: 'VND' })}</TableCell>
                       </TableRow>
                     ))}
                   </TableBody>
                   <TableFooter>
                     <TableRow>
                       <TableCell colSpan={4}>Tổng cộng</TableCell>
-                      <TableCell className="text-right">{p.amount} đ</TableCell>
+                      <TableCell className="text-right">{p.amount.toLocaleString('vi-VN', { style: 'currency', currency: 'VND' })}</TableCell>
                     </TableRow>
                   </TableFooter>
                 </Table>

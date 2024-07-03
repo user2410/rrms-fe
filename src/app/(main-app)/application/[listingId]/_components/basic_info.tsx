@@ -133,7 +133,7 @@ export default function BasicInfo() {
               control={form.control}
               render={({ field }) => (
                 <FormItem className="col-span-2">
-                  <FormLabelRequired>Ngày tháng năm sinh</FormLabelRequired><br />
+                  <FormLabelRequired>Ngày tháng năm sinh</FormLabelRequired>
                   <FormControl>
                     <Input
                       type="date"
@@ -143,7 +143,6 @@ export default function BasicInfo() {
                         field.onChange(new Date(e.currentTarget.value));
                       }}
                       max={format(new Date(), "yyyy-MM-dd")}
-                      className="w-full p-3"
                     />
                   </FormControl>
                 </FormItem>

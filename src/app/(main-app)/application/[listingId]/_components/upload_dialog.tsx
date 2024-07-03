@@ -1,5 +1,5 @@
 import { AlertDialogContent, AlertDialogTrigger } from "@/components/ui/alert-dialog";
-import { Button } from "@/components/ui/button";
+import { Button, buttonVariants } from "@/components/ui/button";
 import Spinner from "@/components/ui/spinner";
 import { backendAPI } from "@/libs/axios";
 import { AlertDialog } from "@radix-ui/react-alert-dialog";
@@ -34,7 +34,7 @@ export default function UploadDialog({
       const accessToken = session.data?.user.accessToken;
       const sendData = await preUploadApplication(form.getValues(), accessToken!);
       // send POST request to backend
-      const newApplication = (await backendAPI.post("/api/applications", sendData, {
+      const newApplication = (await backendAPI.post("/api/applications/create", sendData, {
         headers: {
           Authorization: `Bearer ${accessToken}`
         }
@@ -80,8 +80,8 @@ export default function UploadDialog({
             <FaCheckCircle size={20} color="green" />
             <h2>Thành công gửi đơn đăng kí </h2>
             <div className="flex flex-row gap-2">
-              <Link href={`/listings/${res.listingId}`}>Quay lại</Link>
-              <Link href={`/manage/applications/application/${res.id}`}>Xem chi tiết</Link>
+              <Link href={`/listings/${res.listingId}`} className={buttonVariants({variant: "outline"})}>Quay lại</Link>
+              <Link href={`/manage/applications/application/${res.id}`}  className={buttonVariants({variant: "default"})}>Xem chi tiết</Link>
             </div>
           </div>
         )}

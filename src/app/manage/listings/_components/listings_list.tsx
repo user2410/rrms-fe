@@ -24,14 +24,14 @@ export default function ListingsList({
   sessionData: Session;
 }) {
   const [sortBy, setSortBy] = useState<string>("created_at");
-  const [order, setOrder] = useState<"asc" | "desc">("asc");
+  const [order, setOrder] = useState<"asc" | "desc">("desc");
   const [offset, setOffset] = useState<number>(0);
 
   const query = useQuery<Data>({
     queryKey: ['manage', 'listings', 'managed', pageSize, offset, sortBy, order, sessionData?.user.accessToken],
     queryFn: async ({ queryKey }) => {
       const params = {
-        fields: "property_id,units,title,price,active,created_at,updated_at,expired_at",
+        fields: "property_id,units,title,price,active,priority,created_at,updated_at,expired_at",
         limit: queryKey.at(3),
         offset: queryKey.at(4),
         sortBy: queryKey.at(5),

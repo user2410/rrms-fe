@@ -1,6 +1,6 @@
 "use client";
 
-import { getListingState, Listing } from "@/models/listing";
+import { getListingState, Listing, listingPriorities } from "@/models/listing";
 import { getPrimaryImage, getPropertyFullAddress, Property } from "@/models/property";
 import { Unit } from "@/models/unit";
 import Image from "next/image";
@@ -8,6 +8,8 @@ import Link from "next/link";
 import { FaClock } from "react-icons/fa";
 import ExpDuration from "./exp_duration";
 import { PropertyTypeBadge } from "@/components/complex/property";
+import { cn } from "@/libs/utils";
+import { Badge } from "@/components/ui/badge";
 
 export default function ListingItem({
   listing,
@@ -19,6 +21,7 @@ export default function ListingItem({
   units: Unit[];
 }) {
   const state = getListingState(listing);
+  const priority = listingPriorities.find(item => item.priority === listing.priority);
 
   return (
     <div className="w-full grid grid-cols-5 border bg-card">
@@ -74,14 +77,15 @@ export default function ListingItem({
             <p className="text-xs font-light">Hết hạn ngày {listing.expiredAt.toLocaleDateString("vi-VN")}</p>
           </div>
           <div className="w-full h-full flex flex-col justify-center items-center gap-2 border">
-            <h5 className="text-center">Lượt xem (30 ngày trước)</h5>
-            <span className="text-sm font-light">96</span>
+            <h5 className="text-center">Mức ưu tiên</h5>
+            <Badge className={cn("text-sm text-white", priority?.bgColor)}>{priority?.label}</Badge>
           </div>
         </div>
         <div className="bg-slate-200 p-2 flex flex-row items-center justify-between">
           <div className="flex flex-row gap-1 items-center">
             <FaClock size={10} />
             <span className="text-xs font-light">Cập nhật {listing.updatedAt.toLocaleString("vi-VN")}</span>
+
           </div>
         </div>
       </div>

@@ -1,12 +1,13 @@
 "use client";
 
 import { useFormContext } from "react-hook-form";
-import { BsFillBuildingsFill, BsFillBriefcaseFill } from "react-icons/bs";
+import { BsFillBriefcaseFill } from "react-icons/bs";
 import { GiCutDiamond } from "react-icons/gi";
 
 import { FormControl, FormField, FormItem, FormLabel, FormMessage } from "@/components/ui/form";
-import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
 import { Input } from "@/components/ui/input";
+import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
+import { FaUser } from "react-icons/fa";
 import { ListingFormValues } from "./page";
 
 export default function Step1() {
@@ -27,9 +28,9 @@ export default function Step1() {
               className="grid w-full grid-cols-3 gap-8 pt-2"
             >
               {[
-                { label: "Chủ nhà", desc: "Đăng tin với vai trò chủ nhà, cho thuê với giá tốt nhất", value: "owner", icon: GiCutDiamond },
-                { label: "Môi giới", desc: "Kiếm hoa hồng cao nhất bằng cách niêm yết tài sản của khách hàng của bạn ở mức giá tốt nhất.", value: "broker", icon: BsFillBriefcaseFill },
-                { label: "Nhà thầu", desc: "Đăng tin với vai trò nhà thầu, đăng tin dự án của bạn và đạt được phạm vi tiếp cận cao nhất.", value: "builder", icon: BsFillBuildingsFill },
+                { label: "Chủ nhà", desc: "Đăng tin với vai trò chủ nhà", value: "owner", icon: GiCutDiamond },
+                { label: "Người quản lý", desc: "Người quản lý nhà cho thuê cùng chủ nhà",value: "manager", icon: FaUser },
+                { label: "Môi giới", desc: "Người môi giới, đại lý đăng tin cho chủ nhà hoặc người quản lý", value: "broker", icon: BsFillBriefcaseFill },
               ].map((item, index) => (
                 <FormItem key={index}>
                   <FormLabel className="[&:has([data-state=checked])>div]:border-primary block h-full">

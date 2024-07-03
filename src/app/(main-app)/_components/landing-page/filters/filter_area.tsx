@@ -38,7 +38,7 @@ export default function AreaFilter({
     if (_max) {
       return `Dưới ${_max} m2`;
     }
-    return "Giá thuê...";
+    return "Diện tích...";
   }, [_min, _max]);
 
   return (

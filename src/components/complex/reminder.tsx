@@ -40,7 +40,7 @@ export default function ReminderComponent() {
       })).data || ([] as Reminder[]);
     },
     enabled: !!accessToken,
-    refetchInterval: 1000 * 60, // 1 minute
+    refetchInterval: 1000 * 60 * 10, // 10 minute
   });
 
   useAlarms(

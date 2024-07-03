@@ -9,7 +9,7 @@ import Loading from "@/components/ui/loading";
 import { backendAPI } from "@/libs/axios";
 import { Application, ManagedApplication, MapRentalIntentionToText, TransformApplicationRESTResponse } from "@/models/application";
 import { Listing } from "@/models/listing";
-import { Property } from "@/models/property";
+import { getPropertyFullAddress, Property } from "@/models/property";
 import { Unit } from "@/models/unit";
 import { GetLocationName } from "@/utils/dghcvn";
 import { useQuery } from "@tanstack/react-query";
@@ -37,7 +37,7 @@ export default function ApplicationPage({ params }: { params: { id: string } }) 
         },
         transformResponse: TransformApplicationRESTResponse,
       })).data;
-      if (application.status === "PENDING") {
+      if (application.status === "PENDING" && application.creatorId !== session.data!.user.user.id) {
         await backendAPI.patch(`/api/applications/application/${application.id}/status`, {
           status: "CONDITIONALLY_APPROVED",
         }, {
@@ -107,13 +107,9 @@ export default function ApplicationPage({ params }: { params: { id: string } }) 
           <MoveLeft className="w-8 h-8" />
         </Button>
         <div className="space-y-2">
-          <h1 className="text-2xl ">{query.data.property.fullAddress}</h1>
+          <h1 className="text-2xl ">{property.name}</h1>
           <h2 className="text-xl">
-            {GetLocationName(
-              property.city,
-              property.district,
-              property.ward ? property.ward : "",
-            )}
+            {getPropertyFullAddress(query.data.property)}
           </h2>
         </div>
       </div>

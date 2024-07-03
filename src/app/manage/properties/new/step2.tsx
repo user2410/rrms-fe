@@ -11,7 +11,7 @@ export default function Step2() {
   const multiUnit = form.watch("property.multiUnit");
 
   return (
-    (["APARTMENT", "ROOM"].includes(propertyType) && !multiUnit) || propertyType === "PRIVATE" ? (() => {
+    (["APARTMENT", "ROOM", "VILLA"].includes(propertyType) && !multiUnit) || propertyType === "PRIVATE" ? (() => {
       if(form.getValues("units").length === 0) {
         form.setValue("units", [{
           name: form.getValues("property.name"),

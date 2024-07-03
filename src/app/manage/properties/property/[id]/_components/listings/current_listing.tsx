@@ -135,11 +135,7 @@ export default function CurrentListing({
         <CardHeader>
           Khách thuê quan tâm
         </CardHeader>
-        <CardContent className="grid grid-cols-3 gap-3">
-          <Enquiries
-            listings={query.isSuccess ? query.data : []}
-            accessToken={session.data!.user.accessToken}
-          />
+        <CardContent>
           <Applications
             listings={query.isSuccess ? query.data : []}
             property={property}

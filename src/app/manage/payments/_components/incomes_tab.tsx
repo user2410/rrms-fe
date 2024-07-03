@@ -60,7 +60,7 @@ export default function IncomesTab({
     queryKey: ["manage", "payments", "incomes", pendingPaginationState, pendingPaginationState, sessionData.user.accessToken],
     queryFn: async ({queryKey}) => {
       const pagination = queryKey.at(2) as PaginationState;
-      const pendingPayments = (await backendAPI.get<RentalPaymentItem[]>("/api/rental-payments/managed-payments", {
+      const pendingPayments = (await backendAPI.get<RentalPayment[]>("/api/rental-payments/managed-payments", {
         params: {
           limit: pagination.pageSize,
           offset: pagination.pageIndex,
@@ -70,7 +70,65 @@ export default function IncomesTab({
           Authorization: `Bearer ${queryKey.at(-1)}`,
         }
       })).data || ([]);
-      return transformResult(pendingPayments);
+
+      const rids = new Set<number>();
+      pendingPayments.forEach((payment) => rids.add(payment.rentalId));
+      // Promise all to get rentals
+      const rPromises = [...rids].map((id) => (backendAPI.get<Rental>(`/api/rentals/rental/${id}`, {
+        headers: {
+          Authorization: `Bearer ${queryKey.at(-1)}`,
+        }
+      })));
+      const rentals = (await Promise.all(rPromises)).map((res) => res.data);
+      
+      const propIds = new Set<string>();
+      rentals.forEach((rental) => propIds.add(rental.propertyId));
+      const properties = (await backendAPI.get<Property[]>("/api/properties/ids", {
+        params: {
+          fields: "name,city,district,ward,managers",
+          propIds: [...propIds],
+        },
+        headers: {
+          Authorization: `Bearer ${queryKey.at(-1)}`,
+        }
+      })).data || ([]);
+
+      const unitIds = new Set<string>();
+      rentals.forEach((rental) => unitIds.add(rental.unitId));
+      const units = (await backendAPI.get<Unit[]>("/api/units/ids", {
+        params: {
+          fields: "name",
+          unitIds: [...unitIds],
+        },
+        headers: {
+          Authorization: `Bearer ${queryKey.at(-1)}`,
+        }
+      })).data || ([]);
+
+      // assemble the result
+      return pendingPayments.map((payment) => {
+        const rental = rentals.find((r) => r.id === payment.rentalId)!;
+        const property = properties.find((p) => p.id === rental.propertyId);
+        const unit = units.find((u) => u.id === rental.unitId);
+        return {
+          payment: {
+            ...payment,
+            startDate: new Date(payment.startDate),
+            endDate: new Date(payment.endDate),
+            paymentDate: payment.paymentDate ? new Date(payment.paymentDate) : undefined,
+            expiryDate: payment.expiryDate ? new Date(payment.expiryDate) : undefined,
+          },
+          rental: {
+            ...rental,
+            startDate: new Date(rental.startDate),
+            moveinDate: new Date(rental.moveinDate),
+            createdAt: new Date(rental.createdAt),
+            updatedAt: new Date(rental.updatedAt),
+          },
+          property,
+          unit,
+        } as RentalPaymentItem;
+      });
     },
     staleTime: 1000 * 60 * 5,
     cacheTime: 1000 * 60 * 5,
@@ -80,7 +138,7 @@ export default function IncomesTab({
     queryKey: ["manage", "payments", "incomes", finishedPaginationState, sessionData.user.accessToken],
     queryFn: async ({queryKey}) => {
       const pagination = queryKey.at(2) as PaginationState;
-      const finishedPayments = (await backendAPI.get<RentalPaymentItem[]>("/api/rental-payments/managed-payments", {
+      const finishedPayments = (await backendAPI.get<RentalPayment[]>("/api/rental-payments/managed-payments", {
         params: {
           limit: pagination.pageSize,
           offset: pagination.pageIndex,
@@ -90,7 +148,65 @@ export default function IncomesTab({
           Authorization: `Bearer ${queryKey.at(-1)}`,
         }
       })).data || ([]);
-      return transformResult(finishedPayments);
+
+      const rids = new Set<number>();
+      finishedPayments.forEach((payment) => rids.add(payment.rentalId));
+      // Promise all to get rentals
+      const rPromises = [...rids].map((id) => (backendAPI.get<Rental>(`/api/rentals/rental/${id}`, {
+        headers: {
+          Authorization: `Bearer ${queryKey.at(-1)}`,
+        }
+      })));
+      const rentals = (await Promise.all(rPromises)).map((res) => res.data);
+      
+      const propIds = new Set<string>();
+      rentals.forEach((rental) => propIds.add(rental.propertyId));
+      const properties = (await backendAPI.get<Property[]>("/api/properties/ids", {
+        params: {
+          fields: "name,city,district,ward,managers",
+          propIds: [...propIds],
+        },
+        headers: {
+          Authorization: `Bearer ${queryKey.at(-1)}`,
+        }
+      })).data || ([]);
+
+      const unitIds = new Set<string>();
+      rentals.forEach((rental) => unitIds.add(rental.unitId));
+      const units = (await backendAPI.get<Unit[]>("/api/units/ids", {
+        params: {
+          fields: "name",
+          unitIds: [...unitIds],
+        },
+        headers: {
+          Authorization: `Bearer ${queryKey.at(-1)}`,
+        }
+      })).data || ([]);
+
+      // assemble the result
+      return finishedPayments.map((payment) => {
+        const rental = rentals.find((r) => r.id === payment.rentalId)!;
+        const property = properties.find((p) => p.id === rental.propertyId);
+        const unit = units.find((u) => u.id === rental.unitId);
+        return {
+          payment: {
+            ...payment,
+            startDate: new Date(payment.startDate),
+            endDate: new Date(payment.endDate),
+            paymentDate: payment.paymentDate ? new Date(payment.paymentDate) : undefined,
+            expiryDate: payment.expiryDate ? new Date(payment.expiryDate) : undefined,
+          },
+          rental: {
+            ...rental,
+            startDate: new Date(rental.startDate),
+            moveinDate: new Date(rental.moveinDate),
+            createdAt: new Date(rental.createdAt),
+            updatedAt: new Date(rental.updatedAt),
+          },
+          property,
+          unit,
+        } as RentalPaymentItem;
+      });
     },
     staleTime: 1000 * 60 * 5,
     cacheTime: 1000 * 60 * 5,

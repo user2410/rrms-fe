@@ -27,7 +27,7 @@ export default function AdminPage() {
 
   if (session.status === "authenticated") {
     if (session.data.user.user.role === "ADMIN") {
-      router.replace("/admin/dashboard");
+      router.replace("/admin/dashboard/properties/verification");
     } else {
       router.replace("/");
     }
@@ -50,11 +50,11 @@ export default function AdminPage() {
         toast.error("Invalid credential");
       } else if (cb?.ok) {
         toast.success(`Logged in as ${values.email}!`);
-        router.replace("/admin/dashboard");
+        router.replace("/admin/dashboard/properties/verification");
       }
     } catch (err) {
       console.error(err);
-      toast.error("Something went wrong");
+      toast.error("Đã có lỗi xảy ra");
     } finally {
       form.reset();
     }

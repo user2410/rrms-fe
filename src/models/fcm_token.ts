@@ -20,7 +20,7 @@ export type FCMForegroundPayload = {
 export type FCMBackgroundPayload = {
   from: string;
   priority: string;
-  data: object; // custom metadata
+  data: any; // custom metadata
   notification: {
     body:  string;
     title: string;

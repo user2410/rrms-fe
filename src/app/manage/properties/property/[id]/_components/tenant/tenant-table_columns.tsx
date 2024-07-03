@@ -3,7 +3,7 @@ import UnitDialog from "@/components/complex/unit_dialog";
 import { ColumnDef } from "@tanstack/react-table";
 import { addMonths } from "date-fns";
 import { RentalExtended } from "../tenants";
-import { DataTableRowActions } from "./datatable_actions";
+import Link from "next/link";
 
 export const tenantTColumns: ColumnDef<RentalExtended>[] = [
   {
@@ -37,6 +37,10 @@ export const tenantTColumns: ColumnDef<RentalExtended>[] = [
   },
   {
     id: "action",
-    cell: ({ row }) => <DataTableRowActions row={row} />,
+    cell: ({ row }) => {
+      return (
+        <Link href={`/manage/rentals/rental/${row.original.id}`}>Xem chi tiết</Link>
+      );
+    },
   },
 ];

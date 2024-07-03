@@ -30,9 +30,9 @@ export default function ApplicationList({
 }) {
   console.log("applications", applications);
   const query = useQuery<PreviewApplication[]>({
-    queryKey: ["manage", "rentals", "applications", listName, JSON.stringify(applications)],
+    queryKey: ["manage", "rentals", "applications", listName, applications],
     queryFn: async ({ queryKey }) => {
-      const applications = JSON.parse(queryKey.at(4) as string);
+      const applications = queryKey.at(4) as FetchedApplication[];
       const listingIds = applications.map((item: FetchedApplication) => item.listingId);
       const propIds = applications.map((item: FetchedApplication) => item.propertyId);
       const unitIds = _.uniq(applications.map((item: FetchedApplication) => item.unitId).flat());

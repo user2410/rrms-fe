@@ -24,7 +24,7 @@ export default function ApplicationItem({
     <Link href={`/manage/applications/application/${application.id}`} className="block p-4 space-y-3 bg-card border">
       <div className="flex flex-row justify-between">
         <span className="text-xl font-semibold">{application.fullName}</span>
-        <span className="text-sm font-light">Submitted at {createdAt.toLocaleDateString("vi-VN")} @{createdAt.toLocaleTimeString()}</span>
+        <span className="text-sm font-light">Được gửi ngày {createdAt.toLocaleDateString("vi-VN")} @{createdAt.toLocaleTimeString()}</span>
       </div>
       <div className="flex flex-row gap-2">
         <div>Ngày chuyển tới dự kiến: {moveinDate.toLocaleDateString("vi-VN")}</div>

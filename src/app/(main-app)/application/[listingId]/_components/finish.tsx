@@ -9,6 +9,7 @@ import { useFormContext } from "react-hook-form";
 import { FaUserShield } from "react-icons/fa";
 import { ApplicationForm } from "./main_form";
 import UploadDialog from "./upload_dialog";
+import Link from "next/link";
 
 const TermsAgreement = () => {
   const form = useFormContext<ApplicationForm>();
@@ -22,7 +23,7 @@ const TermsAgreement = () => {
     <Fragment>
       <UploadDialog
         form={form}
-        open={openUploadDialog} 
+        open={openUploadDialog}
         changeOpen={() => setOpenUploadDialog(v => !v)}
       />
       <div className="flex items-center space-x-2">
@@ -57,8 +58,8 @@ const TermsAgreement = () => {
       </div>
 
       <div className="flex flex-row w-full justify-center">
-        <Button type="submit" className="w-2/5" 
-          disabled={!(termsAgreed && commitAgreed)} 
+        <Button type="submit" className="w-2/5"
+          disabled={!(termsAgreed && commitAgreed)}
           onClick={() => {
             console.log("submitting");
             setOpenUploadDialog(true);
@@ -73,15 +74,14 @@ export default function Finish() {
   return (
     <Card>
       <CardHeader>
-        <CardTitle className="text-3xl">Đơn ứng tuyển của bạn đã hoàn thành</CardTitle>
+        <CardTitle className="text-2xl">Đơn ứng tuyển của bạn đã hoàn thành</CardTitle>
       </CardHeader>
       <CardContent className="space-y-4">
         {/* <p>Đơn đăng ký của bạn bao gồm các báo cáo tín dụng, tiền án. Bạn cần xác minh danh tính của mình và trả lời một số câu hỏi bảo mật.</p> */}
-        <p>Nếu bạn nộp đơn cùng với người khác, đơn đăng ký của bạn sẽ được nộp cho chủ nhà khi tất cả người nộp đơn đã hoàn tất. Nếu họ quyết định cho bạn thuê, bạn sẽ được thông báo qua email. Trong thời gian chờ đợi, bạn có thể tiếp tục đăng ký thuê trên RRMS trong 30 ngày tới.</p>
-        <p>Bạn có thể xem trạng thái ứng tuyển thuê nhà trong dashboard của bạn.</p>
-        <Card>
+        <p>Nếu chủ nhà quyết định cho bạn thuê, bạn sẽ được thông báo qua email. Trong thời gian chờ đợi, bạn có thể tiếp tục ứng tuyển thuê nhà tại vào các nhà cho thuê được đăng tin trên RRMS. Bạn có thể theo dõi hồ sơ của mình tại <Link href="/manage/applications/my-applications" className="underline text-blue-600">trang quản lý</Link>.</p>
+        {/* <Card>
           <CardHeader>
-            <CardTitle className="flex flex-row items-center gap-2 my-2">
+            <CardTitle className="flex flex-row items-center gap-2 my-2 text-lg">
               <FaUserShield size={16} color="green" />
               <span>Thông tin của bạn được bảo mật</span>
             </CardTitle>
@@ -93,20 +93,48 @@ export default function Finish() {
               </ul>
             </CardContent>
           </CardHeader>
-        </Card>
+        </Card> */}
 
         <Separator />
 
-        <CardTitle>Điều khoản</CardTitle>
+        <CardTitle className="text-lg">Điều Khoản và Cam Kết Bảo Mật Thông Tin Khách Thuê - RRMS</CardTitle>
         <ScrollArea className="w-full h-72 rounded-sm border">
-          <div className="p-4 text-sm font-light">
-            <p>Chào mừng đến với RRMS.</p>
-            <p>Sau khi chấp thuận những điều khoản này, bạn sẽ được yêu cầu xác thực danh tính (sử dụng những thông tin từ hồ sơ công khai và thông tin tín dụng liên quan để xác thực những thông tin bạn đã cung cấp (ví dụ: Số an sinh xã hội, Ngày tháng năm sinh))</p>
-            <h2 className="font-semibold text-lg">Introduction and Agreement</h2>
-            <p>These Terms of Service apply to the services offered by CoStar Realty Information, Inc. (“Apartments.com”) in connection with the Apartments.com, Apartamentos.com and ApartmentHomeLiving.com websites and related mobile applications, as well as any publicly available versions that may be offered through a distribution partner (collectively the “Site”). You may have arrived at a version of the Site from a distribution partners website, in which case, that partner, if any, will be identified at the top of this page. Any individual who visits, views, accesses or uses any version of the Site, including through a bot or other automated means, (“You” or “User”) is bound by these Terms of Service. By using the Site, You represent and warrant that You are at least eighteen (18) years of age and You hereby agree to be bound by all of the following provisions of these Terms of Service, which form a legally binding contract between You and Apartments.com. You further represent and warrant that You are not a competitor of Apartments.com or any of its affiliates. If You do not agree to these Terms of Service, You are prohibited from accessing the Site and must immediately discontinue such access.
-            </p>
-            <h2 className="font-semibold text-lg">Apartments.com is an Advertising and Information Service</h2>
-            <p>The Site is an online advertising, searching and information service for apartment hunters, dwellers, landlords, and property managers. Apartments.com does not (a) broker, lease, or sublease or offer to broker, lease or sublease, or own apartments directly and is not a party to any transaction between landlords (including, as applicable, property management companies and/or property managers) and renters, (b) guarantee or ensure any apartment or any transaction between a renter and landlord, (c) conduct background screening on rental candidates, execute any lease or sublease documentation on behalf of renters or landlords or collect payment on behalf of renters or landlords, or (d) act as a property manager, broker, payment processor, money transmitter, payment manager, debt collector, or credit reporting agency, and does not guarantee any results from using the Service. The Site facilitates certain services provided by third parties, including, without limitation, background screening and payment collection and processing. You may be subject to additional third party terms and conditions for such services, which will be provided to you for review and acceptance, if applicable, at the time of use of such services. You are strongly encouraged to personally inspect any apartment advertised for rent prior to: signing any lease documentation; providing personal information such as a social security number on a lease application; or wiring or otherwise sending money for any deposit, rent payment or application fee. By using the Site, You acknowledge that published rents and availabilities are subject to change at the sole discretion of the property owner or manager at any time and without further notice.</p>
+          <div className="p-4">
+            <h2 className="text-xl font-semibold my-3">Điều Khoản và Cam Kết Bảo Mật Thông Tin Khách Thuê - RRMS</h2>
+
+            <Separator className="my-2"/>
+
+            <h3 className="text-lg font-semibold">1. Mục đích và phạm vi thu thập thông tin</h3>
+            <p>RRMS cam kết chỉ thu thập các thông tin cá nhân cần thiết để thực hiện chức năng ứng tuyển thuê nhà, bao gồm họ tên, thông tin liên lạc, việc làm, thu nhập và các thông tin khác liên quan. Thông tin này được sử dụng để xác thực danh tính người thuê, đánh giá khả năng thanh toán và duy trì liên lạc trong quá trình thuê nhà.</p>
+
+            <h3 className="text-lg font-semibold">2. Phương thức thu thập thông tin</h3>
+            <p>Thông tin cá nhân của khách thuê sẽ được thu thập thông qua các biểu mẫu điện tử trên hệ thống RRMS. Chúng tôi đảm bảo rằng quy trình thu thập thông tin tuân thủ các quy định pháp luật hiện hành về bảo mật và quyền riêng tư.</p>
+
+            <h3 className="text-lg font-semibold">3. Mục đích sử dụng thông tin</h3>
+            <ul>
+              <li>Xác thực danh tính và liên lạc: Sử dụng thông tin để xác thực người thuê và liên lạc trong quá trình ứng tuyển và thuê nhà.</li>
+              <li>Đánh giá khả năng thanh toán: Thông tin về việc làm và thu nhập sẽ giúp chủ nhà đánh giá khả năng thanh toán của người thuê.</li>
+              <li>Quản lý hợp đồng và bảo trì: Thông tin cá nhân sẽ được sử dụng để quản lý hợp đồng thuê nhà và xử lý các yêu cầu bảo trì.</li>
+            </ul>
+
+            <h3 className="text-lg font-semibold">4. Bảo mật thông tin cá nhân</h3>
+            <p>RRMS cam kết bảo mật tuyệt đối thông tin cá nhân của khách thuê bằng các biện pháp kỹ thuật và quản lý hiện đại nhất. Thông tin cá nhân sẽ được lưu trữ an toàn trên hệ thống và chỉ được truy cập bởi các nhân viên có thẩm quyền.</p>
+
+            <h3 className="text-lg font-semibold">5. Quyền của người thuê nhà</h3>
+            <p>Người thuê nhà có quyền truy cập, chỉnh sửa và xóa bỏ thông tin cá nhân của mình trên hệ thống RRMS. Mọi yêu cầu về việc này có thể được gửi qua các kênh liên lạc chính thức của chúng tôi và sẽ được xử lý trong thời gian sớm nhất.</p>
+
+            <h3 className="text-lg font-semibold">6. Chia sẻ thông tin với bên thứ ba</h3>
+            <p>RRMS cam kết không chia sẻ thông tin cá nhân của khách thuê với bất kỳ bên thứ ba nào nếu không có sự đồng ý của khách thuê, trừ các trường hợp theo yêu cầu của cơ quan chức năng có thẩm quyền.</p>
+
+            <h3 className="text-lg font-semibold">7. Thời gian lưu trữ thông tin</h3>
+            <p>Thông tin cá nhân của khách thuê sẽ được lưu trữ trong suốt thời gian thuê nhà và một khoảng thời gian nhất định sau khi kết thúc hợp đồng thuê để giải quyết các vấn đề hậu kỳ, sau đó sẽ được xóa bỏ theo quy định của RRMS.</p>
+
+            <h3 className="text-lg font-semibold">8. Cam kết bảo mật</h3>
+            <p>RRMS cam kết tuân thủ các quy định về bảo mật thông tin cá nhân và thực hiện các biện pháp cần thiết để bảo vệ thông tin của khách thuê trước các nguy cơ mất mát, lạm dụng hoặc truy cập trái phép.</p>
+
+            <Separator className="my-2"/>
+
+            <p>RRMS luôn nỗ lực để bảo vệ quyền riêng tư của khách thuê và đảm bảo rằng thông tin cá nhân của bạn được xử lý một cách an toàn và bảo mật. Mọi câu hỏi hoặc yêu cầu liên quan đến chính sách bảo mật có thể được gửi tới bộ phận hỗ trợ khách hàng của chúng tôi.</p>
           </div>
         </ScrollArea>
 

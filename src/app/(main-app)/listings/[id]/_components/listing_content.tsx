@@ -45,10 +45,10 @@ export default function ListingContent({
               </Badge>
             )}
             <h3 className="font-normal">{getPropertyFullAddress(property)}</h3>
-            <h4 className="font-light text-sm">Đăng lúc {format(new Date(2014, 1, 11), 'hh:mm dd/MM/yyyy')}</h4>
+            <h4 className="font-light text-sm">Đăng lúc {format(new Date(listing.createdAt || new Date()), 'hh:mm dd/MM/yyyy')}</h4>
           </div>
           <Separator />
-          <GeneralInfo listingDetail={{ listing, property, units }} />
+          <GeneralInfo listingDetail={{ listing, property, units }} preview={preview}/>
           <Separator />
           <div>
             <h2 className="font-semibold text-xl mb-2">Thông tin mô tả</h2>
@@ -57,7 +57,7 @@ export default function ListingContent({
           <Separator />
           <ListingDetails listingDetail={{ listing, property, units }} />
           <Separator />
-          <UnitsList listingDetail={{ listing, property, units }} />
+          <UnitsList listingDetail={{ listing, property, units }} preview={preview}/>
           {listing.policies && listing.policies.length > 0 && (
             <>
               <Separator />

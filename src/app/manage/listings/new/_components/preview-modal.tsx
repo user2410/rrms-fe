@@ -1,5 +1,6 @@
 import ListingContent from "@/app/(main-app)/listings/[id]/_components/listing_content";
 import { ListingFormValues } from "@/app/manage/listings/new/page";
+import { ScrollArea } from "@/components/ui/scroll-area";
 import { UseFormReturn } from "react-hook-form";
 
 export default function PreviewModal({
@@ -23,13 +24,13 @@ export default function PreviewModal({
   };
   
   return (
-    <div className="w-full md:w-[720px] lg:w-[920px] xl:w-[1000px] 2xl:w-[1200px] relative">
+    <ScrollArea className="w-full md:w-[720px] lg:w-[920px] xl:w-[1000px] 2xl:w-[1200px] h-[80vh]">
       <ListingContent
         listing={listing as any}
         property={property}
         units={units}
         preview={true}
       />
-    </div>
+    </ScrollArea>
   );
 }

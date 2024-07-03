@@ -10,6 +10,7 @@ import { DisplayFileSize } from "@/utils/file";
 import { useRef } from "react";
 import { useFieldArray, useFormContext } from "react-hook-form";
 import { ApplicationForm } from "./main_form";
+import FieldMoneyDescription from "@/components/complex/field-money_desc";
 
 export default function Employment() {
   const form = useFormContext<ApplicationForm>();
@@ -78,6 +79,7 @@ export default function Employment() {
                 <FormControl>
                   <Input type="number" {...field} onChange={(e) => field.onChange(e.currentTarget.valueAsNumber)} />
                 </FormControl>
+                <FieldMoneyDescription value={field.value}/>
               </FormItem>
             )}
           />

@@ -19,54 +19,55 @@ export default function SummaryBasicInfo() {
     <div className="space-y-6 px-2">
       <table className="w-full text-sm text-left text-gray-500 dark:text-gray-400">
         <tbody>
-          {Object.entries(property).map(([key, value], index) =>
-            (!['name', 'type', 'media', 'features', 'tags', 'lat', 'lng', 'multiUnit', 'primaryImage'].includes(key))
-              ? (
-                <tr className="bg-white border-b dark:bg-gray-800 dark:border-gray-700" key={index}>
-                  <th scope="row" className="px-6 py-4 font-medium text-gray-900 whitespace-nowrap dark:text-white">
-                    {
-                      key === "area" ? "Diện tích" :
-                      key === "numberOfFloors" ? "Số tầng" :
-                      key === "fullAddress" ? "Địa chỉ" :
-                      key === "city" ? "Tỉnh / Thành phố" :
-                      key === "district" ? "Quận / huyện" :
-                      key === "ward" ? "Phường / xã" :
-                      key === "orientation" ? "Hướng nhà" :
-                      key === "yearBuilt" ? "Năm xây dựng" :
-                      key === "description" ? "Mô tả" :
-                      key === "entranceWidth" ? "Lỗi vào" :
-                      key === "facade" ? "Mặt tiền" :
-                      null
-                    }
-                  </th>
-                  <td className="px-6 py-4">
-                    {
-                    key === "area" ?  (value ? (<span>m<sup>2</sup></span>) : "N/A") :
-                    key === "numberOfFloors" ? (value ? `${value} tầng` : "N/A") :
-                    key === "fullAddress" ? value.toString() :
-                    key === "city" ? (city ? city.name : 'N/A') :
-                    key === "district" ? (district ? district.name : 'N/A') :
-                    key === "ward" ? (ward ? ward.name : 'N/A') :
-                    key === "yearBuilt" ? (!value ? 'N/A' : value.toString()) :
-                    key === "description" ? (!value ? 'N/A' : <div dangerouslySetInnerHTML={{__html: value}} />) :
-                    key === "entranceWidth" ? (!value ? 'N/A' : value.toString()) :
-                    key === "facade" ? (!value ? 'N/A' : (<span>{value.toString()}m<sup>2</sup></span>)) :
-                    key === "orientation" ? (!value ? 'N/A' : (
-                      value === "ne" ? "Đông Bắc" :
-                      value === "nw" ? "Tây Bắc" :
-                      value === "se" ? "Đông Nam" :
-                      value === "sw" ? "Tây Nam" :
-                      value === "n" ? "Bắc" :
-                      value === "s" ? "Nam" :
-                      value === "e" ? "Đông" :
-                      value === "w" ? "Tây" :
-                      null
-                    )) : null
-                    }
-                  </td>
-                </tr>
-              ) : null
-          )}
+        {Object.entries(property).map(([key, value], index) =>
+  (!['name', 'type', 'media', 'features', 'tags', 'lat', 'lng', 'multiUnit', 'primaryImage'].includes(key) && value !== null && value !== undefined && value !== "")
+    ? (
+      <tr className="bg-white border-b dark:bg-gray-800 dark:border-gray-700" key={index}>
+        <th scope="row" className="px-6 py-4 font-medium text-gray-900 whitespace-nowrap dark:text-white">
+          {
+            key === "area" ? "Diện tích" :
+            key === "numberOfFloors" ? "Số tầng" :
+            key === "fullAddress" ? "Địa chỉ" :
+            key === "city" ? "Tỉnh / Thành phố" :
+            key === "district" ? "Quận / huyện" :
+            key === "ward" ? "Phường / xã" :
+            key === "orientation" ? "Hướng nhà" :
+            key === "yearBuilt" ? "Năm xây dựng" :
+            key === "description" ? "Mô tả" :
+            key === "entranceWidth" ? "Lối vào" :
+            key === "facade" ? "Mặt tiền" :
+            null
+          }
+        </th>
+        <td className="px-6 py-4">
+          {
+            key === "area" ? (value ? (<span>{value.toString()} m<sup>2</sup></span>) : "N/A") :
+            key === "numberOfFloors" ? (value ? `${value} tầng` : "N/A") :
+            key === "fullAddress" ? value.toString() :
+            key === "city" ? (city ? city.name : 'N/A') :
+            key === "district" ? (district ? district.name : 'N/A') :
+            key === "ward" ? (ward ? ward.name : 'N/A') :
+            key === "yearBuilt" ? (!value ? 'N/A' : value.toString()) :
+            key === "description" ? (!value ? 'N/A' : <div dangerouslySetInnerHTML={{ __html: value }} />) :
+            key === "entranceWidth" ? (!value ? 'N/A' : value.toString()) :
+            key === "facade" ? (!value ? 'N/A' : (<span>{value.toString()} m<sup>2</sup></span>)) :
+            key === "orientation" ? (!value ? 'N/A' : (
+              value === "ne" ? "Đông Bắc" :
+              value === "nw" ? "Tây Bắc" :
+              value === "se" ? "Đông Nam" :
+              value === "sw" ? "Tây Nam" :
+              value === "n" ? "Bắc" :
+              value === "s" ? "Nam" :
+              value === "e" ? "Đông" :
+              value === "w" ? "Tây" :
+              null
+            )) : null
+          }
+        </td>
+      </tr>
+    ) : null
+)}
+
         </tbody>
       </table>
       <div className="w-full">

@@ -7,6 +7,7 @@ import { useFormContext } from "react-hook-form";
 import { ListingFormValues } from "../page";
 import { useState } from "react";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
+import FieldMoneyDescription from "@/components/complex/field-money_desc";
 
 export default function Step3Price() {
   const [hasDeposit, setHasDeposit] = useState(false);
@@ -49,7 +50,7 @@ export default function Step3Price() {
                             }}
                           />
                         </FormControl>
-                        <FormLabel>Giá thuê {field2.value.toLocaleString('vi-VN', { style: 'currency', currency: 'VND' })} ({(field2.value/property.area).toLocaleString('vi-VN', { style: 'currency', currency: 'VND' })}/m<sup>2</sup>/tháng)</FormLabel>
+                        <FormLabel>{field2.value.toLocaleString('vi-VN', { style: 'currency', currency: 'VND' })} /tháng</FormLabel>
                         <FormMessage />
                       </FormItem>
                     )}
@@ -91,6 +92,7 @@ export default function Step3Price() {
                         onChange={(e) => field2.onChange(e.target.valueAsNumber)}
                       />
                     </FormControl>
+                    <FieldMoneyDescription value={field2.value} />
                     <FormMessage />
                   </FormItem>
                 )}

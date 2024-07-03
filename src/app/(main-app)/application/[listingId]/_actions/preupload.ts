@@ -22,7 +22,7 @@ export default async function preUploadApplication(
       Authorization: `Bearer ${accessToken}`,
     }
   })).data;
-  const newUrl = await uploadFileWithPresignedURL(pi, newPI.url);
+  const newUrl = await uploadFileWithPresignedURL(pi, newPI.avatar.url);
 
   const sendData = {
     ..._data.ao,

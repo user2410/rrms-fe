@@ -1,5 +1,5 @@
 import { AlertDialog, AlertDialogContent, AlertDialogTrigger } from "@/components/ui/alert-dialog";
-import { Button } from "@/components/ui/button";
+import { Button, buttonVariants } from "@/components/ui/button";
 import Spinner from "@/components/ui/spinner";
 import { backendAPI } from "@/libs/axios";
 import { Listing } from "@/models/listing";
@@ -79,7 +79,7 @@ export default function UploadDialog({
       <AlertDialogContent>
         {stage === "CONFIRMATION" && (
           <div className="w-full flex flex-col items-center justify-center gap-2">
-            <p className="text-gray-500">Đồng ý tạo tin đăng <strong>{form.getValues("listing.title")}</strong></p>
+            <p className="text-gray-500 text-center">Đồng ý tạo tin đăng <br/> <strong>{form.getValues("listing.title")}</strong></p>
             <div className="flex flex-row items-center gap-2 mt-4">
               <Button onClick={changeOpen}>Quay lại</Button>
               <Button onClick={handleUpload}>Đồng ý</Button>
@@ -99,8 +99,8 @@ export default function UploadDialog({
             <h2>Tin đăng của bạn đã được ghi nhận</h2>
             <p className="text-sm font-light">Thanh toán ngay để tin đăng được hiển thị</p>
             <div className="flex flex-row items-center gap-2">
-              <Link href={`/manage/listings/listing/${res!.listing.id}`}>Tin đăng</Link>
-              <Link target="_blank" href={`/manage/payments/payment/${res!.payment.id}`}>Thanh toán tin đăng</Link>
+              <Link href={`/manage/listings/listing/${res!.listing.id}`} className={buttonVariants({variant: "outline"})}>Xem tin đăng</Link>
+              <Link target="_blank" href={`/manage/payments/payment/${res!.payment.id}`} className={buttonVariants({variant: "default"})}>Thanh toán tin đăng</Link>
             </div>
           </div>
         )}

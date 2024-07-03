@@ -2,13 +2,14 @@
 
 import { CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Table, TableBody, TableCell, TableFooter, TableHead, TableHeader, TableRow } from "@/components/ui/table";
-import { Fragment, useState } from "react";
+import { Fragment } from "react";
 import { ListingDetail } from "../page";
 import { Input } from "@/components/ui/input";
 import { FormControl, FormField, FormItem, FormLabel } from "@/components/ui/form";
 import { useFormContext } from "react-hook-form";
 import { ApplicationForm } from "./main_form";
 import { Checkbox } from "@/components/ui/checkbox";
+import FieldMoneyDescription from "@/components/complex/field-money_desc";
 
 export default function SelectedUnits({
   data
@@ -79,6 +80,7 @@ export default function SelectedUnits({
                             onChange={(e) => field.onChange(e.target.valueAsNumber)}
                           />
                         </FormControl>
+                        <FieldMoneyDescription value={field.value}/>
                       </FormItem>
                     )}
                   />

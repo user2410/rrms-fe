@@ -152,7 +152,7 @@ export default function Pets({
           {parentForm.watch("ao.pets").map((field, index) => (
             <div key={index} className="border flex flex-row justify-between py-2">
               <div className="space-y-2 px-4">
-                <div className="text-lg font-semibold">{field.type}</div>
+                <div className="text-lg font-semibold">{field.type === "other" ? "Thú nuôi khác" : field.type === "dog" ? "Chó" : "Mèo"}</div>
                 <div className="text-md font-normal flex flex-row items-center gap-2">
                   <FaWeight size={16} />
                   <span>{field.weight} kg</span>

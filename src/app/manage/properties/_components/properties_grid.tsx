@@ -28,7 +28,7 @@ export default function PropertiesGrid({
   sessionData: Session;
 }) {
   const [sortBy, setSortBy] = useState<string>("created_at");
-  const [order, setOrder] = useState<"asc" | "desc">("asc");
+  const [order, setOrder] = useState<"asc" | "desc">("desc");
   const [offset, setOffset] = useState<number>(0);
 
 

@@ -1,10 +1,11 @@
 import { AlertDialog, AlertDialogContent, AlertDialogDescription, AlertDialogHeader, AlertDialogTitle, AlertDialogTrigger } from "@/components/ui/alert-dialog";
-import { Button } from "@/components/ui/button";
+import { Button, buttonVariants } from "@/components/ui/button";
 import { Separator } from "@/components/ui/separator";
 import Spinner from "@/components/ui/spinner";
 import { backendAPI } from "@/libs/axios";
 import { ManagedApplication } from "@/models/application";
 import { Session } from "next-auth";
+import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useEffect, useRef, useState } from "react";
 import { FaCheckCircle } from "react-icons/fa";
@@ -93,13 +94,13 @@ export default function AcceptDiaglog({
                   <li>Quản lý quá trình cho thuê</li>
                 </ol>
                 <div className="space-y-2">
-                  <Button 
-                    variant="default"
-                    onClick={handleCreateRental}
+                  <Button variant="link" onClick={() => triggerBtnRef.current?.click()}>Tôi sẽ xem xét sau</Button>
+                  <Link 
+                    href={`/manage/rentals/new/?applicationId=${application.id}&propertyId=${property.id}&unitId=${unit.id}`}
+                    className={buttonVariants({variant: "default"})}
                   >
                     Thiết đặt
-                  </Button>
-                  <Button variant="link" onClick={() => triggerBtnRef.current?.click()}>Tôi sẽ xem xét sau</Button>
+                  </Link>
                 </div>
               </div>
             </>

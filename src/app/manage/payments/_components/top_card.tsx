@@ -24,7 +24,7 @@ export default function TopCard({
   const query = useQuery<Data>({
     queryKey: ["manage", "payments", sessionData.user.accessToken],
     queryFn: async ({ queryKey }) => {
-      const incomes = (await backendAPI.get("/api/statistics/rentals/payments/incomes", {
+      const incomes = (await backendAPI.get("/api/statistics/manager/rentals/payments/incomes", {
         params: {
           // start time is the first day of the current month
           startTime: new Date(0),
@@ -34,7 +34,7 @@ export default function TopCard({
           Authorization: `Bearer ${queryKey.at(-1)}`,
         }
       })).data || ([]);
-      const payments = (await backendAPI.get("/api/statistics/payments", {
+      const payments = (await backendAPI.get("/api/statistics/manager/payments", {
         params: {
           // start time is the first day of the current month
           startTime: new Date(0),

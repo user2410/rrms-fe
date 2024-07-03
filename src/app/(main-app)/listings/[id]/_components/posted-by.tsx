@@ -28,6 +28,7 @@ export default function PostedBy({
         },
       })).data;
     },
+    enabled: !preview,
     staleTime: 1000 * 60 * 60,
     cacheTime: 1000 * 60 * 60,
   });

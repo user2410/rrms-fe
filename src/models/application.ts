@@ -103,7 +103,7 @@ export const MapRentalIntentionToText = {
 export const MapEmploymentStatusToText = {
   "EMPLOYED": "Đang làm việc",
   "UNEMPLOYED": "Không có việc làm",
-  "SELF_EMPLOYED": "Tự kinh doanh",
+  "SELF-EMPLOYED": "Tự kinh doanh",
   "RETIRED": "Đã nghỉ hưu",
   "STUDENT": "Sinh viên",
 };

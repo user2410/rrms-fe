@@ -17,11 +17,21 @@ import 'lightgallery/css/lightgallery.css';
 import lgThumbnail from 'lightgallery/plugins/thumbnail';
 import lgZoom from 'lightgallery/plugins/zoom';
 import { useSession } from "next-auth/react";
+import { useQuery } from "@tanstack/react-query";
+import { backendAPI } from "@/libs/axios";
+import Spinner from "@/components/ui/spinner";
+
+type DataItem = {
+  unitId: string;
+  tenantsCount: number;
+};
 
 export default function UnitsList({
   listingDetail,
+  preview = false,
 }: {
   listingDetail: ListingDetail;
+  preview?: boolean;
 }) {
   const session = useSession();
   const router = useRouter();
@@ -43,6 +53,23 @@ export default function UnitsList({
     };
   });
 
+  const tenantsCountQuery = useQuery<DataItem[]>({
+    queryKey: ["listing", "detail", "rentals", "tenant-count", session.data?.user.accessToken],
+    queryFn: async ({ queryKey }) => {
+      const queries: Promise<DataItem>[] = units.map(async (u) => {
+
+        const res = (await backendAPI.get("/api/landing/rentals/unit/" + u.id)).data;
+        return ({
+          unitId: u.id,
+          tenantsCount: res.total,
+        });
+      });
+      return Promise.all(queries);
+    },
+    staleTime: 1000 * 60 * 5,
+    cacheTime: 1000 * 60 * 5,
+  });
+
   return (
     <div>
       <div className="w-full flex flex-row justify-between items-center4">
@@ -61,13 +88,13 @@ export default function UnitsList({
               </Button>
             </TooltipTrigger>
             <TooltipContent>
-              {session.status === "unauthenticated" 
-                ? "Đăng nhập để ứng tuyển" 
+              {session.status === "unauthenticated"
+                ? "Đăng nhập để ứng tuyển"
                 : !selectedUnit
-                ? "Chọn một phòng trước khi ứng tuyển" 
-                : listingDetail.property.managers.map(m => m.managerId).find(m => m === session.data?.user.user.id)
-                ? "Bạn không thể ứng tuyển vào nhà cho thuê này"
-                : `Ứng tuyển vào ${units.find(u => u.id === selectedUnit)?.name}`
+                  ? "Chọn một phòng trước khi ứng tuyển"
+                  : listingDetail.property.managers.map(m => m.managerId).find(m => m === session.data?.user.user.id)
+                    ? "Bạn không thể ứng tuyển vào nhà cho thuê này"
+                    : `Ứng tuyển vào ${units.find(u => u.id === selectedUnit)?.name}`
               }
             </TooltipContent>
           </Tooltip>
@@ -100,9 +127,14 @@ export default function UnitsList({
                     <TableCell className="text-left">{unit.name}</TableCell>
                     <TableCell className="text-left">{unit.floor}</TableCell>
                     <TableCell className="text-left">{unit.area}</TableCell>
-                    <TableCell className="text-left">{unit.price}</TableCell>
-                    {/* TODO: Change this cell */}
-                    <TableCell className="text-left">Đang trống</TableCell>
+                    <TableCell className="text-left">{unit.price.toLocaleString('vi-VN', { style: 'currency', currency: 'VND' })}</TableCell>
+                    <TableCell className="text-left">{
+                      tenantsCountQuery.isLoading ? (
+                        <Spinner size={12} />
+                      ) : (() => {
+                        const item = tenantsCountQuery.data?.find((item) => item.unitId === unit.id);
+                        return (item && item.tenantsCount > 0) ? `${item.tenantsCount} người đang thuê` : "Đang trống";
+                      })()}</TableCell>
                     <TableCell className="text-right">
                       <CollapsibleTrigger asChild>
                         <ChevronDown className="w-4 h-4" />
@@ -120,7 +152,7 @@ export default function UnitsList({
                               const Icon = ua?.icon;
                               return (
                                 <li key={index} className="">
-                                  <span className="flex flex-row gap-2 items-center">{Icon && (<Icon size={16}/>)} {ua?.text}</span>
+                                  <span className="flex flex-row gap-2 items-center">{Icon && (<Icon size={16} />)} {ua?.text}</span>
                                   <p className="text-xs font-light">{amenity.description}</p>
                                 </li>
                               );

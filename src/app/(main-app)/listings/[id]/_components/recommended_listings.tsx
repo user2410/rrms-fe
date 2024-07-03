@@ -1,6 +1,6 @@
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { backendAPI } from "@/libs/axios";
-import { ManagedListing } from "@/models/listing";
+import { Listing, ManagedListing } from "@/models/listing";
 import { Property } from "@/models/property";
 import { useQuery } from "@tanstack/react-query";
 import { Fragment } from "react";
@@ -39,7 +39,10 @@ export default function RecommendedListings({
           ids: properties.map(p => p.id),
         }
       })).data;
-      return listings.map((l: any) => {
+      return listings.sort((a: Listing, b: Listing) => (
+        // sort listings by priority in descending order
+        b.priority - a.priority
+      )).map((l: any) => {
         const property = properties.find(p => p.id === l.propertyId)!;
         return ({
           listing: l,

@@ -1,7 +1,3 @@
-import { Button } from "@/components/ui/button";
-import { Label } from "@/components/ui/label";
-import { Separator } from "@/components/ui/separator";
-import { Switch } from "@/components/ui/switch";
 import { getPrimaryImage } from "@/models/property";
 import Image from "next/image";
 import { useState } from "react";
@@ -50,12 +46,14 @@ export default function ApplicationGroup({
       {applications.slice(0, show).map((a, i) => (
         <ApplicationItem ma={a} key={i} />
       ))}
-      <div 
-        className="flex flex-row items-center justify-center border p-2 hover:bg-slate-100 cursor-pointer"
-        onClick={() => setShow(v => (v >= applications.length ? 3 : applications.length))}
-      >
-        {show > applications.length ? "Ẩn bớt" : "Hiện tất cả"}
-     </div>
+      {applications.length > 3 && (
+        <div 
+          className="flex flex-row items-center justify-center border p-2 hover:bg-slate-100 cursor-pointer"
+          onClick={() => setShow(v => (v >= applications.length ? 3 : applications.length))}
+        >
+          {show > 3 ? "Ẩn bớt" : "Hiện tất cả"}
+      </div>
+      )}
     </div>
   );
 };

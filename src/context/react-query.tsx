@@ -9,7 +9,7 @@ export default function ReactQueryContext({ children }: { children: React.ReactN
   return (
     <QueryClientProvider client={queryClient}>
       {children}
-      <ReactQueryDevtools />
+      {/* <ReactQueryDevtools /> */}
     </QueryClientProvider>
-  )
+  );
 }
