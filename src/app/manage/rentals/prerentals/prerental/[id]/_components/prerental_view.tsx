@@ -9,6 +9,7 @@ import PaymentinfoCard from "../../../../rental/[id]/_components/payments/paymen
 import PoliciesCard from "../../../../rental/[id]/_components/policies";
 import TenantCard from "../../../../rental/[id]/_components/tenant_card";
 import { ActionModal, RequestReviewModal } from "./action_modals";
+import { FaArrowLeft } from "react-icons/fa";
 
 export default function PrerentalView({
   preRental,
@@ -25,8 +26,11 @@ export default function PrerentalView({
 }) {
   return (
     <div className="space-y-4">
-      <div className="text-xl font-semibold">
-        Profile thuê nhà (chờ duyệt)
+      <div className="flex flex-row items-center gap-1">
+        <Link href="/manage/rentals">
+          <FaArrowLeft size={16} />
+        </Link>
+        <h2 className="text-xl font-semibold">Profile thuê nhà (chờ duyệt)</h2>
       </div>
       <GeneralCard rental={preRental} property={property} unit={unit} />
       {(preRental.tenantId === sessionData?.user.user.id || !!key) && (

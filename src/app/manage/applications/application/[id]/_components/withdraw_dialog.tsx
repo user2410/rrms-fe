@@ -1,4 +1,4 @@
-import { AlertDialog, AlertDialogContent, AlertDialogDescription, AlertDialogHeader, AlertDialogTitle, AlertDialogTrigger } from "@/components/ui/alert-dialog";
+import { AlertDialog, AlertDialogContent, AlertDialogHeader, AlertDialogTitle, AlertDialogTrigger } from "@/components/ui/alert-dialog";
 import { Button, buttonVariants } from "@/components/ui/button";
 import { Separator } from "@/components/ui/separator";
 import Spinner from "@/components/ui/spinner";
@@ -6,21 +6,18 @@ import { backendAPI } from "@/libs/axios";
 import { ManagedApplication } from "@/models/application";
 import { Session } from "next-auth";
 import Link from "next/link";
-import { useRouter } from "next/navigation";
 import { useEffect, useRef, useState } from "react";
 import { FaCheckCircle } from "react-icons/fa";
 
 type STAGE = "CONFIRMATION" | "SUBMITTING" | "SUCCESS" | "ERROR";
 
-export default function AcceptDiaglog({
+export default function WithdrawDiaglog({
   data,
   sessionData,
 } : {
   data: ManagedApplication;
   sessionData: Session;
 }) {
-  const {application, property, unit} = data;
-  const router = useRouter();
   const triggerBtnRef = useRef<HTMLButtonElement>(null);
   const [stage, setStage] = useState<STAGE>("CONFIRMATION");
 
@@ -33,7 +30,7 @@ export default function AcceptDiaglog({
     try {
       await backendAPI.patch(
         `/api/applications/application/${data.application.id}/status`,
-        { status: "APPROVED" },
+        { status: "WITHDRAWN" },
         { headers: { Authorization: `Bearer ${sessionData.user.accessToken}` } }
       );
       setStage("SUCCESS");
@@ -51,7 +48,7 @@ export default function AcceptDiaglog({
           variant="default"
           disabled={["APPROVED", "REJECTED"].includes(data.application.status)}
         >
-          Chấp nhận
+          Rút đơn
         </Button>
       </AlertDialogTrigger>
       <AlertDialogContent>
@@ -60,7 +57,7 @@ export default function AcceptDiaglog({
             <>
               <AlertDialogHeader>
                 <p className="font-normal">
-                  Xác nhận thông qua đơn ứng tuyển vào nhà cho thuê <strong>{data.property.name}</strong> của <strong>{data.application.fullName}</strong>
+                  Xác nhận rút đơn ứng tuyển vào nhà cho thuê <strong>{data.property.name}</strong>
                 </p>
               </AlertDialogHeader>
               <Separator className="my-6" />
@@ -78,25 +75,11 @@ export default function AcceptDiaglog({
             <>
               <AlertDialogHeader className="flex flex-col items-center space-y-3">
                 <FaCheckCircle size={32} color="green" />
-                <AlertDialogTitle>Đơn ứng tuyển đã được thông qua</AlertDialogTitle>
-                <AlertDialogDescription>Tin tốt sẽ được thông báo tới các ứng viên.</AlertDialogDescription>
+                <AlertDialogTitle>Đẫ rút đơn ứng tuyển </AlertDialogTitle>
               </AlertDialogHeader>
               <Separator className="my-6" />
-              <div className="flex flex-col items-center space-y-3">
-                <h2 className="text-center">Tiếp theo, cung cấp một số thông tin về nơi ở mới của bạn</h2>
-                <ol>
-                  <li>Tạo hợp đồng thuê nhà</li>
-                  <li>Quản lý quá trình cho thuê</li>
-                </ol>
-                <div className="space-y-2">
-                  <Button variant="link" onClick={() => triggerBtnRef.current?.click()}>Tôi sẽ xem xét sau</Button>
-                  <Link 
-                    href={`/manage/rentals/new/?applicationId=${application.id}&propertyId=${property.id}&unitId=${unit.id}`}
-                    className={buttonVariants({variant: "default"})}
-                  >
-                    Tạo profile thuê nhà
-                  </Link>
-                </div>
+              <div className="flex flex-row justify-between">
+                <Link className={buttonVariants({variant: "default"})} href="/manage/applications/my-applications">Đóng</Link>
               </div>
             </>
           ) : (

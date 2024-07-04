@@ -75,28 +75,38 @@ export default function TenantCard({
             />
           </div>
         </div>
-        <div className="space-y-2">
-          <div className="text-base font-medium">Người thuê cùng</div>
-          <div className="text-base font-normal">
-            {rental.coaps.length === 0 && (
-              "Không có người thuê cùng"
-            )}
-            {rental.coaps.map((coap, index) => (
-              <TenantCoap coap={coap} key={index} />
-            ))}
-          </div>
-        </div>
-        <div className="space-y-2">
-          <div className="text-base font-medium">Trẻ vị thành niên</div>
-          <div className="text-base font-normal">
-            {rental.minors.map((minor, index) => (
-              <TenantMinor minor={minor} key={index} />
-            ))}
-          </div>
-        </div>
+        {rental.tenantType === "FAMILY" && (
+          <>
+            <div className="space-y-2">
+              <div className="text-base font-medium">Người thuê cùng</div>
+              <div className="text-base font-normal">
+                {rental.coaps.length === 0 && (
+                  "Không có người thuê cùng"
+                )}
+                {rental.coaps.map((coap, index) => (
+                  <TenantCoap coap={coap} key={index} />
+                ))}
+              </div>
+            </div>
+            <div className="space-y-2">
+              <div className="text-base font-medium">Trẻ vị thành niên</div>
+              <div className="text-base font-normal">
+                {rental.coaps.length === 0 && (
+                  "Không có trẻ vị thành niên"
+                )}
+                {rental.minors.map((minor, index) => (
+                  <TenantMinor minor={minor} key={index} />
+                ))}
+              </div>
+            </div>
+          </>
+        )}
         <div className="space-y-2">
           <div className="text-base font-medium">Thú nuôi</div>
           <div className="text-base font-normal">
+            {rental.pets.length === 0 && (
+              "Không có thú nuôi"
+            )}
             {rental.pets.map((pet, index) => (
               <TenantPet pet={pet} key={index} />
             ))}

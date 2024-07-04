@@ -52,7 +52,7 @@ export function RequestReviewModal({
       </AlertDialogTrigger>
       <AlertDialogContent>
         <AlertDialogHeader>
-          <AlertDialogTitle>Bạn có điều gì chưa hài lòng về profile này?</AlertDialogTitle>
+          <AlertDialogTitle>Bạn có điều gì chưa đồng ý về profile này?</AlertDialogTitle>
           <AlertDialogDescription>
             Hãy góp ý cho chủ nhà biết để xem xét lại thông tin trong profile này.
           </AlertDialogDescription>

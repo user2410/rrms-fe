@@ -130,7 +130,9 @@ export default function WaitingPaymentDialog({
                 }));
               }}
             />
-            <p className="text-sm">{readMoneyVi(state.payamount)}</p>
+            {state.payamount > 0 && (
+              <p className="text-sm">{state.payamount.toLocaleString("vi-VN", {style: "currency", currency: "VND"})} ({readMoneyVi(state.payamount)})</p>
+            )}
           </div>
         </div>
         <DialogFooter>

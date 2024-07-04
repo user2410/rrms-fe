@@ -81,10 +81,12 @@ function PropertyDetailPage({
   return isSet() && (
     <div className="container mx-auto py-10 space-y-8">
       <div className="space-y-4">
-        <Link href="/manage/properties" className="flex flex-row items-center gap-1">
-          <FaArrowLeft size={16} />
+        <div className="flex flex-row items-center gap-1">
+          <Link href="/manage/properties">
+            <FaArrowLeft size={16} />
+          </Link>
           <span>Nhà cho thuê</span>
-        </Link>
+        </div>
         <div className="w-full flex flex-row items-center justify-between">
           <div className="space-y-4">
             <Badge className="inline max-w-fit space-x-1">

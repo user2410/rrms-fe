@@ -23,6 +23,9 @@ export default async function handler(
     });
     return res.status(200).json(await r.data);
   } catch(err: any) {
+    console.error(err.response);
+    console.error(err.response.status, typeof err.response.status, err.response.data);
+    console.error(err.response.status === 401, err.response.status === 404, err.response.status === 500);
     switch (err.response.status) {
       case 401:
         return res.status(401).json({ message: "Mã Captcha sai hoặc hết hiệu lực" });

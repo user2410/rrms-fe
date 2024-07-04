@@ -53,7 +53,7 @@ export default function AuthItem() {
           ) : session.user.user.role === "TENANT" ? (
             <DropdownMenuItem>
               <FaFile size={16} className="mr-2" />
-              <Link href="/manage/applications/to-me">Đơn ứng tuyển của tồi</Link>
+              <Link href="/manage/applications/to-me">Đơn ứng tuyển của tôi</Link>
             </DropdownMenuItem>
           ) : null}
           <DropdownMenuItem>

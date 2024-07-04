@@ -90,7 +90,9 @@ export default function NotificationDropdown() {
               </button>
             </div>
           </div>
-        ));
+        ), {
+          position: "top-right",
+        });
       }
     });
     // Listen for messages from the service worker

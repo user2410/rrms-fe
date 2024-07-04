@@ -1,29 +1,42 @@
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import {
+  AlertDialog,
+  AlertDialogAction,
+  AlertDialogCancel,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogTitle,
+  AlertDialogTrigger,
+} from "@/components/ui/alert-dialog";
+import { Button } from "@/components/ui/button";
+import { Dialog, DialogClose, DialogContent, DialogFooter, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
+import { ScrollArea } from "@/components/ui/scroll-area";
 import { backendAPI } from "@/libs/axios";
 import { Contract } from "@/models/contract";
 import { useQuery } from "@tanstack/react-query";
-import { useState } from "react";
+import { useEffect, useRef, useState } from "react";
+import toast from "react-hot-toast";
 import { useDataCtx } from "../../_context/data.context";
 import Editor from "./editor";
-import { Dialog, DialogClose, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
-import { Button } from "@/components/ui/button";
-import { ScrollArea } from "@/components/ui/scroll-area";
-import toast from "react-hot-toast";
 
-export default function ContractEditorWrapper() {
+
+export default function ContractEditorWrapper({
+  handleSubmit,
+}: {
+  handleSubmit: () => void;
+}) {
   const data = useDataCtx();
 
   const query = useQuery<Contract>({
     queryKey: ["manage", "rentals", "rental", data.rental.id, "contract", data.sessionData.user.accessToken],
-    queryFn: async ({queryKey}) => {
+    queryFn: async ({ queryKey }) => {
       return (await backendAPI.get<Contract>(`/api/rentals/rental/${data.rental.id}/contract`, {
         headers: {
           Authorization: `Bearer ${queryKey.at(-1)}`
         }
       })).data;
     },
-    staleTime: 1000 * 60 * 60,
-    cacheTime: 1000 * 60 * 60,
   });
 
   return query.isLoading ? (
@@ -35,59 +48,49 @@ export default function ContractEditorWrapper() {
       Đã xảy ra lỗi khi tải dữ liệu
     </div>
   ) : (
-    <ContractEditor 
+    <ContractEditor
       contract={query.data}
-      refresh={() => query.refetch()}  
+      handleSubmit={handleSubmit}
+      refetch={() => query.refetch()}
     />
   );
 }
 
 function ContractEditor({
   contract,
-  refresh,
-} : {
+  handleSubmit,
+  refetch,
+}: {
   contract: Contract;
-  refresh: () => void;
+  handleSubmit: () => void;
+  refetch: () => void;
 }) {
-  const {sessionData} = useDataCtx();
   const [value, setValue] = useState<string>(contract.content);
+  const triggerBtnRef = useRef<HTMLButtonElement>(null);
+  const closeBtnRef = useRef<HTMLButtonElement>(null);
 
   function reset() {
     setValue(contract.content);
   }
 
-  async function handleUpdate(status: "PENDING" | "SIGNED") {
-    try {
-      await backendAPI.patch(`/api/contracts/contract/${contract.id}/content`, {
-        id: contract.id,
-        content: value ,
-        status: status,
-        userId: sessionData.user.user.id,
-      }, {
-        headers: {
-          Authorization: `Bearer ${sessionData.user.accessToken}`,
-        }
-      });
-      toast.success("Cập nhật hợp đồng thành công");
-    } catch(err) {
-      console.error(err);
-      toast.error("Có lỗi xảy ra, vui lòng thử lại sau");
-    }
-  }
+  useEffect(() => {
+    setValue(contract.content);
+  }, [contract.content]);
 
   return (
-    <Dialog onOpenChange={(open) => {
-      if(open) {refresh();}
+    <Dialog onOpenChange={() => {
+      console.log("onOpenChange refetch");
+      refetch();
     }}>
       <DialogTrigger asChild>
-        <Button type="button">Chỉnh sửa hợp đồng</Button>
+        <Button type="button" ref={triggerBtnRef}>Chỉnh sửa hợp đồng</Button>
       </DialogTrigger>
       <DialogContent className="max-w-[80vw] lg:max-w-[960px] xl:max-w-[1024px] 2xl:max-w-[1200px]">
         <DialogHeader>
           <DialogTitle>Chỉnh sửa hợp đồng</DialogTitle>
         </DialogHeader>
         <ScrollArea className="h-[70vh]">
-          <Editor value={value} onChange={setValue}/>
+          <Editor value={value} onChange={setValue} />
           <table border={0} cellPadding={0} cellSpacing={0} style={{
             border: "#d3d3d3 1px dotted",
             width: "100%",
@@ -109,13 +112,90 @@ function ContractEditor({
         <DialogFooter className="flex flex-row justify-end">
           <Button type="button" variant="outline" onClick={reset}>Reset</Button>
           <DialogClose asChild>
-            <Button type="submit" className="float-right" onClick={() => handleUpdate("PENDING")}>Cập nhật</Button>
+            <button hidden ref={closeBtnRef}/>
           </DialogClose>
-          <DialogClose asChild>
-            <Button type="submit" variant="destructive" className="float-right" onClick={() => handleUpdate("SIGNED")}>Chấp thuận</Button>
-          </DialogClose>
+          <ActionModal
+            contractId={contract.id}
+            status="SIGNED"
+            value={value}
+            handleSubmit={() => {
+              handleSubmit();
+              closeBtnRef.current?.click();
+            }}
+          />
+          <ActionModal
+            contractId={contract.id}
+            status="PENDING"
+            value={value}
+            handleSubmit={() => {
+              handleSubmit();
+              closeBtnRef.current?.click();
+            }}
+          />
         </DialogFooter>
-        </DialogContent>
+      </DialogContent>
     </Dialog>
   );
 };
+
+function ActionModal({
+  contractId,
+  status,
+  value,
+  handleSubmit,
+} : {
+  contractId: number;
+  status: "PENDING" | "SIGNED";
+  value: string;
+  handleSubmit: () => void;
+}) {
+  const { sessionData } = useDataCtx();
+
+  async function handleUpdate() {
+    try {
+      await backendAPI.patch(`/api/contracts/contract/${contractId}/content`, {
+        id: contractId,
+        content: value,
+        status: status,
+      }, {
+        headers: {
+          Authorization: `Bearer ${sessionData.user.accessToken}`,
+        }
+      });
+      toast.success("Cập nhật hợp đồng thành công");
+      handleSubmit();
+    } catch (err) {
+      console.error(err);
+      toast.error("Có lỗi xảy ra, vui lòng thử lại sau");
+    }
+  }
+
+  return (
+    <AlertDialog>
+      <AlertDialogTrigger asChild>
+        {status === "PENDING" ? (
+          <Button type="button" variant="default">Cập nhật</Button>
+        ) : (
+          <Button type="button" variant="destructive">Chấp thuận</Button>
+        )}
+      </AlertDialogTrigger>
+      <AlertDialogContent>
+        <AlertDialogHeader>
+          <AlertDialogTitle>
+            {status === "PENDING" ? "Cập nhật hợp đồng" : "Chấp thuận hợp đồng" }
+          </AlertDialogTitle>
+          <AlertDialogDescription>
+            {status === "PENDING" 
+            ? "Bạn có chắc chắn muốn cập nhật hợp đồng này ?"
+            : "Chấp thuận hợp đồng ? Lưu ý rằng mọi chỉnh sửa lần này cuả bạn sẽ không được lưu, nội dung hợp đồng sẽ được cố định." }
+          </AlertDialogDescription>
+        </AlertDialogHeader>
+        <AlertDialogFooter>
+          <AlertDialogCancel>Hủy</AlertDialogCancel>
+          <AlertDialogAction onClick={handleUpdate}>Đồng ý</AlertDialogAction>
+        </AlertDialogFooter>
+      </AlertDialogContent>
+    </AlertDialog>
+
+  );
+}

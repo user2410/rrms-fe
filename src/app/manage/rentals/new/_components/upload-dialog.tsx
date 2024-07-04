@@ -1,5 +1,5 @@
 import { AlertDialog, AlertDialogContent, AlertDialogTrigger } from "@/components/ui/alert-dialog";
-import { Button } from "@/components/ui/button";
+import { Button, buttonVariants } from "@/components/ui/button";
 import { backendAPI } from "@/libs/axios";
 import { Session } from "next-auth";
 import Link from "next/link";
@@ -84,7 +84,7 @@ export default function UploadDialog({
             <FaCheckCircle size={20} color="green" />
             <h2>Đã tạo profile thuê nhà cho <strong>{form.getValues("tenant.tenantName")}</strong> thành công</h2>
             <p className="text-sm">Chờ phản hồi từ {form.getValues("tenant.tenantName")} để bắt đầu quản lý thuê nhà</p>
-            <Link href={`/manage/rentals/prerentals/prerental/${res.id}`}>Xem chi tiết</Link>
+            <Link href={`/manage/rentals/prerentals/prerental/${res.id}`} className={buttonVariants({variant: "default"})}>Xem chi tiết</Link>
           </div>
         ) : stage === "ERROR" ? (
           <div className="w-full flex flex-col items-center justify-center gap-2">

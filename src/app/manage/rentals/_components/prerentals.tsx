@@ -88,7 +88,7 @@ export default function Prerentals({
         </div>
       ) : (
         <DataTable
-          columns={prerentalColumns}
+          columns={prerentalColumns(sessionData.user.user.role === "LANDLORD" ? "managed-rentals" : "my-rentals")}
           data={query.data}
         />
       )}

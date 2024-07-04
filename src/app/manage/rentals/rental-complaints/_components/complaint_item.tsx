@@ -33,7 +33,7 @@ import 'lightgallery/css/lg-thumbnail.css';
 import lgThumbnail from 'lightgallery/plugins/thumbnail';
 import lgZoom from 'lightgallery/plugins/zoom';
 import LightGallery from 'lightgallery/react';
-import { useMemo } from "react";
+import { useMemo, useState } from "react";
 import toast from "react-hot-toast";
 import { Session } from "next-auth";
 import { Property } from "@/models/property";
@@ -57,9 +57,12 @@ export default function ComplaintItem({
   item: RentalComplaint;
   sessionData: Session;
 }) {
+  const [limit, setLimit] = useState<number>(5);
+  const [offset, setOffset] = useState<number>(0);
+
   const dataQuery = useQuery<Data>({
     queryKey: ["manage", "rentals", "rental-complaints", item.rentalId, "users", sessionData.user.accessToken],
-    queryFn: async({queryKey}) => {
+    queryFn: async ({ queryKey }) => {
       const rental = (await backendAPI.get(`/api/rentals/rental/${queryKey.at(3)}`, {
         headers: {
           Authorization: `Bearer ${queryKey.at(-1)}`,
@@ -93,9 +96,13 @@ export default function ComplaintItem({
     cacheTime: 1000 * 60 * 5,
   });
   const repliesQuery = useQuery<RentalComplaintReply[]>({
-    queryKey: ["manage", "rentals", "rental-complaints", item.rentalId, "complaints", item.id, "replies", sessionData.user.accessToken],
+    queryKey: ["manage", "rentals", "rental", item.rentalId, "complaints", item.id, "replies", limit, offset, sessionData.user.accessToken],
     queryFn: async ({ queryKey }) => {
       const res = (await backendAPI.get<RentalComplaintReply[]>(`/api/rental-complaints/rental-complaint/${queryKey[5]}/replies`, {
+        params: {
+          limit: queryKey[7],
+          offset: queryKey[8],
+        },
         headers: {
           Authorization: `Bearer ${queryKey.at(-1)}`
         }
@@ -116,7 +123,7 @@ export default function ComplaintItem({
     if (!dataQuery.isSuccess) {
       return;
     }
-    const {property} = dataQuery.data;
+    const { property } = dataQuery.data;
     const isSideA = (_id: string) => property.managers.filter(m => m.managerId === _id).length > 0;
     const _isSideA = isSideA(id);
     const __isSideA = isSideA(sessionData.user.user.id);
@@ -269,45 +276,53 @@ export default function ComplaintItem({
           ) : repliesQuery.data.length === 0 ? (
             <p className="text-sm font-light text-center">Chưa có phản hồi</p>
           ) : (
-            repliesQuery.data.map((reply, index) => (
-              <div className="flex flex-row items-center justify-start gap-3 px-4 py-3" key={index}>
-                <Avatar>
-                  <AvatarFallback>{getUserAvatarFallback(dataQuery.data.users.find(u => u.id === item.creatorId)!)}</AvatarFallback>
-                </Avatar>
-                <div className="space-y-2">
-                  <h4 className="text-sm font-semibold">
-                    {getUserFullName(dataQuery.data.users.find(u => u.id === reply.replierId)!)}&nbsp;
-                    <span className="text-xs font-light">
-                      {reply.createdAt.toLocaleDateString("vi-VN")}, {reply.createdAt.toLocaleTimeString("vi-VN")}
-                    </span>
-                  </h4>
-                  <p className="text-base font-normal">
-                    {reply.reply}
-                  </p>
-                  {reply.media.length > 0 && (
-                      <LightGallery
-                        speed={500}
-                        mode="lg-fade"
-                        plugins={[lgThumbnail, lgZoom]}
-                        elementClassNames="flex flex-row flex-wrap justify-start gap-2"
-                      >
-                        {reply.media.map((media, index) => (
-                          <a
-                            key={index}
-                            data-src={media}
-                          >
-                            <img
-                              src={media}
-                              alt={`media-${index}`}
-                              className="w-24 h-16 object-cover rounded-md"
-                            />
-                          </a>
-                        ))}
-                      </LightGallery>
-                    )}
-                </div>
+            <div className="space-y-4">
+              {
+                repliesQuery.data.map((reply, index) => (
+                  <div className="flex flex-row items-center justify-start gap-3 px-4 py-3" key={index}>
+                    <Avatar>
+                      <AvatarFallback>{getUserAvatarFallback(dataQuery.data.users.find(u => u.id === item.creatorId)!)}</AvatarFallback>
+                    </Avatar>
+                    <div className="space-y-2">
+                      <h4 className="text-sm font-semibold">
+                        {getUserFullName(dataQuery.data.users.find(u => u.id === reply.replierId)!)}&nbsp;
+                        <span className="text-xs font-light">
+                          {reply.createdAt.toLocaleDateString("vi-VN")}, {reply.createdAt.toLocaleTimeString("vi-VN")}
+                        </span>
+                      </h4>
+                      <p className="text-base font-normal">
+                        {reply.reply}
+                      </p>
+                      {reply.media.length > 0 && (
+                        <LightGallery
+                          speed={500}
+                          mode="lg-fade"
+                          plugins={[lgThumbnail, lgZoom]}
+                          elementClassNames="flex flex-row flex-wrap justify-start gap-2"
+                        >
+                          {reply.media.map((media, index) => (
+                            <a
+                              key={index}
+                              data-src={media}
+                            >
+                              <img
+                                src={media}
+                                alt={`media-${index}`}
+                                className="w-24 h-16 object-cover rounded-md"
+                              />
+                            </a>
+                          ))}
+                        </LightGallery>
+                      )}
+                    </div>
+                  </div>
+                ))
+              }
+              <div className="flex flex-row justify-center gap-2">
+                <Button type="button" variant="outline" disabled={offset === 0} onClick={() => setOffset(v => v - limit)}>Trước</Button>
+                <Button type="button" variant="outline" disabled={repliesQuery.data.length < limit} onClick={() => setOffset(v => v + limit)}>Sau</Button>
               </div>
-            ))
+            </div>
           )}
         </div>
         {!["RESOLVED", "CLOSED"].includes(item.status) && (

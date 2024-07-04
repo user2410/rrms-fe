@@ -17,12 +17,14 @@ import Payments from "./_components/payments";
 import TenantCard from "./_components/tenant_card";
 import { DataProvider, RentalData, useDataCtx } from "./_context/data.context";
 import Maintenance from "./_components/maintenance";
+import Link from "next/link";
+import { FaArrowLeft } from "react-icons/fa";
 
 export default function RentalPageWrapper({ params: { id } }: { params: { id: string } }) {
   const session = useSession();
   const query = useQuery<RentalData>({
     queryKey: ["manage", "rentals", "rental", id, session.data?.user.accessToken],
-    queryFn: async ({queryKey}) => {
+    queryFn: async ({ queryKey }) => {
       const rental = (await backendAPI.get<Rental>("/api/rentals/rental/" + id, {
         headers: {
           Authorization: `Bearer ${queryKey.at(-1)}`
@@ -50,7 +52,7 @@ export default function RentalPageWrapper({ params: { id } }: { params: { id: st
       if (rental.creatorId !== '00000000-0000-0000-0000-000000000000') {
         userIds.add(rental.creatorId);
       }
-      if(rental.tenantId && rental.tenantId !== '00000000-0000-0000-0000-000000000000') {
+      if (rental.tenantId && rental.tenantId !== '00000000-0000-0000-0000-000000000000') {
         userIds.add(rental.tenantId);
       }
       const users = (await backendAPI.get<User[]>("/api/auth/credential/ids", {
@@ -87,8 +89,13 @@ export default function RentalPageWrapper({ params: { id } }: { params: { id: st
   }
 
   return (
-    <div className="container pt-10">
-      <h2 className="text-xl font-semibold">Profile thuê trọ</h2>
+    <div className="container pt-10 space-y-4">
+      <div className="flex flex-row items-center gap-1.5">
+        <Link href="/manage/rentals">
+          <FaArrowLeft size={16} />
+        </Link>
+        <h2 className="text-2xl font-semibold">Profile thuê nhà</h2>
+      </div>
       <DataProvider>
         <RentalPage data={query.data} sessionData={session.data!} />
       </DataProvider>
@@ -112,7 +119,7 @@ function RentalPage({
 
   return isSet() && (
     <>
-      <GeneralCard rental={data.rental} property={data.property} unit={data.unit}/>
+      <GeneralCard rental={data.rental} property={data.property} unit={data.unit} />
       <Tabs.Root defaultValue="detail" className="TabsRoot">
         <Tabs.List className="TabsList">
           <Tabs.Trigger className="TabsTrigger" value="detail">Khách thuê</Tabs.Trigger>
@@ -121,17 +128,17 @@ function RentalPage({
         </Tabs.List>
         <Tabs.Content className="TabsContent" value="detail">
           <div className="grid grid-cols-4 gap-4">
-            <ContractCard/>
+            <ContractCard />
             <div className="col-span-3">
-              <TenantCard rental={data.rental}/>
+              <TenantCard rental={data.rental} />
             </div>
           </div>
         </Tabs.Content>
         <Tabs.Content className="TabsContent" value="payment">
-          <Payments/>
+          <Payments />
         </Tabs.Content>
         <Tabs.Content className="TabsContent" value="maintenance">
-          <Maintenance/>
+          <Maintenance />
         </Tabs.Content>
       </Tabs.Root>
     </>

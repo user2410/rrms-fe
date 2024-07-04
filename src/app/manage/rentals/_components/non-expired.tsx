@@ -109,7 +109,7 @@ export default function NonExpired({
           </div>
         ) : (
           <DataTable
-            columns={nonExpiredColumns}
+            columns={nonExpiredColumns(segment)}
             data={query.data}
           />
         )}

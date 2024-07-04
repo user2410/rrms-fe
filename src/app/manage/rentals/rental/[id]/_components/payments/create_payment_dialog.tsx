@@ -5,7 +5,6 @@ import { Form, FormControl, FormField, FormItem, FormLabel, FormLabelRequired, F
 import { Input } from "@/components/ui/input";
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
-import { Textarea } from "@/components/ui/textarea";
 import { backendAPI } from "@/libs/axios";
 import { RentalComplaint } from "@/models/rental";
 import { zodResolver } from "@hookform/resolvers/zod";
@@ -23,7 +22,7 @@ const formSchema = z.object({
   endDate: z.date(),
   amount: z.number(),
   discount: z.number().optional(),
-  note: z.string().optional(),
+  // note: z.string().optional(),
   svcId: z.string().optional(),
 }).refine(data => !(['SERVICE', 'MAINTENANCE'].includes(data.type) && !data.svcId), {
   message: `Chọn dịch vụ hoặc lần bảo trì`,
@@ -67,7 +66,6 @@ export default function CreatePaymentDialog() {
   });
 
   async function handleSubmit(data: FormValues) {
-    console.log("submit", data);
     const code = `${rental.id}_${type}${svcId ? `_${svcId}` : ""}_${type === "MAINTENANCE" ? String(startDate.getDate()+1).padStart(2, '0') : ""}${String(startDate.getMonth()+1).padStart(2, '0')}${startDate.getFullYear()}${type === "MAINTENANCE" ? String(endDate.getDate()+1).padStart(2, '0') : ""}${String(endDate.getMonth()+1).padStart(2, '0')}${endDate.getFullYear()}_M`;
     try {
       const newPayment = (await (backendAPI.post(`/api/rental-payments`, {
@@ -248,7 +246,7 @@ export default function CreatePaymentDialog() {
               name="discount"
               render={({ field }) => (
                 <FormItem className="flex-grow space-y-1.5">
-                  <FormLabelRequired>Chiết khấu</FormLabelRequired>
+                  <FormLabel>Chiết khấu</FormLabel>
                   <FormControl>
                     <Input
                       {...field}
@@ -263,7 +261,7 @@ export default function CreatePaymentDialog() {
             />
           </div>
         </div>
-        <FormField
+        {/* <FormField
           control={form.control}
           name="note"
           render={({ field }) => (
@@ -278,12 +276,12 @@ export default function CreatePaymentDialog() {
               </FormControl>
               <FormMessage />
             </FormItem>
-          )}/>
+          )}/> */}
         <DialogFooter>
           <DialogClose asChild>
             <button type="button" ref={closeBtnRef} hidden/>
           </DialogClose>
-          {JSON.stringify(form.formState.errors)}
+          {/* {JSON.stringify(form.formState.errors)} */}
           <Button type="submit">Tạo khoản thu</Button>
         </DialogFooter>
       </form>

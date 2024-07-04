@@ -34,8 +34,9 @@ import 'lightgallery/css/lg-thumbnail.css';
 import lgThumbnail from 'lightgallery/plugins/thumbnail';
 import lgZoom from 'lightgallery/plugins/zoom';
 import LightGallery from 'lightgallery/react';
-import { useMemo } from "react";
+import { useMemo, useState } from "react";
 import toast from "react-hot-toast";
+import PaginationControl from "@/components/complex/pagination";
 
 const mapItemStatus2BgColor = {
   PENDING: "bg-gray-400",
@@ -50,11 +51,17 @@ export default function ComplaintItem({
 }) {
   const { users, isOnTheSameSide, sessionData } = useDataCtx();
   const isOnTheSameSideWithCreator = isOnTheSameSide(item.creatorId);
+  const [limit, setLimit] = useState<number>(5);
+  const [offset, setOffset] = useState<number>(0);
 
   const query = useQuery<RentalComplaintReply[]>({
-    queryKey: ["manage", "rentals", "rental", item.rentalId, "complaints", item.id, "replies", sessionData.user.accessToken],
+    queryKey: ["manage", "rentals", "rental", item.rentalId, "complaints", item.id, "replies", limit, offset, sessionData.user.accessToken],
     queryFn: async ({ queryKey }) => {
       const res = (await backendAPI.get<RentalComplaintReply[]>(`/api/rental-complaints/rental-complaint/${queryKey[5]}/replies`, {
+        params: {
+          limit: queryKey[7],
+          offset: queryKey[8],
+        },
         headers: {
           Authorization: `Bearer ${queryKey.at(-1)}`
         }
@@ -217,22 +224,23 @@ export default function ComplaintItem({
           ) : query.data.length === 0 ? (
             <p className="text-sm font-light text-center">Chưa có phản hồi</p>
           ) : (
-            query.data.map((reply, index) => (
-              <div className="flex flex-row items-center justify-start gap-3 px-4 py-3" key={index}>
-                <Avatar>
-                  <AvatarFallback>{getUserAvatarFallback(users.find(u => u.id === item.creatorId)!)}</AvatarFallback>
-                </Avatar>
-                <div className="space-y-2">
-                  <h4 className="text-sm font-semibold">
-                    {getUserFullName(users.find(u => u.id === reply.replierId)!)}&nbsp;
-                    <span className="text-xs font-light">
-                      {reply.createdAt.toLocaleDateString("vi-VN")}, {reply.createdAt.toLocaleTimeString("vi-VN")}
-                    </span>
-                  </h4>
-                  <p className="text-base font-normal">
-                    {reply.reply}
-                  </p>
-                  {reply.media.length > 0 && (
+            <>{
+              query.data.map((reply, index) => (
+                <div className="flex flex-row items-center justify-start gap-3 px-4 py-3" key={index}>
+                  <Avatar>
+                    <AvatarFallback>{getUserAvatarFallback(users.find(u => u.id === item.creatorId)!)}</AvatarFallback>
+                  </Avatar>
+                  <div className="space-y-2">
+                    <h4 className="text-sm font-semibold">
+                      {getUserFullName(users.find(u => u.id === reply.replierId)!)}&nbsp;
+                      <span className="text-xs font-light">
+                        {reply.createdAt.toLocaleDateString("vi-VN")}, {reply.createdAt.toLocaleTimeString("vi-VN")}
+                      </span>
+                    </h4>
+                    <p className="text-base font-normal">
+                      {reply.reply}
+                    </p>
+                    {reply.media.length > 0 && (
                       <LightGallery
                         speed={500}
                         mode="lg-fade"
@@ -253,9 +261,15 @@ export default function ComplaintItem({
                         ))}
                       </LightGallery>
                     )}
-                </div>
+                  </div>
+                </div>))
+            }
+              <div className="flex flex-row justify-center gap-2">
+                <Button type="button" variant="outline" disabled={offset === 0} onClick={() => setOffset(v => v - limit)}>Trước</Button>
+                <Button type="button" variant="outline" disabled={query.data.length < limit} onClick={() => setOffset(v => v + limit)}>Sau</Button>
               </div>
-            ))
+            </>
+
           )}
         </div>
         {!["RESOLVED", "CLOSED"].includes(item.status) && (

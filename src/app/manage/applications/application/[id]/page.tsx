@@ -21,6 +21,7 @@ import BasicInfo from "./_components/basic";
 import ChatTab from "./_components/chat_tab";
 import RejectDiaglog from "./_components/reject_diaglog";
 import PostProcess from "./_components/post_process";
+import WithdrawDiaglog from "./_components/withdraw_dialog";
 
 export default function ApplicationPage({ params }: { params: { id: string } }) {
   const router = useRouter();
@@ -119,9 +120,10 @@ export default function ApplicationPage({ params }: { params: { id: string } }) 
           <h1 className="text-2xl font-medium">{application.fullName}</h1>
           <div className="flex flex-row gap-2">
             {application.creatorId === session.data!.user.user.id && ["PENDING", "CONDITIONALLY_APPROVED"].includes(application.status) && (
-              <Button type="button" onClick={handleWithdrawApplication}>
-                Rút đơn
-              </Button>
+              <WithdrawDiaglog
+                data={query.data}
+                sessionData={session.data!}
+              />
             )}
             {application.creatorId !== session.data!.user.user.id && !["APPROVED", "REJECTED"].includes(application.status) && (
               <>

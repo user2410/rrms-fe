@@ -2,12 +2,9 @@ import type { Metadata } from 'next';
 import { Inter } from 'next/font/google';
 import React from "react";
 import { Toaster } from 'react-hot-toast';
-
+import GoogleMapContext from '@/context/google-map';
 import NextAuthContext from '@/context/next-auth';
 import ReactQueryContext from '@/context/react-query';
-import { ManagedUIContext } from '@/context/ui.context';
-import GoogleMapContext from '@/context/google-map';
-import ManagedModal from '@/components/complex/managed-modal';
 
 import '@fortawesome/fontawesome-free/css/all.min.css';
 import '../assets/globals.css';
@@ -31,11 +28,8 @@ export default function RootLayout({
         <NextAuthContext>
           <GoogleMapContext>
             <ReactQueryContext>
-              <ManagedUIContext>
-                <Toaster />
-                <ManagedModal />
-                  {children}
-              </ManagedUIContext>
+              <Toaster />
+              {children}
             </ReactQueryContext>
           </GoogleMapContext>
         </NextAuthContext>

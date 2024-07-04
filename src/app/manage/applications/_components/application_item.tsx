@@ -1,9 +1,5 @@
-import { Button } from "@/components/ui/button";
-import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuSeparator, DropdownMenuTrigger } from "@/components/ui/dropdown-menu";
 import { Separator } from "@/components/ui/separator";
-import { Check, X } from "lucide-react";
 import Link from "next/link";
-import { useRouter } from "next/navigation";
 import { PreviewApplication } from "./application_list";
 import StatusCard from "./status_card";
 
@@ -15,8 +11,6 @@ export default function ApplicationItem({
   const { application, listing } = ma;
   const createdAt = new Date(application.createdAt);
   const moveinDate = new Date(application.moveinDate);
-  
-  const router = useRouter();
 
   console.log('application', ma);
 
@@ -48,32 +42,16 @@ export default function ApplicationItem({
           ) : null
           }
           <StatusCard title="Thu nhập" value={`${Math.ceil(application.employmentMonthlyIncome / listing.price)}x giá thuê`} className="border-red-400" />
-          {application.status === "PENDING" ? (
-            <StatusCard title="Trạng thái" value="Đang chờ" className="border-gray-400" />
-          ) : application.status === "CONDITIONALLY_APPROVED" ? (
+          { ["PENDING", "CONDITIONALLY_APPROVED"].includes(application.status) ? (
             <StatusCard title="Trạng thái" value="Đang xét duyệt" className="border-yellow-400" />
           ) : application.status === "APPROVED" ? (
             <StatusCard title="Trạng thái" value="Đã chấp thuận" className="border-green-400" />
           ) : application.status === "REJECTED" ? (
             <StatusCard title="Trạng thái" value="Đã từ chối" className="border-red-600" />
+          ) : application.status === "WITHDRAWN" ? (
+            <StatusCard title="Trạng thái" value="Đã rút đơn" className="border-gray-600" />
           ) : null}
         </div>
-        <DropdownMenu>
-          <DropdownMenuTrigger asChild>
-            <Button variant="outline">Thao tác...</Button>
-          </DropdownMenuTrigger>
-          <DropdownMenuContent align="end">
-            <DropdownMenuItem onClick={() => { }}>
-              <Check className="mr-2 h-4 w-4" />
-              <span>Chấp nhận</span>
-            </DropdownMenuItem>
-            <DropdownMenuSeparator />
-            <DropdownMenuItem className="text-destructive hover:bg-red-200">
-              <X className="mr-2 h-4 w-4" />
-              <span>Từ chối</span>
-            </DropdownMenuItem>
-          </DropdownMenuContent>
-        </DropdownMenu>
       </div>
     </Link>
   );

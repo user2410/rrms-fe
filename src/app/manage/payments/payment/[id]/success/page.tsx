@@ -47,7 +47,7 @@ export default function SuccessPage({ params: { id } }: { params: { id: string }
             <div className="text-2xl font-bold">Thanh toán thành công</div>
             <div className="mt-5">
               <div className="text-lg">Mã hóa đơn: {query.data?.id}</div>
-              <div className="text-lg">Số tiền: {query.data?.amount}</div>
+              <div className="text-lg">Số tiền: {query.data?.amount.toLocaleString('vi-VN', { style: 'currency', currency: 'VND' })}</div>
               <div className="text-lg">Ngày thanh toán: {new Date(query.data?.updatedAt).toLocaleDateString("vi-VN")} {new Date(query.data?.updatedAt).toLocaleTimeString("vi-VN")}</div>
             </div>
           </div> 

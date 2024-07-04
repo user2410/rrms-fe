@@ -16,6 +16,7 @@ const mapPTypeToTemplate = {
   'PRIVATE': lazy(() => import('./private_template')),
   'ROOM': lazy(() => import('./room_template')),
   'STORE': lazy(() => import('./private_template')),
+  'VILLA': lazy(() => import('./private_template')),
   'OFFICE': lazy(() => import('./office_template')),
   'MINIAPARTMENT': lazy(() => import('./apartment_template')),
 };

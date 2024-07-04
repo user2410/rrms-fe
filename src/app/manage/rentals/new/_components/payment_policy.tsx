@@ -100,11 +100,11 @@ export default function PaymentPolicy() {
                     </FormControl>
                     <p className="text-muted-foreground">%</p>
                   </div>
-                  {latePaymentPenaltyAmount && (
+                  {latePaymentPenaltyAmount ? (
                     <FormDescription>
-                      Mức phạt: {`${latePaymentPenaltyAmount}% số tiền còn nợ`}
+                      Mức phạt: {`${latePaymentPenaltyAmount}% số tiền chậm thanh toán`}
                     </FormDescription>
-                  )}
+                  ) : null}
                 </FormItem>
               )}
             />
@@ -126,11 +126,11 @@ export default function PaymentPolicy() {
                     </FormControl>
                     <p className="text-muted-foreground">VNĐ</p>
                   </div>
-                  {latePaymentPenaltyAmount && (
+                  {latePaymentPenaltyAmount ? (
                     <FormDescription>
                       Mức phạt: {`${latePaymentPenaltyAmount.toLocaleString("vi-VN")} VNĐ`}
                     </FormDescription>
-                  )}
+                  ) : null}
                 </FormItem>
               )}
             />

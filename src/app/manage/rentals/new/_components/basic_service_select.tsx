@@ -85,7 +85,7 @@ export const BasicServiceSelect = forwardRef<HTMLButtonElement, Props>(function 
                 <Select onValueChange={field.onChange} defaultValue={field.value}>
                   <FormControl>
                     <SelectTrigger>
-                      <SelectValue placeholder="Select a provider" />
+                      <SelectValue placeholder="Chọn nhà cung cấp dịch vụ" />
                     </SelectTrigger>
                   </FormControl>
                   <SelectContent className="max-h-[50vh]">

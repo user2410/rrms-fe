@@ -85,7 +85,7 @@ const RoomTemplate = forwardRef<HTMLDivElement, Props>(function Render(props, re
       <p>d) Cải tạo, nâng cấp nhà cho thuê khi được bên B đồng ý, nhưng không được gây phiền hà cho bên B sử dụng chỗ ở;</p>
       <p>e) Được lấy lại nhà cho thuê khi hết hạn hợp đồng thuê, nếu hợp đồng không quy định thời hạn thuê thì bên cho thuê muốn lấy lại nhà phải báo cho bên thuê biết trước ........ ngày;</p>
       <p>f) Đơn phương chấm dứt thực hiện hợp đồng thuê nhà nhưng phải báo cho bên B biết trước ít nhất ...... ngày nếu không có thỏa thuận khác và yêu cầu bồi thường thiệt hại nếu bên B có một trong các hành vi sau đây:</p>
-      <p>- Không trả tiền thuê nhà liên tiếp trong ...... trở lên mà không có lý do chính đáng;</p>
+      <p>- Không trả tiền thuê nhà liên tiếp trong 3 tháng trở lên mà không có lý do chính đáng;</p>
       <p>- Sử dụng nhà không đúng mục đích thuê như đã thỏa thuận trong hợp đồng;</p>
       <p>- Tự ý đục phá, cơi nới, cải tạo, phá dỡ nhà ở đang thuê;</p>
       <p>- Bên B chuyển đổi, cho mượn, cho thuê lại nhà ở đang thuê mà không có sự đồng ý của bên A;</p>

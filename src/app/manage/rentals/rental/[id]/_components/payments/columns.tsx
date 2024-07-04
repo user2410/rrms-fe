@@ -54,7 +54,11 @@ export function planPaymentsColumns(
       header: "Trạng thái",
       cell: ({ row }) => {
         return (
-          <span>{rentalPaymentStatus[row.original.status]}</span>
+          <span>{
+            (row.original.status === "PLAN" && !!row.original.note)
+            ? "Yêu cầu xem xét lại"
+            : rentalPaymentStatus[row.original.status]
+          }</span>
         );
       },
     },
@@ -79,7 +83,7 @@ export function waitingPaymentsColumns(
   isSideA: boolean,
   changePayment: (data: RentalPayment) => void,
 ): ColumnDef<RentalPayment>[] {
-  return ([
+  const cols: ColumnDef<RentalPayment>[] = ([
     ...basecolumns(rental),
     {
       header: "Hạn thanh toán",
@@ -121,6 +125,10 @@ export function waitingPaymentsColumns(
         );
       },
     },
+  ]);
+
+  if (!isSideA) {
+    return ([...cols,
     {
       header: "Thao tác",
       cell: ({ row }) => (
@@ -131,8 +139,9 @@ export function waitingPaymentsColumns(
           rental={rental}
         />
       )
-    },
-  ]);
+    }]);
+  }
+  return cols;
 }
 
 export function waitingConfirmationColumns(

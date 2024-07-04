@@ -4,7 +4,7 @@ import { Form } from "@/components/ui/form";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { backendAPI } from "@/libs/axios";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { useState } from "react";
+import { useRef, useState } from "react";
 import { useForm } from "react-hook-form";
 import toast from "react-hot-toast";
 import * as z from "zod";
@@ -37,11 +37,14 @@ export type ContractBFormValues = z.infer<typeof formSchema>;
 
 export default function CreateContractB({
   contractId,
+  handleSubmit,
 }: {
   contractId: number;
+  handleSubmit: () => void;
 }) {
   const [step, setStep] = useState<number>(0);
   const { sessionData, rental } = useDataCtx();
+  const triggerBtnRef = useRef<HTMLButtonElement>(null);
 
   const form = useForm<ContractBFormValues>({
     resolver: zodResolver(formSchema),
@@ -89,6 +92,8 @@ export default function CreateContractB({
         }
       });
       toast.success("Cập nhật hợp đồng thành công");
+      triggerBtnRef.current?.click();
+      handleSubmit();
     } catch(err) {
       console.error(err);
       toast.error("Có lỗi xảy ra, vui lòng thử lại sau");
@@ -98,7 +103,7 @@ export default function CreateContractB({
   return (
     <Dialog>
       <DialogTrigger asChild>
-        <Button type="button">Bổ sung thông tin</Button>
+        <Button type="button" ref={triggerBtnRef}>Bổ sung thông tin</Button>
       </DialogTrigger>
       <DialogContent className="max-w-[80vw] lg:max-w-[960px] xl:max-w-[1024px] 2xl:max-w-[1200px]">
         <DialogHeader>

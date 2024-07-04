@@ -40,9 +40,9 @@ export default function BasicUnits({
           <TableBody>
             <TableRow>
               <TableCell className="text-left">{unit.name}</TableCell>
-              <TableCell className="text-left">{unit.area}</TableCell>
-              <TableCell className="text-right">{unit.listingPrice}</TableCell>
-              <TableCell className="text-right">{unit.offeredPrice}</TableCell>
+              <TableCell className="text-left">{unit.area.toLocaleString('vi-VN')}</TableCell>
+              <TableCell className="text-right">{unit.listingPrice.toLocaleString('vi-VN', { style: 'currency', currency: 'VND' })}</TableCell>
+              <TableCell className="text-right">{unit.offeredPrice.toLocaleString('vi-VN', { style: 'currency', currency: 'VND' })}</TableCell>
             </TableRow>
           </TableBody>
         </Table>

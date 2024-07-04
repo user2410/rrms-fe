@@ -71,7 +71,7 @@ export default function ApplicationList({
     <Fragment>
       <div className="my-4 w-full">
         {/* Top search bar */}
-        <div className="flex flex-row gap-2 border">
+        {/* <div className="flex flex-row gap-2 border">
           <Input className="flex-1" placeholder="Tìm theo địa chỉ nhà, người ứng tuyển" />
           <Select>
             <SelectTrigger className="w-[120px] gap-1">
@@ -87,7 +87,7 @@ export default function ApplicationList({
             </SelectContent>
           </Select>
           <Button type="button" variant="outline">Đặt lại</Button>
-        </div>
+        </div> */}
       </div>
       <div className="flex flex-row justify-between w-full">
         <h2>

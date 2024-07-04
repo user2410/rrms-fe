@@ -268,7 +268,8 @@ function RentalForm({
           description: m.description ? m.description : undefined,
         })),
         pets: application?.pets,
-
+        moveinDate: application?.moveinDate ? new Date (application?.moveinDate) : undefined,
+        startDate: new Date(),
         rentalIntention: application?.rentalIntention,
         rentalPeriod: application?.preferredTerm,
       },
@@ -319,8 +320,7 @@ function RentalForm({
           setStep(step + 1);
         } else {
           console.error(form.formState.errors);
-          const messages = getMessages(form.formState.errors as any);
-          toast.error(messages.join("\n"));
+          toast.error("Thông tin không hợp lệ, hãy kiểm tra lại");
         }
       })
       .catch((e) => {
@@ -395,7 +395,6 @@ function RentalForm({
               {step === 3 && (
                 <Button type="submit">Hoàn tất</Button>
               )}
-              {JSON.stringify(form.formState.errors)}
             </div>
           </form>
         </Form>

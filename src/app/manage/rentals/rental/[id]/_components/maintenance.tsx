@@ -42,8 +42,6 @@ export default function Maintenance() {
         occurredAt: new Date(r.occurredAt),
       }));
     },
-    staleTime: 1000 * 60,
-    cacheTime: 1000 * 60,
   });
 
   return (

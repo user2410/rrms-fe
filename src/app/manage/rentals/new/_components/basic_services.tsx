@@ -40,7 +40,7 @@ export default function BasicServices() {
                   <Select onValueChange={field.onChange} defaultValue={field.value}>
                     <FormControl>
                       <SelectTrigger>
-                        <SelectValue placeholder="Chọn bên thiết lập điện" />
+                        <SelectValue placeholder="Chọn bên thiết lập dịch vụ điện" />
                       </SelectTrigger>
                     </FormControl>
                     <SelectContent>
@@ -137,7 +137,7 @@ export default function BasicServices() {
                   <Select onValueChange={field.onChange} defaultValue={field.value}>
                     <FormControl>
                       <SelectTrigger>
-                        <SelectValue placeholder="Chọn bên thiết lập nước" />
+                        <SelectValue placeholder="Chọn bên thiết lập dịch vụ nước" />
                       </SelectTrigger>
                     </FormControl>
                     <SelectContent>

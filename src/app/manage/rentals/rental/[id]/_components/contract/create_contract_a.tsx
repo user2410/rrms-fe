@@ -5,7 +5,7 @@ import { ScrollArea } from "@/components/ui/scroll-area";
 import DetailedStepper from "@/components/ui/stepper/detailed-stepper";
 import { getUserFullAddress, getUserFullName } from "@/models/user";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { useMemo, useState } from "react";
+import { useMemo, useRef, useState } from "react";
 import { useForm } from "react-hook-form";
 import * as z from "zod";
 import { useDataCtx } from "../../_context/data.context";
@@ -39,9 +39,13 @@ const formSchema = z.object({
 
 export type ContractAFormValues = z.infer<typeof formSchema>;
 
-export default function CreateContractA() {
+export default function CreateContractA({
+  handleSubmit,
+} : {
+  handleSubmit: () => void;
+}) {
+  const triggerBtnRef = useRef<HTMLButtonElement>(null);
   const [step, setStep] = useState<number>(0);
-  const [res, setRes] = useState<any>();
   const { owners, rental, sessionData } = useDataCtx();
 
   const form = useForm<ContractAFormValues>({
@@ -105,26 +109,14 @@ export default function CreateContractA() {
       aDocuments: data.aDocuments.map((doc) => doc.cert),
     };
     try {
-      if (!res) {
-        // create new contract record
-        const contract = (await backendAPI.post(`/api/rentals/rental/${rental.id}/contract`, submitData, {
-          headers: {
-            Authorization: `Bearer ${sessionData.user.accessToken}`,
-          }
-        })).data;
-        setRes(contract);
-        toast.success("Hợp đồng đã được tạo thành công");
-      } else {
-        // update current contractconst placeholder = ".................................";
-
-        await backendAPI.patch(`/api/contracts/contract/${res.id}`, submitData, {
-          headers: {
-            Authorization: `Bearer ${sessionData.user.accessToken}`,
-          }
-        });
-        setRes(data);
-        toast.success("Hợp đồng đã được cập nhật thành công");
-      }
+      await backendAPI.post(`/api/rentals/rental/${rental.id}/contract`, submitData, {
+        headers: {
+          Authorization: `Bearer ${sessionData.user.accessToken}`,
+        }
+      });
+      toast.success("Hợp đồng đã được tạo thành công");
+      triggerBtnRef.current?.click();
+      handleSubmit();
     } catch (err) {
       console.error(err);
       toast.error("Có lỗi xảy ra, vui lòng thử lại sau");
@@ -154,7 +146,7 @@ export default function CreateContractA() {
   return (
     <Dialog>
       <DialogTrigger asChild>
-        <Button type="button">Tạo hợp đồng</Button>
+        <Button type="button" ref={triggerBtnRef}>Tạo hợp đồng</Button>
       </DialogTrigger>
       <DialogContent className="max-w-[80vw] lg:max-w-[960px] xl:max-w-[1024px] 2xl:max-w-[1200px]">
         <DialogHeader>
@@ -200,7 +192,7 @@ export default function CreateContractA() {
                 )}
               {/* {JSON.stringify(form.formState.errors)} */}
               {(step === 1 && rental.id) && (
-                <Button type="submit">{res ? "Cập nhật" : "Hoàn tất"}</Button>
+                <Button type="submit">Hoàn tất</Button>
               )}
             </DialogFooter>
           </form>

@@ -4,12 +4,12 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import Spinner from "@/components/ui/spinner";
 import { backendAPI } from "@/libs/axios";
 import { useQuery } from "@tanstack/react-query";
+import { RotateCcw } from "lucide-react";
 import { useDataCtx } from "../_context/data.context";
 import ContractEditor from "./contract/contract_editor";
 import CreateContractA from "./contract/create_contract_a";
 import CreateContractB from "./contract/create_contract_b";
 import ViewContract from "./contract/view_contract";
-import { Separator } from "@/components/ui/separator";
 
 type ContractPingData = {
   id: number;
@@ -36,39 +36,43 @@ export default function ContractCard() {
       }
       return res.data;
     },
-    staleTime: 1000 * 30, // 1 minute polling
-    cacheTime: 1000 * 30, // 1 minute polling
+    staleTime: 1000 * 60 * 5,
+    cacheTime: 1000 * 60 * 5,
   });
 
   return (
     <div>
       <Card>
-        <CardHeader>
+        <CardHeader className="flex flex-row justify-between items-center">
           <CardTitle className="text-lg">Hợp đồng</CardTitle>
-          <CardContent className="space-y-4">
-            <h2>Hợp đồng thuê nhà</h2>
-            {query.isLoading ? (
-              <div className="flex flex-row justify-center">
-                <Spinner size={16} />
-              </div>
-            ) : query.isError ? (
-              <div className="flex flex-row justify-center">
-                <span className="text-red-500">Lỗi khi tải hợp đồng</span>
-              </div>
-            ) : query.data ? (
-              <ContractItem
-                item={query.data!}
-              />
-            ) : (
-              <div className="flex flex-col items-center gap-3">
-                <p className="text-center text-sm font-light">Chưa có hợp đồng</p>
-                {sessionData.user.user.id !== rental.tenantId && (
-                  <CreateContractA />
-                )}
-              </div>
-            )}
-          </CardContent>
+          <Button type="button" variant="outline" onClick={() => query.refetch()} disabled={query.isLoading}>
+            <RotateCcw className="w-4 h-4" />
+          </Button>
         </CardHeader>
+        <CardContent className="space-y-4">
+          <h2>Hợp đồng thuê nhà</h2>
+          {query.isLoading ? (
+            <div className="flex flex-row justify-center">
+              <Spinner size={16} />
+            </div>
+          ) : query.isError ? (
+            <div className="flex flex-row justify-center">
+              <span className="text-red-500">Lỗi khi tải hợp đồng</span>
+            </div>
+          ) : query.data ? (
+            <ContractItem
+              item={query.data!}
+              onSubmit={query.refetch}
+            />
+          ) : (
+            <div className="flex flex-col items-center gap-3">
+              <p className="text-center text-sm font-light">Chưa có hợp đồng</p>
+              {sessionData.user.user.id !== rental.tenantId && (
+                <CreateContractA handleSubmit={query.refetch} />
+              )}
+            </div>
+          )}
+        </CardContent>
       </Card>
     </div>
   );
@@ -76,8 +80,10 @@ export default function ContractCard() {
 
 function ContractItem({
   item,
+  onSubmit,
 }: {
   item: ContractPingData;
+  onSubmit: () => void;
 }) {
   const { sessionData, rental, property } = useDataCtx();
 
@@ -98,7 +104,7 @@ function ContractItem({
     ) : (
       <div className="flex flex-col justify-center items-center gap-2">
         <p className="text-sm font-light">Bổ sung thông tin vào hợp đồng</p>
-        <CreateContractB contractId={item.id} />
+        <CreateContractB contractId={item.id} handleSubmit={onSubmit}/>
       </div>
     )
   ) : item.status === 'PENDING' ? (
@@ -111,7 +117,7 @@ function ContractItem({
           </div>
         ) : (
           <div className="flex flex-col items-center gap-2">
-            <ContractEditor />
+            <ContractEditor handleSubmit={onSubmit}/>
           </div>
         )
       ) : (
@@ -122,7 +128,7 @@ function ContractItem({
           </div>
         ) : (
           <div className="flex flex-col items-center gap-2">
-            <ContractEditor />
+            <ContractEditor handleSubmit={onSubmit}/>
           </div>
         )
       )}
