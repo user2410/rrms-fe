@@ -7,8 +7,8 @@ import { Session } from "next-auth";
 import { Card } from "@/components/ui/card";
 
 type Data = {
-  lastMonthNewApplications: number[];
-  thisMonthNewApplications: number[];
+  newApplicationsThisMonth: number[];
+  newApplicationsLastMonth: number[];
 }
 
 export default function NewApplications({
@@ -24,7 +24,10 @@ export default function NewApplications({
         headers: {
           Authorization: `Bearer ${queryKey.at(-1)}`,
         },
-      })).data || ([]);
+      })).data || ({
+        newApplicationsThisMonth: [],
+        newApplicationsLastMonth: [],
+      } as Data);
     },
     staleTime: 1000 * 60 * 5,
     cacheTime: 1000 * 60 * 5,
@@ -46,12 +49,12 @@ export default function NewApplications({
     );
   }
 
-  const thisMonth = query.data.thisMonthNewApplications?.length || 0;
-  const lastMonth = query.data.lastMonthNewApplications?.length || 0;
-  const change = lastMonth > 0 ? (thisMonth - lastMonth) / lastMonth * 100 : 0;
-
+  const thisMonth = query.data.newApplicationsThisMonth?.length || 0;
+  const lastMonth = query.data.newApplicationsLastMonth?.length || 0;
+  const change = lastMonth > 0 ? (thisMonth - lastMonth) : (lastMonth - thisMonth);
+  console.log("change", change);
   return (
-    <Link href="/">
+    <Link href="/manage/applications/to-me">
       {query.isLoading ? (
         <Spinner size={32} />
       ) : query.isError ? (
@@ -62,8 +65,8 @@ export default function NewApplications({
           icon={<i className="fas fa-file-lines" />}
           data={thisMonth.toString() || "0"}
           statArrow={change > 0 ? "up" : change < 0 ? "down" : "none"}
-          change={change > 0 ? change.toString() : ""}
-          since="Từ tháng trước"
+          change={change !== 0 ? change.toString() : ""}
+          since="So với tháng trước"
         />
       )}
     </Link>

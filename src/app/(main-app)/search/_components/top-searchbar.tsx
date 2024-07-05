@@ -50,7 +50,7 @@ export default function TopSearchBar({
   return (
     <Form {...form}>
       <form
-        className="flex items-center lg:px-2 px-1 h-[72px] border-y shadow-md"
+        className="hidden lg:flex items-center lg:px-2 px-1 h-[72px] border-y shadow-md"
         onSubmit={form.handleSubmit(onSubmit)}
       >
         <div className="flex-1 px-2">

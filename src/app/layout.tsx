@@ -8,6 +8,8 @@ import ReactQueryContext from '@/context/react-query';
 
 import '@fortawesome/fontawesome-free/css/all.min.css';
 import '../assets/globals.css';
+import { ReminderProvider } from '@/context/reminder.context';
+import ReminderComponent from '@/components/complex/reminder';
 
 const inter = Inter({ subsets: ['latin'] });
 
@@ -29,7 +31,10 @@ export default function RootLayout({
           <GoogleMapContext>
             <ReactQueryContext>
               <Toaster />
-              {children}
+              <ReminderProvider>
+                <ReminderComponent />
+                {children}
+              </ReminderProvider>
             </ReactQueryContext>
           </GoogleMapContext>
         </NextAuthContext>

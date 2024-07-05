@@ -9,7 +9,7 @@ export default function HomePage() {
     <div>
       <div className="
         bg-[url('/img/hanoi-banner.jpg')] bg-cover bg-center object-fill
-        w-full h-[60vh]
+        w-screen h-[60vh]
         text-white
       ">
         <div className="w-full h-full bg-slate-900 bg-opacity-75 py-24 px-10 flex flex-col items-center justify-center gap-8">

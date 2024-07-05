@@ -25,7 +25,7 @@ export default function ListingItem({
 
   return (
     <div className="w-full grid grid-cols-5 border bg-card">
-      <div className="col-span-3 grid grid-cols-3 border">
+      <div className="col-span-5 md:col-span-3 grid grid-cols-3 border">
         <div className="relative aspect-square flex flex-col justify-center">
           <Image
             src={getPrimaryImage(property)}
@@ -64,7 +64,7 @@ export default function ListingItem({
           </div>
         </div>
       </div>
-      <div className="col-span-2 grid grid-rows-4">
+      <div className="hidden md:col-span-2 md:grid md:grid-rows-4">
         <div className="row-span-3 grid grid-cols-3 border">
           <div className="flex flex-col justify-center items-center gap-2 w-full h-full border">
             <h5 className="text-center">Trạng thái</h5>

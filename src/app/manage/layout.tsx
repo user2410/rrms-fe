@@ -1,15 +1,17 @@
 "use client";
 
 import { ScrollArea } from "@/components/ui/scroll-area";
+import { ReminderProvider } from "@/context/reminder.context";
+import { useFetchReminders } from "@/hooks/use-reminder";
 import { useSession } from "next-auth/react";
 import { useRouter } from "next/navigation";
 import ManageDashboardNavbar from "./_components/navbar";
 import Sidebar from "./_components/sidebar";
 import ReminderComponent from "@/components/complex/reminder";
 
-export default function Layout({ 
+export default function Layout({
   children
-} : {
+}: {
   children: React.ReactNode
 }) {
   const session = useSession();
@@ -26,7 +28,6 @@ export default function Layout({
 
   return (
     <div className="w-full h-full grid grid-cols-12 bg-gray-100 dark:bg-background">
-      <ReminderComponent/>
       <div className="hidden xl:block xl:col-span-2">
         <Sidebar />
       </div>
@@ -38,6 +39,6 @@ export default function Layout({
           {children}
         </ScrollArea>
       </div>
-    </div>
+    </div >
   );
 }

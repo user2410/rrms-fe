@@ -1,4 +1,3 @@
-import ReminderComponent from "@/components/complex/reminder";
 import { FavListingsProvider } from "@/context/favorite_listings.context";
 import FooterMain from "./_components/footer";
 import HeaderMain from "./_components/header";
@@ -6,11 +5,10 @@ import HeaderMain from "./_components/header";
 export default async function MainLayout({
   children,
 }: {
-  children: React.ReactNode
+  children: React.ReactNode;
 }) {
   return (
     <FavListingsProvider>
-      <ReminderComponent/>
       <main
         className="bg-muted"
         style={{

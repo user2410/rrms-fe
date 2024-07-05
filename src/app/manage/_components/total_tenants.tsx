@@ -61,7 +61,7 @@ export default function TotalTenants({
   }
 
   return (
-    <Link href="/">
+    <Link href="/manage/rentals">
       {query.isLoading ? (
         <Spinner size={32} />
       ) : query.isError ? (
@@ -78,7 +78,7 @@ export default function TotalTenants({
             <div className="text-2xl font-bold">{query.data.allTime}</div>
             <div className="inline-block space-x-1 text-emerald-500">
               <i className="fas fa-arrow-up" />
-              <span>{query.data.thisMonth} người thuê mới tháng này</span>
+              <span className="text-xs text-muted-foreground">{query.data.thisMonth} người thuê mới</span>
             </div>
           </CardContent>
         </Card>

@@ -42,7 +42,7 @@ export const approvedRequestColumns: ColumnDef<ManagedNewPropertyManagerRequest>
           href={`/manage/properties/property/${property.id}`}
           className="flex flex-row items-center gap-2"
         >
-          <div className="relative aspect-square w-10 h-10">
+          <div className="relative aspect-square w-10 h-10 hidden sm:block">
             <Image
               src={getPrimaryImage(property)}
               fill

@@ -3,6 +3,15 @@
 import { Button } from "@/components/ui/button";
 import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet";
 import useRoutes from "@/hooks/use-route";
+import {
+  Accordion,
+  AccordionContent,
+  AccordionItem,
+  AccordionTrigger,
+} from "@/components/ui/accordion";
+import { propertiesNavbar } from "./nav-items";
+import { getSearchURL } from "../search/_components/get_searchurl";
+import Link from "next/link";
 
 export default function Sidebar() {
   const rootRoute = useRoutes();
@@ -18,14 +27,42 @@ export default function Sidebar() {
         </Button>
       </SheetTrigger>
       <SheetContent>
-        {/* Mobile menu */}
-        <ul className="flex flex-col gap-2 font-medium rounded-lg">
-          {rootRoute.subroutes?.map((item, index) => (
-            <li key={index}>
-              <a href={item.href} className="block py-2 pl-3 pr-4 text-foreground/60 hover:text-foreground/80 rounded bg-transparent">{item.label}</a>
-            </li>
+        <Accordion type="single" collapsible>
+          {[
+            {
+              label: 'Nhà cho thuê',
+              href: '#',
+              subroute: propertiesNavbar.map((item) => ({
+                label: item.title,
+                description: item.description,
+                href: `/search/${getSearchURL({ ptypes: [item.key] })}`,
+              })),
+            },
+            {
+              label: 'Tin tức',
+              href: '/news',
+            },
+            {
+              label: 'Hướng dẫn',
+              href: '/guide',
+            },
+          ].map((item, index) => (
+            <AccordionItem value={index.toString()} key={index}>
+              <AccordionTrigger>{item.label}</AccordionTrigger>
+              <AccordionContent>
+                {item.subroute && (
+                  item.subroute.map((subitem, subindex) => (
+                    <div key={subindex} className="py-2">
+                      <Link href={subitem.href} className="px-2 py-3 font-semibold">
+                        {subitem.label} 
+                      </Link>
+                    </div>
+                  ))
+                )}
+              </AccordionContent>
+            </AccordionItem>
           ))}
-        </ul>
+        </Accordion>
       </SheetContent>
     </Sheet>
   );

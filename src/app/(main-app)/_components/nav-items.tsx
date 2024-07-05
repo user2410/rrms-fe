@@ -1,14 +1,11 @@
 "use client";
 
-import { Icons } from "@/components/ui/icons";
 import { NavigationMenu, NavigationMenuContent, NavigationMenuItem, NavigationMenuLink, NavigationMenuList, NavigationMenuTrigger } from "@/components/ui/navigation-menu";
-import useRoutes from "@/hooks/use-route";
-import { mapPropertyTypeToText } from "@/models/property";
 import clsx from "clsx";
 import Link from "next/link";
 import React from "react";
 
-const properties: { key: string; title: string; description: string }[] = [
+export const propertiesNavbar: { key: string; title: string; description: string }[] = [
   {
     key: "APARTMENT",
     title: "Căn hộ",
@@ -42,8 +39,6 @@ const properties: { key: string; title: string; description: string }[] = [
 ];
 
 export default function NavItems() {
-  const rootRoute = useRoutes();
-
   return (
     <div
       className="md:w-auto bg-background/95 backdrop-blur"
@@ -54,7 +49,7 @@ export default function NavItems() {
             <NavigationMenuTrigger>Nhà cho thuê</NavigationMenuTrigger>
             <NavigationMenuContent>
               <ul className="grid w-[400px] gap-3 p-4 md:w-[500px] md:grid-cols-2 lg:w-[600px] ">
-                {properties.map((item) => (
+                {propertiesNavbar.map((item) => (
                   <ListItem
                     key={item.title}
                     title={item.title}

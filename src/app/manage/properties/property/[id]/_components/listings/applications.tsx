@@ -50,7 +50,7 @@ export default function Applications({
       <div className="flex flex-row justify-between items-end">
         <h3 className="font-semibold">Đơn ứng tuyển</h3>
         <Link
-          href={`/manage/rental/applications?propertyId=${property.id}`}
+          href={`/manage/rental/applications/to-me?propertyId=${property.id}`}
           className="text-sm hover:underline"
         >
           {query.isSuccess && (

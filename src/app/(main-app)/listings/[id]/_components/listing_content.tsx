@@ -31,9 +31,9 @@ export default function ListingContent({
   return (
     <div className="space-y-4">
 
-      <div className="grid grid-cols-6 gap-6">
+      <div className="grid grid-cols-1 md:grid-cols-6 gap-6">
         {/* Main content */}
-        <div className="space-y-4 col-span-4">
+        <div className="space-y-4 md:col-span-4">
           <Gallery items={property.media} />
           <div className="space-y-3">
             {/* <TopBreadcrumb cityCode={property.city} districtCode={property.district} /> */}
@@ -69,7 +69,7 @@ export default function ListingContent({
           <Separator />
         </div>
         {/* Contact and relavant search */}
-        <div className="col-span-2">
+        <div className="md:col-span-2">
           <div className="space-y-4">
             <PostedBy listing={listing} />
             {!preview && (

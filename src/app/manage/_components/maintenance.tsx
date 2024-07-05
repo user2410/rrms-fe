@@ -19,7 +19,7 @@ export default function Maintenance({
   const query = useQuery<Data>({
     queryKey: ["manage", "statistic", "maintenance", sessionData!.user.accessToken],
     queryFn: async ({queryKey}) => {
-      const res = (await backendAPI.get<Data>("/api/statistics/manager/rentals", {
+      const res = (await backendAPI.get<Data>("/api/statistics/manager/maintenance", {
         headers: {
           Authorization: `Bearer ${queryKey.at(-1)}`,
         },
@@ -49,17 +49,17 @@ export default function Maintenance({
   // compare numbers of new maintenances this month and last month, change is calculated by percentage
   const thisMonth = query.data.newMaintenancesThisMonth?.length || 0;
   const lastMonth = query.data.newMaintenancesLastMonth?.length || 0;
-  const change = lastMonth > 0 ? (thisMonth - lastMonth) / lastMonth * 100 : 0;
+  const change = lastMonth > 0 ? (thisMonth - lastMonth) : (lastMonth - thisMonth);
 
   return (
-    <Link href="/">
+    <Link href="#">
       <StatCard
         title="Yêu cầu bảo trì"
         icon={<i className="fas fa-screwdriver-wrench" />}
         data={thisMonth.toString() || "0"}
         statArrow={change > 0 ? "up" : change < 0 ? "down" : "none"}
-        change={change > 0 ? `${change} %` : ""}
-        since="Từ tháng trước"
+        change={change !== 0 ? change.toString() : ""}
+        since="So với tháng trước"
       />
     </Link>
   );

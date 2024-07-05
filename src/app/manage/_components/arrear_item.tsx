@@ -5,7 +5,7 @@ import { getRentalPaymentReasonText, getTotalAmount, Rental } from "@/models/ren
 import { Unit } from "@/models/unit";
 import { useQuery } from "@tanstack/react-query";
 import { Session } from "next-auth";
-import { RentalPaymentItem } from "./rent-arrear-tile";
+import { RentalPaymentItem } from "./rent-payment-tile";
 import { Property } from "@/models/property";
 import Link from "next/link";
 import { Table, TableCell, TableRow } from "@/components/ui/table";
@@ -51,27 +51,28 @@ export default function ArrearItem({
     <Card className={`${item.expiryDuration < 0 ? "bg-purple-200" : ""}`}>
       <Table>
         <TableRow>
-          <TableCell>
+          <TableCell className="p-2">
             <div className="flex flex-row items-center gap-2">
               <Avatar>
                 <AvatarFallback>{item.tenantName.split(" ").slice(-2).map(i => i[0]).join("")}</AvatarFallback>
               </Avatar>
               <div className="space-y-2">
-                <h3 className="text-base font-semibold">{item.tenantName}</h3>
-                <p className="font-light text-sm">
-                  {query.isSuccess && (<Link href={`/manage/properties/property/${query.data.property.id}`}>{`${query.data.property.name} Phòng ${query.data.unit.name}`}</Link>)}
-                </p>
+                <div>
+                  <Link href={`/manage/rentals/rental/${item.rentalId}`} className="text-sm font-semibold truncate text-ellipsis">{item.tenantName}</Link>
+                </div>
+                <span className="font-light max-w-[32px]">
+                  {query.isSuccess && (<Link className="text-xs truncate text-ellipsis" href={`/manage/properties/property/${query.data.property.id}`}>{`${query.data.property.name} Phòng ${query.data.unit.name}`}</Link>)}
+                </span>
               </div>
             </div>
           </TableCell>
-          <TableCell>
-            <p>Tiền {query.isSuccess && getRentalPaymentReasonText(item, query.data.rental.services)}</p>
+          <TableCell className="text-left">
+            <p>{query.isSuccess && getRentalPaymentReasonText(item, query.data.rental.services)}</p>
           </TableCell>
-          <TableCell>
-            <p>{getTotalAmount(item).toLocaleString("vi-VN", { style: 'currency', currency: 'VND' })}</p>
-          </TableCell>
-          <TableCell>
-            <div>{item.expiryDuration < 0 ? "Đã hết hạn" : `Còn ${item.expiryDuration} ngày`}</div>
+          <TableCell className="text-right">
+            {query.isSuccess && (
+              <p>{getTotalAmount(item, query.data.rental).toLocaleString("vi-VN", { style: 'currency', currency: 'VND' })}</p>
+            )}
           </TableCell>
         </TableRow>
       </Table>

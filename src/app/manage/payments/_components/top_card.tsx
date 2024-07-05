@@ -24,26 +24,30 @@ export default function TopCard({
   const query = useQuery<Data>({
     queryKey: ["manage", "payments", sessionData.user.accessToken],
     queryFn: async ({ queryKey }) => {
-      const incomes = (await backendAPI.get("/api/statistics/manager/rentals/payments/incomes", {
+      const incomes = ((await backendAPI.get("/api/statistics/manager/rentals/payments/incomes", {
         params: {
-          // start time is the first day of the current month
           startTime: new Date(0),
           endTime: new Date(),
         },
         headers: {
           Authorization: `Bearer ${queryKey.at(-1)}`,
         }
-      })).data || ([]);
-      const payments = (await backendAPI.get("/api/statistics/manager/payments", {
+      }))
+      .data || ([]))
+      // @ts-ignore
+      .sort((a,b) => new Date(b.startTime).getTime() - new Date(a.startTime).getTime());
+      const payments = ((await backendAPI.get("/api/statistics/manager/payments", {
         params: {
-          // start time is the first day of the current month
           startTime: new Date(0),
           endTime: new Date(),
         },
         headers: {
           Authorization: `Bearer ${queryKey.at(-1)}`,
         }
-      })).data || ([]);
+      }))
+      .data || ([]))
+      // @ts-ignore
+      .sort((a,b) => new Date(b.startTime).getTime() - new Date(a.startTime).getTime());
       return {
         incomesThisMonth: incomes.at(0)?.amount ?? 0,
         incomesLastMonth: incomes.at(1)?.amount ?? 0,
@@ -81,7 +85,7 @@ export default function TopCard({
       <CardHeader>
         <CardTitle>Khoản thu chi của bạn</CardTitle>
       </CardHeader>
-      <CardContent className="grid grid-cols-3 gap-4">
+      <CardContent className="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-3 gap-4">
         <div className="space-y-2">
           <h3 className="font-semibold">Thu nhập tháng này</h3>
           <ResultDisplay
@@ -115,8 +119,8 @@ export default function TopCard({
             query={query}
             item={
               <AmountTrending
-                current={query.data ? (query.data.expensesThisMonth - query.data.incomesThisMonth) : 0}
-                prev={query.data ? (query.data.expensesLastMonth - query.data.incomesLastMonth) : 0}
+                current={query.data ? (query.data.incomesThisMonth - query.data.expensesThisMonth) : 0}
+                prev={query.data ? (query.data.incomesLastMonth - query.data.expensesLastMonth) : 0}
               />
             }
           />
@@ -161,12 +165,12 @@ const AmountTrending = ({
         change > 0 ? (
           <span className="text-green-600 space-x-1">
             <TrendingUp className="h-4 w-4 inline" />
-            {change}% so với tháng trước
+            {change.toPrecision(2)}% so với tháng trước
           </span>
         ) : (
           <span className="text-red-600 space-x-1">
             <TrendingDown className="h-4 w-4 inline" />
-            {-change}% so với tháng trước
+            {-change.toPrecision(2)}% so với tháng trước
           </span>
         )
       )}

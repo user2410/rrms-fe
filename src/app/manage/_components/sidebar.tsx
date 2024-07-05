@@ -13,6 +13,7 @@ import { BsBuildingFillAdd, BsFillBuildingsFill } from "react-icons/bs";
 import { FaFile, FaFileAlt, FaFileContract, FaHandHolding, FaMoneyBill, FaUser } from "react-icons/fa";
 import { FiLifeBuoy } from "react-icons/fi";
 import SidebarNavigation from "./sidebar_navigation";
+import Logo from "@/components/ui/logo";
 
 const ICON_SIZE = 16;
 
@@ -36,53 +37,21 @@ export default function Sidebar() {
     <nav className="
       h-screen bg-background
       flex flex-wrap md:flex-row md:flex-nowrap items-center justify-between
-      overflow-hidden z-10 py-4 px-6 border-r
+      overflow-hidden z-10 py-4 px-6
     ">
       <div className="md:flex-col md:items-stretch md:min-h-full md:flex-nowrap px-0 flex flex-wrap items-center justify-between w-full mx-auto">
-        <Link
-          href="/"
-          className="md:block text-left md:pb-2 text-foreground mr-0 inline-block whitespace-nowrap text-sm uppercase font-bold p-4 px-0"
-        >
-          <div className="flex items-center justify-center gap-2">
-            <Image
-              className="float-left"
-              src="/logo.png"
-              alt="RRMS"
-              width={48}
-              height={48}
-            />
-            <div className="float-left text-xl">RRMS</div>
-          </div>
-        </Link>
-        {/* User */}
-        <ul className="md:hidden items-center flex flex-wrap list-none">
-          <li className="inline-block relative">
-            NotificationDropdown
-          </li>
-
-        </ul>
         {/* Collapse */}
         <div className="md:flex md:flex-col md:justify-between md:items-stretch md:opacity-100 md:relative md:mt-4 md:shadow-none shadow absolute top-0 left-0 right-0 z-40 overflow-y-auto overflow-x-hidden h-auto items-center flex-1 rounded ">
-          <div className="w-full space-y-6">
+          <div className="w-full pl-1 sm:pl-0 space-y-6">
             {/* Collapse header */}
-            <div className="md:min-w-full md:hidden block pb-4 border-b border-solid border-blueGray-200">
-              <div className="flex flex-wrap">
-                <div className="w-6/12">
-                  <Link
-                    href="/"
-                    className="md:block text-left md:pb-2 text-slate-600 mr-0 inline-block whitespace-nowrap text-lg uppercase font-bold p-4 px-0"
-                  >
-                    RRMS
-                  </Link>
-                </div>
-                <div className="w-6/12 flex justify-end">
-                  <button
-                    type="button"
-                    className="cursor-pointer text-black opacity-50 md:hidden px-3 py-1 text-xl leading-none bg-transparent rounded border border-solid border-transparent"
-                  >
-                    <i className="fas fa-times"></i>
-                  </button>
-                </div>
+            <div className="min-w-full block p-2 ">
+              <div className="w-6/12">
+                <Link
+                  href="/"
+                  className="md:block text-left md:pb-2 text-slate-600 mr-0 inline-block whitespace-nowrap text-lg uppercase font-bold p-4 px-0"
+                >
+                  <Logo size={64}/>
+                </Link>
               </div>
             </div>
             <div className="flex flex-row items-center gap-2">

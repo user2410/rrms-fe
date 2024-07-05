@@ -75,8 +75,8 @@ export default function SearchPage({ query }: { query: SearchFormValues }) {
         <div className="py-4">
           <Header query={query} />
         </div>
-        <div className="grid grid-cols-12 gap-4">
-          <div className="col-span-12 md:col-span-8 space-y-4">
+        <div className="grid grid-cols-1 md:grid-cols-12 gap-4">
+          <div className="md:col-span-8 space-y-4">
             {_query.isLoading ? (
               ListingSectionLoadingState
             ) : _query.isError ? (
@@ -95,7 +95,7 @@ export default function SearchPage({ query }: { query: SearchFormValues }) {
               />
             )}
           </div>
-          <div className="hidden md:block md:col-span-4">
+          <div className="md:block md:col-span-4">
             <Sidebar query={query} />
           </div>
         </div>

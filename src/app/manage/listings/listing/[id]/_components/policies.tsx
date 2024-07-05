@@ -76,7 +76,7 @@ export default function Policies() {
           </Button>
         </span>
       </CardHeader>
-      <CardContent className="grid grid-cols-2 gap-4">
+      <CardContent className="grid grid-cols-1 sm:grid-cols-2 gap-4">
         <div className="space-y-2">
           <h3 className="font-semibold">Số khách thuê tối đa</h3>
           {isEditing ? (

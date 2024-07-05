@@ -32,7 +32,7 @@ export default function Searchbar() {
   }
 
   return (
-    <form className="flex flex-row w-2/5 gap-1" onSubmit={handleSubmit}>
+    <form className="hidden lg:flex lg:flex-row w-2/5 gap-1" onSubmit={handleSubmit}>
       <div className="flex-grow">
         <SearchbarSuggestion
           placeholder="Tìm kiếm theo khu vực"

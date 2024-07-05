@@ -18,6 +18,7 @@ import {
 import { Button } from "@/components/ui/button";
 import { BiDotsHorizontal } from "react-icons/bi";
 import { ChevronsUp } from "lucide-react";
+import { useMemo } from "react";
 
 export default function Managers() {
   const { property, sessionData } = usePropDataCtx();
@@ -37,6 +38,8 @@ export default function Managers() {
     cacheTime: 1000 * 60 * 5, // 5 minutes
     staleTime: 1000 * 60 * 5, // 5 minutes
   });
+
+  const managers = useMemo(() => property.managers.filter(m => m.role === "MANAGER"), [property]);
 
   return (
     <div>
@@ -90,9 +93,11 @@ export default function Managers() {
           </CardContent>
         ) : (
           <CardContent className="space-y-3">
-            {property.managers
-              .filter(m => m.role === "MANAGER")
-              .map((m, i) => {
+            {managers.length == 0 ? (
+              <div className="w-full flex flex-row justify-center items-center py-2">
+                <span>Chưa có người quản lý</span>
+              </div>
+            ) : managers.map((m, i) => {
                 const user = query.data.find(u => u.id === m.managerId)!;
                 return (
                   <div key={i} className="w-full flex flex-row justify-between border shadow-sm py-3 px-2">

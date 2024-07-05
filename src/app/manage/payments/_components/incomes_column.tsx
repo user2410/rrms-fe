@@ -137,7 +137,7 @@ export const finishedPaymentsColumns: ColumnDef<RentalPaymentItem>[] = [
       return (
         <Link
           href={`/manage/rentals/rental/${rental.id}`}
-          className="font-semibold text-blue-600 hover:underline"
+          className="font-semibold text-blue-600 hover:underline "
         >
           {rental.tenantType === "ORGANIZATION" ? rental.organizationName : rental.tenantName}
         </Link>
@@ -151,7 +151,7 @@ export const finishedPaymentsColumns: ColumnDef<RentalPaymentItem>[] = [
       return (
         <Link
           href={`/manage/rentals/rental/${rental.id}`}
-          className="font-semibold text-blue-600 hover:underline"
+          className="font-semibold text-blue-600 hover:underline truncate text-ellipsis"
         >
           {property.name} - {unit.name}
         </Link>
@@ -163,18 +163,17 @@ export const finishedPaymentsColumns: ColumnDef<RentalPaymentItem>[] = [
     cell: ({ row }) => {
       const { payment, rental } = row.original;
       return (
-        <span className="">{getRentalPaymentReasonText(payment, rental.services)}</span>
+        <span className="truncate text-ellipsis">{getRentalPaymentReasonText(payment, rental.services)}</span>
       );
     },
   },
   {
     header: "Số tiền",
     cell: ({ row }) => {
-      const { payment } = row.original;
+      const { payment, rental } = row.original;
       return (
         <span className="">
-          {payment.amount.toLocaleString('vi-VN', { style: 'currency', currency: 'VND' })}&nbsp;
-          {!!payment.discount && (`(-${payment.discount.toLocaleString('vi-VN', { style: 'currency', currency: 'VND' })})`)}
+          {getTotalAmount(payment, rental).toLocaleString('vi-VN', { style: 'currency', currency: 'VND' })}
         </span>
       );
     },

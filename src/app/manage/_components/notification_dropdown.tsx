@@ -8,6 +8,7 @@ import {
   DropdownMenuShortcut,
   DropdownMenuTrigger
 } from "@/components/ui/dropdown-menu";
+import { ScrollArea } from "@/components/ui/scroll-area";
 import useFcmToken from "@/hooks/use_fcm-token";
 import { backendAPI } from "@/libs/axios";
 import { firebaseApp } from "@/libs/firebase";
@@ -136,6 +137,7 @@ export default function NotificationDropdown() {
           limit: queryKey[2],
           offset: queryKey[3],
           channel: "PUSH",
+          token: fcmToken,
         },
         headers: {
           Authorization: `Bearer ${queryKey.at(-1)}`,
@@ -174,59 +176,63 @@ export default function NotificationDropdown() {
           )}
         </div>
       </DropdownMenuTrigger>
-      <DropdownMenuContent className="min-w-[24rem]">
-        {(query.isLoading || query.isError) ? (
-          Array.from({ length: 10 }).map((_, index) => (
-            <DropdownMenuItem key={index} className="animate-pulse">
-              <div className="flex-grow flex flex-row items-center p-2">
-                <Bell className="mr-2 h-4 w-4" />
-                <div className="space-y-1">
-                  <h3 className="font-semibold text-lg"></h3>
-                  <p className="text-sm text-muted-foreground">Loading...</p>
-                </div>
-                <DropdownMenuShortcut>
-                  Loading...
-                </DropdownMenuShortcut>
-              </div>
-            </DropdownMenuItem>
-          ))
-        ) : query.data.length + newNotifications.length === 0 ? (
-          <DropdownMenuItem className="justify-center text-muted-foreground">
-            Không có thông báo
-          </DropdownMenuItem>
-        ) : (
-          (Object.values([...newNotifications, ...query.data].reduce((accumulator: any, current: any) => (accumulator[current.id] = current, accumulator), {})) as NotificationModel[])
-            .sort((a, b) => b.createdAt.getTime() - a.createdAt.getTime())
-            .map((item, index) => (
-              <DropdownMenuItem key={index}>
-                <Link
-                  href={getNotificationActionLink(item)}
-                  className="flex-grow flex flex-row items-center p-2 hover:cursor-pointer"
-                  onClick={() => handleClickNotification(item.id)}
-                >
-                  {!item.seen ? (
-                    <span className="relative mr-3">
-                      <Bell className="h-4 w-4" />
-                      <span className="absolute top-0 right-0 h-2 w-2 rounded-sm bg-blue-600" />
-                    </span>
-                  ) : (
-                    <Bell className="h-4 w-4 mr-3" />
-                  )}
-
+      <DropdownMenuContent>
+        <ScrollArea className="min-w-[24rem] max-w-[36rem] h-[40vh]">
+          {(query.isLoading || query.isError) ? (
+            Array.from({ length: 10 }).map((_, index) => (
+              <DropdownMenuItem key={index} className="animate-pulse">
+                <div className="flex-grow flex flex-row items-center p-2">
+                  <Bell className="mr-2 h-4 w-4" />
                   <div className="space-y-1">
-                    <h3 className="font-semibold text-base">{item.title}</h3>
-                    <p className="text-sm text-muted-foreground">{item.content.length > 52 ? `${item.content.slice(0, 53)}...` : item.content}</p>
+                    <h3 className="font-semibold text-lg"></h3>
+                    <p className="text-sm text-muted-foreground">Loading...</p>
                   </div>
-                  <DropdownMenuShortcut className="text-xs">
-                    {formatDistance(new Date(item.createdAt), new Date(), {
-                      addSuffix: true,
-                      locale: vilocale,
-                    })}
+                  <DropdownMenuShortcut>
+                    Loading...
                   </DropdownMenuShortcut>
-                </Link>
+                </div>
               </DropdownMenuItem>
             ))
-        )}
+          ) : query.data.length + newNotifications.length === 0 ? (
+            <DropdownMenuItem className="justify-center text-muted-foreground">
+              Không có thông báo
+            </DropdownMenuItem>
+          ) : (
+            (Object.values([...newNotifications, ...query.data].reduce((accumulator: any, current: any) => (accumulator[current.id] = current, accumulator), {})) as NotificationModel[])
+              .sort((a, b) => b.createdAt.getTime() - a.createdAt.getTime())
+              .map((item, index) => (
+                <DropdownMenuItem key={index}>
+                  <Link
+                    href={getNotificationActionLink(item)}
+                    className="flex-grow flex flex-row items-center p-2 hover:cursor-pointer"
+                    onClick={() => handleClickNotification(item.id)}
+                  >
+                    {!item.seen ? (
+                      <span className="relative mr-3">
+                        <Bell className="h-4 w-4" />
+                        <span className="absolute top-0 right-0 h-2 w-2 rounded-sm bg-blue-600" />
+                      </span>
+                    ) : (
+                      <span className="mr-3">
+                        <Bell className="h-4 w-4" />
+                      </span>
+                    )}
+
+                    <div className="space-y-1">
+                      <h3 className="font-semibold text-base text-ellipsis">{item.title}</h3>
+                      <p className="text-sm text-muted-foreground">{item.content.length > 52 ? `${item.content.slice(0, 53)}...` : item.content}</p>
+                    </div>
+                    <DropdownMenuShortcut className="text-xs">
+                      {formatDistance(new Date(item.createdAt), new Date(), {
+                        addSuffix: true,
+                        locale: vilocale,
+                      })}
+                    </DropdownMenuShortcut>
+                  </Link>
+                </DropdownMenuItem>
+              ))
+          )}
+        </ScrollArea>
       </DropdownMenuContent>
     </DropdownMenu>
 

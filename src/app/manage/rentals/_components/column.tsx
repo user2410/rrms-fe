@@ -1,18 +1,11 @@
 "use client";
 
-import { Button, buttonVariants } from "@/components/ui/button";
-import {
-  DropdownMenu,
-  DropdownMenuContent,
-  DropdownMenuItem,
-  DropdownMenuTrigger
-} from "@/components/ui/dropdown-menu";
+import { buttonVariants } from "@/components/ui/button";
 import { mapTenantType2Text } from "@/models/application";
 import { ColumnDef } from "@tanstack/react-table";
-import { Eye, MoreHorizontal } from "lucide-react";
+import { Eye } from "lucide-react";
 import Link from "next/link";
 import { ManagedRental } from "../page";
-import { cn } from "@/libs/utils";
 
 export const aboutToExpireColumns: ColumnDef<ManagedRental>[] = [
   {
@@ -59,24 +52,14 @@ export const aboutToExpireColumns: ColumnDef<ManagedRental>[] = [
     cell: ({ row }) => (`${row.original.rental.expiryDate!.toLocaleDateString("vi-VN")} (${row.original.rental.timeLeft < 0 ? "Hết hạn" : `còn ${row.original.rental.timeLeft.toFixed(0)} ngày`})`),
   },
   {
-    header: "",
+    header: "Profile thuê nhà",
     cell: ({ row }) => (
-      <DropdownMenu>
-        <DropdownMenuTrigger>
-          <Button variant="ghost" size="icon">
-            <MoreHorizontal className="h-4 w-4" />
-            <span className="sr-only">More</span>
-          </Button>
-        </DropdownMenuTrigger>
-        <DropdownMenuContent>
-          <DropdownMenuItem>Profile</DropdownMenuItem>
-          <DropdownMenuItem>Billing</DropdownMenuItem>
-          <DropdownMenuItem>Team</DropdownMenuItem>
-          <DropdownMenuItem>Subscription</DropdownMenuItem>
-        </DropdownMenuContent>
-      </DropdownMenu>
-    )
-  }
+      <Link href={`/manage/rentals/rental/${row.original.rental.id}`} className="flex flex-row items-center gap-1">
+        <Eye className="w-4 h-4" />
+        <span>Xem chi tiết</span>
+      </Link>
+    ),
+  },
 ];
 
 export function nonExpiredColumns(segment: string): ColumnDef<ManagedRental>[] {
@@ -141,13 +124,13 @@ export function nonExpiredColumns(segment: string): ColumnDef<ManagedRental>[] {
         header: "Profile thuê nhà",
         cell: ({ row }) => (
           <Link href={`/manage/rentals/rental/${row.original.rental.id}`} className="flex flex-row items-center gap-1">
-            <Eye className="w-4 h-4"/>
+            <Eye className="w-4 h-4" />
             <span>Xem chi tiết</span>
-          </Link>  
+          </Link>
         ),
       },
     ]);
-  } 
+  }
   return res;
 }
 

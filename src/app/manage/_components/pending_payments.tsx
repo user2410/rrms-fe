@@ -13,7 +13,7 @@ import { backendAPI } from "@/libs/axios";
 import { getRentalPaymentReason, getRentalPaymentReasonText } from "@/models/rental";
 import { useQuery } from "@tanstack/react-query";
 import { Session } from "next-auth";
-import { RentalPaymentItem } from "./rent-arrear-tile";
+import { RentalPaymentItem } from "./rent-payment-tile";
 import Link from "next/link";
 
 

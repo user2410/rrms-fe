@@ -145,7 +145,7 @@ export default function ApplicationPage({ params }: { params: { id: string } }) 
             )}
           </div>
         </div>
-        <div className="w-3/4 grid grid-cols-3 gap-3">
+        <div className="w-3/4 grid grid-cols-2 lg:grid-cols-3 gap-3">
           <div className="space-y-2">
             <div className="text-lg font-medium">Submitted</div>
             <div className="text-base font-normal">{new Date(application.createdAt).toLocaleDateString("vi-VN")}</div>

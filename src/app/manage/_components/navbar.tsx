@@ -27,7 +27,6 @@ export default function ManageDashboardNavbar() {
             </Button>
           </SheetTrigger>
           <SheetContent side="left">
-            {/* Mobile menu */}
             <Sidebar/>
           </SheetContent>
         </Sheet>

@@ -100,17 +100,14 @@ export default function WelcomeTile({
   return (
     <Card className="w-full h-full ">
       <CardHeader>
-        <CardTitle>Chào mừng, {getUserFullName(sessionData.user.user as any)}</CardTitle>
-        <CardDescription>
-          Thông tin về nhà cho thuê của bạn
-        </CardDescription>
+        <CardTitle className="text-lg">Nhà cho thuê của bạn</CardTitle>
       </CardHeader>
       <CardContent>
         {query.isError ? (
           <div className="text-red-500">Lỗi khi tải dữ liệu</div>
         ) : (
-          <div className="my-8 flex flex-row items-center gap-6">
-            <div className="flex-grow flex flex-col items-center gap-8">
+          <div className="my-8 grid grid-cols-1 sm:grid-cols-10 gap-6">
+            <div className="col-span-3 flex-grow flex flex-col items-center gap-8">
               <div className="w-36 h-36 flex flex-col justify-center items-center gap-4">
                 {query.isLoading ? (
                   <Spinner size={32} />
@@ -168,7 +165,7 @@ export default function WelcomeTile({
                 </Link>
               </div>
             </div>
-            <div className="flex-grow flex flex-col items-center gap-4">
+            <div className="col-span-7 flex-grow flex flex-col items-center gap-4">
               <h3 className="text-xl font-medium">Xếp hạng lượt cho thuê</h3>
               <Tabs defaultValue="properties" className="w-full">
                 <TabsList className="grid w-full grid-cols-2">
@@ -191,7 +188,7 @@ export default function WelcomeTile({
                             <TableRow key={index}>
                               <TableCell>{index + 1}</TableCell>
                               <TableCell>
-                                <Link href={`/manage/properties/property/${item.propertyId}`}>
+                                <Link href={`/manage/properties/property/${item.propertyId}`} className="text-blue-600 hover:underline">
                                   {detailsQuery.isSuccess && (detailsQuery.data.properties.find((property) => property.id === item.propertyId)?.name)}
                                 </Link>
                               </TableCell>
@@ -209,7 +206,7 @@ export default function WelcomeTile({
                             <TableRow key={index}>
                               <TableCell>{query.data.properties.length - query.data.leastRentedProperties.length + index + 1}</TableCell>
                               <TableCell>
-                                <Link href={`/manage/properties/property/${item.propertyId}`}>
+                                <Link href={`/manage/properties/property/${item.propertyId}`} className="text-blue-600 hover:underline">
                                   {detailsQuery.isSuccess && (detailsQuery.data.properties.find((property) => property.id === item.propertyId)?.name)}
                                 </Link>
                               </TableCell>
@@ -237,7 +234,7 @@ export default function WelcomeTile({
                             <TableRow key={index}>
                               <TableCell>{index + 1}</TableCell>
                               <TableCell>
-                                <Link href={`/manage/properties/property/${item.propertyId}`}>
+                                <Link href={`/manage/properties/property/${item.propertyId}`} className="text-blue-600 hover:underline">
                                   {detailsQuery.isSuccess && (detailsQuery.data.units.find((unit) => unit.id === item.unitId)?.name)}
                                 </Link>
                               </TableCell>
@@ -255,7 +252,7 @@ export default function WelcomeTile({
                             <TableRow key={index}>
                               <TableCell>{query.data.units.length - query.data.leastRentedUnits.length + index + 1}</TableCell>
                               <TableCell>
-                                <Link href={`/manage/properties/property/${item.propertyId}`}>
+                                <Link href={`/manage/properties/property/${item.propertyId}`} className="text-blue-600 hover:underline">
                                   {detailsQuery.isSuccess && (detailsQuery.data.units.find((unit) => unit.id === item.unitId)?.name)}
                                 </Link>
                               </TableCell>

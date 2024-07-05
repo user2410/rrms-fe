@@ -17,31 +17,6 @@ export type RentalPaymentItem = {
   unit: Unit;
 };
 
-function transformResult(payments: RentalPaymentItem[]) {
-  return payments.map((item: RentalPaymentItem) => ({
-    payment: {
-      ...item.payment,
-      startDate: new Date(item.payment.startDate),
-      endDate: new Date(item.payment.endDate),
-      paymentDate: item.payment.paymentDate ? new Date(item.payment.paymentDate) : undefined,
-      expiryDate: item.payment.expiryDate ? new Date(item.payment.expiryDate) : undefined,
-    },
-    rental: {
-      ...item.rental,
-      startDate: new Date(item.rental.startDate),
-      moveinDate: new Date(item.rental.moveinDate),
-      createdAt: new Date(item.rental.createdAt),
-      updatedAt: new Date(item.rental.updatedAt),
-    },
-    property: {
-      ...item.property,
-      createdAt: new Date(item.property.createdAt),
-      updatedAt: new Date(item.property.updatedAt),
-    },
-    unit: item.unit,
-  })) as RentalPaymentItem[];
-}
-
 export default function IncomesTab({
   sessionData,
 } : {

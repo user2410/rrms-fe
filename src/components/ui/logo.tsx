@@ -35,7 +35,7 @@ export default function Logo({
       />
       {!logoOnly &&
         <span className={clsx(
-          "ml-4 self-center text-2xl font-semibold whitespace-nowrap dark:text-white",
+          "ml-2 xl:ml-3 self-center text-2xl font-semibold whitespace-nowrap dark:text-white",
           titleClassName && '',
         )}>RRMS</span>
       }

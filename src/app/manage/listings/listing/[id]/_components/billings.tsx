@@ -55,7 +55,7 @@ export default function Billings() {
         <CardContent className="space-y-4">
           <div className="space-y-2">
             <h3 className="font-semibold">Gói đăng tin</h3>
-            <div className="grid grid-cols-4 gap-3">
+            <div className="grid grid-cols-2 sm:grid-cols-4 gap-3">
               {listingPriorities.map((item, index) => (
                 <div className={`rounded-md border-2 p-4 flex flex-col items-center gap-2 ${item.priority === listing.priority ? "border-foreground" : "border-muted"}`} key={index}>
                   <h3 className="text-foreground font-medium">{item.label}</h3>
@@ -65,7 +65,7 @@ export default function Billings() {
             </div>
           </div>
           <div className="space-y-2">
-            <div className="grid grid-cols-3 gap-3">
+            <div className="grid grid-cols-2 sm:grid-cols-3 gap-3">
               <div className="space-y-2">
                 <h4 className="font-semibold">Ngày đăng</h4>
                 <p>{new Date(listing.createdAt).toLocaleDateString("vi-VN")}</p>

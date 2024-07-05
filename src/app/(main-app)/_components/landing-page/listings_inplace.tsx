@@ -104,7 +104,7 @@ export default function ListingInplace() {
   return (
     <div className="space-y-6">
       <h2 className="text-2xl font-semibold">Tin đăng {query.isSuccess ? ` tại ${query.data.geolocation.city?.name}` : "dành cho bạn"}</h2>
-      <div className="grid grid-cols-4 gap-7">
+      <div className="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-4 gap-7">
         {query.isLoading ? (
           Array.from({ length: 8 }).map((_, index) => (
             <ListingCardSkeleton key={index} />

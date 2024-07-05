@@ -42,11 +42,11 @@ export default function NewsTab() {
             }
           ].map((item, index) => (
             <Tabs.Trigger key={index} className="TabsTrigger" value={item.value}>
-              <h2 className={clsx("text-2xl font-normal min-w-max", tab === item.value ? "text-foreground" : "text-muted-foreground")}>{item.label}</h2>
+              <h2 className={clsx("text-base lg:text-lg xl:text-2xl font-normal min-w-max", tab === item.value ? "text-foreground" : "text-muted-foreground")}>{item.label}</h2>
             </Tabs.Trigger>
           ))}
         </Tabs.List>
-        <Link href="#" className="text-sm hover:underline flex flex-row items-center gap-1">
+        <Link href="#" className="text-sm hover:underline hidden lg:flex flex-row items-center gap-1">
           Xem thêm
           <MoveRight className="h-4 w-4"/>
         </Link>
@@ -68,7 +68,7 @@ function TabView({ articles }: { articles: Article[] }) {
   const [selectedArticle, setSelectedArticle] = useState<number>(0);
 
   return articles.length > 0 ? (
-    <div className="grid grid-cols-2 gap-7">
+    <div className="grid grid-cols-1 lg:grid-cols-2 gap-7">
       <Link
         target="_blank"
         href={articles[selectedArticle].originalSource ?? articles[selectedArticle].link}
@@ -91,14 +91,14 @@ function TabView({ articles }: { articles: Article[] }) {
             onMouseEnter={() => setSelectedArticle(index)}
           >
             <div className="py-4 cursor-pointer hover:underline border-b border-gray-200">
-              <h2 className="text-lg mb-2">{article.title}</h2>
+              <h2 className="text-base lg:text-lg mb-2">{article.title}</h2>
             </div>
           </Link>
         ))}
       </div>
     </div>
   ) : (
-    <div className="grid grid-cols-2 gap-7">
+    <div className="grid grid-cols-1 lg:grid-cols-2 gap-7">
       <div className="space-y-2">
         <Skeleton className="w-full aspect-video" />
         <Skeleton className="w-full h-14" />

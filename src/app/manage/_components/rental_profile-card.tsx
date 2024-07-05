@@ -1,28 +1,23 @@
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { useQuery } from "@tanstack/react-query";
-import { aboutToExpireColumns, nonExpiredColumns } from "./column";
-import { DataTable } from "./data_table";
-import { ManagedRental } from "../page";
+import { ManagedRental } from "../rentals/page";
 import { Session } from "next-auth";
-import { Rental } from "@/models/rental";
 import { backendAPI } from "@/libs/axios";
+import { Rental } from "@/models/rental";
 import { Property } from "@/models/property";
 import { Unit } from "@/models/unit";
 import { addMonths } from "date-fns";
 import Spinner from "@/components/ui/spinner";
-import { Fragment, useState } from "react";
+import { DataTable } from "../rentals/_components/data_table";
+import { aboutToExpireColumns } from "../rentals/_components/column";
 
-export default function NonExpired({
-  segment,
+export default function RentalProfileCard({
   sessionData,
-}: {
-  segment: string;
+} : {
   sessionData: Session;
 }) {
-  const [limit, setLimit] = useState<number>(100);
-  const [offset, setOffset] = useState<number>(0);
-
   const query = useQuery<ManagedRental[]>({
-    queryKey: ["managed", "rentals", segment, "nonexpired", limit, offset, sessionData.user.accessToken],
+    queryKey: ["managed", "rentals", "managed-rentals", "nonexpired", 100, 0, sessionData.user.accessToken],
     queryFn: async ({ queryKey }) => {
       const rentals = (await backendAPI.get<Rental[]>(`/api/rentals/${queryKey.at(2)}`, {
         params: {
@@ -59,62 +54,56 @@ export default function NonExpired({
           Authorization: `Bearer ${queryKey.at(-1)}`,
         }
       })).data || ([]);
-      return rentals.map((rental) => {
+      return rentals
+      .map((rental) => {
         const property = properties.find((property) => property.id === rental.propertyId);
         const unit = units.find((unit) => unit.id === rental.unitId);
+        const expiryDate = addMonths(new Date(rental.startDate), rental.rentalPeriod);
         return ({
           rental: {
             ...rental,
             startDate: new Date(rental.startDate),
             moveinDate: new Date(rental.moveinDate),
-            expiryDate: addMonths(new Date(rental.startDate), rental.rentalPeriod),
-            timeLeft: ((addMonths(new Date(rental.startDate), rental.rentalPeriod).getTime() - Date.now()) / (24 * 60 * 60 * 1000)),
+            expiryDate,
+            timeLeft: ((expiryDate.getTime() - Date.now()) / (24 * 60 * 60 * 1000)),
           },
           property,
           unit,
         }) as ManagedRental;
-      });
+      })
+      .sort((a, b) => a.rental.timeLeft - b.rental.timeLeft);
     },
     staleTime: 1000 * 60 * 5,
     cacheTime: 1000 * 60 * 5,
   });
 
   return (
-    <Fragment>
-      {query.isSuccess && (() => {
-        const rentals = query.data.
-          filter((item) => item.rental.timeLeft < 60).
-          sort((a, b) => {
-            return a.rental.timeLeft - b.rental.timeLeft;
-          });
-        return rentals.length > 0 && (
-          <div className="space-y-3">
-            <h3 className="text-lg">Lượt thuê sắp hết hạn</h3>
-            <DataTable
-              columns={aboutToExpireColumns}
-              data={rentals}
-            />
-          </div>
-        );
-      })()}
-      <div className="space-y-3">
-        <h3 className="text-lg">Đang thuê</h3>
+    <Card>
+      <CardHeader>
+        <CardTitle className="text-lg">Hợp đồng thuê nhà</CardTitle>
+      </CardHeader>
+      <CardContent>
         {query.isLoading ? (
-          <div className="w-full h-full flex justify-center items-center">
+          <div className="w-full flex flex-row justify-center">
             <Spinner size={32} />
           </div>
         ) : query.isError ? (
-          <div className="w-full h-full flex justify-center items-center">
-            <p className="text-red-500">Đã có lỗi xảy ra</p>
+          <div className="w-full flex flex-row justify-center">
+            <div className="text-red-500">Lỗi khi tải dữ liệu</div>
           </div>
         ) : (
-          <DataTable
-            columns={nonExpiredColumns(segment)}
-            data={query.data}
-          />
+          query.data.length > 0 ? (
+            <DataTable
+              columns={aboutToExpireColumns.slice(0, aboutToExpireColumns.length - 1)}
+              data={query.data.slice(0, 5)}
+            />
+          ) : (
+            <div className="w-full flex flex-row justify-center">
+              <div className="text-gray-500">Không có hợp đồng thuê nào</div>
+            </div>
+          )
         )}
-      </div>
-    </Fragment>
+      </CardContent>
+    </Card>
   );
-
 };

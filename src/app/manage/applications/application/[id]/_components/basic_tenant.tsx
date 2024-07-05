@@ -42,8 +42,8 @@ export default function BasicTenant({
         Người thuê nhà
       </CardHeader>
       <CardContent className="!p-4 lg:!p-6">
-        <div className="flex flex-row gap-4">
-          <div className="relative w-[256px] aspect-[9/12]">
+        <div className="grid grid-cols-1 lg:grid-cols-4 gap-4">
+          <div className="col-span-1 relative w-[256px] aspect-[9/12]">
             <Image
               src={data?.application.profileImage}
               fill
@@ -52,7 +52,7 @@ export default function BasicTenant({
               className="rounded-md"
             />
           </div>
-          <div className="flex-1">
+          <div className="col-span-3">
             <div className="w-full grid grid-cols-2 gap-4">
               <InfoItem
                 icon={<FaRegAddressCard size={16} />}
