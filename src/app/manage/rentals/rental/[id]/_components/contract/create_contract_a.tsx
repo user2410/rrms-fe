@@ -50,35 +50,35 @@ export default function CreateContractA({
 
   const form = useForm<ContractAFormValues>({
     resolver: zodResolver(formSchema),
-    // defaultValues: {
-    //   aFullName: getUserFullName(owners[0]),
-    //   aAddress: getUserFullAddress(owners[0]),
-    //   aPhone: owners[0].phone,
-    // },
     defaultValues: {
-      "aFullName": "Albert Alpha",
-      "aAddress": "Số 1, Đường Giải Phóng, Phường Bách Khoa, Hai Bà Trưng, Hà Nội",
-      "aPhone": "0912142214",
-      "aDob": new Date("1989-12-12T00:00:00.000Z"),
-      "aHouseholdRegistration": "Số 2 Nhà Thờ, Hoàn Kiếm, Hà Nội",
-      "aIdentity": "0151651631187",
-      "aIdentityIssuedBy": "Cục quản lý di trú",
-      "aIdentityIssuedAt": new Date("2024-04-19T00:00:00.000Z"),
-      "aBankAccount": "213854199152412",
-      "aBank": "SCB",
-      "aRegistrationNumber": "HTDN/1243143125",
-      "aDocuments": [
-        {
-          "cert": "Chứng từ số ABC/12214325"
-        },
-        {
-          "cert": "Hợp đồng HAH/1242"
-        }
-      ],
-      "paymentMethod": "cash",
-      "createdAtPlace": "Hà Nội",
-      "nCopies": 2
+      aFullName: getUserFullName(owners[0]),
+      aAddress: getUserFullAddress(owners[0]),
+      aPhone: owners[0].phone,
     },
+    // defaultValues: {
+    //   "aFullName": "Albert Alpha",
+    //   "aAddress": "Số 1, Đường Giải Phóng, Phường Bách Khoa, Hai Bà Trưng, Hà Nội",
+    //   "aPhone": "0912142214",
+    //   "aDob": new Date("1989-12-12T00:00:00.000Z"),
+    //   "aHouseholdRegistration": "Số 2 Nhà Thờ, Hoàn Kiếm, Hà Nội",
+    //   "aIdentity": "0151651631187",
+    //   "aIdentityIssuedBy": "Cục quản lý di trú",
+    //   "aIdentityIssuedAt": new Date("2024-04-19T00:00:00.000Z"),
+    //   "aBankAccount": "213854199152412",
+    //   "aBank": "SCB",
+    //   "aRegistrationNumber": "HTDN/1243143125",
+    //   "aDocuments": [
+    //     {
+    //       "cert": "Chứng từ số ABC/12214325"
+    //     },
+    //     {
+    //       "cert": "Hợp đồng HAH/1242"
+    //     }
+    //   ],
+    //   "paymentMethod": "cash",
+    //   "createdAtPlace": "Hà Nội",
+    //   "nCopies": 2
+    // },
   });
 
   const stepperSteps = useMemo(() => {
@@ -192,7 +192,7 @@ export default function CreateContractA({
                 )}
               {/* {JSON.stringify(form.formState.errors)} */}
               {(step === 1 && rental.id) && (
-                <Button type="submit">Hoàn tất</Button>
+                <Button type="submit" onClick={() => console.log("form error:", form.formState.errors)}>Hoàn tất</Button>
               )}
             </DialogFooter>
           </form>

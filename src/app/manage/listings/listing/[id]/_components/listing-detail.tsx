@@ -151,7 +151,7 @@ export default function ListingDetail() {
               values.tags.length === 0 ? (
                 <p>Bài đăng chưa gắn thẻ</p>
               ) : (
-                <div className="hidden gap-1 lg:flex">
+                <div className="gap-1 lg:flex">
                   {values.tags.map((field, i) => (
                     <Badge
                       key={i}

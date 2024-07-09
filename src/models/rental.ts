@@ -265,6 +265,21 @@ export function isSideA(
   return managers.some((m) => m.managerId === userId);
 }
 
+export type RentalRequest = {
+  id: number;
+  rentalId: number;
+  creatorId: string;
+  extendDuration?: number;
+  rentalPayments?: number[]; // rentalPaymentIds
+  rentalComplaints?: number[]; // rentalComplaintIds
+  note?: string;
+  feedback?: string;
+  type: "EXTEND" | "CANCEL";
+  status: "PENDING" | "APPROVED" | "REJECTED";
+  createdAt: Date;
+  updatedAt: Date;
+};
+
 export const mockedRentals = [
   {
     "id": 13,

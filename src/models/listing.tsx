@@ -118,8 +118,8 @@ export const listingPriorities = [
 
 export const listingDiscount = [
   {duration: 7, discount: 0},
-  {duration: 15, discount: 10},
-  {duration: 30, discount: 20},
+  {duration: 30, discount: 10},
+  {duration: 90, discount: 20},
 ];
 
 export const mockupListings : Listing[] = [

@@ -1,5 +1,5 @@
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { FormControl, FormField, FormItem, FormLabel, FormMessage } from "@/components/ui/form";
+import { FormControl, FormDescription, FormField, FormItem, FormLabel, FormMessage } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Switch } from "@/components/ui/switch";
@@ -142,7 +142,9 @@ export default function Step3Price() {
                             onChange={(e) => field.onChange(e.target.valueAsNumber)}
                           />
                         </FormControl>
-                        <FormLabel>Giá thuê {field.value.toLocaleString('vi-VN', { style: 'currency', currency: 'VND' })} ({(field.value/unit.area).toLocaleString('vi-VN', { style: 'currency', currency: 'VND' })}/m<sup>2</sup>/tháng)</FormLabel>
+                        {field.value > 0 && (
+                          <FormDescription>Giá thuê {field.value.toLocaleString('vi-VN', { style: 'currency', currency: 'VND' })}/tháng</FormDescription>
+                        )}
                       </FormItem>
                     )}
                   />

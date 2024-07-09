@@ -78,7 +78,7 @@ export default function WithdrawDiaglog({
                 <AlertDialogTitle>Đẫ rút đơn ứng tuyển </AlertDialogTitle>
               </AlertDialogHeader>
               <Separator className="my-6" />
-              <div className="flex flex-row justify-between">
+              <div className="flex flex-row justify-center">
                 <Link className={buttonVariants({variant: "default"})} href="/manage/applications/my-applications">Đóng</Link>
               </div>
             </>

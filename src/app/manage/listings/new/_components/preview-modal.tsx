@@ -8,19 +8,21 @@ export default function PreviewModal({
 }: {
   form: UseFormReturn<ListingFormValues, any, undefined>
 }) {
-  const property = form.getValues("propertyData").property;
-  const units = form.getValues("propertyData").units;
+  const property = form.watch("propertyData").property;
+  const units = form.watch("propertyData").units;
+  const selectedUnits = form.getValues("units");
   const listing = {
+    ...form.watch("contact"),
+    ...form.watch("listing"),
+    ...form.watch("config"),
     id: "",
     creatorId: "",
     propertyId: property.id,
+    price: selectedUnits.reduce((acc, unit) => acc + (unit.price || 0), 0) / selectedUnits.length,
     createdAt: new Date(),
     updatedAt: new Date(),
     expiredAt: new Date(),
-    units: units.map((unit) => ({listingId: "", unitId: unit.id, price: 0})),
-    ...form.getValues("contact"),
-    ...form.getValues("listing"),
-    ...form.getValues("config"),
+    units: units.map((unit) => ({listingId: "", unitId: unit.id, price: selectedUnits.find(su => su.unitId === unit.id)?.price || 0})),
   };
   
   return (
@@ -28,7 +30,10 @@ export default function PreviewModal({
       <ListingContent
         listing={listing as any}
         property={property}
-        units={units}
+        units={
+          units
+          .filter(u => selectedUnits.find(su => su.unitId === u.id))
+          .map(u => ({...u, price: selectedUnits.find(su => su.unitId === u.id)?.price || 0}))}
         preview={true}
       />
     </ScrollArea>

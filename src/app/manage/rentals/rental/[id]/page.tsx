@@ -10,15 +10,16 @@ import * as Tabs from '@radix-ui/react-tabs';
 import { useQuery } from "@tanstack/react-query";
 import { Session } from "next-auth";
 import { useSession } from "next-auth/react";
+import Link from "next/link";
 import { useEffect } from "react";
+import { FaArrowLeft } from "react-icons/fa";
 import ContractCard from "./_components/contract_card";
 import GeneralCard from "./_components/general";
+import Maintenance from "./_components/maintenance";
 import Payments from "./_components/payments";
 import TenantCard from "./_components/tenant_card";
 import { DataProvider, RentalData, useDataCtx } from "./_context/data.context";
-import Maintenance from "./_components/maintenance";
-import Link from "next/link";
-import { FaArrowLeft } from "react-icons/fa";
+import PoliciesCard from "./_components/policies";
 
 export default function RentalPageWrapper({ params: { id } }: { params: { id: string } }) {
   const session = useSession();
@@ -117,9 +118,32 @@ function RentalPage({
     setSessionData(sessionData);
   }, []);
 
+  // const requestsQuery = useQuery<RentalRequest[]>({
+  //   queryKey: ["manage", "rentals", "rental", data.rental.id, "requests", sessionData.user.accessToken],
+  //   queryFn: async ({ queryKey }) => {
+  //     return (await backendAPI.get<RentalRequest[]>(`/api/rentals/rental/${queryKey.at(3)}/requests`, {
+  //       headers: {
+  //         Authorization: `Bearer ${queryKey.at(-1)}`
+  //       }
+  //     })).data || ([]);
+  //   },
+  //   staleTime: 1000 * 60 * 5,
+  //   cacheTime: 1000 * 60 * 5,
+  // });
+
   return isSet() && (
     <>
       <GeneralCard rental={data.rental} property={data.property} unit={data.unit} />
+      {/* {(
+        requestsQuery.isSuccess 
+        && data.rental.status === "INPROGRESS" && addMonths(new Date(data.rental.startDate), data.rental.rentalPeriod).getTime() > new Date().getTime()) 
+        && data.rental.tenantId !== sessionData.user.user.id
+        && (
+        <div className="flex flex-row justify-end gap-2">
+          <ExtendDialog rental={data.rental} sessionData={sessionData} requests={requestsQuery.data} onSubmit={requestsQuery.refetch}/>
+          <CancelDialog rental={data.rental} sessionData={sessionData} requests={requestsQuery.data}/>
+        </div>
+      )} */}
       <Tabs.Root defaultValue="detail" className="TabsRoot">
         <Tabs.List className="TabsList">
           <Tabs.Trigger className="TabsTrigger" value="detail">Khách thuê</Tabs.Trigger>
@@ -128,7 +152,10 @@ function RentalPage({
         </Tabs.List>
         <Tabs.Content className="TabsContent" value="detail">
           <div className="grid grid-cols-4 gap-4">
-            <ContractCard />
+            <div className="space-y-4">
+              <ContractCard />
+              <PoliciesCard rental={data.rental}/>
+            </div>
             <div className="col-span-3">
               <TenantCard rental={data.rental} />
             </div>

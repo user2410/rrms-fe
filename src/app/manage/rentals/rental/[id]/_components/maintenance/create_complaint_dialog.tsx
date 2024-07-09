@@ -23,7 +23,7 @@ import toast from "react-hot-toast";
 import { uploadFileWithPresignedURL } from "@/actions/upload-file";
 import { Session } from "next-auth";
 import { useQuery } from "@tanstack/react-query";
-import { ManagedRental, Rental } from "@/models/rental";
+import { ManagedRental, Rental, RentalComplaint } from "@/models/rental";
 import {
   Select,
   SelectContent,
@@ -56,10 +56,12 @@ type FormValues = z.infer<typeof formSchema>;
 
 export default function CreateComplaintDialog({
   rentalId,
-  sessionData
+  sessionData,
+  onCreated,
 }: {
   rentalId?: number;
   sessionData: Session;
+  onCreated?: (complaint: RentalComplaint) => void;
 }) {
   const closeBtnRef = useRef<HTMLButtonElement>(null);
   const form = useForm<FormValues>({
@@ -148,6 +150,9 @@ export default function CreateComplaintDialog({
           Authorization: `Bearer ${sessionData.user.accessToken}`
         }
       });
+      if (onCreated) {
+        onCreated(res.data);
+      }
       toast.success("Tạo thành công");
       closeBtnRef.current?.click();
       form.reset();

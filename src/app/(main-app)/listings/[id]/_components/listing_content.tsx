@@ -28,6 +28,10 @@ export default function ListingContent({
   units: Unit[];
   preview?: boolean;
 }) {
+  console.log("listing", listing);
+  console.log("property", property);
+  console.log("units", units);
+
   return (
     <div className="space-y-4">
 
@@ -65,13 +69,31 @@ export default function ListingContent({
             </>
           )}
           <Separator />
-          <MapNNearby property={property} />
+          <div className="space-y-2">
+            <h3 className="font-semibold">Gắn thẻ</h3>
+            {listing.tags.length === 0 ? (
+                <p>Bài đăng chưa gắn thẻ</p>
+              ) : (
+                <div className="gap-1 lg:flex">
+                  {listing.tags.map((field, i) => (
+                    <Badge
+                      key={i}
+                      variant="secondary"
+                      className="rounded-sm px-1 font-normal hover:cursor-pointer"
+                    >
+                      {field.tag}
+                    </Badge>
+                  ))}
+                </div>
+              )}
+          </div>
           <Separator />
+          <MapNNearby property={property} />
         </div>
         {/* Contact and relavant search */}
         <div className="md:col-span-2">
           <div className="space-y-4">
-            <PostedBy listing={listing} />
+            <PostedBy listing={listing} preview={preview}/>
             {!preview && (
               <>
                 <RecommendedListings listingId={listing.id} />

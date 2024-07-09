@@ -41,8 +41,22 @@ export default function Item({
           </DialogClose>
           {item.request.status === "PENDING" && (
             <>
-              <RejectAction requestId={item.request.id} property={item.property} sessionData={sessionData} onClose={() => closeBtnRef.current?.click()} />
-              <ApproveAction requestId={item.request.id} property={item.property} sessionData={sessionData} onClose={() => closeBtnRef.current?.click()} />
+              <RejectAction 
+                requestId={item.request.id} 
+                property={item.property} 
+                sessionData={sessionData} 
+                onClose={() => {
+                  closeBtnRef.current?.click();
+                  refresh();
+                }} />
+              <ApproveAction 
+                requestId={item.request.id} 
+                property={item.property} 
+                sessionData={sessionData} 
+                onClose={() => {
+                  closeBtnRef.current?.click();
+                  refresh();
+                }} />
             </>
           )}
         </DialogFooter>

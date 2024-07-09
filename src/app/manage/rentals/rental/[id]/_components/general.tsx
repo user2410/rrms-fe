@@ -15,6 +15,8 @@ export default function GeneralCard({
   property: Property;
   unit: Unit;
 }) {
+  const expiryDate = addMonths(new Date(rental.startDate), rental.rentalPeriod);
+
   return (
     <Card>
       <CardHeader>
@@ -27,7 +29,11 @@ export default function GeneralCard({
         </div>
         <div className="space-y-2">
           <div className="text-lg font-medium">Thời hạn thuê</div>
-          <div className="text-base font-normal">{nMonthsToYears(rental.rentalPeriod)} (Hết hạn {addMonths(new Date(rental.startDate), rental.rentalPeriod).toLocaleDateString("vi-VN")})</div>
+          <div className="text-base font-normal">{nMonthsToYears(rental.rentalPeriod)} ({
+            rental.status === "END" 
+            ? "Đã chấm dứt thuê"
+            : expiryDate.getTime() > new Date().getTime() ? `Hết hạn ${expiryDate.toLocaleDateString("vi-VN")}` : "Đã hết hạn thuê"
+          })</div>
         </div>
         <div className="space-y-2">
           <div className="text-lg font-medium">Nhà cho thuê</div>

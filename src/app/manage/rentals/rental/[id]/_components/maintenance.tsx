@@ -61,7 +61,7 @@ export default function Maintenance() {
               <Button>Tạo</Button>
             </AlertDialogTrigger>
             <AlertDialogContent className="max-w-[40vw]">
-              <CreateComplaintDialog rentalId={rental.id} sessionData={sessionData}/>
+              <CreateComplaintDialog rentalId={rental.id} sessionData={sessionData} onCreated={() => query.refetch}/>
             </AlertDialogContent>
           </AlertDialog>
         </div>
@@ -75,7 +75,10 @@ export default function Maintenance() {
           <p className="w-full text-center text-sm font-light">Không có báo cáo nào</p>
         ) : (
           <>
-            {query.data.slice(offset * PAGE_SIZE).map((item, index) => (
+            {query.data
+              .slice(offset * PAGE_SIZE)
+              .sort((a, b) => b.createdAt.getTime() - a.createdAt.getTime())
+              .map((item, index) => (
               <ComplaintItem item={item} key={index}/>
             ))}
             <div className="flex flex-row justify-center gap-2">

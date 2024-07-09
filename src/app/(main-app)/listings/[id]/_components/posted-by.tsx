@@ -20,7 +20,7 @@ export default function PostedBy({
   const query = useQuery<SearchResult>({
     queryKey: ['listings', 'listing', 'posted-by', listing.id],
     queryFn: async () => {
-      return (await backendAPI.get("/api/listings/search", {
+      return (await backendAPI.get<SearchResult>("/api/listings/search", {
         params: {
           lcreatorId: listing.creatorId,
           pisPublic: true,
@@ -28,7 +28,7 @@ export default function PostedBy({
         },
       })).data;
     },
-    enabled: !preview,
+    enabled: !preview && !!listing.creatorId,
     staleTime: 1000 * 60 * 60,
     cacheTime: 1000 * 60 * 60,
   });
@@ -48,7 +48,10 @@ export default function PostedBy({
                 return `${firstName[0]}${lastName[0]}`;
               })()}</AvatarFallback>
             </Avatar>
-            <h3 className="font-semibold text-center">{listing.fullName}</h3>
+            <h3 className="font-semibold text-center">
+              {listing.fullName} 
+              <span className="font-normal ml-2">{listing.contactType === "owner" ? "(chủ nhà)" : listing.contactType === "manager" ? "(quản lý)" : "(môi giới)"}</span>
+            </h3>
           </div>
           {query.isSuccess && (
             <div className="text-center">

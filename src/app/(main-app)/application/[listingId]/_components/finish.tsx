@@ -53,7 +53,7 @@ const TermsAgreement = () => {
           htmlFor="commit"
           className="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
         >
-          Tôi cam đoan rằng tất cả các thông tin trên là đúng sự thật và chịu trách nhiệm pháp lý với những thông tin đã khai.
+          Tôi cam đoan rằng tất cả các thông tin trên là đúng sự thật.
         </label>
       </div>
 

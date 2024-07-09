@@ -1,6 +1,7 @@
 import { Card, CardContent, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
 import Link from "next/link";
 import { mapPropertyTypeToText } from "@/models/property";
+import { getSearchURL } from "../get_searchurl";
 
 export default function PTypesSection() {
   return (
@@ -47,7 +48,7 @@ export default function PTypesSection() {
               className="border-b border-dashed border-gray-200"
             >
               <Link 
-                href="/" 
+                href={getSearchURL({ptypes: [item.ptype]})}
                 className="p-1 flex flex-row items-center justify-between w-full text-sm hover:underline gap-2"
               >
                 <span className="space-x-2">

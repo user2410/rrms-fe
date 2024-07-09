@@ -99,7 +99,7 @@ function Location({
             {message && (<span className="italic text-muted-foreground">{message}</span>)}
             {error && (<span className="text-red-600">{error}</span>)}
             <br></br>
-            Chọn vị trí nhà cho thuê trên <a target="_blank" rel="noopener noreferrer" className="underline hover:text-primary" href="https://www.google.com/maps">bản đồ</a> và gán link vào đây. <a target="_blank" rel="noopener noreferrer" className="underline hover:text-primary" href="#">Hướng dẫn chi tiết</a>
+            Chọn vị trí nhà cho thuê trên <a target="_blank" rel="noopener noreferrer" className="underline hover:text-primary" href="https://www.google.com/maps">bản đồ</a> và gán link vào đây. <a target="_blank" rel="noopener noreferrer" className="underline hover:text-primary" href="/guide/manager/properties/new">Hướng dẫn chi tiết</a>
           </FormDescription>
           <FormMessage />
         </FormItem>

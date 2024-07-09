@@ -61,6 +61,7 @@ export default function PlanTile({
     staleTime: 1000 * 60 * 5,
     cacheTime: 1000 * 60 * 5,
   });
+
   return (
     <Card className={cn("w-full h-full", className)}>
       <CardHeader className="flex flex-row justify-between">
@@ -68,6 +69,7 @@ export default function PlanTile({
         <CreateReminderDialog
           triggerBtn={<button className="btn btn-primary">Tạo lịch hẹn</button>}
           sessionData={sessionData}
+          onCreate={() => query.refetch()}
         />
       </CardHeader>
       {query.isLoading ? (
@@ -93,7 +95,9 @@ export default function PlanTile({
               <div className="w-full flex flex-row justify-center">
                 Không có lịch hẹn vào ngày hôm nay
               </div>
-            ) : query.data[selectedDate].reminders.map((item, index) => (
+            ) : query.data[selectedDate].reminders
+              .sort((a,b) => a.startAt.getTime() - b.startAt.getTime())
+              .map((item, index) => (
               <div
                 key={index}
                 className="mb-4 grid grid-cols-[25px_1fr] items-start pb-4 last:mb-0 last:pb-0"

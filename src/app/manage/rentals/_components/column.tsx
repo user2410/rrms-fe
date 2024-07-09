@@ -116,21 +116,16 @@ export function nonExpiredColumns(segment: string): ColumnDef<ManagedRental>[] {
       header: "Ngày hết hạn thuê",
       cell: ({ row }) => (`${row.original.rental.expiryDate!.toLocaleDateString("vi-VN")} (${row.original.rental.timeLeft < 0 ? "Hết hạn" : `còn ${row.original.rental.timeLeft.toFixed(0)} ngày`})`),
     },
+    {
+      header: "Profile thuê nhà",
+      cell: ({ row }) => (
+        <Link href={`/manage/rentals/rental/${row.original.rental.id}`} className="flex flex-row items-center gap-1">
+          <Eye className="w-4 h-4" />
+          <span>Xem chi tiết</span>
+        </Link>
+      ),
+    },
   ]);
-  if (segment === "managed-rentals") {
-    return ([
-      ...res,
-      {
-        header: "Profile thuê nhà",
-        cell: ({ row }) => (
-          <Link href={`/manage/rentals/rental/${row.original.rental.id}`} className="flex flex-row items-center gap-1">
-            <Eye className="w-4 h-4" />
-            <span>Xem chi tiết</span>
-          </Link>
-        ),
-      },
-    ]);
-  }
   return res;
 }
 

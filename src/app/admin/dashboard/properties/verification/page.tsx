@@ -12,6 +12,9 @@ import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle }
 import { Session } from "next-auth";
 import PaginationControl from "@/components/complex/pagination";
 
+import { RefreshCcw } from "lucide-react";
+import { Button } from "@/components/ui/button";
+
 
 export type RequestItem = {
   request: PropertyVerificationRequest;
@@ -113,13 +116,16 @@ function Requests({
 
   return (
     <Card>
-      <CardHeader>
-        <CardTitle className="text-lg">{title}</CardTitle>
-        <CardDescription>
-          {query.isSuccess && (
-            <>Có tất cả {query.data.fullCount} yêu cầu</>
-          )}
-        </CardDescription>
+      <CardHeader className="flex flex-row justify-between">
+        <div className="space-y-1 5">
+          <CardTitle className="text-lg">{title}</CardTitle>
+          <CardDescription>
+            {query.isSuccess && (
+              <>Có tất cả {query.data.fullCount} yêu cầu</>
+            )}
+          </CardDescription>
+        </div>
+        <Button variant="outline" onClick={() => query.refetch()}><RefreshCcw className="w-6 h-6" /></Button>
       </CardHeader>
       <CardContent>
         <DataTable

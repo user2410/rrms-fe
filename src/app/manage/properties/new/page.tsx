@@ -17,8 +17,7 @@ const propertyFormSchema = z.object({
   property: z.object({
     name: z
       .string()
-      .min(3, "Tên nhà cho thuê phải có ít nhất 3 ký tự")
-      .max(30, "Tên nhà cho thuê không được quá 30 ký tự"),
+      .min(3, "Tên nhà cho thuê phải có ít nhất 3 ký tự"),
     type: z
       .string({
         required_error: "Xin hãy chọn loại nhà cho thuê",

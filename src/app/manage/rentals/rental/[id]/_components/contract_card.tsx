@@ -99,7 +99,6 @@ function ContractItem({
     isSideA(sessionData.user.user.id) ? (
       <div className="flex flex-col justify-center items-center gap-2">
         <p className="text-center text-base font-light text-gray-400">Đang chờ bên B bổ sung thông tin</p>
-        <Button type="button" variant="outline">Xem chi tiết</Button>
       </div>
     ) : (
       <div className="flex flex-col justify-center items-center gap-2">

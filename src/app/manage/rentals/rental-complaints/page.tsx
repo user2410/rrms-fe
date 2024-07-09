@@ -64,7 +64,7 @@ export default function ReportsPage() {
               </AlertDialogTrigger>
               <AlertDialogContent className="max-w-[40vw]">
                 {session.status === "authenticated" && (
-                  <CreateComplaintDialog sessionData={session.data} />
+                  <CreateComplaintDialog sessionData={session.data} onCreated={() => query.refetch()}/>
                 )}
               </AlertDialogContent>
             </AlertDialog>

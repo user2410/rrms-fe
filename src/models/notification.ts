@@ -44,6 +44,15 @@ export function getNotificationActionLink(n: NotificationModel): string {
       } catch (e) {
         return `/manage/rentals/rental/${n.data.rentalId}`;
       }
+    case "CREATE_PROPERTYVERIFICATIONSTATUS":
+    case "UPDATE_PROPERTYVERIFICATIONSTATUS":
+      try {
+        const propertyId = JSON.parse(n.data.propertyId);
+        return `/manage/properties/property/${propertyId}`;
+      } catch (e) {
+        return `/manage/properties/property/${n.data.propertyId}`;
+      }
+
   }
   return "/";
 }

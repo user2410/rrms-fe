@@ -73,6 +73,7 @@ export default function ChatTab({
       <Button 
         type="button" variant="outline" className="" 
         onClick={handleCreateGroup}
+        disabled={sessionData.user.user.id === application.creatorId}
       >Tạo nhóm</Button>
       <p className="font-thin">Chưa có nhóm trao đổi. Tạo nhóm để bắt đầu trao đổi về nhà cho thuê. Xem <Link href="#" className="underline">Quy định nhóm trao đổi</Link>.</p>
     </div>

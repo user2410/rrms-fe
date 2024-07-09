@@ -3,9 +3,8 @@ import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet";
 import { ThemeSwitcher } from "@/components/ui/theme-switcher";
 import { format } from "date-fns";
 import vi from "date-fns/locale/vi";
-import { useSession } from "next-auth/react";
-// import NotificationDropdown from "./notification_dropdown";
 import Sidebar from "./sidebar";
+import NotificationDropdown from "@/app/manage/_components/notification_dropdown";
 
 export default function DashboardNavbar() {
   
@@ -33,8 +32,7 @@ export default function DashboardNavbar() {
       </div>
       {/* Form */}
       <div className="flex items-center gap-8">
-        <ThemeSwitcher size={20} />
-        {/* <NotificationDropdown /> */}
+        <NotificationDropdown />
       </div>
     </nav>
   );

@@ -3,7 +3,9 @@ import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle, Di
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
+import { useReminderCtx } from "@/context/reminder.context";
 import { backendAPI } from "@/libs/axios";
+import { Reminder } from "@/models/reminder";
 import { toISOStringWithTimezone } from "@/utils/time";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { DialogClose } from "@radix-ui/react-dialog";
@@ -29,10 +31,13 @@ export type FormValues = z.infer<typeof formSchema>;
 type CreateReminderDialogProps = {
   triggerBtn: React.ReactNode;
   sessionData: Session;
+  onCreate?: (reminder: Reminder) => void;
 };
 
 export default function CreateReminderDialog(props: CreateReminderDialogProps){
   const closeBtnRef = useRef<HTMLButtonElement>(null);
+  const {addReminder} = useReminderCtx();
+
   const form = useForm<FormValues>({
     resolver: zodResolver(formSchema),
     defaultValues: {
@@ -48,11 +53,16 @@ export default function CreateReminderDialog(props: CreateReminderDialogProps){
 
   async function handleCreateReminder(values: FormValues) {
     try {
-      await backendAPI.post("/api/reminders/", values, {
+      const reminder = (await backendAPI.post<Reminder>("/api/reminders/", values, {
         headers: {
           Authorization: `Bearer ${props.sessionData.user.accessToken}`,
         },
-      });
+      })).data;
+      addReminder(reminder);
+      if(props.onCreate) {
+        props.onCreate(reminder);
+      }
+      toast.success("Đã tạo lịch hẹn");
     } catch(err) {
       console.error("error creating reminder", err);
       toast.error("Đã có lỗi xảy ra");
@@ -138,7 +148,6 @@ export default function CreateReminderDialog(props: CreateReminderDialogProps){
                           console.log("datetime value:", e.target.value);
                           form.setValue("endAt", new Date(e.target.value));
                         }}
-                        min={addHours(new Date(), 1).toISOString().substring(0, 16)}
                       />
                     </FormControl>
                     <FormMessage />

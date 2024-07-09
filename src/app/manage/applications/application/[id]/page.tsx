@@ -11,16 +11,14 @@ import { Application, ManagedApplication, MapRentalIntentionToText, TransformApp
 import { Listing } from "@/models/listing";
 import { getPropertyFullAddress, Property } from "@/models/property";
 import { Unit } from "@/models/unit";
-import { GetLocationName } from "@/utils/dghcvn";
 import { useQuery } from "@tanstack/react-query";
 import { useSession } from "next-auth/react";
-import toast from "react-hot-toast";
 import StatusCard from "../../_components/status_card";
 import AcceptDiaglog from "./_components/accept_diaglog";
 import BasicInfo from "./_components/basic";
 import ChatTab from "./_components/chat_tab";
-import RejectDiaglog from "./_components/reject_diaglog";
 import PostProcess from "./_components/post_process";
+import RejectDiaglog from "./_components/reject_diaglog";
 import WithdrawDiaglog from "./_components/withdraw_dialog";
 
 export default function ApplicationPage({ params }: { params: { id: string } }) {
@@ -84,22 +82,6 @@ export default function ApplicationPage({ params }: { params: { id: string } }) 
   }
 
   const { application, property, unit } = query.data;
-
-  async function handleWithdrawApplication() {
-    try {
-      await backendAPI.patch(`/api/applications/application/${application.id}/status`, {
-        status: "WITHDRAWN",
-      }, {
-        headers: {
-          Authorization: `Bearer ${session.data?.user.accessToken}`,
-        },
-      });
-      toast.success("Đã rút đơn ứng tuyển");
-    } catch (err) {
-      console.error(err);
-      toast.error("Có lỗi xảy ra khi rút đơn ứng tuyển");
-    }
-  }
 
   return (
     <div className="container h-full py-10 space-y-4">
@@ -172,6 +154,8 @@ export default function ApplicationPage({ params }: { params: { id: string } }) 
             <StatusCard title="Trạng thái" value="Đã chấp thuận" className="border-green-400" />
           ) : application.status === "REJECTED" ? (
             <StatusCard title="Trạng thái" value="Đã từ chối" className="border-red-600" />
+          ) : application.status === "WITHDRAWN" ? (
+            <StatusCard title="Trạng thái" value="Đã rút đơn" className="border-slate-600" />
           ) : null}
         </div>
       </div>
@@ -181,7 +165,7 @@ export default function ApplicationPage({ params }: { params: { id: string } }) 
           <Tabs.Trigger value="basic" className="TabsTrigger">
             Đơn ứng tuyển
           </Tabs.Trigger>
-          <Tabs.Trigger value="chat" className="TabsTrigger">
+          <Tabs.Trigger value="chat" className="TabsTrigger" disabled={[ "APPROVED", "REJECTED", "WITHDRAWN"].includes(application.status)}>
             Trao đổi
           </Tabs.Trigger>
         </Tabs.List>

@@ -102,7 +102,8 @@ export default function PaymentPolicy() {
                   </div>
                   {latePaymentPenaltyAmount ? (
                     <FormDescription>
-                      Mức phạt: {`${latePaymentPenaltyAmount}% số tiền chậm thanh toán`}
+                      Mức phạt: {`${latePaymentPenaltyAmount}% số tiền chậm thanh toán`}&nbsp;
+                      {latePaymentPenaltyAmount > 20 && (<span className="text-red-600 text-sm">(cao so với quy định)</span>)}
                     </FormDescription>
                   ) : null}
                 </FormItem>

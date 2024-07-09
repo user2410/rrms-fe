@@ -42,7 +42,7 @@ const applicationFormSchema = z.object({
     fullName: z.string(),
     email: z.string().email(),
     phone: z.string(),
-    dob: z.date().optional(),
+    dob: z.date(),
     profileImage: z.object({
       url: z.string(),
       name: z.string(),
@@ -90,10 +90,10 @@ const applicationFormSchema = z.object({
     rhMonthlyPayment: z.number().optional(),
     rhReasonForLeaving: z.string().optional(),
 
-    employmentStatus: z.enum(["EMPLOYED", "STUDENT", "SELF-EMPLOYED", "UNEMPLOYED", "RETIRED"]).optional(),
+    employmentStatus: z.enum(["EMPLOYED", "STUDENT", "SELF-EMPLOYED", "UNEMPLOYED", "RETIRED"]),
     employmentCompanyName: z.string().optional(),
     employmentPosition: z.string().optional(),
-    employmentMonthlyIncome: z.number().optional(),
+    employmentMonthlyIncome: z.number(),
     employmentComment: z.string().optional().optional(),
 
     // identityType: z.enum(["ID", "CITIZENIDENTIFICATION", "PASSPORT", "DRIVERLICENSE"]),

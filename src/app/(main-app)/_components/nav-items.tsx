@@ -4,6 +4,7 @@ import { NavigationMenu, NavigationMenuContent, NavigationMenuItem, NavigationMe
 import clsx from "clsx";
 import Link from "next/link";
 import React from "react";
+import { getSearchURL } from "../search/_components/get_searchurl";
 
 export const propertiesNavbar: { key: string; title: string; description: string }[] = [
   {
@@ -53,7 +54,7 @@ export default function NavItems() {
                   <ListItem
                     key={item.title}
                     title={item.title}
-                    href={`/search/ptypes=${item.key}`}
+                    href={getSearchURL({ptypes: [item.key]})}
                   >
                     {item.description}
                   </ListItem>

@@ -11,9 +11,11 @@ const redirectedUrlHandlers : {
     processFn: (redirectedUrl: string) => {
       // try 2 ways to extract lat, lng
       const x1 = redirectedUrl.split('@')[1];
+      // console.log("x1", x1);
       if(x1) {
         const x2 = x1.split(',');
-        if (x2.length >= 3) return { redirectedUrl };
+        // console.log("x2", x2);
+        if (x2.length < 2) return { redirectedUrl };
         return ({
           redirectedUrl,
           coord: { lat: parseFloat(x2[0]), lng: parseFloat(x2[1]) }
@@ -71,6 +73,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
     switch (r.status) {
       case 302:
         const redirectedUrl = r.headers.location;
+        console.log(redirectedUrl);
         let handler = null;
         for(let i=0; i<redirectedUrlHandlers.length; i++) {
           const h = redirectedUrlHandlers[i];

@@ -123,6 +123,7 @@ export default function WaitingPaymentDialog({
             <Input
               type="number"
               value={state.payamount}
+              max={total}
               onChange={(e) => {
                 setState(v => ({
                   ...v,

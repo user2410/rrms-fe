@@ -125,7 +125,7 @@ export default function NewListingPage() {
       units: [],
       config: {
         priority: 1,
-        postDuration: 15,
+        postDuration: 30,
       },
     },
   });

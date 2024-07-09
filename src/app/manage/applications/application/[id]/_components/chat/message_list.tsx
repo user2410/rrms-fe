@@ -6,12 +6,13 @@ import { backendAPI } from "@/libs/axios";
 import { ManagedApplication } from "@/models/application";
 import { Message, MsgGroup } from "@/models/message";
 import { useQuery } from "@tanstack/react-query";
-import { Image as ImageIcon, RotateCcw, Send } from "lucide-react";
+import { Calendar as CalendarIcon, Image as ImageIcon, RotateCcw, Send } from "lucide-react";
 import { Session } from "next-auth";
 import { FormEvent, useEffect, useRef, useState } from "react";
 import { useMessageCtx } from "../../_context/messages.context";
 import { useWSCtx } from "../../_context/ws.context";
 import MessageItem from "./message_item";
+import CreateReminderDialog from "@/components/complex/create_reminder";
 
 const defaultLimit = 10;
 const defaultOffset = 0;
@@ -91,11 +92,12 @@ export default function MessageList({
 
   function handleSubmit(e: FormEvent<HTMLFormElement>) {
     e.preventDefault();
-    const textMsg = (e.target as any)[2].value;
+    const textMsg = textInputRef.current?.value || "";
     // console.log(e);
     // console.log("file:", e.target[1].value); // file path
     console.log("text msg:", textMsg);
     console.log(conn);
+    if (textMsg === "") return;
     conn?.send(JSON.stringify({
       type: "CHAT_CREATE_MESSAGE",
       payload: {
@@ -186,6 +188,16 @@ export default function MessageList({
         action="POST"
         onSubmit={handleSubmit}
       >
+        <CreateReminderDialog
+          triggerBtn={(
+            <button 
+              type="button" className="border-none" 
+            >
+              <CalendarIcon className="w-6 h-6 text-blue-400" />
+            </button>
+          )}
+          sessionData={sessionData}
+        />
         <button 
           type="button" className="border-none" 
           disabled={query.isLoading || query.isError || !conn}

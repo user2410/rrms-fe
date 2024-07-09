@@ -38,12 +38,12 @@ export function ApproveAction({
         },
       });
       toast.success("Đã xác minh nhà cho thuê");
+      onClose();
     } catch(err) {
       console.error(err);
       toast.error("Có lỗi xảy ra khi xác minh nhà cho thuê");
     }
     // await backendAPI.post(`api/properties/verifications/${requestId}/approve`);
-    onClose();
   }
 
   return (
@@ -91,11 +91,11 @@ export function RejectAction({
         },
       });
       toast.success("Đã từ chối xác minh nhà cho thuê");
+      onClose();
     } catch(err) {
       console.error(err);
       toast.error("Có lỗi xảy ra khi xác minh nhà cho thuê");
     }
-    onClose();
   }
 
   return (

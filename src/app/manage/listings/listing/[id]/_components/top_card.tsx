@@ -1,34 +1,13 @@
 import { PropertyTypeBadge } from "@/components/complex/property";
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import Spinner from "@/components/ui/spinner";
-import { backendAPI } from "@/libs/axios";
 import { getListingState } from "@/models/listing";
-import { getUserFullName, User } from "@/models/user";
-import { useQuery } from "@tanstack/react-query";
 import { ExternalLink, TriangleAlert } from "lucide-react";
 import Link from "next/link";
 import { useDataCtx } from "../_context/data.context";
 
 export default function TopCard() {
   const { listing, property, sessionData } = useDataCtx();
-
-  const query = useQuery<User>({
-    queryKey: ["manage", "listings", "listing", "user", listing.creatorId, sessionData?.user.accessToken],
-    queryFn: async ({ queryKey }) => {
-      const res = (await backendAPI.get<User[]>("/api/auth/credential/ids", {
-        params: {
-          ids: queryKey.at(4),
-        },
-        headers: {
-          Authorization: `Bearer ${queryKey.at(-1)}`,
-        }
-      })).data;
-      return res[0];
-    },
-    staleTime: 1000 * 60 * 60,
-    cacheTime: 1000 * 60 * 60,
-  });
 
   const state = getListingState(listing);
 
@@ -65,7 +44,7 @@ export default function TopCard() {
             <h3 className="font-semibold">Người đăng tin</h3>
             <span className="text-base">
               {listing.fullName}&nbsp;
-              {query.isLoading ? (<Spinner size={4} />) : query.isSuccess ? (`(${getUserFullName(query.data)})`) : null}
+              {listing.contactType === "owner" ? "(chủ nhà)" : listing.contactType === "manager" ? "(quản lý)" : "(môi giới)"}
             </span>
           </div>
           <div className="space-y-2">

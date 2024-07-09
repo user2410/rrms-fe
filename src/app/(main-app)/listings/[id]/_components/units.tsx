@@ -66,6 +66,7 @@ export default function UnitsList({
       });
       return Promise.all(queries);
     },
+    enabled: !preview,
     staleTime: 1000 * 60 * 5,
     cacheTime: 1000 * 60 * 5,
   });
@@ -122,6 +123,7 @@ export default function UnitsList({
                       <Checkbox
                         checked={selectedUnit === unit.id}
                         onCheckedChange={() => setSelectedUnit(v => v === unit.id ? '' : unit.id)}
+                        disabled={!!preview}
                       />
                     </TableCell>
                     <TableCell className="text-left">{unit.name}</TableCell>

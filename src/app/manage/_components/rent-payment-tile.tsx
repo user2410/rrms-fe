@@ -36,6 +36,8 @@ async function getArrearsQuery({ queryKey }: { queryKey: QueryKey }) {
     params: {
       startTime,
       endTime: new Date(),
+      limit: 1000,
+      offset: 0,
     },
     headers: {
       Authorization: `Bearer ${queryKey.at(-1)}`,
@@ -70,17 +72,17 @@ export default function RentPaymentTile({
   });
 
   const lastMonthArrears = useMemo(() => {
-    if (arrearsQuery.status === 'success') {
+    if (arrearsQuery.data) {
       return arrearsQuery.data[arrearsQuery.data.length - 1]?.payments || [];
     }
     return [];
-  }, [arrearsQuery.status]);
+  }, [arrearsQuery.data]);
   const allTimeArrears = useMemo(() => {
-    if (arrearsQuery.status === 'success') {
+    if (arrearsQuery.data) {
       return arrearsQuery.data.reverse().map(item => item.payments).flat();
     }
     return [];
-  }, [arrearsQuery.status]);
+  }, [arrearsQuery.data]);
 
   // console.log("allTimeArrears:", allTimeArrears);
 
@@ -90,12 +92,12 @@ export default function RentPaymentTile({
         <CardTitle className="text-lg">Khoản thu</CardTitle>
       </CardHeader>
       <CardContent>
-        <Tabs.Root defaultValue="arrears" className="TabsRoot">
+        <Tabs.Root defaultValue="arrears" className="TabsRoot px-0">
           <Tabs.List className="TabsList">
             <Tabs.Trigger className="TabsTrigger" value="arrears">Còn nợ</Tabs.Trigger>
             <Tabs.Trigger className="TabsTrigger" value="paid">Đã thanh toán</Tabs.Trigger>
           </Tabs.List>
-          <Tabs.Content className="TabsContent px-0 py-0" value="arrears">
+          <Tabs.Content className="TabsContent !px-0 !py-0 space-y-2" value="arrears">
             <CardDescription>
               {/* Nợ tháng này: {lastMonthArrears.reduce((acc, item) => acc + (item.status === "PAYFINE" ? (item.fine || 0) : (item.amount - (item.discount || 0) - item.paid)), 0).toLocaleString("vi-VN", { style: 'currency', currency: 'VND' })}  */}
               Tổng nợ: {allTimeArrears.reduce((acc, item) => acc + (item.status === "PAYFINE" ? (item.fine || 0) : (item.amount - (item.discount || 0) - item.paid)), 0).toLocaleString("vi-VN", { style: 'currency', currency: 'VND' })}
@@ -112,7 +114,7 @@ export default function RentPaymentTile({
               <CardContent className="px-0 pb-0">
                 <div className="space-y-3">
                   {lastMonthArrears.length > 0
-                    ? lastMonthArrears.map((item, index) => (
+                    ? lastMonthArrears.slice(0, 5).map((item, index) => (
                       <ArrearItem key={index} item={item} sessionData={sessionData} />
                     )) : allTimeArrears.slice(0, 5).map((item, index) => (
                       <ArrearItem key={index} item={item} sessionData={sessionData} />
