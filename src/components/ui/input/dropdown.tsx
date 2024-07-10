@@ -82,7 +82,7 @@ const DropdownInput: React.FC<DropdownInputProps> = ({
         </ul>
       </div>
     </div>
-  )
+  );
 };
 
 export default DropdownInput;

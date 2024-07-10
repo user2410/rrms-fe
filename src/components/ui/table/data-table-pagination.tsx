@@ -60,5 +60,5 @@ export default function DataTablePagination<TData>({
         </div>
       </div>
     </div>
-  )
+  );
 }

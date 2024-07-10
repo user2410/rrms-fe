@@ -61,30 +61,29 @@ export default function FilterNRooms() {
           },
         ].map((item) => (
           <FormField
-           key={item.fieldName}
-           control={form.control}
-           name={item.fieldName as any}
-           render={({field}) => (
-            <FormItem>
-              <FormLabel className="font-normal text-xs">{item.label}</FormLabel>
-              <Select
-                onValueChange={field.onChange}
-                value={form.watch(item.fieldName as any) || ""}
-              >
-                <FormControl>
-                  <SelectTrigger type="button">
-                    <SelectValue placeholder={`Số ${item.label}`} />
-                  </SelectTrigger>
-                </FormControl>
-                <SelectContent>
-                  {nRoomsItems.map((item) => (
-                    <SelectItem key={item.value} value={item.value}>{item.label}</SelectItem>
-                  ))}
-                </SelectContent>
-              </Select>
-            </FormItem> 
-           )}>
-          </FormField>
+            key={item.fieldName}
+            control={form.control}
+            name={item.fieldName as any}
+            render={({ field }) => (
+              <FormItem>
+                <FormLabel className="font-normal text-xs">{item.label}</FormLabel>
+                <Select
+                  onValueChange={field.onChange}
+                  value={form.watch(item.fieldName as any) || ""}
+                >
+                  <FormControl>
+                    <SelectTrigger type="button">
+                      <SelectValue placeholder={`Số ${item.label}`} />
+                    </SelectTrigger>
+                  </FormControl>
+                  <SelectContent>
+                    {nRoomsItems.map((item) => (
+                      <SelectItem key={item.value} value={item.value}>{item.label}</SelectItem>
+                    ))}
+                  </SelectContent>
+                </Select>
+              </FormItem>
+            )} />
         ))}
       </div>
     </div>

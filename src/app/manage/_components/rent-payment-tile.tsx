@@ -12,6 +12,8 @@ import { Property } from "@/models/property";
 import { Unit } from "@/models/unit";
 import { DataTable } from "@/components/complex/data_table";
 import { finishedPaymentsColumns } from "../payments/_components/incomes_column";
+import { IconBadge } from "@/components/ui/icon-badge";
+import { TrendingUp } from "lucide-react";
 
 export type RentalPaymentItem = RentalPayment & {
   expiryDuration: number;
@@ -89,7 +91,10 @@ export default function RentPaymentTile({
   return (
     <Card className="w-full h-full">
       <CardHeader className="flex flex-row items-center justify-between">
-        <CardTitle className="text-lg">Khoản thu</CardTitle>
+        <div className="flex flex-row items-center gap-2">
+          <IconBadge icon={TrendingUp} variant="success"/>
+          <CardTitle className="text-lg">Khoản thu</CardTitle>
+        </div>
       </CardHeader>
       <CardContent>
         <Tabs.Root defaultValue="arrears" className="TabsRoot px-0">
@@ -113,10 +118,7 @@ export default function RentPaymentTile({
             ) : (
               <CardContent className="px-0 pb-0">
                 <div className="space-y-3">
-                  {lastMonthArrears.length > 0
-                    ? lastMonthArrears.slice(0, 5).map((item, index) => (
-                      <ArrearItem key={index} item={item} sessionData={sessionData} />
-                    )) : allTimeArrears.slice(0, 5).map((item, index) => (
+                  {[...lastMonthArrears, ...allTimeArrears].slice(0, 5).map((item, index) => (
                       <ArrearItem key={index} item={item} sessionData={sessionData} />
                     ))
                   }

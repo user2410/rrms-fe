@@ -37,7 +37,8 @@ export default function Step2Amenities({
               <FormItem className="w-[40%]">
                 <FormControl>
                   <Select 
-                    onValueChange={field.onChange}
+                    value={field.value.toString()}
+                    onValueChange={(v) => field.onChange(v.toString())}
                   >
                     <FormControl>
                       <SelectTrigger>

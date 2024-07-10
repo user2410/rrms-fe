@@ -6,7 +6,7 @@ export function null2Undefined<T extends object>(obj: Nullable<T>): Nullable<T> 
     if (obj[key] === null) {
       result[key] = undefined;
     } else if (typeof obj[key] === 'object' && obj[key] !== null) {
-      result[key] = null2Undefined(obj[key]) as Nullable<T>[Extract<keyof T, string>];
+      result[key] = null2Undefined(obj[key] as object) as Nullable<T>[Extract<keyof T, string>];
     } else {
       result[key] = obj[key];
     }

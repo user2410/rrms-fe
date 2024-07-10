@@ -120,7 +120,7 @@ export default function CreateContractB({
               currentStep={step}
               steps={[
                 {
-                  title: "Bên A",
+                  title: "Bên B",
                   description: "Bổ sung thông tin của bên cho thuê",
                 },
                 {

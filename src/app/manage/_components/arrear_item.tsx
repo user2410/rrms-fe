@@ -63,7 +63,7 @@ export default function ArrearItem({
     <Dialog>
       <DialogTrigger>
         <Card className={cn("p-2", item.expiryDuration < 0 && "bg-purple-200")}>
-          <div className="grid grid-cols-7 gap-0.5">
+          <div className="grid grid-cols-7 gap-2">
             <div className="col-span-4 flex flex-row items-center gap-1.5">
               <Avatar>
                 <AvatarFallback>{item.tenantName.split(" ").slice(-2).map(i => i[0]).join("")}</AvatarFallback>
@@ -75,8 +75,7 @@ export default function ArrearItem({
                 </span>
               </div>
             </div>
-            <div className="col-span-1"></div>
-            <div className="col-span-1 flex flex-col justify-center">
+            <div className="col-span-2 flex flex-col justify-center">
               <p className="text-sm">{query.isSuccess && getRentalPaymentReasonText(item, query.data.rental.services)}</p>
             </div>
             <div className="col-span-1 flex flex-col justify-center">

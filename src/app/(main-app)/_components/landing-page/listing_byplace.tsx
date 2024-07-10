@@ -2,6 +2,7 @@
 
 import Link from "next/link";
 import { useEffect, useState } from "react";
+import { getSearchURL } from "../../search/_components/get_searchurl";
 
 type Place = {
   code: string;
@@ -24,7 +25,7 @@ function Placecard({ place }: { place: Place }) {
 
   return (
     <Link
-      href={`/search?pcity=${place.code}`}
+      href={getSearchURL({pcity: place.code})}
       className="hover:underline pt-4 pl-4 space-y-2 bg-cover bg-center bg-no-repeat aspect-[4/3] text-white transition-all duration-1000 ease-in-out"
       style={{
         backgroundImage: `linear-gradient(rgba(0, 0, 0, 0.4), rgba(0, 0, 0, 0.1)), url(${place.bgImgs[bgImageIndex]})`,

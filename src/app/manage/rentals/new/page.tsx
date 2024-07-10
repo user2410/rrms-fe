@@ -267,7 +267,11 @@ function RentalForm({
           phone: m.phone ? m.phone : undefined,
           description: m.description ? m.description : undefined,
         })),
-        pets: application?.pets,
+        pets: application?.pets && application.pets.map(p => ({
+          ...p,
+          weight: p.weight ? p.weight : undefined,
+          description: p.description ? p.description : undefined,
+        })),
         moveinDate: application?.moveinDate ? new Date (application?.moveinDate) : undefined,
         startDate: new Date(),
         rentalIntention: application?.rentalIntention,

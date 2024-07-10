@@ -19,7 +19,7 @@ export default function AuthModal() {
   return (
     <Dialog>
       <DialogTrigger asChild>
-        <Button ref={modalTriggerBtnRef} type="button" variant="outline">Sign in</Button>
+        <Button ref={modalTriggerBtnRef} type="button" variant="outline">Đăng nhập</Button>
       </DialogTrigger>
       <DialogContent className="max-w-[80vw] lg:max-w-[960px] xl:max-w-[1024px] 2xl:max-w-[1200px]">
         <div className="grid grid-cols-2 gap-3 w-full">

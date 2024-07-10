@@ -1,5 +1,5 @@
-import { backendAPI } from '@/libs/axios'
-import type { NextApiRequest, NextApiResponse } from 'next'
+import { backendAPI } from '@/libs/axios';
+import type { NextApiRequest, NextApiResponse } from 'next';
 
 //  request: {
 //    accessToken,
@@ -10,22 +10,22 @@ export default async function handler(
   res: NextApiResponse
 ) {
   if (req.method !== 'POST') {
-    return res.status(405).json({ message: 'Method not allowed' })
+    return res.status(405).json({ message: 'Method not allowed' });
   }
 
-  const {accessToken, file} = req.body
-  console.log("body", file, accessToken)
+  const {accessToken, file} = req.body;
+  console.log("body", file, accessToken);
 
   try {
     const presignURL = (await backendAPI.post('/api/storage/presign', file, {
       headers: {
         Authorization: `Bearer ${accessToken}`
       }
-    })).data
-    res.status(201).json(presignURL)
+    })).data;
+    res.status(201).json(presignURL);
   } catch (err) {
-    console.error(err)
-    res.status(500).json({ err })
+    console.error(err);
+    res.status(500).json({ err });
   }
 
 }

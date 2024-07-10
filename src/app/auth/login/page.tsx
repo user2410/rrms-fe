@@ -6,9 +6,9 @@ import { useSession } from "next-auth/react";
 import Link from "next/link";
 import { useRouter, useSearchParams } from "next/navigation";
 
-export const metadata: Metadata = {
-  title: "Đăng nhập",
-};
+// export const metadata: Metadata = {
+//   title: "Đăng nhập",
+// };
 
 export default function AuthPage() {
   const session = useSession();

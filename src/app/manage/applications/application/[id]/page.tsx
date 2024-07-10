@@ -119,7 +119,7 @@ export default function ApplicationPage({ params }: { params: { id: string } }) 
                 />
               </>
             )}
-            {application.status === "APPROVED" && (
+            {(application.status === "APPROVED" && application.creatorId !== session.data!.user.user.id) && (
               <PostProcess
                 data={query.data}
                 sessionData={session.data!}

@@ -1,17 +1,17 @@
 "use client";
 
-import { addMonths, format } from "date-fns";
-import { FiTrendingDown, FiTrendingUp } from "react-icons/fi";
-import { Chart as ChartJS, registerables } from "chart.js";
-import { Chart } from "react-chartjs-2";
-import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
-import { Button } from "@/components/ui/button";
-import { Session } from "next-auth";
-import { useQuery } from "@tanstack/react-query";
-import { backendAPI } from "@/libs/axios";
-import Spinner from "@/components/ui/spinner";
-import { useMemo, useState } from "react";
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
+import { IconBadge } from "@/components/ui/icon-badge";
 import { Input } from "@/components/ui/input";
+import Spinner from "@/components/ui/spinner";
+import { backendAPI } from "@/libs/axios";
+import { useQuery } from "@tanstack/react-query";
+import { Chart as ChartJS, registerables } from "chart.js";
+import { addMonths, format } from "date-fns";
+import { ArrowUpDown } from "lucide-react";
+import { Session } from "next-auth";
+import { useMemo, useState } from "react";
+import { Chart } from "react-chartjs-2";
 
 ChartJS.register(...registerables);
 
@@ -126,7 +126,10 @@ export default function RevenueTile({
   return (
     <Card className="w-full h-full">
       <CardHeader>
-        <CardTitle className="text-lg">Thu nhập</CardTitle>
+        <div className="flex flex-row items-center gap-2">
+          <IconBadge icon={ArrowUpDown} variant="warning"/>
+          <CardTitle className="text-lg">Thu chi</CardTitle>
+        </div>
         <div className="flex flex-row justify-start items-center gap-2">
           <CardDescription>Báo cáo từ</CardDescription>
           <Input
@@ -193,12 +196,12 @@ export default function RevenueTile({
           <table>
             <tbody>
               <tr>
-                <th className="font-semibold text-left" style={{color: "rgba(0, 99, 132, 0.6)"}}>Tổng thu nhập:</th>
-                <th className="text-right">{allTimePaymentQuery.status === "success" ? (totalIncome.toLocaleString("vi-VN", { style: "currency", currency: "VND"})) : (<Spinner size={16}/>) }</th>
+                <th className="font-semibold text-left" style={{ color: "rgba(0, 99, 132, 0.6)" }}>Tổng thu nhập:</th>
+                <th className="text-right">{allTimePaymentQuery.status === "success" ? (totalIncome.toLocaleString("vi-VN", { style: "currency", currency: "VND" })) : (<Spinner size={16} />)}</th>
               </tr>
               <tr>
-                <th className="font-semibold text-left" style={{color: "rgb(235, 146, 52)"}}>Tổng chi phí:</th>
-                <th className="text-right">{allTimePaymentQuery.status === "success" ? (totalExpense.toLocaleString("vi-VN", { style: "currency", currency: "VND"})) : (<Spinner size={16}/>) }</th>
+                <th className="font-semibold text-left" style={{ color: "rgb(235, 146, 52)" }}>Tổng chi phí:</th>
+                <th className="text-right">{allTimePaymentQuery.status === "success" ? (totalExpense.toLocaleString("vi-VN", { style: "currency", currency: "VND" })) : (<Spinner size={16} />)}</th>
               </tr>
             </tbody>
           </table>

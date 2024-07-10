@@ -143,6 +143,60 @@ export default function Step2MultiRooms() {
                     )}
                   />
                 </div>
+                <div className="flex flex-row justify-between gap-2">
+                <FormField
+                    control={form.control}
+                    name={`units.${index}.numberOfBedrooms`}
+                    render={({ field }) => (
+                      <FormItem>
+                        <FormLabel>Số phòng ngủ</FormLabel>
+                        <FormControl>
+                          <Input type="number" min={0} {...field} onChange={(e) => field.onChange(e.target.valueAsNumber)} />
+                        </FormControl>
+                        <FormMessage />
+                      </FormItem>
+                    )}
+                  />
+                  <FormField
+                    control={form.control}
+                    name={`units.${index}.numberOfBathrooms`}
+                    render={({ field }) => (
+                      <FormItem>
+                        <FormLabel>Số phòng tắm</FormLabel>
+                        <FormControl>
+                          <Input type="number" min={0} {...field} onChange={(e) => field.onChange(e.target.valueAsNumber)} />
+                        </FormControl>
+                        <FormMessage />
+                      </FormItem>
+                    )}
+                  />
+                  <FormField
+                    control={form.control}
+                    name={`units.${index}.numberOfToilets`}
+                    render={({ field }) => (
+                      <FormItem>
+                        <FormLabel>Số phòng vệ sinh</FormLabel>
+                        <FormControl>
+                          <Input type="number" min={0} {...field} onChange={(e) => field.onChange(e.target.valueAsNumber)} />
+                        </FormControl>
+                        <FormMessage />
+                      </FormItem>
+                    )}
+                  />
+                  <FormField
+                    control={form.control}
+                    name={`units.${index}.numberOfBalconies`}
+                    render={({ field }) => (
+                      <FormItem>
+                        <FormLabel>Số ban công</FormLabel>
+                        <FormControl>
+                          <Input type="number" min={0} {...field} onChange={(e) => field.onChange(e.target.valueAsNumber)} />
+                        </FormControl>
+                        <FormMessage />
+                      </FormItem>
+                    )}
+                  />
+                </div>
                 <div>
                   <CardTitle className="text-xl my-2">Tiện nghi</CardTitle>
                   <Step2Amenities nth={index} />

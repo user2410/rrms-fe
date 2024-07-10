@@ -35,6 +35,19 @@ export default async function handler(
     });
   } catch (err) {
     console.error(err);
-    res.status(500).json({ message: "Internal Server Error" });
+    res.status(200).json({
+      "country_code": "VN",
+      "country_name": "Vietnam",
+      "city": {
+          "name": "Hà Nội",
+          "lowerName": "hanoi",
+          "code": "HN"
+      },
+      "postal": null,
+      "latitude": 21.0333,
+      "longitude": 105.85,
+      // "IPv4": "113.190.239.220",
+      "state": "Hanoi"
+  });
   }
 }

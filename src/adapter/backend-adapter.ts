@@ -1,4 +1,4 @@
-import { Adapter, AdapterAccount, AdapterUser } from "next-auth/adapters"
+import { Adapter, AdapterAccount, AdapterUser } from "next-auth/adapters";
 import { AxiosInstance } from "axios";
 
 export function BackendAdapter(be: AxiosInstance) : Adapter {
@@ -39,5 +39,5 @@ export function BackendAdapter(be: AxiosInstance) : Adapter {
     deleteSession: async (sessionToken) => {
 
     },
-  }
+  };
 }

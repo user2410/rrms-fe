@@ -4,6 +4,7 @@ import { PropertyMedia } from '@/models/property';
 import clsx from 'clsx';
 import LightGallery from 'lightgallery/react';
 import { Fragment, useCallback, useRef } from 'react';
+// @ts-ignore
 import { Navigation } from 'swiper';
 import { Swiper, SwiperSlide } from "swiper/react";
 

@@ -10,10 +10,12 @@ import { addMonths } from "date-fns";
 import Spinner from "@/components/ui/spinner";
 import { DataTable } from "../rentals/_components/data_table";
 import { aboutToExpireColumns } from "../rentals/_components/column";
+import { IconBadge } from "@/components/ui/icon-badge";
+import { File as FileIcon } from "lucide-react";
 
 export default function RentalProfileCard({
   sessionData,
-} : {
+}: {
   sessionData: Session;
 }) {
   const query = useQuery<ManagedRental[]>({
@@ -22,14 +24,14 @@ export default function RentalProfileCard({
       const rentals = (await backendAPI.get<Rental[]>(`/api/rentals/${queryKey.at(2)}`, {
         params: {
           fields: "property_id,unit_id,tenant_id,tenant_name,tenant_email,tenant_phone,profile_image,organization_name,start_date,movein_date,rental_period",
-          limit: queryKey.at(4), 
+          limit: queryKey.at(4),
           offset: queryKey.at(5),
         },
         headers: {
           Authorization: `Bearer ${queryKey.at(-1)}`,
         }
       })).data || ([]);
-      if(rentals.length === 0) {
+      if (rentals.length === 0) {
         return [] as ManagedRental[];
       }
       const propIds = new Set<string>();
@@ -55,23 +57,23 @@ export default function RentalProfileCard({
         }
       })).data || ([]);
       return rentals
-      .map((rental) => {
-        const property = properties.find((property) => property.id === rental.propertyId);
-        const unit = units.find((unit) => unit.id === rental.unitId);
-        const expiryDate = addMonths(new Date(rental.startDate), rental.rentalPeriod);
-        return ({
-          rental: {
-            ...rental,
-            startDate: new Date(rental.startDate),
-            moveinDate: new Date(rental.moveinDate),
-            expiryDate,
-            timeLeft: ((expiryDate.getTime() - Date.now()) / (24 * 60 * 60 * 1000)),
-          },
-          property,
-          unit,
-        }) as ManagedRental;
-      })
-      .sort((a, b) => a.rental.timeLeft - b.rental.timeLeft);
+        .map((rental) => {
+          const property = properties.find((property) => property.id === rental.propertyId);
+          const unit = units.find((unit) => unit.id === rental.unitId);
+          const expiryDate = addMonths(new Date(rental.startDate), rental.rentalPeriod);
+          return ({
+            rental: {
+              ...rental,
+              startDate: new Date(rental.startDate),
+              moveinDate: new Date(rental.moveinDate),
+              expiryDate,
+              timeLeft: ((expiryDate.getTime() - Date.now()) / (24 * 60 * 60 * 1000)),
+            },
+            property,
+            unit,
+          }) as ManagedRental;
+        })
+        .sort((a, b) => a.rental.timeLeft - b.rental.timeLeft);
     },
     staleTime: 1000 * 60 * 5,
     cacheTime: 1000 * 60 * 5,
@@ -80,7 +82,10 @@ export default function RentalProfileCard({
   return (
     <Card>
       <CardHeader>
-        <CardTitle className="text-lg">Hợp đồng thuê nhà</CardTitle>
+        <div className="flex flex-row items-center gap-2">
+          <IconBadge icon={FileIcon} variant="success"/>
+          <CardTitle className="text-lg">Hợp đồng thuê nhà</CardTitle>
+        </div>
       </CardHeader>
       <CardContent>
         {query.isLoading ? (

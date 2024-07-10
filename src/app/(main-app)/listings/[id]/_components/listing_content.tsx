@@ -37,7 +37,7 @@ export default function ListingContent({
 
       <div className="grid grid-cols-1 md:grid-cols-6 gap-6">
         {/* Main content */}
-        <div className="space-y-4 md:col-span-4">
+        <div className="space-y-4 md:col-span-4 bg-card-foreground">
           <Gallery items={property.media} />
           <div className="space-y-3">
             {/* <TopBreadcrumb cityCode={property.city} districtCode={property.district} /> */}

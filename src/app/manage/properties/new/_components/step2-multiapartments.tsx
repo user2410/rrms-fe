@@ -148,6 +148,19 @@ export default function Step2MultiApartments() {
                   />
                   <FormField
                     control={form.control}
+                    name={`units.${index}.numberOfToilets`}
+                    render={({ field }) => (
+                      <FormItem>
+                        <FormLabel>Số phòng vệ sinh</FormLabel>
+                        <FormControl>
+                          <Input type="number" min={0} {...field} onChange={(e) => field.onChange(e.target.valueAsNumber)} />
+                        </FormControl>
+                        <FormMessage />
+                      </FormItem>
+                    )}
+                  />
+                  <FormField
+                    control={form.control}
                     name={`units.${index}.numberOfBalconies`}
                     render={({ field }) => (
                       <FormItem>

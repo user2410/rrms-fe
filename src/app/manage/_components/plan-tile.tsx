@@ -10,6 +10,8 @@ import { useState } from "react";
 import Spinner from "@/components/ui/spinner";
 import { cn } from "@/libs/utils";
 import CreateReminderDialog from "@/components/complex/create_reminder";
+import { IconBadge } from "@/components/ui/icon-badge";
+import { Calendar } from "lucide-react";
 
 type DataItem = {
   day: Date;
@@ -28,10 +30,10 @@ export default function PlanTile({
 
   const query = useQuery<DataItem[]>({
     queryKey: ["manage", "reminders", date, sessionData.user.accessToken],
-    queryFn: async ({queryKey}) => {
+    queryFn: async ({ queryKey }) => {
       const days = [...Array(7).keys()].map((i) => addDays(new Date(queryKey.at(2) as any), i));
-      const res : DataItem[] = [];
-      for(const day of days) {
+      const res: DataItem[] = [];
+      for (const day of days) {
         const minStartAt = new Date(day);
         const maxStartAt = new Date(day);
         minStartAt.setHours(0, 0, 0, 0);
@@ -48,7 +50,7 @@ export default function PlanTile({
         res.push({
           day: new Date(day),
           reminders: r.map((item) => ({
-            ...item, 
+            ...item,
             startAt: new Date(item.startAt),
             endAt: new Date(item.endAt),
             createdAt: new Date(item.createdAt),
@@ -65,7 +67,10 @@ export default function PlanTile({
   return (
     <Card className={cn("w-full h-full", className)}>
       <CardHeader className="flex flex-row justify-between">
-        <CardTitle className="text-xl">Kế hoạch</CardTitle>
+        <div className="flex flex-row items-center gap-2">
+          <IconBadge icon={Calendar} />
+          <CardTitle className="text-xl">Kế hoạch</CardTitle>
+        </div>
         <CreateReminderDialog
           triggerBtn={<button className="btn btn-primary">Tạo lịch hẹn</button>}
           sessionData={sessionData}
@@ -74,7 +79,7 @@ export default function PlanTile({
       </CardHeader>
       {query.isLoading ? (
         <div className="flex items-center justify-center h-32">
-          <Spinner size={32}/>
+          <Spinner size={32} />
         </div>
       ) : query.isError ? (
         <div className="flex items-center justify-center h-32">
@@ -96,23 +101,23 @@ export default function PlanTile({
                 Không có lịch hẹn vào ngày hôm nay
               </div>
             ) : query.data[selectedDate].reminders
-              .sort((a,b) => a.startAt.getTime() - b.startAt.getTime())
+              .sort((a, b) => a.startAt.getTime() - b.startAt.getTime())
               .map((item, index) => (
-              <div
-                key={index}
-                className="mb-4 grid grid-cols-[25px_1fr] items-start pb-4 last:mb-0 last:pb-0"
-              >
-                <span className="flex h-2 w-2 translate-y-1 rounded-full bg-sky-500" />
-                <div className="space-y-1">
-                  <p className="text-sm font-medium leading-none">
-                    {item.title}&nbsp;({item.startAt.toLocaleTimeString("vi-VN")} - {item.endAt.toLocaleTimeString("vi-VN")})
-                  </p>
-                  <p className="text-sm text-muted-foreground">
-                    {item.note}
-                  </p>
+                <div
+                  key={index}
+                  className="mb-4 grid grid-cols-[25px_1fr] items-start pb-4 last:mb-0 last:pb-0"
+                >
+                  <span className="flex h-2 w-2 translate-y-1 rounded-full bg-sky-500" />
+                  <div className="space-y-1">
+                    <p className="text-sm font-medium leading-none">
+                      {item.title}&nbsp;({item.startAt.toLocaleTimeString("vi-VN")} - {item.endAt.toLocaleTimeString("vi-VN")})
+                    </p>
+                    <p className="text-sm text-muted-foreground">
+                      {item.note}
+                    </p>
+                  </div>
                 </div>
-              </div>
-            ))}
+              ))}
           </ScrollArea>
         </CardContent>
       )}

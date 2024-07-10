@@ -25,12 +25,17 @@ export function getNotificationActionLink(n: NotificationModel): string {
     case "CREATE_PRERENTAL":
       try {
         const preRentalId = JSON.parse(n.data.prerentalId);
-        return `/manage/prerentals/prerental/${preRentalId}`;
+        return `/manage/rentals/prerentals/prerental/${preRentalId}`;
       } catch (e) {
-        return `/manage/prerentals/prerental/${n.data.prerentalId}`;
+        return `/manage/rentals/prerentals/prerental/${n.data.prerentalId}`;
       }
     case "UPDATE_PRERENTAL":
-      return "#";
+      try {
+        const rentalId = JSON.parse(n.data.prerentalId);
+        return `/manage/rentals/rental/${rentalId}`;
+      } catch (e) {
+        return "#";
+      }
     case "CREATE_RENTALPAYMENT":
     case "UPDATE_RENTALPAYMENT":
     case "CREATE_CONTRACT":

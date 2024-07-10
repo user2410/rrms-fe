@@ -1,6 +1,7 @@
 "use client";
 
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
+import { IconBadge } from "@/components/ui/icon-badge";
 import Spinner from "@/components/ui/spinner";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
@@ -10,6 +11,7 @@ import { Unit } from "@/models/unit";
 import { getUserFullName, User } from "@/models/user";
 import { useQuery } from "@tanstack/react-query";
 import { Chart as ChartJS, registerables } from "chart.js";
+import { Home } from "lucide-react";
 import { Session } from "next-auth";
 import Link from "next/link";
 import { Chart } from "react-chartjs-2";
@@ -48,7 +50,7 @@ export default function WelcomeTile({
 }) {
   const query = useQuery<Data>({
     queryKey: ["manage", "statistic", "properties", sessionData!.user.accessToken],
-    queryFn: async ({queryKey}) => {
+    queryFn: async ({ queryKey }) => {
       return (await backendAPI.get<Data>("/api/statistics/manager/properties", {
         params: {
           limit: 2,
@@ -68,7 +70,7 @@ export default function WelcomeTile({
     units: Unit[];
   }>({
     queryKey: ["manage", "statistic", "properties", "details", sessionData!.user.accessToken],
-    queryFn: async ({queryKey}) => {
+    queryFn: async ({ queryKey }) => {
       const properties = (await backendAPI.get<Property[]>("/api/properties/ids", {
         params: {
           propIds: query.data!.properties,
@@ -100,7 +102,10 @@ export default function WelcomeTile({
   return (
     <Card className="w-full h-full ">
       <CardHeader>
-        <CardTitle className="text-lg">Nhà cho thuê của bạn</CardTitle>
+        <div className="flex flex-row items-center gap-2">
+          <IconBadge icon={Home} />
+          <CardTitle className="text-lg">Nhà cho thuê của bạn</CardTitle>
+        </div>
       </CardHeader>
       <CardContent>
         {query.isError ? (

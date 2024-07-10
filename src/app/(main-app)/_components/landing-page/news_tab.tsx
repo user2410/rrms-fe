@@ -15,12 +15,12 @@ type TAB = "GetNewNewsAsHtml" | "GetHotSubjectHNAsHtml" | "GetHotSubjectHCMAsHtm
 export default function NewsTab() {
   const [tab, setTab] = useState<TAB>("GetNewNewsAsHtml");
   const query = useQuery<Article[]>({
-    queryKey: ["news", tab],
+    queryKey: ["home", "news", tab],
     queryFn: async ({ queryKey }) => {
-      return (await axios.get<Article[]>(`/api/news/${queryKey.at(1)}`)).data;
+      return (await axios.get<Article[]>(`/api/news/${queryKey.at(-1)}`)).data;
     },
-    staleTime: 1000 * 60 * 5,
-    cacheTime: 1000 * 60 * 5,
+    staleTime: 1000 * 60 * 60 * 24,
+    cacheTime: 1000 * 60 * 60 * 24,
   });
 
   return (
@@ -42,7 +42,7 @@ export default function NewsTab() {
             }
           ].map((item, index) => (
             <Tabs.Trigger key={index} className="TabsTrigger" value={item.value}>
-              <h2 className={clsx("text-base lg:text-lg xl:text-2xl font-normal min-w-max", tab === item.value ? "text-foreground" : "text-muted-foreground")}>{item.label}</h2>
+              <h2 className={clsx("text-base lg:text-lg xl:text-xl font-normal min-w-max", tab === item.value ? "text-foreground" : "text-muted-foreground")}>{item.label}</h2>
             </Tabs.Trigger>
           ))}
         </Tabs.List>
