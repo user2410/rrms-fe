@@ -53,6 +53,7 @@ export default function PaymentPage({ params: { id } }: { params: { id: string }
     try {
       const res = (await axios.post("/api/payment/get_vnpay_url", {
         id,
+        origin: window.location.origin,
         ...data,
         accessToken: session.data?.user.accessToken,
       })).data;

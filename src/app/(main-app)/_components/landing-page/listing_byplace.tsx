@@ -3,6 +3,7 @@
 import Link from "next/link";
 import { useEffect, useState } from "react";
 import { getSearchURL } from "../../search/_components/get_searchurl";
+import { useRouter } from "next/navigation";
 
 type Place = {
   code: string;
@@ -11,6 +12,7 @@ type Place = {
 };
 
 function Placecard({ place }: { place: Place }) {
+  const router = useRouter();
   const [bgImageIndex, setBgImageIndex] = useState(0);
 
   useEffect(() => {
@@ -24,15 +26,15 @@ function Placecard({ place }: { place: Place }) {
   }, [place.bgImgs.length]);
 
   return (
-    <Link
-      href={getSearchURL({pcity: place.code})}
-      className="hover:underline pt-4 pl-4 space-y-2 bg-cover bg-center bg-no-repeat aspect-[4/3] text-white transition-all duration-1000 ease-in-out"
+    <div
+      onClick={() => {router.push(getSearchURL({pcity: place.code}));}}
+      className="hover:underline hover:cursor-pointer pt-4 pl-4 space-y-2 bg-cover bg-center bg-no-repeat aspect-[4/3] text-white transition-all duration-1000 ease-in-out"
       style={{
         backgroundImage: `linear-gradient(rgba(0, 0, 0, 0.4), rgba(0, 0, 0, 0.1)), url(${place.bgImgs[bgImageIndex]})`,
       }}
     >
       <h3 className="text-lg font-semibold">{place.title}</h3>
-    </Link>
+    </div>
   );
 }
 

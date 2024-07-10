@@ -9,7 +9,7 @@ export default async function handler(
     return res.status(405).json({ message: "Method not allowed" });
   }
 
-  const { id, accessToken, bankCode, language } = req.body;
+  const { id, accessToken, origin, bankCode, language } = req.body;
   if (!id || !accessToken) {
     return res.status(400).json({ message: "Missing id, accessToken" });
   }
@@ -18,7 +18,7 @@ export default async function handler(
     const r = await backendAPI.post("/api/payments/vnpay/create_payment_url/" + id, {
       bankCode,
       language,
-      returnUrl: `${process.env.NEXT_PUBLIC_HTTP_BACKEND_URL}/api/payments/vnpay/vnpay_return`,
+      returnUrl: `${origin}/api/payment/vnpay_return`,
     }, {
       headers: {
         "Authorization": `Bearer ${accessToken}`

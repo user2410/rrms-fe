@@ -4,7 +4,7 @@ import Spinner from "@/components/ui/spinner";
 import { backendAPI } from "@/libs/axios";
 import { RentalComplaint } from "@/models/rental";
 import { useQuery } from "@tanstack/react-query";
-import { CircleCheck, CircleDot, CirclePause } from "lucide-react";
+import { CircleCheck, CircleDot, CirclePause, FileIcon } from "lucide-react";
 import { Session } from "next-auth";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { useState } from "react";
@@ -17,6 +17,7 @@ import {
   DialogTrigger,
 } from "@/components/ui/dialog";
 import ComplaintItem from "../rentals/rental-complaints/_components/complaint_item";
+import { IconBadge } from "@/components/ui/icon-badge";
 
 type Statistic = {
   pending: number;
@@ -86,8 +87,8 @@ export default function RentalComplaints({
             </div>
           </DialogTrigger>
           <DialogContent className="max-w-[40vw]">
-            <DialogHeader/>
-            <ComplaintItem sessionData={sessionData} item={item}/>
+            <DialogHeader />
+            <ComplaintItem sessionData={sessionData} item={item} />
           </DialogContent>
         </Dialog>
       ))}
@@ -97,7 +98,10 @@ export default function RentalComplaints({
   return (
     <Card className={className}>
       <CardHeader>
-        <CardTitle className="text-xl">Báo cáo</CardTitle>
+        <div className="flex flex-row items-center gap-2">
+          <IconBadge icon={FileIcon} />
+          <CardTitle className="text-lg">Báo cáo</CardTitle>
+        </div>
       </CardHeader>
       <CardContent>
         {query.isLoading ? (

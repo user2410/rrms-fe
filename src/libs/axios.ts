@@ -4,6 +4,7 @@ export const backendAPI = axios.create({
   baseURL: process.env.NEXT_PUBLIC_HTTP_BACKEND_URL,
   headers: {
     "Content-Type": "application/json",
+    "ngrok-skip-browser-warning": true,
   },
 });
 

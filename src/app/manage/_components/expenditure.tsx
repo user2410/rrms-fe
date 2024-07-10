@@ -1,10 +1,12 @@
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { IconBadge } from "@/components/ui/icon-badge";
 import { Input } from "@/components/ui/input";
 import Spinner from "@/components/ui/spinner";
 import { backendAPI } from "@/libs/axios";
 import { useQuery } from "@tanstack/react-query";
 import { Chart as ChartJS, registerables } from "chart.js";
 import { addMonths, format } from "date-fns";
+import { HandCoins } from "lucide-react";
 import { Session } from "next-auth";
 import Link from "next/link";
 import { useState } from "react";
@@ -29,8 +31,10 @@ export default function Expenditure({
   return (
     <Card className={className}>
       <CardHeader className="flex flex-row justify-between items-center">
-        <CardTitle className="text-xl">Chi tiêu</CardTitle>
-        <Link href="/manage/rentals" className="hover:underline">Xem tất cả</Link>
+        <div className="flex flex-row items-center gap-2">
+          <IconBadge icon={HandCoins} variant="destructive"/>
+          <CardTitle className="text-lg">Chi tiêu</CardTitle>
+        </div>
       </CardHeader>
       <CardContent>
         <Graph sessionData={sessionData} />

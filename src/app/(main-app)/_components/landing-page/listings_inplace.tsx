@@ -8,10 +8,12 @@ import { GeolocationDB } from "@/models/dghcvn";
 import { Listing, SearchResult } from "@/models/listing";
 import { getPrimaryImage, getPropertyFullAddress, Property } from "@/models/property";
 import { ToMillion } from "@/utils/currency";
+import { getLowerCityName } from "@/utils/dghcvn";
 import { useQuery } from "@tanstack/react-query";
 import axios from "axios";
 import Image from "next/image";
 import Link from "next/link";
+import { getCurrentLocation } from "../../_action/get_location";
 
 function ListingCard({ item }: { item: ReturnedListing }) {
   const { listing, property } = item;
@@ -69,10 +71,10 @@ export default function ListingInplace() {
   const query = useQuery<Data>({
     queryKey: ['landing', "listings-inplace"],
     queryFn: async () => {
-      const geolocation = (await axios.get<GeolocationDB>("/api/location/geolocationdb")).data;
+      const geolocation = await getCurrentLocation();
       const searchListings = (await backendAPI.get<SearchResult>(`/api/listings/search`, {
         params: {
-          pcity: geolocation.city?.code ?? "SG",
+          pcity: geolocation.city?.code || "HN",
           limit: 8,
           _r: new Date().getTime(), // prevent cache
         },

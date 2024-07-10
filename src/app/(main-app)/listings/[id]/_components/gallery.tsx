@@ -66,7 +66,7 @@ export default function Gallery({ items }: { items: PropertyMedia[] }) {
           {items.map((item, index) => (
             <SwiperSlide
               key={index}
-              className="bg-slate-200 !flex justify-center items-center aspect-video hover:cursor-pointer"
+              className="bg-slate-200 !flex justify-center items-center aspect-video hover:cursor-pointer rounded-sm"
               onClick={() => {
                 console.log("swiper slide clicked", index);
                 lightGalleryRef.current?.openGallery(index);

@@ -81,7 +81,7 @@ export default function UploadDialog({
           <div className="w-full flex flex-col items-center justify-center gap-2">
             <p className="text-gray-500 text-center">Đồng ý tạo tin đăng <br/> <strong>{form.getValues("listing.title")}</strong></p>
             <div className="flex flex-row items-center gap-2 mt-4">
-              <Button onClick={changeOpen}>Quay lại</Button>
+              <Button variant="outline" onClick={changeOpen}>Quay lại</Button>
               <Button onClick={handleUpload}>Đồng ý</Button>
             </div>
           </div>

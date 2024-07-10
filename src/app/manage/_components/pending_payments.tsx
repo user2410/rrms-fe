@@ -10,11 +10,13 @@ import {
   TableRow
 } from "@/components/ui/table";
 import { backendAPI } from "@/libs/axios";
-import { getRentalPaymentReason, getRentalPaymentReasonText } from "@/models/rental";
+import { getRentalPaymentReasonText } from "@/models/rental";
 import { useQuery } from "@tanstack/react-query";
 import { Session } from "next-auth";
-import { RentalPaymentItem } from "./rent-payment-tile";
 import Link from "next/link";
+import { RentalPaymentItem } from "./rent-payment-tile";
+import { IconBadge } from "@/components/ui/icon-badge";
+import { TrendingUp } from "lucide-react";
 
 
 type PendingPaymentData = {
@@ -49,7 +51,10 @@ export default function PendingPayments({
   return (
     <Card className={className}>
       <CardHeader>
-        <CardTitle className="text-base">Các khoản chưa thanh toán</CardTitle>
+        <div className="flex flex-row items-center gap-2">
+          <IconBadge icon={TrendingUp} variant="warning"/>
+          <CardTitle className="text-lg">Các khoản chưa thanh toán</CardTitle>
+        </div>
       </CardHeader>
       <CardContent>
         {query.isLoading ? (

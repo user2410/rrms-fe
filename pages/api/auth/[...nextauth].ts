@@ -77,6 +77,7 @@ export const authOptions: AuthOptions = {
   //   maxAge: parseInt(process.env.SESSION_MAX_AGE || "900"), // 15 minutes,
   // },
   debug: process.env.NODE_ENV !== "production",
+  secret: process.env.NEXTAUTH_SECRET
 };
 
 export default NextAuth(authOptions);

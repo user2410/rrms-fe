@@ -14,6 +14,8 @@ type Data = {
   state: string;
 };
 
+const timeout = 5000;
+
 export default async function handler(
   req: NextApiRequest,
   res: NextApiResponse,

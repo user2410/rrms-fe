@@ -98,6 +98,7 @@ export default function Step3Basic() {
           </Label>
           <Input 
             placeholder="Nhập từ khóa, nhấn Enter để tạo" 
+            maxLength={32}
             onKeyDown={(e) => {
               const v = e.currentTarget.value.trim();
               if (e.key === "Enter" && fields.length < 5 && v !== ""){

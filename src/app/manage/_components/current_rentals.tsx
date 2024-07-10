@@ -12,6 +12,8 @@ import { addMonths } from "date-fns";
 import Spinner from "@/components/ui/spinner";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import Empty from "@/components/complex/empty";
+import { IconBadge } from "@/components/ui/icon-badge";
+import { Home } from "lucide-react";
 
 export default function CurrentRentals({
   className,
@@ -84,8 +86,10 @@ export default function CurrentRentals({
   return (
     <Card className={className}>
       <CardHeader className="flex flex-row justify-between items-center">
-        <CardTitle className="text-xl">Nhà thuê hiện tại</CardTitle>
-        <Link href="/manage/rentals" className="hover:underline">Xem tất cả</Link>
+        <div className="flex flex-row items-center gap-2">
+          <IconBadge icon={Home} />
+          <CardTitle className="text-lg">Nhà thuê hiện tại</CardTitle>
+        </div>
       </CardHeader>
       <CardContent>
         {query.isLoading ? (
@@ -108,7 +112,7 @@ export default function CurrentRentals({
                   className="w-10 h-10"
                 />
                 <div>
-                  <Link 
+                  <Link
                     href={`/manage/rentals/rental/${query.data[0].rental.id}`}
                     className="text-center block"
                   >
@@ -137,7 +141,7 @@ export default function CurrentRentals({
                           alt={item.property.name}
                           className="w-10 h-10"
                         />
-                        <Link 
+                        <Link
                           href={`/manage/rentals/rental/${item.rental.id}`}
                         >
                           {item.property.name} ({item.unit.name})

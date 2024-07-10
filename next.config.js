@@ -51,6 +51,11 @@ const nextConfig = {
         protocol: 'https',
         hostname: '**.cdn.static123.com',
       },
+      {
+        protocol: 'https',
+        hostname: 'iili.io',
+        pathname: '/**',
+      },
     ]
   }
 };

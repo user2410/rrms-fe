@@ -10,7 +10,7 @@ import { Separator } from "@/components/ui/separator";
 import { RentalComplaint, RentalComplaintReply } from "@/models/rental";
 import { getUserAvatarFallback, getUserFullName } from "@/models/user";
 import clsx from "clsx";
-import { Check, Clock, PauseCircle } from "lucide-react";
+import { Check, Clock, PauseCircle, RotateCcw } from "lucide-react";
 import { useDataCtx } from "../../_context/data.context";
 import CreateReply from "./create_reply";
 import { useQuery } from "@tanstack/react-query";
@@ -211,6 +211,14 @@ export default function ComplaintItem({
                 </AlertDialogFooter>
               </AlertDialogContent>
             </AlertDialog>
+            <Button
+              type="button"
+              variant="outline"
+              disabled={query.isLoading}
+              onClick={() => query.refetch()}
+            >
+              <RotateCcw className="w-4 h-4" />
+            </Button>
           </div>
         )}
         <Separator />
