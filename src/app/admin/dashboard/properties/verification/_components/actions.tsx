@@ -30,7 +30,7 @@ export function ApproveAction({
 }) {
   async function handleApprove() {
     try {
-      await backendAPI.patch(`api/properties/verifications/${requestId}`, {
+      await backendAPI.patch(`/api/properties/verifications/${requestId}`, {
         status: "APPROVED",
       }, {
         headers: {
@@ -43,7 +43,7 @@ export function ApproveAction({
       console.error(err);
       toast.error("Có lỗi xảy ra khi xác minh nhà cho thuê");
     }
-    // await backendAPI.post(`api/properties/verifications/${requestId}/approve`);
+    // await backendAPI.post(`/api/properties/verifications/${requestId}/approve`);
   }
 
   return (
@@ -82,7 +82,7 @@ export function RejectAction({
 
   async function handleReject() {
     try {
-      await backendAPI.patch(`api/properties/verifications/${requestId}`, {
+      await backendAPI.patch(`/api/properties/verifications/${requestId}`, {
         status: "REJECTED",
         feedback,
       }, {

@@ -24,6 +24,7 @@ export default async function handler(
 
   const timeoutPromise = new Promise((resolve, reject) => {
     setTimeout(() => {
+      console.log("news cache hit");
       resolve(defaultArticles[id as keyof typeof defaultArticles]);
     }, timeout);
   });
@@ -32,7 +33,7 @@ export default async function handler(
     const scrapper = new BatdongsanVNScrapper();
     const articles = await Promise.race([
       scrapper.scrape(
-        `https://batdongsan.com.vn/microservice-architecture-router/Systems/Home/${id}`,
+        `https://batdongsan.com.vn/microservice-architecture-router/Systems/Home/${id}&_r=${new Date().getTime()}`,
       ),
       timeoutPromise,
     ]);

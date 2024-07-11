@@ -37,7 +37,7 @@ export default function ListingsList({
         sortBy: queryKey.at(5),
         order: queryKey.at(6),
       };
-      const res = (await backendAPI.get("api/listings/managed-listings", {
+      const res = (await backendAPI.get("/api/listings/managed-listings", {
         params,
         headers: {
           Authorization: `Bearer ${queryKey.at(-1)}`,

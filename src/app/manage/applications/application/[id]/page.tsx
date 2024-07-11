@@ -107,7 +107,7 @@ export default function ApplicationPage({ params }: { params: { id: string } }) 
                 sessionData={session.data!}
               />
             )}
-            {application.creatorId !== session.data!.user.user.id && !["APPROVED", "REJECTED"].includes(application.status) && (
+            {application.creatorId !== session.data!.user.user.id && !["APPROVED", "REJECTED", "WITHDRAWN"].includes(application.status) && (
               <>
                 <AcceptDiaglog
                   data={query.data}
